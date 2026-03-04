@@ -15,25 +15,16 @@
       <Filter>system</Filter>
     </ClCompile>
     <ClCompile Include="Game.cpp" />
-    <ClCompile Include="SceneManager.cpp">
+    <ClCompile Include="src\Scene\InGameScene.cpp">
       <Filter>Scene</Filter>
     </ClCompile>
-    <ClCompile Include="IScene.cpp">
+    <ClCompile Include="src\Scene\IScene.cpp">
       <Filter>Scene</Filter>
     </ClCompile>
-    <ClCompile Include="TitleScene.cpp">
+    <ClCompile Include="src\Scene\SceneManager.cpp">
       <Filter>Scene</Filter>
     </ClCompile>
-    <ClCompile Include="StageSelectScene.cpp">
-      <Filter>Scene</Filter>
-    </ClCompile>
-    <ClCompile Include="SkillSelectScene.cpp">
-      <Filter>Scene</Filter>
-    </ClCompile>
-    <ClCompile Include="InGameScene.cpp">
-      <Filter>Scene</Filter>
-    </ClCompile>
-    <ClCompile Include="ResultScene.cpp">
+    <ClCompile Include="src\Scene\OutGameScene.cpp">
       <Filter>Scene</Filter>
     </ClCompile>
   </ItemGroup>
@@ -43,25 +34,16 @@
       <Filter>system</Filter>
     </ClInclude>
     <ClInclude Include="Game.h" />
-    <ClInclude Include="SceneManager.h">
+    <ClInclude Include="src\Scene\InGameScene.h">
       <Filter>Scene</Filter>
     </ClInclude>
-    <ClInclude Include="IScene.h">
+    <ClInclude Include="src\Scene\IScene.h">
       <Filter>Scene</Filter>
     </ClInclude>
-    <ClInclude Include="TitleScene.h">
+    <ClInclude Include="src\Scene\SceneManager.h">
       <Filter>Scene</Filter>
     </ClInclude>
-    <ClInclude Include="StageSelectScene.h">
-      <Filter>Scene</Filter>
-    </ClInclude>
-    <ClInclude Include="SkillSelectScene.h">
-      <Filter>Scene</Filter>
-    </ClInclude>
-    <ClInclude Include="InGameScene.h">
-      <Filter>Scene</Filter>
-    </ClInclude>
-    <ClInclude Include="ResultScene.h">
+    <ClInclude Include="src\Scene\OutGameScene.h">
       <Filter>Scene</Filter>
     </ClInclude>
   </ItemGroup>
