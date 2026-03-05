@@ -9,5 +9,5 @@ namespace UpdateGroup
 	constexpr uint32_t Boss = 1 << 1;	//!< 0000 0000 0000 0010
 	constexpr uint32_t UI = 1 << 2;		//!< 0000 0000 0000 0100
 
-	constexpr uint32_t All = 0xFFFFFFFF; // 全ビット1(すべて動くようにする)
+	constexpr uint32_t All = 0xFFFFFFFF; // 全ビット1 : すべて動くようになる
 }

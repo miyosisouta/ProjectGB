@@ -13,7 +13,9 @@ static constexpr uint32_t ID() { return appHash32(#name); }
 static constexpr uint32_t INVALID_STATE_ID = -1;
 
 
-
+/*
+ * State‚ÌŠî’êƒNƒ‰ƒX
+ */
 class IState : public Noncopyable
 {
 public:

@@ -7,12 +7,12 @@ namespace
 	// アニメーション設定
 	struct AnimationData
 	{
-		const char* filePath;
-		bool loopFlag;
+		const char* filePath; // ファイルパス
+		bool loopFlag; // ループするかフラグ
 	};
 
 	// 読み込みたいアニメーションのファイルパスを並べる
-	// ここにパスを追加・削除するだけで、下の処理がすべて自動で適応される
+	// ここにパスを追加・削除するだけで、スタート処理にてm_animationClipListに自動で追加される
 	static AnimationData sAnimPaths[] = {
 		AnimationData{"Assets/animData/idle.tka",true},
 		AnimationData{"Assets/animData/walk.tka",true},
@@ -40,8 +40,8 @@ bool Player::Start()
 		// すべてのアニメーションを登録
 		for (size_t i = 0; i < animCount; ++i)
 		{
-			m_animationClipList[i].Load(sAnimPaths[i].filePath);			// ファイルパス
-			m_animationClipList[i].SetLoopFlag(sAnimPaths[i].loopFlag);  // ループ
+			m_animationClipList[i].Load(sAnimPaths[i].filePath); // ファイルパス
+			m_animationClipList[i].SetLoopFlag(sAnimPaths[i].loopFlag); // ループ設定
 		}
 	}
 	
@@ -57,21 +57,26 @@ bool Player::Start()
 		);
 
 		// モデルの座標を更新・初期化
-		m_modelRender.SetPosition(m_transform.m_position);
-		m_modelRender.SetScale(m_transform.m_scale);
-		m_modelRender.Update();
+		{
+			m_modelRender.SetPosition(m_transform.m_position);
+			m_modelRender.SetScale(m_transform.m_scale);
+			m_modelRender.Update();
+		}
 	}
+	// 共通処理を呼び出す
 	return Character::Start();
 }
 
 
 void Player::Update()
 {
+	// 共通処理を呼び出す
 	Character::Update();
 }
 
 
 void Player::Render(RenderContext& rc)
 {
+	// 共通処理を呼び出す
 	Character::Render(rc);
 }
