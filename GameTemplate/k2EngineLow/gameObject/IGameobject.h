@@ -3,7 +3,6 @@
  */
 
 #pragma once
-
 #include <list>
 #include <string>
 namespace nsK2EngineLow {
@@ -12,7 +11,15 @@ namespace nsK2EngineLow {
 	/*!
 		*@brief	ゲームオブジェクト。
 		*/
-	class IGameObject : public Noncopyable {
+	class IGameObject : public Noncopyable 
+	{
+	protected:
+		uint32_t m_updateGroup = 0xffffffff; //!< どのグループに所属するか示す
+
+	public:
+		void SetUpdateGroup(uint32_t group) { m_updateGroup = group; } // グループ設定
+		uint32_t GetUpdateGroup() { return m_updateGroup; } //!< グループを取得
+
 	public:
 		/*!
 			*@brief	デストラクタ

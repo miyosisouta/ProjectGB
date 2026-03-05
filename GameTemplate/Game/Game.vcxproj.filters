@@ -4,6 +4,21 @@
     <Filter Include="system">
       <UniqueIdentifier>{22dd8095-74f9-46df-81a1-36675a040b1f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Src">
+      <UniqueIdentifier>{21ee54de-58c5-44d5-b6d6-2cbb07277117}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\Actor">
+      <UniqueIdentifier>{088cc947-e9c8-4275-806d-b36e3eab00b8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\Math">
+      <UniqueIdentifier>{a67cf218-1416-4d61-a580-3d4e9b5a527b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\Util">
+      <UniqueIdentifier>{fea131bf-9024-4dca-a871-599590060281}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\Memory">
+      <UniqueIdentifier>{e62cf48f-d979-48b8-9cf6-d49f0f3a4271}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp" />
@@ -12,6 +27,27 @@
       <Filter>system</Filter>
     </ClCompile>
     <ClCompile Include="Game.cpp" />
+    <ClCompile Include="src\Actor\Actor.cpp">
+      <Filter>Src\Actor</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Math\Transform.cpp">
+      <Filter>Src\Math</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Actor\Character.cpp">
+      <Filter>Src\Actor</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Actor\StateMachine.cpp">
+      <Filter>Src\Actor</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Actor\State.cpp">
+      <Filter>Src\Actor</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Memory\Array.cpp">
+      <Filter>Src\Memory</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Actor\Player.cpp">
+      <Filter>Src\Actor</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h" />
@@ -19,5 +55,32 @@
       <Filter>system</Filter>
     </ClInclude>
     <ClInclude Include="Game.h" />
+    <ClInclude Include="src\Actor\Actor.h">
+      <Filter>Src\Actor</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Math\Transform.h">
+      <Filter>Src\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Util\Crc32.h">
+      <Filter>Src\Util</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Actor\Character.h">
+      <Filter>Src\Actor</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Actor\StateMachine.h">
+      <Filter>Src\Actor</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Actor\State.h">
+      <Filter>Src\Actor</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Memory\Array.h">
+      <Filter>Src\Memory</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Actor\Player.h">
+      <Filter>Src\Actor</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Types.h">
+      <Filter>Src</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
