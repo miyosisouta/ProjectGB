@@ -148,17 +148,13 @@ namespace app
 
 		void Transform::ResetLocalPosition()
 		{
-			m_localPosition.x = 0.0f;
-			m_localPosition.y = 0.0f;
-			m_localPosition.z = 0.0f;
+			m_localPosition = Vector3::Zero;
 		}
 
 
 		void Transform::ResetLocalRotation()
 		{
-			m_localRotation.x = 0.0f;
-			m_localRotation.y = 0.0f;
-			m_localRotation.z = 0.0f;
+			m_localRotation = Quaternion::Identity;
 		}
 	}
 }
