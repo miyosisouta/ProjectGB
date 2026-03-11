@@ -2,8 +2,20 @@
 #include "Character.h"
 
 
+class State;
 class Player : public Character
 {
+public:
+	/** 遷移ルールのセットアップ */
+	void SetUpTranslateRulu();
+
+	/** 
+	 * アニメーションの再生。
+	 * id : ステートのIDによってアニメーションのインデックスを決める
+	 */
+	void PlayAnimation(StateID id);
+
+
 public:
 	/* コンストラクタ */
 	Player();

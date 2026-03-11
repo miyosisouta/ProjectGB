@@ -227,8 +227,10 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="src\Actor\Actor.cpp" />
     <ClCompile Include="src\Actor\Character.cpp" />
+    <ClCompile Include="src\Actor\IState.cpp" />
     <ClCompile Include="src\Actor\Player.cpp" />
-    <ClCompile Include="src\Actor\State.cpp" />
+    <ClCompile Include="src\Actor\PlayerController.cpp" />
+    <ClCompile Include="src\Actor\PlayerState.cpp" />
     <ClCompile Include="src\Actor\StateMachine.cpp" />
     <ClCompile Include="src\Math\Transform.cpp" />
     <ClCompile Include="src\Memory\Array.cpp" />
@@ -243,8 +245,10 @@
     <ClInclude Include="Game.h" />
     <ClInclude Include="src\Actor\Actor.h" />
     <ClInclude Include="src\Actor\Character.h" />
+    <ClInclude Include="src\Actor\IState.h" />
     <ClInclude Include="src\Actor\Player.h" />
-    <ClInclude Include="src\Actor\State.h" />
+    <ClInclude Include="src\Actor\PlayerController.h" />
+    <ClInclude Include="src\Actor\PlayerState.h" />
     <ClInclude Include="src\Actor\StateMachine.h" />
     <ClInclude Include="src\Math\Transform.h" />
     <ClInclude Include="src\Memory\Array.h" />

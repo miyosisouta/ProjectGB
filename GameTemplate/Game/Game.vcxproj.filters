@@ -39,13 +39,19 @@
     <ClCompile Include="src\Actor\StateMachine.cpp">
       <Filter>Src\Actor</Filter>
     </ClCompile>
-    <ClCompile Include="src\Actor\State.cpp">
-      <Filter>Src\Actor</Filter>
-    </ClCompile>
     <ClCompile Include="src\Memory\Array.cpp">
       <Filter>Src\Memory</Filter>
     </ClCompile>
     <ClCompile Include="src\Actor\Player.cpp">
+      <Filter>Src\Actor</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Actor\PlayerController.cpp">
+      <Filter>Src\Actor</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Actor\IState.cpp">
+      <Filter>Src\Actor</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Actor\PlayerState.cpp">
       <Filter>Src\Actor</Filter>
     </ClCompile>
   </ItemGroup>
@@ -70,9 +76,6 @@
     <ClInclude Include="src\Actor\StateMachine.h">
       <Filter>Src\Actor</Filter>
     </ClInclude>
-    <ClInclude Include="src\Actor\State.h">
-      <Filter>Src\Actor</Filter>
-    </ClInclude>
     <ClInclude Include="src\Memory\Array.h">
       <Filter>Src\Memory</Filter>
     </ClInclude>
@@ -81,6 +84,15 @@
     </ClInclude>
     <ClInclude Include="src\Types.h">
       <Filter>Src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Actor\PlayerController.h">
+      <Filter>Src\Actor</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Actor\IState.h">
+      <Filter>Src\Actor</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Actor\PlayerState.h">
+      <Filter>Src\Actor</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

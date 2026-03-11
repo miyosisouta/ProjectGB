@@ -1,11 +1,12 @@
 #pragma once
 #include "Actor.h"
-
+#include "StateMachine.h"
 
 class Character : public Actor
 {
 protected:
-	AllocatedArray<AnimationClip> m_animationClipList; //!< アニメーションクリップのリスト
+	AllocatedArray<AnimationClip> animationClipList_; //!< アニメーションクリップのリスト
+	StateMachine stateMachine_;
 
 
 public:
