@@ -6,6 +6,20 @@
     </Filter>
     <Filter Include="Scene">
       <UniqueIdentifier>{54b45104-2bb4-4b2c-87f2-4a6ee6d21b45}</UniqueIdentifier>
+    <Filter Include="Src">
+      <UniqueIdentifier>{21ee54de-58c5-44d5-b6d6-2cbb07277117}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\Actor">
+      <UniqueIdentifier>{088cc947-e9c8-4275-806d-b36e3eab00b8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\Math">
+      <UniqueIdentifier>{a67cf218-1416-4d61-a580-3d4e9b5a527b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\Util">
+      <UniqueIdentifier>{fea131bf-9024-4dca-a871-599590060281}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\Memory">
+      <UniqueIdentifier>{e62cf48f-d979-48b8-9cf6-d49f0f3a4271}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -29,6 +43,32 @@
     </ClCompile>
     <ClCompile Include="src\Scene\LoadingScreen.cpp">
       <Filter>Scene</Filter>
+    <ClCompile Include="src\Actor\Actor.cpp">
+      <Filter>Src\Actor</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Math\Transform.cpp">
+      <Filter>Src\Math</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Actor\Character.cpp">
+      <Filter>Src\Actor</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Actor\StateMachine.cpp">
+      <Filter>Src\Actor</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Memory\Array.cpp">
+      <Filter>Src\Memory</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Actor\Player.cpp">
+      <Filter>Src\Actor</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Actor\PlayerController.cpp">
+      <Filter>Src\Actor</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Actor\IState.cpp">
+      <Filter>Src\Actor</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Actor\PlayerState.cpp">
+      <Filter>Src\Actor</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -51,6 +91,38 @@
     </ClInclude>
     <ClInclude Include="src\Scene\LoadingScreen.h">
       <Filter>Scene</Filter>
+    <ClInclude Include="src\Actor\Actor.h">
+      <Filter>Src\Actor</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Math\Transform.h">
+      <Filter>Src\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Util\Crc32.h">
+      <Filter>Src\Util</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Actor\Character.h">
+      <Filter>Src\Actor</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Actor\StateMachine.h">
+      <Filter>Src\Actor</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Memory\Array.h">
+      <Filter>Src\Memory</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Actor\Player.h">
+      <Filter>Src\Actor</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Types.h">
+      <Filter>Src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Actor\PlayerController.h">
+      <Filter>Src\Actor</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Actor\IState.h">
+      <Filter>Src\Actor</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Actor\PlayerState.h">
+      <Filter>Src\Actor</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
