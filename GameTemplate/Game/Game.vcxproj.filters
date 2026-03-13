@@ -49,6 +49,7 @@
     <ClCompile Include="system\system.cpp">
       <Filter>system</Filter>
     </ClCompile>
+    <ClCompile Include="src\Util\Curve.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Game.h" />
@@ -104,6 +105,7 @@
     <ClInclude Include="system\system.h">
       <Filter>system</Filter>
     </ClInclude>
+    <ClInclude Include="src\Util\Curve.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="src">
