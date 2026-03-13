@@ -1,393 +1,155 @@
-/**
- * UIBase.h
- * UIの基本的な処理をするクラス群
- */
+#include "../k2EngineLow/math/Vector.h" // 追加: Vector2, Vector3, Vector4型の定義が必要
+
 #pragma once
-#include "UIAnimation.h"
-#include <memory>
-#include <vector>
-#include "Transform.h"
 
-//class UIAnimationBase;
-
-/** 基底クラス */
-class UIBase : public Noncopyable
-{
-public:
-	Transform m_transform;
-	Vector4 m_color = Vector4::White;
-	
-	/*bool isStart = false;
-	bool isUpdate = true;*/
-	bool isDraw = true;
-
-public:
-	// deleteがいらない
-	//std::vector<std::unique_ptr<UIAnimationBase>> m_uiAnimationList;
-	std::unordered_map<uint32_t, std::unique_ptr<UIAnimationBase>> m_uiAnimationList;
-
-
-public:
-	UIBase()
-	{
-		m_uiAnimationList.clear();
-	}
-	virtual ~UIBase()
-	{
-		// 明示的に消しているだけ。本来は要らない
-		m_uiAnimationList.clear();
-	}
-
-	//virtual bool Start() = 0;
-	virtual void Update() = 0;
-	virtual void Render(RenderContext& rc) = 0;
-
-
-public:
-	void UpdateAnimation()
-	{
-		ForEachAnimation([](UIAnimationBase* animation)
-			{
-				animation->Update();
-			});
-	}
-	void PlayAnimation()
-	{
-		ForEachAnimation([](UIAnimationBase* animation)
-			{
-				animation->Play();
-			});
-	}
-	void ResetAnimation()
-	{
-		ForEachAnimation([](UIAnimationBase* animation)
-			{
-				animation->Reset();
-			});
-	}
-	bool IsPlayAniamtion()
-	{
-		auto it = std::find_if(m_uiAnimationList.begin(), m_uiAnimationList.end(), [&](const auto& animationPair)
-			{
-				auto* animation = animationPair.second.get();
-				if (animation->IsPlay()) {
-					return true;
-				}
-				return false;
-			});
-		return it != m_uiAnimationList.end();
-	}
-	void StopSpriteAnimation()
-	{
-		ForEachAnimation([](UIAnimationBase* animation)
-			{
-				animation->Stop();
-			});
-	}
-	bool IsComplted() const
-	{
-		// すべて再生済みか
-		auto it = std::find_if(m_uiAnimationList.begin(), m_uiAnimationList.end(), [&](const auto& animationPair)
-			{
-				auto* animation = animationPair.second.get();
-				return !animation->IsPlay();
-			});
-		return it != m_uiAnimationList.end();
-	}
-
-
-	void AddAnimation(const uint32_t key, std::unique_ptr<UIAnimationBase> animation) 
-	{
-		animation->SetUI(this);
-		m_uiAnimationList.emplace(key, std::move(animation));
-	}
-
-	void RemoveAnimation(const uint32_t key)
-	{
-		m_uiAnimationList.erase(key);
-	}
-
-	void ForEachAnimation(const std::function<void(UIAnimationBase*)>& func)
-	{
-		for (auto& animation : m_uiAnimationList)
-		{
-			func(animation.second.get());
-		}
-	}
-
-	UIAnimationBase* FindAnimaion(const uint32_t key)
-	{
-		auto it = m_uiAnimationList.find(key);
-		if (it != m_uiAnimationList.end())
-		{
-			return it->second.get();
-		}
-		return nullptr;
-	}
-};
-
-
-
-
-// ============================================
-// 画像を使うUI関連
-// ============================================
-
-
-class UIImage : public UIBase
-{
-protected:
-	SpriteRender m_spriteRender;
-
-
-protected:
-	UIImage();
-	~UIImage();
-
-
-public:
-	virtual void Update() override;
-	virtual void Render(RenderContext& rc) override;
-
-public:
-	/** スプライトレンダーの取得 */
-	SpriteRender* GetSpriteRender() { return &m_spriteRender; }
-};
-
-
+// 汎用的なclamp関数テンプレート
+template <typename T>
+T clamp(T value, T low, T high) {
+    if (value < low) {
+        return low;
+    }
+    if (value > high) {
+        return high;
+    }
+    return value;
+}
 
 /**
- * ゲージUI
+ * @brief イージングとループの種類
  */
-class UIGauge : public UIImage
+
+ /** イージングの種類 */
+enum class EasingType { Linear, EaseIn, EaseOut, EaseInOut }; // 線形補間、イーズイン、イーズアウト、イーズインアウト
+/** ループの種類 */
+enum class LoopMode { Once, Loop, PingPong }; // 片道、周回(上から下、上から下を繰り返す)、往復(上から下、下から上を繰り返す)
+
+
+
+
+
+/** 汎用的なカーブクラステンプレート */
+template <typename T>
+class Curve
 {
-	friend class UICanvas;
-	
+public:
+    T m_startValue;          //!< 始める数値
+    T m_endValue;            //!< 終わる数値
+    float m_duration;        //!< 時間の間隔
+    float m_currentTime;     //!< 現在の時間
+    EasingType m_easingType; //!< イージングタイプ
+    LoopMode m_loopMode;     //!< ループモード
+    bool m_isPlaying;        //!< 再生するか
+    int m_direction;         //!< 方向
+
+
+public:
+    Curve()
+        : m_currentTime(0)
+        , m_duration(1.0f)
+        , m_isPlaying(false)
+        , m_direction(1)
+    {
+    }
+
+    /* 初期化 */
+    void Initialize(const T& start, const T& end, const float timeSec, const EasingType type = EasingType::EaseInOut, const LoopMode loopMode = LoopMode::Once) {
+        m_startValue = start;
+        m_endValue = end;
+        m_duration = max(0.0001f, timeSec);
+        m_easingType = type;
+        m_loopMode = loopMode;
+        m_currentTime = 0.0f;
+        m_isPlaying = false;
+        m_direction = 1;
+    }
+
+    /** 再生 */
+    void Play()
+    {
+        m_isPlaying = true;
+    }
+
+    /* 停止 */
+    void Stop() {
+        m_isPlaying = false;
+    }
+
+    /** リセット */
+    void Reset() {
+        m_currentTime = 0.0f;
+        m_direction = 1;
+    }
+
+    /** 更新 */
+    void Update(float deltaTime)
+    {
+        // 再生していなければ何もしない
+        if (!m_isPlaying) return;
+
+        // 時間を進める
+        //m_currentTime += m_loopMode == LoopMode::Loop ? deltaTime * m_direction : deltaTime;
+        if (m_loopMode == LoopMode::Loop)
+        {
+            m_currentTime += deltaTime * m_direction;
+        }
+        else if (m_loopMode == LoopMode::PingPong) {
+            m_currentTime += deltaTime * m_direction;
+        }
+        else {
+            m_currentTime += deltaTime;
+        }
+
+        // 終了判定とループ処理
+        if (m_currentTime >= m_duration) {
+            if (m_loopMode == LoopMode::Once) {
+                m_currentTime = m_duration;
+                m_isPlaying = false;
+            }
+            else if (m_loopMode == LoopMode::Loop) {
+                m_currentTime = 0.0f;
+            }
+            else if (m_loopMode == LoopMode::PingPong) {
+                m_currentTime = m_duration;
+                m_direction = -1;
+            }
+        }
+        else if (m_currentTime <= 0.0f) {
+            if (m_loopMode == LoopMode::PingPong) {
+                m_currentTime = 0.0f;
+                m_direction = 1;
+            }
+        }
+    }
+
+
+    /** 現在の値を取得 */
+    T GetCurrentValue() const
+    {
+        float t = clamp<float>(m_currentTime / m_duration, 0.0f, 1.0f);
+        float rate = ApplyEasingInternal(t);
+        return m_startValue + (m_endValue - m_startValue) * rate;
+    }
+
+    /** 再生中か取得 */
+    bool IsPlaying() const { return m_isPlaying; }
+
 
 private:
-	UIGauge();
-	~UIGauge();
-
-
-public:
-	virtual void Update() override;
-	virtual void Render(RenderContext& rc) override;
-
-public:
-	void Initialize(const char* assetName, const float width, const float height, const Vector3& position, const Vector3& scale, const Quaternion& rotation);
+    /** イージング適用 */
+    float ApplyEasingInternal(float t) const {
+        switch (m_easingType) {
+        case EasingType::Linear:    return t;
+        case EasingType::EaseIn:    return t * t;
+        case EasingType::EaseOut:   return t * (2.0f - t);
+        case EasingType::EaseInOut:
+            if (t < 0.5f) return 2.0f * t * t;
+            else          return -1.0f + (4.0f - 2.0f * t) * t;
+        }
+        return t;
+    }
 };
 
-
-/**
- * アイコンUI
- */
-class UIIcon : public UIImage
-{
-	friend class UICanvas;
-
-//private:
-public:
-	UIIcon();
-	~UIIcon();
-
-
-public:
-	virtual void Update() override;
-	virtual void Render(RenderContext& rc) override;
-
-
-public:
-	void Initialize(const char* assetName, const float width, const float height);
-};
-
-
-
-
-// ============================================
-// 文字を使うUI関連
-// ============================================
-
-
-class UIText : public UIBase
-{
-protected:
-	FontRender m_fontRender;
-
-
-private:
-	UIText();
-	~UIText();
-
-
-public:
-	virtual void Update() override;
-	virtual void Render(RenderContext& rc) override;
-
-	void SetText(const wchar_t* text)
-	{
-		m_fontRender.SetText(text);
-	}
-};
-
-
-
-// ============================================
-// ボタンを使うUI関連
-// ============================================
-class UIButton : public UIImage
-{
-private:
-	/** ボタンが押されたときの処理(外部から委譲される) */
-	std::function<void()> m_delegate;
-
-
-private:
-	UIButton();
-	~UIButton();
-
-
-public:
-	virtual void Update() override;
-	virtual void Render(RenderContext& rc) override;
-};
-
-
-
-// ============================================
-// UI桁表示(スコア表示などで使用)
-// ============================================
-class UIDigit : public UIBase
-{
-private:
-	/** 画像表示機能の可変長配列 */
-	std::vector<SpriteRender*> m_renderList;
-	/** 表示される数字 */
-	int m_number;
-	int m_requestNumber;
-	int m_digit;
-	/** 数字表示に必要な画像が入った */
-	std::string m_assetPath;
-
-	int w;
-	int h;
-
-
-
-public:
-	UIDigit();
-	~UIDigit();
-
-
-public:
-	virtual void Update() override;
-	virtual void Render(RenderContext& rc) override;
-
-
-public:
-	/**
-	 * ・アセットの名前
-	 * ・何桁かの情報（数）
-	 * ・表示する数
-	 * ・横
-	 * ・高さ
-	 * ・位置
-	 * ・大きさ
-	 * ・回転
-	 */
-	void Initialize(const char* assetPath, const int digit, const int number, const float widht, const float height, const Vector3& position, const Vector3& scale, const Quaternion& rotation);
-
-	/** 数字を設定 */
-	void SetNumber(const int number) { m_requestNumber = number; }
-
-	std::vector<SpriteRender*>& GetSpriteRenderList() { return m_renderList; }
-
-	void ForEach(const std::function<void(SpriteRender*)>& func)
-	{
-		for (auto* render : m_renderList) {
-			func(render);
-		}
-	}
-
-
-private:
-	void UpdateNumber(const int targetDigit, const int number);
-	void UpdatePosition(const int index);
-
-	/** 対象の桁 */
-	int GetDigit(int digit);
-};
-
-
-
-
-// ============================================
-// キャンバス
-// ============================================
-
-
-/**
- * 絵を書くキャンバスのイメージ
- * UIを作るときにこのクラスを作ってください
- */
-class UICanvas : public UIBase
-{
-	friend class UIBase;
-	friend class UIImage;
-	friend class UIGauge;
-	friend class UIIcon;
-	friend class UIText;
-	friend class UIButton;
-
-
-private:
-	/**
-	 * NOTE: 各UI自体に親子関係持たせたいけど使わない可能性があるので、一旦ここだけにしてみる
-	 */
-	//std::vector<UIBase*> m_uiList;
-	std::unordered_map<uint32_t, std::unique_ptr<UIBase>> m_uiList;
-
-
-public:
-	UICanvas();
-	~UICanvas();
-
-
-	void Update() override;
-	void Render(RenderContext& rc) override;
-
-
-public:
-	template <typename T>
-	T* CreateUI(const uint32_t key)
-	{
-		auto ui = std::make_unique<T>();
-		ui->m_transform.SetParent(&m_transform);
-		m_uiList.emplace(key, std::move(ui));
-		return static_cast<T*>(m_uiList[key].get());
-	}
-
-	void RemoveUI(const uint32_t key)
-	{
-		m_uiList.erase(key);
-	}
-
-	template <typename T>
-	T* FindUI(const uint32_t key)
-	{
-		auto it = m_uiList.find(key);
-		if (it != m_uiList.end())
-		{
-			return dynamic_cast<T*>(it->second.get());
-		}
-		return nullptr;
-	}
-
-	/*template <typename T>
-	T* CreateUI()
-	{
-		T* ui = new T();
-		ui->m_transform.SetParent(&m_transform);
-		m_uiList.push_back(ui);
-		return ui;
-	}*/
-};
+using FloatCurve = Curve<float>;
+using Vector2Curve = Curve<Vector2>;
+using Vector3Curve = Curve<Vector3>;
+using Vector4Curve = Curve<Vector4>;
