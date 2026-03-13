@@ -225,6 +225,11 @@
   <ItemGroup>
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="src\Scene\InGameScene.cpp" />
+    <ClCompile Include="src\Scene\IScene.cpp" />
+    <ClCompile Include="src\Scene\LoadingScreen.cpp" />
+    <ClCompile Include="src\Scene\OutGameScene.cpp" />
+    <ClCompile Include="src\Scene\SceneManager.cpp" />
     <ClCompile Include="src\Actor\Actor.cpp" />
     <ClCompile Include="src\Actor\Character.cpp" />
     <ClCompile Include="src\Actor\IState.cpp" />
@@ -243,6 +248,11 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Game.h" />
+    <ClInclude Include="src\Scene\InGameScene.h" />
+    <ClInclude Include="src\Scene\IScene.h" />
+    <ClInclude Include="src\Scene\LoadingScreen.h" />
+    <ClInclude Include="src\Scene\OutGameScene.h" />
+    <ClInclude Include="src\Scene\SceneManager.h" />
     <ClInclude Include="src\Actor\Actor.h" />
     <ClInclude Include="src\Actor\Character.h" />
     <ClInclude Include="src\Actor\IState.h" />
