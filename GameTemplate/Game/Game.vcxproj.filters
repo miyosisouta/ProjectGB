@@ -1,128 +1,131 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="system">
-      <UniqueIdentifier>{22dd8095-74f9-46df-81a1-36675a040b1f}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Scene">
-      <UniqueIdentifier>{54b45104-2bb4-4b2c-87f2-4a6ee6d21b45}</UniqueIdentifier>
-    <Filter Include="Src">
-      <UniqueIdentifier>{21ee54de-58c5-44d5-b6d6-2cbb07277117}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Src\Actor">
-      <UniqueIdentifier>{088cc947-e9c8-4275-806d-b36e3eab00b8}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Src\Math">
-      <UniqueIdentifier>{a67cf218-1416-4d61-a580-3d4e9b5a527b}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Src\Util">
-      <UniqueIdentifier>{fea131bf-9024-4dca-a871-599590060281}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Src\Memory">
-      <UniqueIdentifier>{e62cf48f-d979-48b8-9cf6-d49f0f3a4271}</UniqueIdentifier>
-    </Filter>
-  </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="stdafx.cpp" />
+    <ClCompile Include="Game.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="stdafx.cpp" />
+    <ClCompile Include="src\Actor\Actor.cpp">
+      <Filter>src\Actor</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Actor\Character.cpp">
+      <Filter>src\Actor</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Scene\InGameScene.cpp">
+      <Filter>src\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Scene\IScene.cpp">
+      <Filter>src\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Actor\IState.cpp">
+      <Filter>src\Actor</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Scene\LoadingScreen.cpp">
+      <Filter>src\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Scene\OutGameScene.cpp">
+      <Filter>src\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Actor\Player.cpp">
+      <Filter>src\Actor</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Actor\PlayerController.cpp">
+      <Filter>src\Actor</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Actor\PlayerState.cpp">
+      <Filter>src\Actor</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Scene\SceneManager.cpp">
+      <Filter>src\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Actor\StateMachine.cpp">
+      <Filter>src\Actor</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Math\Transform.cpp">
+      <Filter>src\Math</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Memory\Array.cpp">
+      <Filter>src\Memory</Filter>
+    </ClCompile>
     <ClCompile Include="system\system.cpp">
       <Filter>system</Filter>
     </ClCompile>
-    <ClCompile Include="Game.cpp" />
-    <ClCompile Include="src\Scene\InGameScene.cpp">
-      <Filter>Scene</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Scene\IScene.cpp">
-      <Filter>Scene</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Scene\SceneManager.cpp">
-      <Filter>Scene</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Scene\OutGameScene.cpp">
-      <Filter>Scene</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Scene\LoadingScreen.cpp">
-      <Filter>Scene</Filter>
-    <ClCompile Include="src\Actor\Actor.cpp">
-      <Filter>Src\Actor</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Math\Transform.cpp">
-      <Filter>Src\Math</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Actor\Character.cpp">
-      <Filter>Src\Actor</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Actor\StateMachine.cpp">
-      <Filter>Src\Actor</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Memory\Array.cpp">
-      <Filter>Src\Memory</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Actor\Player.cpp">
-      <Filter>Src\Actor</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Actor\PlayerController.cpp">
-      <Filter>Src\Actor</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Actor\IState.cpp">
-      <Filter>Src\Actor</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Actor\PlayerState.cpp">
-      <Filter>Src\Actor</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Game.h" />
     <ClInclude Include="stdafx.h" />
+    <ClInclude Include="src\Actor\Actor.h">
+      <Filter>src\Actor</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Actor\Character.h">
+      <Filter>src\Actor</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Scene\InGameScene.h">
+      <Filter>src\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Scene\IScene.h">
+      <Filter>src\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Actor\IState.h">
+      <Filter>src\Actor</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Scene\LoadingScreen.h">
+      <Filter>src\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Scene\OutGameScene.h">
+      <Filter>src\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Actor\Player.h">
+      <Filter>src\Actor</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Actor\PlayerController.h">
+      <Filter>src\Actor</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Actor\PlayerState.h">
+      <Filter>src\Actor</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Scene\SceneManager.h">
+      <Filter>src\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Actor\StateMachine.h">
+      <Filter>src\Actor</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Math\Transform.h">
+      <Filter>src\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Memory\Array.h">
+      <Filter>src\Memory</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Util\Crc32.h">
+      <Filter>src\Util</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Types.h">
+      <Filter>src</Filter>
+    </ClInclude>
     <ClInclude Include="system\system.h">
       <Filter>system</Filter>
     </ClInclude>
-    <ClInclude Include="Game.h" />
-    <ClInclude Include="src\Scene\InGameScene.h">
-      <Filter>Scene</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Scene\IScene.h">
-      <Filter>Scene</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Scene\SceneManager.h">
-      <Filter>Scene</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Scene\OutGameScene.h">
-      <Filter>Scene</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Scene\LoadingScreen.h">
-      <Filter>Scene</Filter>
-    <ClInclude Include="src\Actor\Actor.h">
-      <Filter>Src\Actor</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Math\Transform.h">
-      <Filter>Src\Math</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Util\Crc32.h">
-      <Filter>Src\Util</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Actor\Character.h">
-      <Filter>Src\Actor</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Actor\StateMachine.h">
-      <Filter>Src\Actor</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Memory\Array.h">
-      <Filter>Src\Memory</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Actor\Player.h">
-      <Filter>Src\Actor</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Types.h">
-      <Filter>Src</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Actor\PlayerController.h">
-      <Filter>Src\Actor</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Actor\IState.h">
-      <Filter>Src\Actor</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Actor\PlayerState.h">
-      <Filter>Src\Actor</Filter>
-    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="src">
+      <UniqueIdentifier>{b888e0f0-dd25-41e5-80ca-354ec5c9b318}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Actor">
+      <UniqueIdentifier>{4d4fd8cf-34ff-4a98-8dc7-e0c0d304a063}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Math">
+      <UniqueIdentifier>{8bb9c55b-3e08-4cc3-bdff-4824871bd608}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Memory">
+      <UniqueIdentifier>{b010943d-5260-4a82-baa1-46c4ad8bc45d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Scene">
+      <UniqueIdentifier>{31a1cf72-3973-44d7-be83-43828d295fc3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Util">
+      <UniqueIdentifier>{7e73a35f-0fa1-4d35-8c36-b341c8b646ab}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="system">
+      <UniqueIdentifier>{900e8c00-9aa1-4757-ba73-4eaac98f8115}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
 </Project>
