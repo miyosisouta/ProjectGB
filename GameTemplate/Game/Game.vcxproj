@@ -227,6 +227,7 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="src\Scene\InGameScene.cpp" />
     <ClCompile Include="src\Scene\IScene.cpp" />
+    <ClCompile Include="src\Scene\LoadingScreen.cpp" />
     <ClCompile Include="src\Scene\OutGameScene.cpp" />
     <ClCompile Include="src\Scene\SceneManager.cpp" />
     <ClCompile Include="stdafx.cpp">
@@ -240,6 +241,7 @@
     <ClInclude Include="Game.h" />
     <ClInclude Include="src\Scene\InGameScene.h" />
     <ClInclude Include="src\Scene\IScene.h" />
+    <ClInclude Include="src\Scene\LoadingScreen.h" />
     <ClInclude Include="src\Scene\OutGameScene.h" />
     <ClInclude Include="src\Scene\SceneManager.h" />
     <ClInclude Include="stdafx.h" />

@@ -27,6 +27,9 @@
     <ClCompile Include="src\Scene\OutGameScene.cpp">
       <Filter>Scene</Filter>
     </ClCompile>
+    <ClCompile Include="src\Scene\LoadingScreen.cpp">
+      <Filter>Scene</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h" />
@@ -44,6 +47,9 @@
       <Filter>Scene</Filter>
     </ClInclude>
     <ClInclude Include="src\Scene\OutGameScene.h">
+      <Filter>Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Scene\LoadingScreen.h">
       <Filter>Scene</Filter>
     </ClInclude>
   </ItemGroup>

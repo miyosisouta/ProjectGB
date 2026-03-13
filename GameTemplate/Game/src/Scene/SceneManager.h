@@ -6,7 +6,12 @@
 
 #pragma once
 #include "src/Scene/IScene.h"
+#include <map>
+#include <functional>
 
+
+class LoadingScreen;
+	
 
 class SceneManager
 {
@@ -20,6 +25,10 @@ private:
 	IScene* currentScene_ = nullptr;
 	/** シーンのマップ */
 	SceneMap sceneMap_;
+	/** ロード画面クラスのポインタ */
+	LoadingScreen* loadingScreen_ = nullptr;
+	/** シーン生成のフラグが経ってからの時間 */
+	float changeSceneElapsed = 0.0f;
 
 
 private:
@@ -78,3 +87,19 @@ public:
 	}
 };
 
+
+
+/******************************************************************************************************/
+
+
+class SceneMangerObject : public IGameObject
+{
+public:
+	SceneMangerObject();
+	~SceneMangerObject();
+
+
+private:
+	bool Start() override;
+	void Update() override;
+};

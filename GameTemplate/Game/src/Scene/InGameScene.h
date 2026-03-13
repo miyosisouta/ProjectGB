@@ -11,6 +11,10 @@
 class InGameScene : public IScene
 {
 public:
+	appScene(InGameScene);
+
+
+public:
 	InGameScene();
 	~InGameScene();
 

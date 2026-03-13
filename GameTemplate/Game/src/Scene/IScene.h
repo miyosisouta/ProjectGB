@@ -16,8 +16,8 @@ public:\
 class IScene
 {
 public:
-	IScene() {};
-	virtual ~IScene() {};
+	IScene();
+	virtual ~IScene();
 
 
 public:

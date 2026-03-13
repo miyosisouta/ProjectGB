@@ -35,4 +35,11 @@ void OutGameScene::Update()
 
 bool OutGameScene::RequestScene(uint32_t& id)
 {
+	//Aボタンが押されたら次のシーンへ（仮）
+	if (g_pad[0]->IsTrigger(enButtonA)) {
+		id = InGameScene::ID();
+		return true;
+	}
+
+	return false;
 }
