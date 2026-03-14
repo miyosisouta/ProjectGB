@@ -14,8 +14,8 @@
 class UIBase : public Noncopyable
 {
 public:
-	Transform m_transform;
-	Vector4 m_color = Vector4::White;
+	Transform transform;
+	Vector4 color = Vector4::White;
 
 	/*bool isStart = false;
 	bool isUpdate = true;*/

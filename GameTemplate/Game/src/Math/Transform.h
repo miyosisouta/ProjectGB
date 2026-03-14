@@ -10,15 +10,15 @@ class Transform : public Noncopyable
 {
 public:
 	/** 自身の現在のパラメータ */
-	Vector3 m_localPosition;
-	Quaternion m_localRotation;
-	Vector3 m_localScale;
+	Vector3 localPosition;
+	Quaternion localRotation;
+	Vector3 localScale;
 
 	/** 親トランスフォームを考慮したパラメータ */
 	// 原点となるもの
-	Vector3 m_position;
-	Quaternion m_rotation;
-	Vector3 m_scale;
+	Vector3 position;
+	Quaternion rotation;
+	Vector3 scale;
 
 
 	/**
@@ -26,11 +26,11 @@ public:
 	 * 基本的に関数以外から弄る必要なし
 	 */
 private:
-	Matrix m_rotationMatrix_;
-	Matrix m_worldMatrix_;
+	Matrix rotationMatrix_;
+	Matrix worldMatrix_;
 
-	Transform* m_parent_;
-	std::vector<Transform*> m_children_;
+	Transform* parent_;
+	std::vector<Transform*> children_;
 
 
 public:
@@ -51,16 +51,16 @@ public:
 	//親トランスフォームを設定
 	void SetParent(Transform* p)
 	{
-		m_parent_ = p;
-		m_parent_->m_children_.push_back(this);
+		parent_ = p;
+		parent_->children_.push_back(this);
 	}
 
 	void ResetLocalPosition();
 	void ResetLocalRotation();
 
-	const Matrix& GetWorldMatrix() const { return m_worldMatrix_; }
+	const Matrix& GetWorldMatrix() const { return worldMatrix_; }
 
 
-	const std::vector<Transform*>& GetChildren() { return m_children_; }
-	bool HasChild() { return m_children_.size() > 0; }
+	const std::vector<Transform*>& GetChildren() { return children_; }
+	bool HasChild() { return children_.size() > 0; }
 };

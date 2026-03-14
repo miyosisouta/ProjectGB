@@ -10,7 +10,7 @@
 UIColorAnimation::UIColorAnimation()
 {
 	SetFunc([&](Vector4 v) {
-		m_ui->m_color = v;
+		m_ui->color = v;
 		});
 }
 
@@ -23,7 +23,7 @@ UIColorAnimation::UIColorAnimation()
 UIScaleAnimation::UIScaleAnimation()
 {
 	SetFunc([&](Vector3 s) {
-		m_ui->m_transform.m_localScale = s;
+		m_ui->transform.localScale = s;
 		//m_ui->m_transform.UpdateTransform();
 		});
 }
@@ -37,7 +37,7 @@ UIScaleAnimation::UIScaleAnimation()
 UITranslateAniamtion::UITranslateAniamtion()
 {
 	SetFunc([&](Vector3 s) {
-		m_ui->m_transform.m_localPosition = s;
+		m_ui->transform.localPosition = s;
 		//m_ui->m_transform.UpdateTransform();
 		});
 }
@@ -51,7 +51,7 @@ UITranslateAniamtion::UITranslateAniamtion()
 UITranslateOffsetAnimation::UITranslateOffsetAnimation()
 {
 	SetFunc([&](Vector3 offset) {
-		m_ui->m_transform.m_localPosition.Add(offset);
+		m_ui->transform.localPosition.Add(offset);
 		//m_ui->m_transform.UpdateTransform();
 		});
 }
@@ -70,6 +70,6 @@ UIRotationAnimation::UIRotationAnimation()
 			q.SetRotationDegY(s);
 			m_ui->m_transform.m_localRotation = q;
 			m_ui->m_transform.UpdateTransform();*/
-			m_ui->m_transform.m_localRotation.SetRotationDegZ(s);
+			m_ui->transform.localRotation.SetRotationDegZ(s);
 		});
 }

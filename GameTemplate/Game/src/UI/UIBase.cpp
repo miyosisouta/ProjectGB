@@ -47,10 +47,10 @@ UIGauge::~UIGauge()
 
 void UIGauge::Update()
 {
-	m_transform.UpdateTransform();
-	m_spriteRender.SetPosition(m_transform.m_position);
-	m_spriteRender.SetScale(m_transform.m_scale);
-	m_spriteRender.SetRotation(m_transform.m_rotation);
+	transform.UpdateTransform();
+	m_spriteRender.SetPosition(transform.position);
+	m_spriteRender.SetScale(transform.scale);
+	m_spriteRender.SetRotation(transform.rotation);
 	m_spriteRender.Update();
 }
 
@@ -63,9 +63,9 @@ void UIGauge::Render(RenderContext& rc)
 
 void UIGauge::Initialize(const char* assetName, const float width, const float height, const Vector3& position, const Vector3& scale, const Quaternion& rotation)
 {
-	m_transform.m_localPosition = position;
-	m_transform.m_localScale = scale;
-	m_transform.m_localRotation = rotation;
+	transform.localPosition = position;
+	transform.localScale = scale;
+	transform.localRotation = rotation;
 
 	m_spriteRender.Init(assetName, width, height);
 	m_spriteRender.SetPosition(position);
@@ -100,11 +100,11 @@ void UIIcon::Update()
 
 	UpdateAnimation();
 
-	m_spriteRender.SetMulColor(m_color);
-	m_transform.UpdateTransform();
-	m_spriteRender.SetPosition(m_transform.m_position);
-	m_spriteRender.SetScale(m_transform.m_scale);
-	m_spriteRender.SetRotation(m_transform.m_rotation);
+	m_spriteRender.SetMulColor(color);
+	transform.UpdateTransform();
+	m_spriteRender.SetPosition(transform.position);
+	m_spriteRender.SetScale(transform.scale);
+	m_spriteRender.SetRotation(transform.rotation);
 	m_spriteRender.Update();
 
 	//for (auto& animation : m_uiAnimationList) {
@@ -163,14 +163,14 @@ void UIDigit::Update()
 
 	UpdateAnimation();
 
-	m_transform.UpdateTransform();
+	transform.UpdateTransform();
 	for (int i = 0; i < m_renderList.size(); ++i)
 	{
 		auto* spriteRender = m_renderList[i];
 		UpdatePosition(i);
-		spriteRender->SetScale(m_transform.m_scale);
-		spriteRender->SetRotation(m_transform.m_rotation);
-		spriteRender->SetMulColor(m_color);
+		spriteRender->SetScale(transform.scale);
+		spriteRender->SetRotation(transform.rotation);
+		spriteRender->SetMulColor(color);
 		spriteRender->Update();
 	}
 
@@ -200,9 +200,9 @@ void UIDigit::Initialize(const char* assetName, const int digit, const int numbe
 	w = widht;
 	h = height;
 
-	m_transform.m_localPosition = position;
-	m_transform.m_localScale = scale;
-	m_transform.m_localRotation = rotation;
+	transform.localPosition = position;
+	transform.localScale = scale;
+	transform.localRotation = rotation;
 
 	for (int i = 0; i < digit; i++)
 	{
@@ -262,7 +262,7 @@ void UIDigit::UpdateNumber(const int targetDigit, const int number)
 void UIDigit::UpdatePosition(const int index)
 {
 	SpriteRender* render = m_renderList[index];
-	Vector3 position = m_transform.m_position;
+	Vector3 position = transform.position;
 	position.x -= w * index;
 	render->SetPosition(position);
 }
@@ -304,7 +304,7 @@ UICanvas::~UICanvas()
 
 void UICanvas::Update()
 {
-	m_transform.UpdateTransform();
+	transform.UpdateTransform();
 
 	for (auto& ui : m_uiList) {
 		ui.second->Update();

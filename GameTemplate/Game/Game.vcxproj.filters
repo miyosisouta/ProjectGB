@@ -52,6 +52,18 @@
     <ClCompile Include="src\Util\Curve.cpp">
       <Filter>src\Util</Filter>
     </ClCompile>
+    <ClCompile Include="src\UI\UIBase.cpp">
+      <Filter>src\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="src\UI\UIAnimation.cpp">
+      <Filter>src\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="src\UI\Layout.cpp">
+      <Filter>src\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="src\UI\Menu.cpp">
+      <Filter>src\UI</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Game.h" />
@@ -110,6 +122,18 @@
     <ClInclude Include="src\Util\Curve.h">
       <Filter>src\Util</Filter>
     </ClInclude>
+    <ClInclude Include="src\UI\UIBase.h">
+      <Filter>src\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="src\UI\UIAnimation.h">
+      <Filter>src\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="src\UI\Layout.h">
+      <Filter>src\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="src\UI\Menu.h">
+      <Filter>src\UI</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="src">
@@ -132,6 +156,9 @@
     </Filter>
     <Filter Include="system">
       <UniqueIdentifier>{900e8c00-9aa1-4757-ba73-4eaac98f8115}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\UI">
+      <UniqueIdentifier>{a3928a48-4c2b-49ee-babe-960b9d548557}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>
