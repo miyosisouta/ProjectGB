@@ -9,7 +9,8 @@
 #include <string>
 
 
-#define appHash32(str) app::util::ComputeCrc32(str)
+//#define appHash32(str) app::util::ComputeCrc32(str)
+#define Hash32(str) app::util::ComputeCrc32(str)
 
 
 namespace app

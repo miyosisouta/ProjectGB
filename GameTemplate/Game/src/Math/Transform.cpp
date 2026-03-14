@@ -8,23 +8,23 @@
 
 
 Transform::Transform()
-	:m_position(Vector3::Zero)
-	, m_localPosition(Vector3::Zero)
-	, m_scale(Vector3::One)
-	, m_localScale(Vector3::One)
-	, m_rotation(Quaternion::Identity)
-	, m_localRotation(Quaternion::Identity)
-	, m_rotationMatrix_(Matrix::Identity)
-	, m_worldMatrix_(Matrix::Identity)
-	, m_parent_(nullptr)
+	: position(Vector3::Zero)
+	, localPosition(Vector3::Zero)
+	, scale(Vector3::One)
+	, localScale(Vector3::One)
+	, rotation(Quaternion::Identity)
+	, localRotation(Quaternion::Identity)
+	, rotationMatrix_(Matrix::Identity)
+	, worldMatrix_(Matrix::Identity)
+	, parent_(nullptr)
 {
-	m_children_.clear();
+	children_.clear();
 }
 
 Transform::~Transform()
 {
-	if (m_parent_) {
-		m_parent_->RemoveChild(this);
+	if (parent_) {
+		parent_->RemoveChild(this);
 	}
 	Release();
 }
@@ -32,38 +32,38 @@ Transform::~Transform()
 void Transform::UpdateTransform()
 {
 
-	if (m_parent_) {
+	if (parent_) {
 		//座標計算
 		Matrix localPos;
-		localPos.MakeTranslation(m_localPosition);
+		localPos.MakeTranslation(localPosition);
 
 		Matrix pos;
-		pos.Multiply(localPos, m_parent_->m_worldMatrix_);
+		pos.Multiply(localPos, parent_->worldMatrix_);
 
 		//多分平行移動の部分を取ってるだけ
-		m_position.x = pos.m[3][0];
-		m_position.y = pos.m[3][1];
-		m_position.z = pos.m[3][2];
+		position.x = pos.m[3][0];
+		position.y = pos.m[3][1];
+		position.z = pos.m[3][2];
 
 		//スケール
-		m_scale.x = m_localScale.x * m_parent_->m_scale.x;
-		m_scale.y = m_localScale.y * m_parent_->m_scale.y;
-		m_scale.z = m_localScale.z * m_parent_->m_scale.z;
+		scale.x = localScale.x * parent_->scale.x;
+		scale.y = localScale.y * parent_->scale.y;
+		scale.z = localScale.z * parent_->scale.z;
 
 		//回転
-		m_rotation = m_parent_->m_rotation * m_localRotation;
+		rotation = parent_->rotation * localRotation;
 
 	}
 	else
 	{
 		//ローカルの値をそのままコピー
-		m_position = m_localPosition;
-		m_scale = m_localScale;
-		m_rotation = m_localRotation;
+		position = localPosition;
+		scale = localScale;
+		rotation = localRotation;
 	}
 
 	//回転行列
-	m_rotationMatrix_.MakeRotationFromQuaternion(m_rotation);
+	rotationMatrix_.MakeRotationFromQuaternion(rotation);
 	//ワールド行列更新
 	UpdateWorldMatrix();
 }
@@ -71,14 +71,14 @@ void Transform::UpdateTransform()
 void Transform::UpdateWorldMatrix()
 {
 	Matrix scal, pos, world;
-	scal.MakeScaling(m_scale);
-	pos.MakeTranslation(m_position);
+	scal.MakeScaling(scale);
+	pos.MakeTranslation(position);
 
-	world.Multiply(scal, m_rotationMatrix_);
-	m_worldMatrix_.Multiply(world, pos);
+	world.Multiply(scal, rotationMatrix_);
+	worldMatrix_.Multiply(world, pos);
 
 	//子も更新
-	for (Transform* child : m_children_)
+	for (Transform* child : children_)
 	{
 		child->UpdateTransform();
 	}
@@ -106,23 +106,23 @@ void Transform::Release()
 	//m_children_.clear();
 
 	// 1. 全ての子どもの親設定を解除
-	for (auto* child : m_children_)
+	for (auto* child : children_)
 	{
 		if (child) {
-			child->m_parent_ = nullptr;
+			child->parent_ = nullptr;
 		}
 	}
 
 	// 2. リストを空にする
-	m_children_.clear();
+	children_.clear();
 }
 
 void Transform::RemoveChild(Transform* t)
 {
 	//イテレータ生成
-	std::vector<Transform*>::iterator it = m_children_.begin();
+	std::vector<Transform*>::iterator it = children_.begin();
 	//vectorを回す
-	while (it != m_children_.end())
+	while (it != children_.end())
 	{
 		//イテレータから子トランスフォームのポインタを受け取る
 		Transform* child = (*it);
@@ -130,8 +130,8 @@ void Transform::RemoveChild(Transform* t)
 		if (child == t)
 		{
 			//紐づけを外す
-			child->m_parent_ = nullptr;
-			m_children_.erase(it);
+			child->parent_ = nullptr;
+			children_.erase(it);
 			//処理を終了
 			return;
 		}
@@ -144,11 +144,11 @@ void Transform::RemoveChild(Transform* t)
 
 void Transform::ResetLocalPosition()
 {
-	m_localPosition = Vector3::Zero;
+	localPosition = Vector3::Zero;
 }
 
 
 void Transform::ResetLocalRotation()
 {
-	m_localRotation = Quaternion::Identity;
+	localRotation = Quaternion::Identity;
 }
