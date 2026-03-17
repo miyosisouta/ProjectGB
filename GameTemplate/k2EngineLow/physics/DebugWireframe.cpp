@@ -46,8 +46,8 @@ namespace nsK2EngineLow {
 
 	void DebugWireframe::InitSharder()
 	{
-		m_Vshader.LoadVS("Assets/shader/debugWireFrame.fx", "VSMain");
-		m_Pshader.LoadPS("Assets/shader/debugWireFrame.fx", "PSMain");
+		m_Vshader.LoadVS("Assets/Shader/debugWireFrame.fx", "VSMain");
+		m_Pshader.LoadPS("Assets/Shader/debugWireFrame.fx", "PSMain");
 	}
 
 	void DebugWireframe::InitPipelineState()

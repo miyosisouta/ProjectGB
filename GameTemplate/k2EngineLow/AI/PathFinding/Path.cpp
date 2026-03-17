@@ -55,9 +55,9 @@ namespace nsK2EngineLow {
 				Vector3 rayEnd = rayStart;
 				rayEnd.y -= 1000.0f;
 				Vector3 hitPos;
-				if (physicsWorld->RayTest(rayStart, rayEnd, hitPos)) {
+				/*if (physicsWorld->RayTest(rayStart, rayEnd, hitPos)) {
 					pos = hitPos;
-				}
+				}*/
 			}
 			return pos;
 		}
