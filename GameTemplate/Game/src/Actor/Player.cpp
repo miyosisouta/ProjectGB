@@ -19,10 +19,10 @@ namespace anim
 	// 読み込みたいアニメーションのファイルパスを並べる
 	// ここにパスを追加・削除するだけで、スタート処理にてm_animationClipListに自動で追加される
 	static AnimationData sAnimPaths[] = {
-		AnimationData{"Assets/animData/idle.tka",true},
-		AnimationData{"Assets/animData/walk.tka",true},
-		AnimationData{"Assets/animData/run.tka",true},
-		AnimationData{"Assets/animData/jump.tka",true},
+		AnimationData{"Assets/Objects/Player/Animation/Idle_A.tka",false},
+		AnimationData{"Assets/Objects/Player/Animation/Walk.tka",true},
+		AnimationData{"Assets/Objects/Player/Animation/Run.tka",true},
+		AnimationData{"Assets/Objects/Player/Animation/Jump.tka",true},
 		// アニメーションを増やすときはここから
 	};
 
@@ -118,15 +118,17 @@ bool Player::Start()
 	{
 		// モデルのファイルパスとアニメーションを設定
 		modelRender_.Init(
-			"Assets/modelData/unityChan.tkm",	// ファイルパス
+			"Assets/Objects/Player/Model/Model.tkm",	// ファイルパス
 			animationClipList_.data(),			// アニメーションデータ
 			animationClipList_.size(),			// リストの数
-			enModelUpAxisY						// モデルの上方向
+			enModelUpAxisZ						// モデルの上方向
 		);
 
 		// モデルの座標を更新・初期化
 		{
+			transform_.UpdateTransform();
 			modelRender_.SetPosition(transform_.position);
+			modelRender_.SetRotation(transform_.rotation);
 			modelRender_.SetScale(transform_.scale);
 			modelRender_.Update();
 		}
@@ -152,7 +154,7 @@ void Player::Update()
 		transform_.localPosition += moveVelocity_;
 
 		// 回転処理
-		transform_.localRotation = stateMachine_.GetRotation();
+		transform_.localRotation.SetRotationYFromDirectionXZ(moveVelocity_);
 
 		// トランスフォームの更新
 		transform_.UpdateTransform();

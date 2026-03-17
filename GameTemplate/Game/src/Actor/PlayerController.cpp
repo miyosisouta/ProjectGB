@@ -21,7 +21,7 @@ void PlayerController::Update()
 	targetStateMachine->SetStickLAmount(stickAmount);*/
 
 	// 回転
-	if (stickX >= 0.01f || stickY >= 0.01f)
+	if (fabs(stickX) >= 0.01f || fabs(stickY) >= 0.01f)
 	{
 		// 左スティックの方向
 		targetStateMachine->SetRotation(ComputeRotation());
