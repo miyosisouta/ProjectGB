@@ -14,8 +14,8 @@ using UIAnimationApplyFunc = std::function<void(const T&)>;
 class UIAnimationBase : public Noncopyable
 {
 protected:
-	UIBase* m_ui = nullptr;
-	float m_timeSec = 0.0f;
+	UIBase* ui_ = nullptr;
+	float timeSec_ = 0.0f;
 
 
 public:
@@ -29,22 +29,22 @@ public:
 	virtual void Reset() = 0;
 
 
-	void SetUI(UIBase* ui) { m_ui = ui; }
+	void SetUI(UIBase* ui) { ui_ = ui; }
 };
 
 
 /** floatのアニメーション */
 class UIFloatAnimation :public UIAnimationBase {
 protected:
-	FloatCurve m_curve;
+	FloatCurve curve_;
 	/** カーブ用のパラメーター */
-	float m_start = 0.0f;
-	float m_end = 0.0f;
+	float start_ = 0.0f;
+	float end_ = 0.0f;
 
-	EasingType m_type = EasingType::Linear;
-	LoopMode m_loopMode = LoopMode::Once;
+	EasingType type_ = EasingType::Linear;
+	LoopMode loopMode_ = LoopMode::Once;
 
-	UIAnimationApplyFunc<float> m_applyFunc;
+	UIAnimationApplyFunc<float> applyFunc_;
 
 public:
 	UIFloatAnimation() {}
@@ -57,61 +57,61 @@ public:
 			return;
 		}
 
-		m_curve.Update(g_gameTime->GetFrameDeltaTime());
+		curve_.Update(g_gameTime->GetFrameDeltaTime());
 
 		//イージングされた現在の値を取得し、登録された関数を実行
-		if (m_applyFunc) {
-			m_applyFunc(m_curve.GetCurrentValue());
+		if (applyFunc_) {
+			applyFunc_(curve_.GetCurrentValue());
 		}
 	}
 
 	/** 再生 */
 	void Play() override
 	{
-		m_curve.Play();
+		curve_.Play();
 	}
 
 	/** 停止 */
 	void Stop() override
 	{
-		m_curve.Stop();
+		curve_.Stop();
 	}
 
 	/** リセット */
 	void Reset() override
 	{
-		m_curve.Reset();
+		curve_.Reset();
 	}
 
 	/** 再生中か */
 	bool IsPlay() override
 	{
-		return m_curve.IsPlaying();
+		return curve_.IsPlaying();
 	}
 
 	/** UIアニメーションのパラメーターを設定 */
 	void SetParameter(float start, float end, float timeSec, EasingType type, LoopMode loopMode)
 	{
-		m_start = start;
-		m_end = end;
-		m_timeSec = timeSec;
-		m_type = type;
-		m_loopMode = loopMode;
+		start_ = start;
+		end_ = end;
+		timeSec_ = timeSec;
+		type_ = type;
+		loopMode_ = loopMode;
 		/* 即時反映のためにPlayと同じ引き数でセット */
 		//m_curve.Play(start, end, timeSec, type, loopMode);
-		m_curve.Initialize(m_start, m_end, m_timeSec, m_type, m_loopMode);
+		curve_.Initialize(start_, end_, timeSec_, type_, loopMode_);
 	}
 
 	/** アニメーション中の現在の値を取得 */
 	float GetCurrendtValue()
 	{
-		return m_curve.GetCurrentValue();
+		return curve_.GetCurrentValue();
 	}
 
 	/** アニメーション後の情報を適用する関数を設定 */
 	void SetFunc(const UIAnimationApplyFunc<float>& func)
 	{
-		m_applyFunc = func;
+		applyFunc_ = func;
 	}
 };
 
@@ -119,15 +119,15 @@ public:
 class  UIVector2Animation : public UIAnimationBase
 {
 protected:
-	Vector2Curve m_curve;
+	Vector2Curve curve_;
 	/** カーブ用のパラメーター */
-	Vector2 m_start = Vector2::Zero;
-	Vector2 m_end = Vector2::Zero;
+	Vector2 start_ = Vector2::Zero;
+	Vector2 end_ = Vector2::Zero;
 
-	EasingType m_type = EasingType::Linear;
-	LoopMode m_loopMode = LoopMode::Once;
+	EasingType type_ = EasingType::Linear;
+	LoopMode loopMode_ = LoopMode::Once;
 
-	UIAnimationApplyFunc<Vector2> m_applyFunc;
+	UIAnimationApplyFunc<Vector2> applyFunc_;
 
 
 public:
@@ -137,45 +137,45 @@ public:
 	/** 更新 */
 	void Update() override
 	{
-		m_curve.Update(g_gameTime->GetFrameDeltaTime());
+		curve_.Update(g_gameTime->GetFrameDeltaTime());
 		//m_applyFunc(m_curve.GetCurrentValue());
-		if (m_applyFunc) {
-			m_applyFunc(m_curve.GetCurrentValue());
+		if (applyFunc_) {
+			applyFunc_(curve_.GetCurrentValue());
 		}
 	}
 
 	/** 再生 */
 	void Play() override
 	{
-		m_curve.Play();
+		curve_.Play();
 	}
 
 	/** 再生してるか */
 	bool IsPlay() override
 	{
-		return m_curve.IsPlaying();
+		return curve_.IsPlaying();
 	}
 
 	/** 停止 */
 	void Stop() override {
-		m_curve.Stop();
+		curve_.Stop();
 	}
 
 
 	/** リセット */
 	void Reset() override
 	{
-		m_curve.Reset();
+		curve_.Reset();
 	}
 
 	/** UIアニメーションの情報を設定 */
 	void SetParameter(Vector2 start, Vector2 end, float timeSec, EasingType type, LoopMode loopMode)
 	{
-		m_start = start;
-		m_end = end;
-		m_timeSec = timeSec;
-		m_type = type;
-		m_loopMode = loopMode;
+		start_ = start;
+		end_ = end;
+		timeSec_ = timeSec;
+		type_ = type;
+		loopMode_ = loopMode;
 		//m_curve.Play(start, end, timeSec, type, loopMode);
 
 	}
@@ -183,13 +183,13 @@ public:
 	/** アニメーション中の現在の値を取得 */
 	Vector2 GetCurrentValue()
 	{
-		return m_curve.GetCurrentValue();
+		return curve_.GetCurrentValue();
 	}
 
 	/** アニメーション後の情報を適用する関数を設定 */
 	void SetFunc(const UIAnimationApplyFunc<Vector2>& func)
 	{
-		m_applyFunc = func;
+		applyFunc_ = func;
 	}
 };
 
@@ -203,15 +203,15 @@ public:
 class UIVector3Animation : public UIAnimationBase
 {
 protected:
-	Vector3Curve m_curve;
+	Vector3Curve curve_;
 	/** カーブ用のパラメーター */
-	Vector3 m_start = Vector3::Zero;
-	Vector3 m_end = Vector3::Zero;
-	float m_timeSec = 0.0f;
-	EasingType m_type = EasingType::Linear;
-	LoopMode m_loopMode = LoopMode::Once;
+	Vector3 start_ = Vector3::Zero;
+	Vector3 end_ = Vector3::Zero;
+	float timeSec_ = 0.0f;
+	EasingType type_ = EasingType::Linear;
+	LoopMode loopMode_ = LoopMode::Once;
 
-	UIAnimationApplyFunc<Vector3> m_applyFunc;
+	UIAnimationApplyFunc<Vector3> applyFunc_;
 
 
 public:
@@ -220,10 +220,10 @@ public:
 
 	void Update() override
 	{
-		m_curve.Update(g_gameTime->GetFrameDeltaTime());
+		curve_.Update(g_gameTime->GetFrameDeltaTime());
 		//m_applyFunc(m_curve.GetCurrentValue());
-		if (m_applyFunc) {
-			m_applyFunc(m_curve.GetCurrentValue());
+		if (applyFunc_) {
+			applyFunc_(curve_.GetCurrentValue());
 		}
 		else {
 			// Handle the error or log a message
@@ -232,42 +232,42 @@ public:
 
 	void Play() override
 	{
-		m_curve.Play();
+		curve_.Play();
 	}
 
 	bool IsPlay() override
 	{
-		return m_curve.IsPlaying();
+		return curve_.IsPlaying();
 	}
 
 	void Stop() override {
-		m_curve.Stop();
+		curve_.Stop();
 	}
 
 	/** リセット */
 	void Reset() override
 	{
-		m_curve.Reset();
+		curve_.Reset();
 	}
 
 	void SetParameter(Vector3 start, Vector3 end, float timeSec, EasingType type, LoopMode loopMode)
 	{
-		m_start = start;
-		m_end = end;
-		m_timeSec = timeSec;
-		m_type = type;
-		m_loopMode = loopMode;
-		m_curve.Initialize(start, end, timeSec, type, loopMode);
+		start_ = start;
+		end_ = end;
+		timeSec_ = timeSec;
+		type_ = type;
+		loopMode_ = loopMode;
+		curve_.Initialize(start, end, timeSec, type, loopMode);
 	}
 
 	Vector3 GetCurrentValue()
 	{
-		return m_curve.GetCurrentValue();
+		return curve_.GetCurrentValue();
 	}
 
 	void SetFunc(const UIAnimationApplyFunc<Vector3>& func)
 	{
-		m_applyFunc = func;
+		applyFunc_ = func;
 	}
 };
 
@@ -281,15 +281,15 @@ public:
 class UIVector4Animation : public UIAnimationBase
 {
 protected:
-	Vector4Curve m_curve;
+	Vector4Curve curve_;
 	/** カーブ用のパラメーター */
-	Vector4 m_start = Vector4::White;
-	Vector4 m_end = Vector4::White;
-	float m_timeSec = 0.0f;
-	EasingType m_type = EasingType::Linear;
-	LoopMode m_loopMode = LoopMode::Once;
+	Vector4 start_ = Vector4::White;
+	Vector4 end_ = Vector4::White;
+	float timeSec_ = 0.0f;
+	EasingType type_ = EasingType::Linear;
+	LoopMode loopMode_ = LoopMode::Once;
 
-	UIAnimationApplyFunc<Vector4> m_applyFunc;
+	UIAnimationApplyFunc<Vector4> applyFunc_;
 
 public:
 	UIVector4Animation() {}
@@ -297,10 +297,10 @@ public:
 
 	void Update() override
 	{
-		m_curve.Update(g_gameTime->GetFrameDeltaTime());
+		curve_.Update(g_gameTime->GetFrameDeltaTime());
 		//m_applyFunc(m_curve.GetCurrentValue());
-		if (m_applyFunc) {
-			m_applyFunc(m_curve.GetCurrentValue());
+		if (applyFunc_) {
+			applyFunc_(curve_.GetCurrentValue());
 		}
 		else {
 			// Handle the error or log a message
@@ -309,43 +309,43 @@ public:
 
 	void Play() override
 	{
-		m_curve.Play();
+		curve_.Play();
 	}
 
 	bool IsPlay() override
 	{
-		return m_curve.IsPlaying();
+		return curve_.IsPlaying();
 	}
 
 	void Stop() override {
-		m_curve.Stop();
+		curve_.Stop();
 	}
 
 	/** リセット */
 	void Reset() override
 	{
-		m_curve.Reset();
+		curve_.Reset();
 	}
 
 	void SetParameter(Vector4 start, Vector4 end, float timeSec, EasingType type, LoopMode loopMode)
 	{
-		m_start = start;
-		m_end = end;
-		m_timeSec = timeSec;
-		m_type = type;
-		m_loopMode = loopMode;
-		m_curve.Initialize(start, end, timeSec, type, loopMode);
+		start_ = start;
+		end_ = end;
+		timeSec_ = timeSec;
+		type_ = type;
+		loopMode_ = loopMode;
+		curve_.Initialize(start, end, timeSec, type, loopMode);
 	}
 
 
 	Vector4 GetCurrendtValue()
 	{
-		return m_curve.GetCurrentValue();
+		return curve_.GetCurrentValue();
 	}
 
 	void SetFunc(const UIAnimationApplyFunc<Vector4>& func)
 	{
-		m_applyFunc = func;
+		applyFunc_ = func;
 	}
 };
 
@@ -364,8 +364,8 @@ public:
 
 	void Update() override
 	{
-		m_curve.Update(g_gameTime->GetFrameDeltaTime());
-		m_applyFunc(m_curve.GetCurrentValue());
+		curve_.Update(g_gameTime->GetFrameDeltaTime());
+		applyFunc_(curve_.GetCurrentValue());
 	}
 };
 
@@ -381,8 +381,8 @@ public:
 
 	void Update() override
 	{
-		m_curve.Update(g_gameTime->GetFrameDeltaTime());
-		m_applyFunc(m_curve.GetCurrentValue());
+		curve_.Update(g_gameTime->GetFrameDeltaTime());
+		applyFunc_(curve_.GetCurrentValue());
 	}
 };
 
@@ -396,8 +396,8 @@ public:
 
 	void Update() override
 	{
-		m_curve.Update(g_gameTime->GetFrameDeltaTime());
-		m_applyFunc(m_curve.GetCurrentValue());
+		curve_.Update(g_gameTime->GetFrameDeltaTime());
+		applyFunc_(curve_.GetCurrentValue());
 	}
 };
 
@@ -410,8 +410,8 @@ public:
 
 	void Update() override
 	{
-		m_curve.Update(g_gameTime->GetFrameDeltaTime());
-		m_applyFunc(m_curve.GetCurrentValue());
+		curve_.Update(g_gameTime->GetFrameDeltaTime());
+		applyFunc_(curve_.GetCurrentValue());
 	}
 };
 
@@ -425,8 +425,8 @@ public:
 
 	void Update() override
 	{
-		m_curve.Update(g_gameTime->GetFrameDeltaTime());
-		m_applyFunc(m_curve.GetCurrentValue());
+		curve_.Update(g_gameTime->GetFrameDeltaTime());
+		applyFunc_(curve_.GetCurrentValue());
 	}
 
 };

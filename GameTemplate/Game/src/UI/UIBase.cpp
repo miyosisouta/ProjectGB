@@ -48,16 +48,16 @@ UIGauge::~UIGauge()
 void UIGauge::Update()
 {
 	transform.UpdateTransform();
-	m_spriteRender.SetPosition(transform.position);
-	m_spriteRender.SetScale(transform.scale);
-	m_spriteRender.SetRotation(transform.rotation);
-	m_spriteRender.Update();
+	spriteRender_.SetPosition(transform.position);
+	spriteRender_.SetScale(transform.scale);
+	spriteRender_.SetRotation(transform.rotation);
+	spriteRender_.Update();
 }
 
 
 void UIGauge::Render(RenderContext& rc)
 {
-	m_spriteRender.Draw(rc);
+	spriteRender_.Draw(rc);
 }
 
 
@@ -67,11 +67,11 @@ void UIGauge::Initialize(const char* assetName, const float width, const float h
 	transform.localScale = scale;
 	transform.localRotation = rotation;
 
-	m_spriteRender.Init(assetName, width, height);
-	m_spriteRender.SetPosition(position);
-	m_spriteRender.SetScale(scale);
-	m_spriteRender.SetRotation(rotation);
-	m_spriteRender.Update();
+	spriteRender_.Init(assetName, width, height);
+	spriteRender_.SetPosition(position);
+	spriteRender_.SetScale(scale);
+	spriteRender_.SetRotation(rotation);
+	spriteRender_.Update();
 }
 
 
@@ -100,12 +100,12 @@ void UIIcon::Update()
 
 	UpdateAnimation();
 
-	m_spriteRender.SetMulColor(color);
+	spriteRender_.SetMulColor(color);
 	transform.UpdateTransform();
-	m_spriteRender.SetPosition(transform.position);
-	m_spriteRender.SetScale(transform.scale);
-	m_spriteRender.SetRotation(transform.rotation);
-	m_spriteRender.Update();
+	spriteRender_.SetPosition(transform.position);
+	spriteRender_.SetScale(transform.scale);
+	spriteRender_.SetRotation(transform.rotation);
+	spriteRender_.Update();
 
 	//for (auto& animation : m_uiAnimationList) {
 	//	animation->Update();
@@ -116,7 +116,7 @@ void UIIcon::Update()
 void UIIcon::Render(RenderContext& rc)
 {
 	if (isDraw) {
-		m_spriteRender.Draw(rc);
+		spriteRender_.Draw(rc);
 	}
 }
 
@@ -133,7 +133,7 @@ void UIIcon::Initialize(const char* assetName, const float width, const float he
 	//m_spriteRender.SetRotation(rotation);
 	//m_spriteRender.Update();
 
-	m_spriteRender.Init(assetName, width, height);
+	spriteRender_.Init(assetName, width, height);
 }
 
 
@@ -154,19 +154,19 @@ UIDigit::~UIDigit()
 
 void UIDigit::Update()
 {
-	if (m_number != m_requestNumber) {
-		m_number = m_requestNumber;
-		for (int i = 0; i < m_digit; ++i) {
-			UpdateNumber(i + 1, m_number);
+	if (number_ != requestNumber_) {
+		number_ = requestNumber_;
+		for (int i = 0; i < digit_; ++i) {
+			UpdateNumber(i + 1, number_);
 		}
 	}
 
 	UpdateAnimation();
 
 	transform.UpdateTransform();
-	for (int i = 0; i < m_renderList.size(); ++i)
+	for (int i = 0; i < renderList_.size(); ++i)
 	{
-		auto* spriteRender = m_renderList[i];
+		auto* spriteRender = renderList_[i];
 		UpdatePosition(i);
 		spriteRender->SetScale(transform.scale);
 		spriteRender->SetRotation(transform.rotation);
@@ -186,7 +186,7 @@ void UIDigit::Render(RenderContext& rc)
 	{
 		return;
 	}
-	for (SpriteRender* spriteRender : m_renderList)
+	for (SpriteRender* spriteRender : renderList_)
 	{
 		spriteRender->Draw(rc);
 	}
@@ -194,9 +194,9 @@ void UIDigit::Render(RenderContext& rc)
 
 void UIDigit::Initialize(const char* assetName, const int digit, const int number, const float widht, const float height, const Vector3& position, const Vector3& scale, const Quaternion& rotation)
 {
-	m_assetPath = assetName;
-	m_digit = digit;
-	m_number = number;
+	assetPath_ = assetName;
+	digit_ = digit;
+	number_ = number;
 	w = widht;
 	h = height;
 
@@ -211,8 +211,8 @@ void UIDigit::Initialize(const char* assetName, const int digit, const int numbe
 		spriteRender->SetPosition(position);
 		spriteRender->SetScale(scale);
 		spriteRender->SetRotation(rotation);
-		m_renderList.push_back(spriteRender);
-		UpdateNumber(i + 1, m_number);	// 桁なので＋１する
+		renderList_.push_back(spriteRender);
+		UpdateNumber(i + 1, number_);	// 桁なので＋１する
 	}
 }
 
@@ -242,17 +242,17 @@ void UIDigit::UpdateNumber(const int targetDigit, const int number)
 	const int targetRenderIndex = targetDigit - 1;
 	SpriteRender* nextRender = nullptr;
 	// 次のやつをつくる
-	if (targetRenderIndex < m_renderList.size()) {
-		nextRender = m_renderList[targetRenderIndex];
+	if (targetRenderIndex < renderList_.size()) {
+		nextRender = renderList_[targetRenderIndex];
 	}
 	else {
 		nextRender = new SpriteRender();
-		m_renderList.push_back(nextRender);
+		renderList_.push_back(nextRender);
 	}
 
 	// 対象の桁の数字
 	const int targetDigitNumber = GetDigit(targetDigit);
-	std::string assetNname = m_assetPath + "/0.dds";
+	std::string assetNname = assetPath_ + "/0.dds";
 	// 数字の部分を桁の数字で変える
 	assetNname[assetNname.size() - 5] = '0' + targetDigitNumber;
 	nextRender->Init(assetNname.c_str(), w, h);
@@ -261,7 +261,7 @@ void UIDigit::UpdateNumber(const int targetDigit, const int number)
 
 void UIDigit::UpdatePosition(const int index)
 {
-	SpriteRender* render = m_renderList[index];
+	SpriteRender* render = renderList_[index];
 	Vector3 position = transform.position;
 	position.x -= w * index;
 	render->SetPosition(position);
@@ -274,7 +274,7 @@ int UIDigit::GetDigit(int digit)
 	K2_ASSERT(digit >= 1, "桁指定が間違えています。\n");
 	digit -= 1;
 	int divisor = static_cast<int>(pow(10, digit));
-	return (m_number / divisor) % 10;
+	return (number_ / divisor) % 10;
 }
 
 
@@ -285,7 +285,7 @@ int UIDigit::GetDigit(int digit)
 
 UICanvas::UICanvas()
 {
-	m_uiList.clear();
+	uiList_.clear();
 }
 
 
@@ -298,7 +298,7 @@ UICanvas::~UICanvas()
 	//	delete ui;
 	//	ui = nullptr;
 	//}
-	m_uiList.clear();
+	uiList_.clear();
 }
 
 
@@ -306,14 +306,14 @@ void UICanvas::Update()
 {
 	transform.UpdateTransform();
 
-	for (auto& ui : m_uiList) {
+	for (auto& ui : uiList_) {
 		ui.second->Update();
 	}
 }
 
 void UICanvas::Render(RenderContext& rc)
 {
-	for (auto& ui : m_uiList) {
+	for (auto& ui : uiList_) {
 		ui.second->Render(rc);
 	}
 }
