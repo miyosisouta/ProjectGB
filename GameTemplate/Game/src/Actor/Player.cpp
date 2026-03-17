@@ -3,6 +3,7 @@
 #include "StateMachine.h"
 #include "PlayerState.h"
 
+
 /*
  * アニメーションの名前空間
  */
@@ -40,38 +41,38 @@ void Player::SetUpTranslateRulu()
 	stateMachine_.AddState(StateID::Dead, new DeadState(this));
 
 	// トランジション（遷移ルール）を登録
-	stateMachine_.AddGlobalTransition([]() { if (g_pad[0]->IsPress(enButtonX)) { return true; } return false; }, StateID::Dead); /* HPが0なら他のステート関係なく実行 */
-	stateMachine_.AddTransition(StateID::Idle, StateID::Walk, []() // 待機中の場合に左スティック入力があれば歩きステートへ変更
-		{
-			if(g_pad[0]->IsPress(enButtonA)){ return true; }
-			return false;
+	stateMachine_.AddGlobalTransition([this]() { if (IsDead()) { return true; } return false; }, StateID::Dead); /* HPが0なら他のステート関係なく実行 */
+	// 待機 -> 歩き (スティック入力があり、かつダッシュボタンが押されていない)
+	stateMachine_.AddTransition(StateID::Idle, StateID::Walk, [this]() {
+		return stateMachine_.GetStickLAmount() > 0.01f && !stateMachine_.IsDash();
 		});
-	stateMachine_.AddTransition(StateID::Idle, StateID::Run, []()
-		{
-			if (g_pad[0]->IsPress(enButtonY)) { return true; }
-			return false;
+
+	// 待機 -> 走り (スティック入力があり、かつダッシュボタンが押されている)
+	stateMachine_.AddTransition(StateID::Idle, StateID::Run, [this]() {
+		return stateMachine_.GetStickLAmount() > 0.01f && stateMachine_.IsDash();
 		});
-	stateMachine_.AddTransition(StateID::Walk, StateID::Idle, []()
-		{
-			if (g_pad[0]->IsPress(enButtonB)) { return true; }
-			return false;
+
+	// 歩き -> 待機 (スティック入力がなくなった)
+	stateMachine_.AddTransition(StateID::Walk, StateID::Idle, [this]() {
+		return stateMachine_.GetStickLAmount() < 0.01f;
 		});
-	stateMachine_.AddTransition(StateID::Walk, StateID::Run, []()
-		{
-			if (g_pad[0]->IsPress(enButtonY)) { return true; }
-			return false;
+
+	// 歩き -> 走り (歩き中にダッシュボタンが押された)
+	stateMachine_.AddTransition(StateID::Walk, StateID::Run, [this]() {
+		return stateMachine_.IsDash();
 		});
-	stateMachine_.AddTransition(StateID::Run, StateID::Idle, []()
-		{
-			if (g_pad[0]->IsPress(enButtonB)) { return true; }
-			return false;
+	
+	// 走り -> 待機 (スティック入力がなくなった)
+	stateMachine_.AddTransition(StateID::Run, StateID::Idle, [this]() {
+		return stateMachine_.GetStickLAmount() < 0.01f;
 		});
-	stateMachine_.AddTransition(StateID::Run, StateID::Walk, []()
-		{
-			if (g_pad[0]->IsPress(enButtonA)) { return true; }
-			return false;
+
+	// 走り -> 歩き (走り中にダッシュボタンが離された)
+	stateMachine_.AddTransition(StateID::Run, StateID::Walk, [this]() {
+		return !stateMachine_.IsDash();
 		});
 }
+
 
 void Player::PlayAnimation(const StateID id)
 {
@@ -87,6 +88,7 @@ void Player::PlayAnimation(const StateID id)
 
 	modelRender_.PlayAnimation(animIndex); // Idをもとにそのアニメーションの再生
 }
+
 
 Player::Player()
 {
@@ -124,8 +126,8 @@ bool Player::Start()
 
 		// モデルの座標を更新・初期化
 		{
-			modelRender_.SetPosition(transform_.m_position);
-			modelRender_.SetScale(transform_.m_scale);
+			modelRender_.SetPosition(transform_.position);
+			modelRender_.SetScale(transform_.scale);
 			modelRender_.Update();
 		}
 	}
@@ -143,6 +145,23 @@ void Player::Update()
 {
 	// 共通処理を呼び出す : ステートマシンのアップデートを呼んでます
 	Character::Update();
+
+	// モデルへの設定
+	{
+		// 移動処理
+		transform_.localPosition += moveVelocity_;
+
+		// 回転処理
+		transform_.localRotation = stateMachine_.GetRotation();
+
+		// トランスフォームの更新
+		transform_.UpdateTransform();
+
+		// モデルへ反映
+		modelRender_.SetPosition(transform_.position);
+		modelRender_.SetRotation(transform_.rotation);
+		modelRender_.Update();
+	}
 }
 
 

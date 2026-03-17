@@ -14,9 +14,9 @@ void Actor::Update()
 	transform_.UpdateTransform();
 
 	// 更新したトランスフォームをモデルに設定
-	modelRender_.SetPosition(transform_.m_position);
-	modelRender_.SetScale(transform_.m_scale);
-	modelRender_.SetRotation(transform_.m_rotation);
+	modelRender_.SetPosition(transform_.position);
+	modelRender_.SetScale(transform_.scale);
+	modelRender_.SetRotation(transform_.rotation);
 	modelRender_.Update();
 }
 

@@ -10,20 +10,8 @@
     <ClCompile Include="src\Actor\Character.cpp">
       <Filter>src\Actor</Filter>
     </ClCompile>
-    <ClCompile Include="src\Scene\InGameScene.cpp">
-      <Filter>src\Scene</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Scene\IScene.cpp">
-      <Filter>src\Scene</Filter>
-    </ClCompile>
     <ClCompile Include="src\Actor\IState.cpp">
       <Filter>src\Actor</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Scene\LoadingScreen.cpp">
-      <Filter>src\Scene</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Scene\OutGameScene.cpp">
-      <Filter>src\Scene</Filter>
     </ClCompile>
     <ClCompile Include="src\Actor\Player.cpp">
       <Filter>src\Actor</Filter>
@@ -33,9 +21,6 @@
     </ClCompile>
     <ClCompile Include="src\Actor\PlayerState.cpp">
       <Filter>src\Actor</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Scene\SceneManager.cpp">
-      <Filter>src\Scene</Filter>
     </ClCompile>
     <ClCompile Include="src\Actor\StateMachine.cpp">
       <Filter>src\Actor</Filter>
@@ -49,21 +34,6 @@
     <ClCompile Include="system\system.cpp">
       <Filter>system</Filter>
     </ClCompile>
-    <ClCompile Include="src\Util\Curve.cpp">
-      <Filter>src\Util</Filter>
-    </ClCompile>
-    <ClCompile Include="src\UI\UIBase.cpp">
-      <Filter>src\UI</Filter>
-    </ClCompile>
-    <ClCompile Include="src\UI\UIAnimation.cpp">
-      <Filter>src\UI</Filter>
-    </ClCompile>
-    <ClCompile Include="src\UI\Layout.cpp">
-      <Filter>src\UI</Filter>
-    </ClCompile>
-    <ClCompile Include="src\UI\Menu.cpp">
-      <Filter>src\UI</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Game.h" />
@@ -74,20 +44,8 @@
     <ClInclude Include="src\Actor\Character.h">
       <Filter>src\Actor</Filter>
     </ClInclude>
-    <ClInclude Include="src\Scene\InGameScene.h">
-      <Filter>src\Scene</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Scene\IScene.h">
-      <Filter>src\Scene</Filter>
-    </ClInclude>
     <ClInclude Include="src\Actor\IState.h">
       <Filter>src\Actor</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Scene\LoadingScreen.h">
-      <Filter>src\Scene</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Scene\OutGameScene.h">
-      <Filter>src\Scene</Filter>
     </ClInclude>
     <ClInclude Include="src\Actor\Player.h">
       <Filter>src\Actor</Filter>
@@ -98,9 +56,6 @@
     <ClInclude Include="src\Actor\PlayerState.h">
       <Filter>src\Actor</Filter>
     </ClInclude>
-    <ClInclude Include="src\Scene\SceneManager.h">
-      <Filter>src\Scene</Filter>
-    </ClInclude>
     <ClInclude Include="src\Actor\StateMachine.h">
       <Filter>src\Actor</Filter>
     </ClInclude>
@@ -110,29 +65,11 @@
     <ClInclude Include="src\Memory\Array.h">
       <Filter>src\Memory</Filter>
     </ClInclude>
-    <ClInclude Include="src\Util\Crc32.h">
-      <Filter>src\Util</Filter>
-    </ClInclude>
     <ClInclude Include="src\Types.h">
       <Filter>src</Filter>
     </ClInclude>
     <ClInclude Include="system\system.h">
       <Filter>system</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Util\Curve.h">
-      <Filter>src\Util</Filter>
-    </ClInclude>
-    <ClInclude Include="src\UI\UIBase.h">
-      <Filter>src\UI</Filter>
-    </ClInclude>
-    <ClInclude Include="src\UI\UIAnimation.h">
-      <Filter>src\UI</Filter>
-    </ClInclude>
-    <ClInclude Include="src\UI\Layout.h">
-      <Filter>src\UI</Filter>
-    </ClInclude>
-    <ClInclude Include="src\UI\Menu.h">
-      <Filter>src\UI</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
