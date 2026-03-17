@@ -34,6 +34,12 @@
     <ClCompile Include="system\system.cpp">
       <Filter>system</Filter>
     </ClCompile>
+    <ClCompile Include="src\Effect\EffectManager.cpp">
+      <Filter>src\Effect</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Sound\SoundManager.cpp">
+      <Filter>src\Sound</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Game.h" />
@@ -71,6 +77,18 @@
     <ClInclude Include="system\system.h">
       <Filter>system</Filter>
     </ClInclude>
+    <ClInclude Include="src\Effect\EffectManager.h">
+      <Filter>src\Effect</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Effect\Types.h">
+      <Filter>src\Effect</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Sound\SoundManager.h">
+      <Filter>src\Sound</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Sound\Types.h">
+      <Filter>src\Sound</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="src">
@@ -96,6 +114,12 @@
     </Filter>
     <Filter Include="src\UI">
       <UniqueIdentifier>{a3928a48-4c2b-49ee-babe-960b9d548557}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Sound">
+      <UniqueIdentifier>{7a1f4abf-3da9-4365-b7ee-2d7de52d6449}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Effect">
+      <UniqueIdentifier>{2af746e8-ec3b-4478-94ce-ed3cf306f224}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>
