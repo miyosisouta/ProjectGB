@@ -22,7 +22,8 @@ public:	MenuBase() {}	virtual ~MenuBase() { Clear(); }
     {
         if (canvas_) {
             canvas_->Update();
-        }	}
+        }	
+    }
 
     virtual void Render(RenderContext& rc)
     {
