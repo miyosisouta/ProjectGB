@@ -32,91 +32,91 @@ template <typename T>
 class Curve
 {
 public:
-    T m_startValue;          //!< 始める数値
-    T m_endValue;            //!< 終わる数値
-    float m_duration;        //!< 時間の間隔
-    float m_currentTime;     //!< 現在の時間
-    EasingType m_easingType; //!< イージングタイプ
-    LoopMode m_loopMode;     //!< ループモード
-    bool m_isPlaying;        //!< 再生するか
-    int m_direction;         //!< 方向
+    T startValue;          //!< 始める数値
+    T endValue;            //!< 終わる数値
+    float duration;        //!< 時間の間隔
+    float currentTime;     //!< 現在の時間
+    EasingType easingType; //!< イージングタイプ
+    LoopMode loopMode;     //!< ループモード
+    bool isPlaying;        //!< 再生するか
+    int direction;         //!< 方向
 
 
 public:
     Curve()
-        : m_currentTime(0)
-        , m_duration(1.0f)
-        , m_isPlaying(false)
-        , m_direction(1)
+        : currentTime(0)
+        , duration(1.0f)
+        , isPlaying(false)
+        , direction(1)
     {
     }
 
     /* 初期化 */
     void Initialize(const T& start, const T& end, const float timeSec, const EasingType type = EasingType::EaseInOut, const LoopMode loopMode = LoopMode::Once) {
-        m_startValue = start;
-        m_endValue = end;
-        m_duration = max(0.0001f, timeSec);
-        m_easingType = type;
-        m_loopMode = loopMode;
-        m_currentTime = 0.0f;
-        m_isPlaying = false;
-        m_direction = 1;
+        startValue = start;
+        endValue = end;
+        duration = max(0.0001f, timeSec);
+        easingType = type;
+        loopMode = loopMode;
+        currentTime = 0.0f;
+        isPlaying = false;
+        direction = 1;
     }
 
     /** 再生 */
     void Play()
     {
-        m_isPlaying = true;
+        isPlaying = true;
     }
 
     /* 停止 */
     void Stop() {
-        m_isPlaying = false;
+        isPlaying = false;
     }
 
     /** リセット */
     void Reset() {
-        m_currentTime = 0.0f;
-        m_direction = 1;
+        currentTime = 0.0f;
+        direction = 1;
     }
 
     /** 更新 */
     void Update(float deltaTime)
     {
         // 再生していなければ何もしない
-        if (!m_isPlaying) return;
+        if (!isPlaying) return;
 
         // 時間を進める
         //m_currentTime += m_loopMode == LoopMode::Loop ? deltaTime * m_direction : deltaTime;
-        if (m_loopMode == LoopMode::Loop)
+        if (loopMode == LoopMode::Loop)
         {
-            m_currentTime += deltaTime * m_direction;
+            currentTime += deltaTime * m_direction;
         }
-        else if (m_loopMode == LoopMode::PingPong) {
-            m_currentTime += deltaTime * m_direction;
+        else if (loopMode == LoopMode::PingPong) {
+            currentTime += deltaTime * direction;
         }
         else {
-            m_currentTime += deltaTime;
+            currentTime += deltaTime;
         }
 
         // 終了判定とループ処理
-        if (m_currentTime >= m_duration) {
-            if (m_loopMode == LoopMode::Once) {
-                m_currentTime = m_duration;
-                m_isPlaying = false;
+        if (currentTime >= duration) {
+            if (loopMode == LoopMode::Once) {
+                currentTime = duration;
+                isPlaying = false;
             }
-            else if (m_loopMode == LoopMode::Loop) {
-                m_currentTime = 0.0f;
+            else if (loopMode == LoopMode::Loop) {
+                currentTime = 0.0f;
             }
-            else if (m_loopMode == LoopMode::PingPong) {
-                m_currentTime = m_duration;
-                m_direction = -1;
+            else if (loopMode == LoopMode::PingPong) {
+                currentTime = duration;
+                direction = -1;
             }
         }
-        else if (m_currentTime <= 0.0f) {
-            if (m_loopMode == LoopMode::PingPong) {
-                m_currentTime = 0.0f;
-                m_direction = 1;
+        else if (currentTime <= 0.0f) {
+            if (loopMode == LoopMode::PingPong) {
+                currentTime = 0.0f;
+                direction = 1;
             }
         }
     }
@@ -125,19 +125,19 @@ public:
     /** 現在の値を取得 */
     T GetCurrentValue() const
     {
-        float t = clamp<float>(m_currentTime / m_duration, 0.0f, 1.0f);
+        float t = clamp<float>(currentTime / duration, 0.0f, 1.0f);
         float rate = ApplyEasingInternal(t);
-        return m_startValue + (m_endValue - m_startValue) * rate;
+        return startValue + (endValue - startValue) * rate;
     }
 
     /** 再生中か取得 */
-    bool IsPlaying() const { return m_isPlaying; }
+    bool IsPlaying() const { return isPlaying; }
 
 
 private:
     /** イージング適用 */
     float ApplyEasingInternal(float t) const {
-        switch (m_easingType) {
+        switch (easingType) {
         case EasingType::Linear:    return t;
         case EasingType::EaseIn:    return t * t;
         case EasingType::EaseOut:   return t * (2.0f - t);
