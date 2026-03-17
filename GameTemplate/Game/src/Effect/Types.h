@@ -24,7 +24,8 @@ struct EffectInformation
 
 
 /** 情報を保持 */
-//static EffectInformation effectInformation[enEffectKind_Max] =
-//{
-//};
+static EffectInformation effectInformation[enEffectKind_Max] =
+{
+	EffectInformation(u"Assets/Effect/effect.efk")
+};
 
