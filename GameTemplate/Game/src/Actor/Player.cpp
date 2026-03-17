@@ -19,58 +19,118 @@ namespace anim
 	// 読み込みたいアニメーションのファイルパスを並べる
 	// ここにパスを追加・削除するだけで、スタート処理にてm_animationClipListに自動で追加される
 	static AnimationData sAnimPaths[] = {
-		AnimationData{"Assets/Objects/Player/Animation/Idle_A.tka",false},
+		AnimationData{"Assets/Objects/Player/Animation/IdleA.tka",false},
 		AnimationData{"Assets/Objects/Player/Animation/Walk.tka",true},
 		AnimationData{"Assets/Objects/Player/Animation/Run.tka",true},
-		AnimationData{"Assets/Objects/Player/Animation/Jump.tka",true},
+		AnimationData{"Assets/Objects/Player/Animation/Attack.tka",false},
+		AnimationData{"Assets/Objects/Player/Animation/Death.tka",false}
 		// アニメーションを増やすときはここから
 	};
 
 	constexpr uint8_t ANIMATION_IDLE = 0; // 待機
 	constexpr uint8_t ANIMATION_WALK = 1; // 歩く
 	constexpr uint8_t ANIMATION_RUN = 2;  // 走る
+	constexpr uint8_t ANIMATION_NORMAL_ATTACK = 3;  // 通常攻撃
 }
 
 
 void Player::SetUpTranslateRulu()
 {
 	// ステート（状態）を登録
-	stateMachine_.AddState(StateID::Idle, new IdleState(this));
-	stateMachine_.AddState(StateID::Walk, new WalkState(this));
-	stateMachine_.AddState(StateID::Run, new RunState(this));
-	stateMachine_.AddState(StateID::Dead, new DeadState(this));
+	{
+		stateMachine_.AddState(StateID::Idle, new IdleState(this));
+		stateMachine_.AddState(StateID::Walk, new WalkState(this));
+		stateMachine_.AddState(StateID::Run, new RunState(this));
+		stateMachine_.AddState(StateID::NormalAttack, new NormalAttackState(this));
+		stateMachine_.AddState(StateID::Dead, new DeadState(this));
+	}
+
 
 	// トランジション（遷移ルール）を登録
-	stateMachine_.AddGlobalTransition([this]() { if (IsDead()) { return true; } return false; }, StateID::Dead); /* HPが0なら他のステート関係なく実行 */
-	// 待機 -> 歩き (スティック入力があり、かつダッシュボタンが押されていない)
-	stateMachine_.AddTransition(StateID::Idle, StateID::Walk, [this]() {
-		return stateMachine_.GetStickLAmount() > 0.01f && !stateMachine_.IsDash();
-		});
+	{
+		// 優先される条件
+		{
+			stateMachine_.AddGlobalTransition([this]() { if (IsDead()) { return true; } return false; }, StateID::Dead); /* HPが0なら他のステート関係なく実行 */
+		}
 
-	// 待機 -> 走り (スティック入力があり、かつダッシュボタンが押されている)
-	stateMachine_.AddTransition(StateID::Idle, StateID::Run, [this]() {
-		return stateMachine_.GetStickLAmount() > 0.01f && stateMachine_.IsDash();
-		});
+		// 一般ルール 
+		{
+			/** 待機 */
+			{
+				// 待機 -> 歩き
+				stateMachine_.AddTransition(StateID::Idle, StateID::Walk, [this]() {
+					return stateMachine_.GetStickLAmount() > 0.01f && !stateMachine_.IsDash();
+					});
 
-	// 歩き -> 待機 (スティック入力がなくなった)
-	stateMachine_.AddTransition(StateID::Walk, StateID::Idle, [this]() {
-		return stateMachine_.GetStickLAmount() < 0.01f;
-		});
+				// 待機 -> 走り
+				stateMachine_.AddTransition(StateID::Idle, StateID::Run, [this]() {
+					return stateMachine_.GetStickLAmount() > 0.01f && stateMachine_.IsDash();
+					});
 
-	// 歩き -> 走り (歩き中にダッシュボタンが押された)
-	stateMachine_.AddTransition(StateID::Walk, StateID::Run, [this]() {
-		return stateMachine_.IsDash();
-		});
-	
-	// 走り -> 待機 (スティック入力がなくなった)
-	stateMachine_.AddTransition(StateID::Run, StateID::Idle, [this]() {
-		return stateMachine_.GetStickLAmount() < 0.01f;
-		});
+				// 待機 -> 通常攻撃
+				stateMachine_.AddTransition(StateID::Idle, StateID::NormalAttack, [this]() {
+					return stateMachine_.IsActionButtonB();
+					});
+			}
 
-	// 走り -> 歩き (走り中にダッシュボタンが離された)
-	stateMachine_.AddTransition(StateID::Run, StateID::Walk, [this]() {
-		return !stateMachine_.IsDash();
-		});
+			/** 歩き */
+			{
+				// 歩き -> 待機
+				stateMachine_.AddTransition(StateID::Walk, StateID::Idle, [this]() {
+					return stateMachine_.GetStickLAmount() < 0.01f;
+					});
+
+				// 歩き -> 走り
+				stateMachine_.AddTransition(StateID::Walk, StateID::Run, [this]() {
+					return stateMachine_.IsDash();
+					});
+
+				// 歩き -> 通常攻撃
+				stateMachine_.AddTransition(StateID::Walk, StateID::NormalAttack, [this]() {
+					return stateMachine_.IsActionButtonB();
+					});
+			}
+
+			/** 走り */
+			{
+				// 走り -> 待機
+				stateMachine_.AddTransition(StateID::Run, StateID::Idle, [this]() {
+					return stateMachine_.GetStickLAmount() < 0.01f;
+					});
+
+				// 走り -> 歩き
+				stateMachine_.AddTransition(StateID::Run, StateID::Walk, [this]() {
+					return !stateMachine_.IsDash();
+					});
+
+				// 走り -> 通常攻撃
+				stateMachine_.AddTransition(StateID::Run, StateID::NormalAttack, [this]() {
+					return stateMachine_.IsActionButtonB();
+					});
+			}
+
+			/** 通常攻撃 */
+			{
+				// 通常攻撃 → 待機
+				stateMachine_.AddTransition(StateID::NormalAttack, StateID::Idle, [this]() {
+					auto* currentState = static_cast<PlayerStateBase*>(stateMachine_.GetCurrentState());
+					return currentState && currentState->IsFinished();
+					});
+
+				// 通常攻撃 → 歩き
+				stateMachine_.AddTransition(StateID::NormalAttack, StateID::Walk, [this]() {
+					auto* currentState = static_cast<PlayerStateBase*>(stateMachine_.GetCurrentState());
+					return currentState && currentState->IsFinished();
+					});
+
+				// 通常攻撃 → 走る
+				stateMachine_.AddTransition(StateID::NormalAttack, StateID::Run, [this]() {
+					auto* currentState = static_cast<PlayerStateBase*>(stateMachine_.GetCurrentState());
+					return currentState && currentState->IsCancelable() && stateMachine_.IsDash();
+					});
+			}
+		}
+	}
 }
 
 
@@ -82,6 +142,7 @@ void Player::PlayAnimation(const StateID id)
 	case StateID::Idle: animIndex = anim::ANIMATION_IDLE; break;	// 待機。
 	case StateID::Walk: animIndex = anim::ANIMATION_WALK; break;	// 歩き。
 	case StateID::Run:  animIndex = anim::ANIMATION_RUN; break;		// 走る。
+	case StateID::NormalAttack:  animIndex = anim::ANIMATION_NORMAL_ATTACK; break;		// 走る。
 	
 	default: return; // ないなら処理を返す
 	}
@@ -154,7 +215,7 @@ void Player::Update()
 		transform_.localPosition += moveVelocity_;
 
 		// 回転処理
-		transform_.localRotation.SetRotationYFromDirectionXZ(moveVelocity_);
+		transform_.localRotation = stateMachine_.GetRotation();
 
 		// トランスフォームの更新
 		transform_.UpdateTransform();

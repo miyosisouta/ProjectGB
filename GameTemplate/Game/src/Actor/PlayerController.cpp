@@ -12,13 +12,13 @@ void PlayerController::Update()
 	auto* targetStateMachine = m_target->GetStateMachine();
 	// Aボタンでダッシュ
 	targetStateMachine->SetDash(g_pad[0]->IsPress(enButtonA));
+	// Bボタンで通常攻撃
+	targetStateMachine->ActionButtonB(g_pad[0]->IsPress(enButtonB));
 
 	// スティックの入力を取得
 	float stickX = g_pad[0]->GetLStickXF();
 	float stickY = g_pad[0]->GetLStickYF();
 	
-	/*float stickAmount = sqrtf(stickX * stickX + stickY * stickY);
-	targetStateMachine->SetStickLAmount(stickAmount);*/
 
 	// 回転
 	if (fabs(stickX) >= 0.01f || fabs(stickY) >= 0.01f)

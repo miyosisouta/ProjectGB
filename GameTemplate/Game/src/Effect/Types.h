@@ -10,6 +10,7 @@
 enum enEffectKind
 {
 	enEffectKind = 0,
+	enEffectKind_Wind_Blast = enEffectKind,
 	enEffectKind_Max
 };
 
@@ -26,6 +27,6 @@ struct EffectInformation
 /** 情報を保持 */
 static EffectInformation effectInformation[enEffectKind_Max] =
 {
-	EffectInformation(u"Assets/Effect/effect.efk")
+	EffectInformation(u"Assets/Effect/Wind_Blast.efk")
 };
 

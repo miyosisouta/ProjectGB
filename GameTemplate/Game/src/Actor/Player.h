@@ -6,6 +6,7 @@ class State;
 class Player : public Character
 {
 private:
+	std::unique_ptr<GhostBody> playerHitbox_; //!< プレイヤーの当たり判定用コリジョン
 	Vector3 moveVelocity_ = Vector3::Zero; //!< 毎フレームの移動速度を保持する変数
 
 public:

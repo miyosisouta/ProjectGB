@@ -6,6 +6,8 @@
 
 #include "Game.h"
 
+#include "src/collision/GhostBodyManager.h"
+
 
 
 void ReportLiveObjects()
@@ -33,6 +35,10 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 	// ここから初期化を行うコードを記述する。
 	//////////////////////////////////////
 
+
+	GhostBodyManager::Initialize();
+	
+
 	//Gameクラスのオブジェクトを作成。
 	NewGO<Game>(0, "game");
 
@@ -48,6 +54,8 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 		}
 		K2Engine::GetInstance()->Execute();
 	}
+
+	GhostBodyManager::Finalize();
 
 	K2Engine::DeleteInstance();
 

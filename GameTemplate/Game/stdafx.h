@@ -12,3 +12,8 @@ using namespace nsK2Engine;
 #include "src/Util/Crc32.h"
 #include "src/Memory/Array.h"	//!< 配列
 #include "src/Util/Curve.h"     //!< カーブ
+#include "src/Util/TaskSchedulerSystem.h"
+#include "src/collision/GhostBody.h"
+#include "src/collision/PhysicalBody.h"
+#include "src/Effect/EffectManager.h"
+#include "src/Sound/SoundManager.h"

@@ -18,6 +18,9 @@ namespace
 
 bool Game::Start()
 {
+	// @todo for test
+	PhysicsWorld::Get().EnableDrawDebugWireFrame();
+
 	player_ = NewGO<Player>(0, "player");
 	playerController_ = NewGO<PlayerController>(10, "playerController");
 	playerController_->SetTarget(player_);
@@ -27,6 +30,8 @@ bool Game::Start()
 	//layout = new Layout();
 	//layout->Initialize<SoundOptionMenu>("Assets/ui/layout/SoundOptionMenu.json");
 
+	effect_ = NewGO<EffectManagerObject>(20, "effect");
+	sound_ = NewGO<SoundManagerObject>(10, "sound");
 	return true;
 }
 
