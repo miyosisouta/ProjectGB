@@ -9,7 +9,8 @@
 /** サウンドの種類 */
 enum enSoundKind
 {
-	enSoundKind_SE = 0
+	enSoundKind_SE = 0,
+	enSoundKind_SE_Max,
 };
 
 
@@ -23,10 +24,11 @@ struct SoundInformation
 
 
 /** 情報を保持 */
-//static SoundInformation soundInformation[enSoundKind_SE_Max] =
-//{
-//	//BGM
-//
-//	// SE	
-//};
+static SoundInformation soundInformation[enSoundKind_SE_Max] =
+{
+	//BGM
+	SoundInformation("Assets/Sound/BGM.wav")
+
+	// SE	
+};
 
