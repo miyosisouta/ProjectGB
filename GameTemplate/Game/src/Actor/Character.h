@@ -8,6 +8,8 @@ protected:
 	AllocatedArray<AnimationClip> animationClipList_; //!< アニメーションクリップのリスト
 	StateMachine stateMachine_;
 
+public:
+	StateMachine* GetStateMachine() { return  &stateMachine_; }
 
 public:
 	/* コンストラクタ */

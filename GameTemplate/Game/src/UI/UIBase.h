@@ -24,18 +24,18 @@ public:
 public:
 	// deleteがいらない
 	//std::vector<std::unique_ptr<UIAnimationBase>> m_uiAnimationList;
-	std::unordered_map<uint32_t, std::unique_ptr<UIAnimationBase>> m_uiAnimationList;
+	std::unordered_map<uint32_t, std::unique_ptr<UIAnimationBase>> uiAnimationList;
 
 
 public:
 	UIBase()
 	{
-		m_uiAnimationList.clear();
+		uiAnimationList.clear();
 	}
 	virtual ~UIBase()
 	{
 		// 明示的に消しているだけ。本来は要らない
-		m_uiAnimationList.clear();
+		uiAnimationList.clear();
 	}
 
 	//virtual bool Start() = 0;
@@ -67,7 +67,7 @@ public:
 	}
 	bool IsPlayAniamtion()
 	{
-		auto it = std::find_if(m_uiAnimationList.begin(), m_uiAnimationList.end(), [&](const auto& animationPair)
+		auto it = std::find_if(uiAnimationList.begin(), uiAnimationList.end(), [&](const auto& animationPair)
 			{
 				auto* animation = animationPair.second.get();
 				if (animation->IsPlay()) {
@@ -75,7 +75,7 @@ public:
 				}
 				return false;
 			});
-		return it != m_uiAnimationList.end();
+		return it != uiAnimationList.end();
 	}
 	void StopSpriteAnimation()
 	{
@@ -87,29 +87,29 @@ public:
 	bool IsComplted() const
 	{
 		// すべて再生済みか
-		auto it = std::find_if(m_uiAnimationList.begin(), m_uiAnimationList.end(), [&](const auto& animationPair)
+		auto it = std::find_if(uiAnimationList.begin(), uiAnimationList.end(), [&](const auto& animationPair)
 			{
 				auto* animation = animationPair.second.get();
 				return !animation->IsPlay();
 			});
-		return it != m_uiAnimationList.end();
+		return it != uiAnimationList.end();
 	}
 
 
 	void AddAnimation(const uint32_t key, std::unique_ptr<UIAnimationBase> animation)
 	{
 		animation->SetUI(this);
-		m_uiAnimationList.emplace(key, std::move(animation));
+		uiAnimationList.emplace(key, std::move(animation));
 	}
 
 	void RemoveAnimation(const uint32_t key)
 	{
-		m_uiAnimationList.erase(key);
+		uiAnimationList.erase(key);
 	}
 
 	void ForEachAnimation(const std::function<void(UIAnimationBase*)>& func)
 	{
-		for (auto& animation : m_uiAnimationList)
+		for (auto& animation : uiAnimationList)
 		{
 			func(animation.second.get());
 		}
@@ -117,8 +117,8 @@ public:
 
 	UIAnimationBase* FindAnimaion(const uint32_t key)
 	{
-		auto it = m_uiAnimationList.find(key);
-		if (it != m_uiAnimationList.end())
+		auto it = uiAnimationList.find(key);
+		if (it != uiAnimationList.end())
 		{
 			return it->second.get();
 		}
@@ -137,7 +137,7 @@ public:
 class UIImage : public UIBase
 {
 protected:
-	SpriteRender m_spriteRender;
+	SpriteRender spriteRender_;
 
 
 protected:
@@ -151,7 +151,7 @@ public:
 
 public:
 	/** スプライトレンダーの取得 */
-	SpriteRender* GetSpriteRender() { return &m_spriteRender; }
+	SpriteRender* GetSpriteRender() { return &spriteRender_; }
 };
 
 
@@ -211,7 +211,7 @@ public:
 class UIText : public UIBase
 {
 protected:
-	FontRender m_fontRender;
+	FontRender fontRender_;
 
 
 private:
@@ -225,7 +225,7 @@ public:
 
 	void SetText(const wchar_t* text)
 	{
-		m_fontRender.SetText(text);
+		fontRender_.SetText(text);
 	}
 };
 
@@ -238,7 +238,7 @@ class UIButton : public UIImage
 {
 private:
 	/** ボタンが押されたときの処理(外部から委譲される) */
-	std::function<void()> m_delegate;
+	std::function<void()> delegate_;
 
 
 private:
@@ -260,13 +260,13 @@ class UIDigit : public UIBase
 {
 private:
 	/** 画像表示機能の可変長配列 */
-	std::vector<SpriteRender*> m_renderList;
+	std::vector<SpriteRender*> renderList_;
 	/** 表示される数字 */
-	int m_number;
-	int m_requestNumber;
-	int m_digit;
+	int number_;
+	int requestNumber_;
+	int digit_;
 	/** 数字表示に必要な画像が入った */
-	std::string m_assetPath;
+	std::string assetPath_;
 
 	int w;
 	int h;
@@ -297,13 +297,13 @@ public:
 	void Initialize(const char* assetPath, const int digit, const int number, const float widht, const float height, const Vector3& position, const Vector3& scale, const Quaternion& rotation);
 
 	/** 数字を設定 */
-	void SetNumber(const int number) { m_requestNumber = number; }
+	void SetNumber(const int number) { requestNumber_ = number; }
 
-	std::vector<SpriteRender*>& GetSpriteRenderList() { return m_renderList; }
+	std::vector<SpriteRender*>& GetSpriteRenderList() { return renderList_; }
 
 	void ForEach(const std::function<void(SpriteRender*)>& func)
 	{
-		for (auto* render : m_renderList) {
+		for (auto* render : renderList_) {
 			func(render);
 		}
 	}
@@ -344,7 +344,7 @@ private:
 	 * NOTE: 各UI自体に親子関係持たせたいけど使わない可能性があるので、一旦ここだけにしてみる
 	 */
 	 //std::vector<UIBase*> m_uiList;
-	std::unordered_map<uint32_t, std::unique_ptr<UIBase>> m_uiList;
+	std::unordered_map<uint32_t, std::unique_ptr<UIBase>> uiList_;
 
 
 public:
@@ -361,21 +361,22 @@ public:
 	T* CreateUI(const uint32_t key)
 	{
 		auto ui = std::make_unique<T>();
-		ui->m_transform.SetParent(&m_transform);
-		m_uiList.emplace(key, std::move(ui));
-		return static_cast<T*>(m_uiList[key].get());
+		// transformの名前が違うかも もしエラーはいたら確認
+		ui->transform.SetParent(&transform);
+		uiList_.emplace(key, std::move(ui));
+		return static_cast<T*>(uiList_[key].get());
 	}
 
 	void RemoveUI(const uint32_t key)
 	{
-		m_uiList.erase(key);
+		uiList_.erase(key);
 	}
 
 	template <typename T>
 	T* FindUI(const uint32_t key)
 	{
-		auto it = m_uiList.find(key);
-		if (it != m_uiList.end())
+		auto it = uiList_.find(key);
+		if (it != uiList_.end())
 		{
 			return dynamic_cast<T*>(it->second.get());
 		}

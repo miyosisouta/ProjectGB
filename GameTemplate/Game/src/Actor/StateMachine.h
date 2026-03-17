@@ -41,6 +41,31 @@ private:
 	StateID currentStateId_ = StateID::None; //!< 現在のステートのid
 	StateID nextStateId_ = StateID::None;	 //!< 次のステートのid
 
+private:
+	Quaternion rotation_ = Quaternion::Identity; //!< 回転：モデルをどちらに向けるか
+	Vector3 direction_ = Vector3::Zero; //!< 方向：カメラ基準でどちらを向くか
+	float stickLAmount_ = 0.0f; //!< 左スティックの入力量：キャラクターが移動しているかわかる
+	bool dash_ = false; //!< ダッシュするか
+	bool actionButtonB_ = false; //!< Bボタンを押したか
+	bool actionButtonX_ = false; //!< Xボタンを押したか
+	bool actionButtonY_ = false; //!< Yボタンを押したか
+
+
+public:
+	inline Quaternion GetRotation() { return rotation_; }				//!< 回転の取得
+	inline void SetRotation(const Quaternion rot) { rotation_ = rot; }	//!< 回転の設定
+	inline const Vector3& GetDirection() { return direction_; }			//!< 方向の取得
+	inline void SetDirection(const Vector3& dir) { direction_ = dir; }	//!< 方向の設定
+	inline float GetStickLAmount() { return stickLAmount_; }			//!< 入力されているか
+	inline void SetStickLAmount(const float stickLAmount) { stickLAmount_ = stickLAmount; } //!< 入力量を設定
+	inline bool IsDash() { return dash_; }								//!< Aボタンされているか
+	inline void SetDash(const bool flg) { dash_ = flg; }				//!< Aボタンの設定
+	inline bool IsActionButtonB() { return actionButtonB_; }			//!< Bボタンされているか
+	inline void ActionButtonB(const bool flg) { actionButtonB_ = flg; }	//!< Bボタンの設定
+	inline bool IsActionButtonY() { return actionButtonY_; }			//!< Yボタンされているか
+	inline void ActionButtonY(const bool flg) { actionButtonY_ = flg; }	//!< Yボタンの設定
+	inline bool IsActionButtonX() { return actionButtonX_; }			//!< Xボタンされているか
+	inline void ActionButtonX(const bool flg) { actionButtonX_ = flg; }	//!< Xボタンの設定
 
 public:
 	/* コンストラクタ */
@@ -53,8 +78,9 @@ public:
 	/* ステートの切り替えと更新 */
 	void UpdateState();
 
-
-/************************** ステート関係 **************************/
+/*================================================================*/
+/** ステート関係 */
+/*================================================================*/
 
 public:
 	/* 新しいステートの登録を行う */

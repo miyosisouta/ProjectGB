@@ -5,6 +5,13 @@
 class State;
 class Player : public Character
 {
+private:
+	Vector3 moveVelocity_ = Vector3::Zero; //!< 毎フレームの移動速度を保持する変数
+
+public:
+	inline void SetMoveVelocity(const Vector3& velocity) { moveVelocity_ = velocity; } //!< 移動速度の設定
+	inline Vector3 GetMoveVelocity() { return moveVelocity_; } //!< 移動速度を取得
+
 public:
 	/** 遷移ルールのセットアップ */
 	void SetUpTranslateRulu();
