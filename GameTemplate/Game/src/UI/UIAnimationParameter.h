@@ -3,7 +3,7 @@
  * アニメーション情報の外部ファイル管理＆ホットリロード
  */
 #pragma once
-#include "src/json/json.hpp"
+#include <src/json/json.hpp>
 
 
 /**

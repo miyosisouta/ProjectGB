@@ -94,8 +94,18 @@ T clamp(T value, T low, T high) {
 		// 再生していなければ何もしない
          if (!isPlaying_) return;
 
-		// 時間を進める
-         currentTime_ += loopMode_ == LoopMode::PingPong ? deltaTime * direction_ : deltaTime;
+         // 時間を進める
+         if (loopMode_ == LoopMode::Loop)
+         {
+             currentTime_ += deltaTime * direction_;
+         }
+         else if (loopMode_ == LoopMode::PingPong) {
+             currentTime_ += deltaTime * direction_;
+         }
+         else {
+             currentTime_ += deltaTime;
+         }
+
 
 		// 終了判定とループ処理
          if (currentTime_ >= duration_) {

@@ -4,20 +4,38 @@
 #include "Src/Actor/PlayerController.h"
 
 
+// @todo for test
+#include "src/UI/Layout.h"
+#include "src/UI/SoundOptionMenu.h"
+#include "src/UI/UIAnimationParameter.h"
+
+
+namespace
+{
+	static Layout* layout = nullptr;
+}
+
+
 bool Game::Start()
 {
 	player_ = NewGO<Player>(0, "player");
 	playerController_ = NewGO<PlayerController>(10, "playerController");
 	playerController_->SetTarget(player_);
+
+	UIAnimationParameter::Get().Load("Assets/ui/uiAnimation/UIAnimation.json");
+
+	//layout = new Layout();
+	//layout->Initialize<SoundOptionMenu>("Assets/ui/layout/SoundOptionMenu.json");
+
 	return true;
 }
 
 void Game::Update()
 {
-	
+	//layout->Update();
 }
 
 void Game::Render(RenderContext& rc)
 {
-	
+	//layout->Render(rc);
 }

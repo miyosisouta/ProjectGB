@@ -5,6 +5,8 @@
 using namespace nsK2EngineLow;
 using namespace nsK2Engine;
 
+#include <src/json/json.hpp>
+
 #include "src/Types.h"			//!< タイプ
 #include "src/Math/Transform.h"	//!< トランスフォーム
 #include "src/Util/Crc32.h"
