@@ -1,13 +1,43 @@
-/**
- * UIBase.cpp
- * UIの基本的な処理をするクラス群
+﻿/**
+ * UIParts.cpp
+ * UIのパーツ群
  */
 #include "stdafx.h"
-#include "UIBase.h"
+#include "UIParts.h"
 
-  // ============================================
-  // 画像を使うUI関連
-  // ============================================
+
+// ============================================
+// UIBase 共通
+// ============================================
+
+/**
+ * finalColor_ を更新する
+ *
+ * 親 Canvas がある場合: finalColor_ = color * parentCanvas_->finalColor_
+ * 親 Canvas がない場合: finalColor_ = color  （Canvas 自身や最上位の UI）
+ *
+ * RGBA それぞれ独立して乗算するため、
+ * 親が半透明でも子の個別カラーを保ちつつ合成される。
+ */
+void UIBase::ComputeFinalColor()
+{
+	if (parentCanvas_)
+	{
+		finalColor_.x = color.x * parentCanvas_->finalColor_.x;
+		finalColor_.y = color.y * parentCanvas_->finalColor_.y;
+		finalColor_.z = color.z * parentCanvas_->finalColor_.z;
+		finalColor_.w = color.w * parentCanvas_->finalColor_.w;
+	}
+	else
+	{
+		finalColor_ = color;
+	}
+}
+
+
+// ============================================
+// 画像を使うUI関連
+// ============================================
 
 
 UIImage::UIImage()
@@ -47,6 +77,8 @@ UIGauge::~UIGauge()
 
 void UIGauge::Update()
 {
+	ComputeFinalColor();
+	spriteRender_.SetMulColor(finalColor_);
 	transform.UpdateTransform();
 	spriteRender_.SetPosition(transform.position);
 	spriteRender_.SetScale(transform.scale);
@@ -89,27 +121,17 @@ UIIcon::~UIIcon()
 {
 }
 
+
 void UIIcon::Update()
 {
-	//// @too for test
-	//for (auto& animation : m_uiAnimationList)
-	//{
-	//	//UpdateAnimation();
-	//	animation->Update();
-	//}
-
 	UpdateAnimation();
-
-	spriteRender_.SetMulColor(color);
+	ComputeFinalColor();
+	spriteRender_.SetMulColor(finalColor_);
 	transform.UpdateTransform();
 	spriteRender_.SetPosition(transform.position);
 	spriteRender_.SetScale(transform.scale);
 	spriteRender_.SetRotation(transform.rotation);
 	spriteRender_.Update();
-
-	//for (auto& animation : m_uiAnimationList) {
-	//	animation->Update();
-	//}
 }
 
 
@@ -123,17 +145,64 @@ void UIIcon::Render(RenderContext& rc)
 
 void UIIcon::Initialize(const char* assetName, const float width, const float height)
 {
-	//m_transform.m_localPosition = position;
-	//m_transform.m_localScale = scale;
-	//m_transform.m_localRotation = rotation;
-
-	//m_spriteRender.Init(assetName, width, height);
-	//m_spriteRender.SetPosition(position);
-	//m_spriteRender.SetScale(scale);
-	//m_spriteRender.SetRotation(rotation);
-	//m_spriteRender.Update();
-
 	spriteRender_.Init(assetName, width, height);
+}
+
+
+
+
+/********************************/
+
+
+UIText::UIText()
+{
+}
+
+
+UIText::~UIText()
+{
+}
+
+
+void UIText::Update()
+{
+	UpdateAnimation();
+	ComputeFinalColor();
+	transform.UpdateTransform();
+	fontRender_.SetPosition(transform.position);
+	fontRender_.SetScale(transform.scale.x);
+	fontRender_.SetColor(finalColor_);
+}
+
+
+void UIText::Render(RenderContext& rc)
+{
+	fontRender_.Draw(rc);
+}
+
+
+
+
+/********************************/
+
+
+UIButton::UIButton()
+{
+}
+
+
+UIButton::~UIButton()
+{
+}
+
+
+void UIButton::Update()
+{
+}
+
+
+void UIButton::Render(RenderContext& rc)
+{
 }
 
 
@@ -154,8 +223,17 @@ UIDigit::~UIDigit()
 
 void UIDigit::Update()
 {
+	ComputeFinalColor();
 	if (number_ != requestNumber_) {
 		number_ = requestNumber_;
+		digit_ = ComputeDigit();
+
+		//不要な桁を削除
+		while (renderList_.size() > digit_) {
+			delete renderList_.back();
+			renderList_.pop_back();
+		}
+
 		for (int i = 0; i < digit_; ++i) {
 			UpdateNumber(i + 1, number_);
 		}
@@ -170,35 +248,29 @@ void UIDigit::Update()
 		UpdatePosition(i);
 		spriteRender->SetScale(transform.scale);
 		spriteRender->SetRotation(transform.rotation);
-		spriteRender->SetMulColor(color);
+		spriteRender->SetMulColor(finalColor_);
 		spriteRender->Update();
 	}
 
-	/*for (auto& animation : m_uiAnimationList) {
-		animation->Update();
-	}*/
 }
 
 
 void UIDigit::Render(RenderContext& rc)
 {
-	if (!isDraw)
-	{
-		return;
-	}
 	for (SpriteRender* spriteRender : renderList_)
 	{
 		spriteRender->Draw(rc);
 	}
 }
 
+
 void UIDigit::Initialize(const char* assetName, const int digit, const int number, const float widht, const float height, const Vector3& position, const Vector3& scale, const Quaternion& rotation)
 {
 	assetPath_ = assetName;
 	digit_ = digit;
 	number_ = number;
-	w = widht;
-	h = height;
+	w_ = widht;
+	h_ = height;
 
 	transform.localPosition = position;
 	transform.localScale = scale;
@@ -216,22 +288,6 @@ void UIDigit::Initialize(const char* assetName, const int digit, const int numbe
 	}
 }
 
-
-// @todo for test
-//void UIDigit::SetCustomChar(int targetDigit, const std::string& assetPath)
-//{
-//	K2_ASSERT(targetDigit >= 1, "桁指定が間違えています。\n");
-//
-//	int targetIndex = targetDigit - 1;
-//	if (targetIndex >= m_renderList.size())
-//	{
-//		return; // 範囲外
-//	}
-//
-//	SpriteRender* render = m_renderList[targetIndex];
-//	std::string assetName = m_assetPath + "/" + assetPath; // coron.dds
-//	render->Init(assetName.c_str(), w, h);
-//}
 
 void UIDigit::UpdateNumber(const int targetDigit, const int number)
 {
@@ -253,9 +309,8 @@ void UIDigit::UpdateNumber(const int targetDigit, const int number)
 	// 対象の桁の数字
 	const int targetDigitNumber = GetDigit(targetDigit);
 	std::string assetNname = assetPath_ + "/0.dds";
-	// 数字の部分を桁の数字で変える
 	assetNname[assetNname.size() - 5] = '0' + targetDigitNumber;
-	nextRender->Init(assetNname.c_str(), w, h);
+	nextRender->Init(assetNname.c_str(), w_, h_);
 }
 
 
@@ -263,8 +318,21 @@ void UIDigit::UpdatePosition(const int index)
 {
 	SpriteRender* render = renderList_[index];
 	Vector3 position = transform.position;
-	position.x -= w * index;
+	position.x -= w_ * index;
 	render->SetPosition(position);
+}
+
+int UIDigit::ComputeDigit()
+{
+	int n = number_;
+	if (n == 0) return 1;
+	int count = 0;
+	n = std::abs(n);
+	while (n > 0) {
+		n /= 10;
+		count++;
+	}
+	return count;
 }
 
 
@@ -291,31 +359,29 @@ UICanvas::UICanvas()
 
 UICanvas::~UICanvas()
 {
-	//for(auto* ui : m_uiList) {
-	//	// トランスフォームの親子関係を解除
-	//	m_transform.RemoveChild(&ui->m_transform);
-	//	// キャンバス上にあるUIを削除
-	//	delete ui;
-	//	ui = nullptr;
-	//}
 	uiList_.clear();
 }
 
 
 void UICanvas::Update()
 {
+	UpdateAnimation();
+
+	// 自分の finalColor_ を先に確定する。
+	// 子の ComputeFinalColor() がこの値を参照するため、子の Update より前に呼ぶこと。
+	ComputeFinalColor();
+
 	transform.UpdateTransform();
 
 	for (auto& ui : uiList_) {
-		ui.second->Update();
+		ui.get()->Update();
 	}
 }
+
 
 void UICanvas::Render(RenderContext& rc)
 {
 	for (auto& ui : uiList_) {
-		ui.second->Render(rc);
+		ui.get()->Render(rc);
 	}
 }
-
-

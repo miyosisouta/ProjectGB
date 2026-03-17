@@ -143,9 +143,6 @@
     <ClCompile Include="math\Matrix.cpp">
       <Filter>math</Filter>
     </ClCompile>
-    <ClCompile Include="math\Vector.cpp">
-      <Filter>math</Filter>
-    </ClCompile>
     <ClCompile Include="physics\SphereCollider.cpp">
       <Filter>physics</Filter>
     </ClCompile>
@@ -230,6 +227,9 @@
     </ClCompile>
     <ClCompile Include="HID\GamePadVIbration.cpp">
       <Filter>HID</Filter>
+    </ClCompile>
+    <ClCompile Include="math\Vector.cpp">
+      <Filter>math</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -396,9 +396,6 @@
     <ClInclude Include="level3D\MapChip.h">
       <Filter>level3D</Filter>
     </ClInclude>
-    <ClInclude Include="math\Vector.h">
-      <Filter>math</Filter>
-    </ClInclude>
     <ClInclude Include="math\Math.h">
       <Filter>math</Filter>
     </ClInclude>
@@ -513,6 +510,9 @@
     </ClInclude>
     <ClInclude Include="HID\GamePadVibration.h">
       <Filter>HID</Filter>
+    </ClInclude>
+    <ClInclude Include="math\Vector.h">
+      <Filter>math</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

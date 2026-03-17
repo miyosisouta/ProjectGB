@@ -1,20 +1,26 @@
-/**
+﻿/**
  * UIAnimation.cpp
- * UIAnimationをアニメーションさせる機能群
+ * UI用のアニメーション処理群
  */
 #include "stdafx.h"
 #include "UIAnimation.h"
-#include "UIBase.h"
+#include "UIParts.h"
 
 
 UIColorAnimation::UIColorAnimation()
 {
-	SetFunc([&](Vector4 v) {
-		ui_->color = v;
-		});
+	// applyFunc_ は Update() 内で直接 ui_->color に書き込むため不要
 }
 
-
+void UIColorAnimation::Update()
+{
+	bool wasPlaying = curve_.IsPlaying();
+	curve_.Update(g_gameTime->GetFrameDeltaTime());
+	if ((curve_.IsPlaying() || wasPlaying) && ui_)
+	{
+		ui_->color = curve_.GetCurrentValue();
+	}
+}
 
 
 /*******************************************************/
@@ -22,27 +28,35 @@ UIColorAnimation::UIColorAnimation()
 
 UIScaleAnimation::UIScaleAnimation()
 {
-	SetFunc([&](Vector3 s) {
-		ui_->transform.localScale = s;
-		//m_ui->m_transform.UpdateTransform();
-		});
 }
 
-
+void UIScaleAnimation::Update()
+{
+	bool wasPlaying = curve_.IsPlaying();
+	curve_.Update(g_gameTime->GetFrameDeltaTime());
+	if ((curve_.IsPlaying() || wasPlaying) && ui_)
+	{
+		ui_->transform.localScale = curve_.GetCurrentValue();
+	}
+}
 
 
 /*******************************************************/
 
 
-UITranslateAniamtion::UITranslateAniamtion()
+UITranslateAnimation::UITranslateAnimation()
 {
-	SetFunc([&](Vector3 s) {
-		ui_->transform.localPosition = s;
-		//m_ui->m_transform.UpdateTransform();
-		});
 }
 
-
+void UITranslateAnimation::Update()
+{
+	bool wasPlaying = curve_.IsPlaying();
+	curve_.Update(g_gameTime->GetFrameDeltaTime());
+	if ((curve_.IsPlaying() || wasPlaying) && ui_)
+	{
+		ui_->transform.localPosition = curve_.GetCurrentValue();
+	}
+}
 
 
 /*******************************************************/
@@ -50,10 +64,34 @@ UITranslateAniamtion::UITranslateAniamtion()
 
 UITranslateOffsetAnimation::UITranslateOffsetAnimation()
 {
-	SetFunc([&](Vector3 offset) {
-		ui_->transform.localPosition.Add(offset);
-		//m_ui->m_transform.UpdateTransform();
-		});
+}
+
+void UITranslateOffsetAnimation::Update()
+{
+	bool wasPlaying = curve_.IsPlaying();
+	curve_.Update(g_gameTime->GetFrameDeltaTime());
+	if ((curve_.IsPlaying() || wasPlaying) && ui_)
+	{
+		ui_->transform.localPosition.Add(curve_.GetCurrentValue());
+	}
+}
+
+
+/*******************************************************/
+
+
+UIRotationAnimation::UIRotationAnimation()
+{
+}
+
+void UIRotationAnimation::Update()
+{
+	bool wasPlaying = curve_.IsPlaying();
+	curve_.Update(g_gameTime->GetFrameDeltaTime());
+	if ((curve_.IsPlaying() || wasPlaying) && ui_)
+	{
+		ui_->transform.localRotation.SetRotationDegZ(curve_.GetCurrentValue());
+	}
 }
 
 
@@ -62,14 +100,58 @@ UITranslateOffsetAnimation::UITranslateOffsetAnimation()
 /*******************************************************/
 
 
-UIRotationAnimation::UIRotationAnimation()
+void UICanvasFadeAnimation::Update()
 {
-	SetFunc([&](float s)
-		{
-			/*Quaternion q;
-			q.SetRotationDegY(s);
-			m_ui->m_transform.m_localRotation = q;
-			m_ui->m_transform.UpdateTransform();*/
-			ui_->transform.localRotation.SetRotationDegZ(s);
-		});
+	bool wasPlaying = curve_.IsPlaying();
+	curve_.Update(g_gameTime->GetFrameDeltaTime());
+	if ((curve_.IsPlaying() || wasPlaying) && ui_)
+	{
+		ui_->color.w = curve_.GetCurrentValue();
+	}
+}
+
+
+/*******************************************************/
+
+
+void UIAnimationSequence::Update(float deltaTime)
+{
+	if (!isPlaying_ || !target_) return;
+
+	// ディレイ待ち
+	if (waitingDelay_) {
+		delayTimer_ -= deltaTime;
+		if (delayTimer_ > 0.0f) return;
+		waitingDelay_ = false;
+		StartCurrentStep();
+		return;
+	}
+
+	// 現在のアニメーション完了チェック
+	if (currentIndex_ >= 0 && currentIndex_ < static_cast<int>(steps_.size())) {
+		const auto& step = steps_[currentIndex_];
+		UIAnimationBase* anim = target_->FindAnimation(step.animationKey);
+		if (anim && !anim->IsPlay()) {
+			// 完了コールバック
+			if (step.onComplete) step.onComplete();
+			AdvanceToNext();
+		}
+	}
+}
+
+
+void UIAnimationSequence::StartCurrentStep()
+{
+	if (currentIndex_ < 0 || currentIndex_ >= static_cast<int>(steps_.size())) return;
+
+	const auto& step = steps_[currentIndex_];
+	UIAnimationBase* anim = target_->FindAnimation(step.animationKey);
+	if (anim) {
+		if (step.onStart) step.onStart();
+		anim->Play();
+	}
+	else {
+		// アニメーションが見つからない場合はスキップ
+		AdvanceToNext();
+	}
 }
