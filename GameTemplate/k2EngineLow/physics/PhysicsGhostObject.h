@@ -20,7 +20,7 @@ namespace nsK2EngineLow {
 		void Release()
 		{
 			if (m_isRegistPhysicsWorld == true) {
-				PhysicsWorld::GetInstance()->RemoveCollisionObject(m_ghostObject);
+				PhysicsWorld::Get().RemoveCollisionObject(m_ghostObject);
 				m_isRegistPhysicsWorld = false;
 			}
 		}

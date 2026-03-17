@@ -57,7 +57,7 @@ namespace nsK2Engine {
 		btEnd.setOrigin(btVector3(position.x, position.y, position.z));
 		SConvexSweepCallback callback(vWk);
 		//	callback.m_collisionFilterGroup = 
-		PhysicsWorld::GetInstance()->ConvexSweepTest((const btConvexShape*)m_collider.GetBody(), btStart, btEnd, callback);
+		//PhysicsWorld::Get().ConvexSweepTest((const btConvexShape*)m_collider.GetBody(), btStart, btEnd, callback);
 		if (callback.hasHit()) {
 			Vector3 vHitPos = Vector3(callback.m_hitPointWorld.x(), callback.m_hitPointWorld.y(), callback.m_hitPointWorld.z());
 			Vector3 vOffset = Vector3(callback.m_hitNormalWorld.x(), callback.m_hitNormalWorld.y(), callback.m_hitNormalWorld.z());

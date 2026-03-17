@@ -27,7 +27,7 @@ namespace nsK2EngineLow {
 		btRbInfo.m_restitution = initData.restitution;
 		m_rigidBody = std::make_unique<btRigidBody>(btRbInfo);
 
-		PhysicsWorld::GetInstance()->AddRigidBody(*this);
+		PhysicsWorld::Get().AddRigidBody(*this);
 	}
 	RigidBody::~RigidBody()
 	{
@@ -37,7 +37,7 @@ namespace nsK2EngineLow {
 	void RigidBody::Release()
 	{
 		if (m_rigidBody) {
-			PhysicsWorld::GetInstance()->RemoveRigidBody(*this);
+			PhysicsWorld::Get().RemoveRigidBody(*this);
 		}
 	}
 }

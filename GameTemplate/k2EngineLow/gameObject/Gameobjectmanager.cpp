@@ -46,7 +46,7 @@ namespace nsK2EngineLow {
 		}
 		
 		//物理エンジンのアップデートを呼び出す。
-		PhysicsWorld::GetInstance()->Update(1.0f / 60.0f);
+		PhysicsWorld::Get().Update(1.0f / 60.0f);
 	}
 	void GameObjectManager::ExecuteRender(RenderContext& rc)
 	{

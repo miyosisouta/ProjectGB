@@ -153,27 +153,27 @@ namespace nsAI {
 				float offset = agentHeight * 0.5f + agentRadius + agentHeight * 0.1f;
 				rayStartPos.y += offset;
 				rayEndPos.y += offset;
-				if (physicsWorld->ConvexSweepTest(collider, rayStartPos, rayEndPos)) {
-					// 何かのオブジェクトとぶつかった。
-					// 始点から終点の間のセルは削除できない。
-					// 次のブロックを見ていく。
-					rayStartCellIt = rayEndCellIt;
-					rayPrevCellit = rayEndCellIt;
-					rayPrevCellit++;
-					if (rayPrevCellit == cellList.end()) {
-						// 終わり。
-						break;
-					}
-					rayEndCellIt = rayPrevCellit;
-					rayEndCellIt++;
-				}
-				else {
-					// ぶつからなかった → 始点と終点の間のセルは除去できる。
-					cellList.erase(rayPrevCellit);
-					// 次。
-					rayPrevCellit = rayEndCellIt;
-					rayEndCellIt++;
-				}
+				//if (physicsWorld->ConvexSweepTest(collider, rayStartPos, rayEndPos)) {
+				//	// 何かのオブジェクトとぶつかった。
+				//	// 始点から終点の間のセルは削除できない。
+				//	// 次のブロックを見ていく。
+				//	rayStartCellIt = rayEndCellIt;
+				//	rayPrevCellit = rayEndCellIt;
+				//	rayPrevCellit++;
+				//	if (rayPrevCellit == cellList.end()) {
+				//		// 終わり。
+				//		break;
+				//	}
+				//	rayEndCellIt = rayPrevCellit;
+				//	rayEndCellIt++;
+				//}
+				//else {
+				//	// ぶつからなかった → 始点と終点の間のセルは除去できる。
+				//	cellList.erase(rayPrevCellit);
+				//	// 次。
+				//	rayPrevCellit = rayEndCellIt;
+				//	rayEndCellIt++;
+				//}
 			}
 		}
 	}

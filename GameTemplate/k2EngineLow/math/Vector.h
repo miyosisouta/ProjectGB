@@ -419,6 +419,15 @@ namespace nsK2EngineLow {
 			Div(s);
 			return *this;
 		}
+
+
+		bool IsEqual(const Vector3& v, float epsilon = 0.00001f) const
+		{
+			// x, y, z のそれぞれの差が、ごくわずかな値（epsilon）より小さければ同じとみなす
+			return (std::abs(x - v.x) < epsilon) &&
+				(std::abs(y - v.y) < epsilon) &&
+				(std::abs(z - v.z) < epsilon);
+		}
 	};
 	/// <summary>
 	/// 4次元ベクトルクラス。
@@ -949,6 +958,15 @@ namespace nsK2EngineLow {
 			DirectX::XMVECTOR xmv = DirectX::XMVector3Rotate(_v, *this);
 			DirectX::XMStoreFloat3(&_v.vec, xmv);
 		}
+
+		bool IsEqual(const Vector4& v, float epsilon = 0.00001f) const
+		{
+			return (std::abs(x - v.x) <= epsilon) &&
+				(std::abs(y - v.y) <= epsilon) &&
+				(std::abs(z - v.z) <= epsilon) &&
+				(std::abs(w - v.w) <= epsilon);
+		}
+
 	};
 	
 	//整数型のベクトルクラス。
