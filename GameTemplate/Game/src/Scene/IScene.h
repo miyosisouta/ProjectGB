@@ -5,12 +5,13 @@
  */
 
 #pragma once
+#include "src/Util/Crc32.h"
 
 
  /** 各シーンにIDを割り振る */
-#define appScene(scene)\
+#define Scene(scene)\
 public:\
- static constexpr uint32_t ID() { return appHash32(#scene); }
+ static constexpr uint32_t ID() { return Hash32(#scene); }
 
 
 class IScene
