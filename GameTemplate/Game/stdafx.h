@@ -9,3 +9,4 @@ using namespace nsK2Engine;
 #include "src/Math/Transform.h"	//!< トランスフォーム
 #include "src/Util/Crc32.h"
 #include "src/Memory/Array.h"	//!< 配列
+#include "src/Util/Curve.h"     //!< カーブ

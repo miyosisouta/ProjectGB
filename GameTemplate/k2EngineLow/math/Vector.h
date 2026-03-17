@@ -121,6 +121,24 @@ namespace nsK2EngineLow {
 		{
 			Set(x, y, z);
 		}
+		Vector3(float xyz)
+		{
+			Set(xyz, xyz, xyz);
+		}
+
+		/// <summary>
+		/// 2つのVector3が指定された誤差範囲内で等しいかどうかを判定します。
+		/// </summary>
+		/// <param name="other">比較対象のVector3。</param>
+		/// <param name="epsilon">比較時の許容誤差（デフォルト: 1e-5f）。</param>
+		/// <returns>2つのベクトルが誤差範囲内で等しい場合はtrue、それ以外の場合はfalse。</returns>
+		bool IsEqual(const Vector3& other, float epsilon = 1e-5f) const
+		{
+			return (fabsf(x - other.x) <= epsilon)
+				&& (fabsf(y - other.y) <= epsilon)
+				&& (fabsf(z - other.z) <= epsilon);
+		}
+
 		/// <summary>
 		/// 線形補完
 		/// </summary>
@@ -419,15 +437,6 @@ namespace nsK2EngineLow {
 			Div(s);
 			return *this;
 		}
-
-
-		bool IsEqual(const Vector3& v, float epsilon = 0.00001f) const
-		{
-			// x, y, z のそれぞれの差が、ごくわずかな値（epsilon）より小さければ同じとみなす
-			return (std::abs(x - v.x) < epsilon) &&
-				(std::abs(y - v.y) < epsilon) &&
-				(std::abs(z - v.z) < epsilon);
-		}
 	};
 	/// <summary>
 	/// 4次元ベクトルクラス。
@@ -718,6 +727,19 @@ namespace nsK2EngineLow {
 		{
 		}
 		/// <summary>
+		/// 2つのクォータニオンが誤差範囲内で等しいかどうかを判定します。
+		/// </summary>
+		/// <param name="other">比較対象のクォータニオン。</param>
+		/// <param name="epsilon">比較時の許容誤差。デフォルト値は1e-5f。</param>
+		/// <returns>2つのクォータニオンが誤差範囲内で等しい場合はtrue、そうでない場合はfalse。</returns>
+		bool IsEqual(const Quaternion& other, float epsilon = 1e-5f) const
+		{
+			return (fabsf(x - other.x) <= epsilon)
+				&& (fabsf(y - other.y) <= epsilon)
+				&& (fabsf(z - other.z) <= epsilon)
+				&& (fabsf(w - other.w) <= epsilon);
+		}
+		/// <summary>
 		/// X軸周りの回転クォータニオンを作成。
 		/// </summary>
 		/// <param name="axis"></param>
@@ -958,15 +980,6 @@ namespace nsK2EngineLow {
 			DirectX::XMVECTOR xmv = DirectX::XMVector3Rotate(_v, *this);
 			DirectX::XMStoreFloat3(&_v.vec, xmv);
 		}
-
-		bool IsEqual(const Vector4& v, float epsilon = 0.00001f) const
-		{
-			return (std::abs(x - v.x) <= epsilon) &&
-				(std::abs(y - v.y) <= epsilon) &&
-				(std::abs(z - v.z) <= epsilon) &&
-				(std::abs(w - v.w) <= epsilon);
-		}
-
 	};
 	
 	//整数型のベクトルクラス。
@@ -977,6 +990,35 @@ namespace nsK2EngineLow {
 			int v[4];
 		};
 	};
+	/// <summary>
+	/// ベクトル同士の加算。
+	/// </summary>
+	static inline Vector2 operator+(const Vector2& v0, const Vector2& v1)
+	{
+		return Vector2(v0.x + v1.x, v0.y + v1.y);
+	}
+	/// <summary>
+	/// ベクトルとスカラーの乗算。
+	/// </summary>
+
+	static inline Vector2 operator*(const Vector2& v, float s)
+	{
+		return Vector2(v.x * s, v.y * s);
+	}
+	/// <summary>
+	/// ベクトルとスカラーの除算。
+	/// </summary>
+	static inline Vector2 operator/(const Vector2& v, float s)
+	{
+		return Vector2(v.x / s, v.y / s);
+	}
+	/// <summary>
+	/// ベクトル同士の減算。
+	/// </summary>
+	static inline Vector2 operator-(const Vector2& v0, const Vector2& v1)
+	{
+		return Vector2(v0.x - v1.x, v0.y - v1.y);
+	}
 	/// <summary>
 	/// ベクトル同士の加算。
 	/// </summary>

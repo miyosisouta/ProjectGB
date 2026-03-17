@@ -244,6 +244,13 @@
     <ClCompile Include="src\Math\Transform.cpp" />
     <ClCompile Include="src\Memory\Array.cpp" />
     <ClCompile Include="src\Sound\SoundManager.cpp" />
+    <ClCompile Include="src\UI\Layout.cpp" />
+    <ClCompile Include="src\UI\Menu.cpp" />
+    <ClCompile Include="src\UI\UIAnimation.cpp" />
+    <ClCompile Include="src\UI\UIParts.cpp" />
+    <ClCompile Include="src\UI\UIScreenManager.cpp" />
+    <ClCompile Include="src\Util\Curve.cpp" />
+    <ClCompile Include="src\Util\TaskSchedulerSystem.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
@@ -276,6 +283,16 @@
     <ClInclude Include="src\Sound\SoundManager.h" />
     <ClInclude Include="src\Sound\Types.h" />
     <ClInclude Include="src\Types.h" />
+    <ClInclude Include="src\UI\Layout.h" />
+    <ClInclude Include="src\UI\Menu.h" />
+    <ClInclude Include="src\UI\UIAnimation.h" />
+    <ClInclude Include="src\UI\UIAnimationFactory.h" />
+    <ClInclude Include="src\UI\UIAnimationParameter.h" />
+    <ClInclude Include="src\UI\UIParts.h" />
+    <ClInclude Include="src\UI\UIScreenManager.h" />
+    <ClInclude Include="src\Util\Crc32.h" />
+    <ClInclude Include="src\Util\Curve.h" />
+    <ClInclude Include="src\Util\TaskSchedulerSystem.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="system\system.h" />
   </ItemGroup>
