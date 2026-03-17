@@ -5,7 +5,7 @@ class Actor : public IGameObject
 {
 public:
 	/** 例外としてpublic */
-	app::math::Transform transform_; //!< トランスフォーム
+	Transform transform_; //!< トランスフォーム
 
 protected:
 	ModelRender modelRender_; //!< モデルレンダー

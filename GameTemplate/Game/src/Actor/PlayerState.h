@@ -10,6 +10,11 @@ class PlayerStateBase: public IState
 protected:
 	Player* player_ = nullptr; //!< プレイヤー
 
+protected:
+	/** 移動速度を計算する共通処理 */ 
+	Vector3 CalcMovementVelocity(float speed);
+
+
 public:
 	/*
 	 * コンストラクタ
