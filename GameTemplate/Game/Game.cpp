@@ -24,18 +24,18 @@ bool Game::Start()
 
 	UIAnimationParameter::Get().Load("Assets/ui/uiAnimation/UIAnimation.json");
 
-	layout = new Layout();
-	layout->Initialize<SoundOptionMenu>("Assets/ui/layout/SoundOptionMenu.json");
+	//layout = new Layout();
+	//layout->Initialize<SoundOptionMenu>("Assets/ui/layout/SoundOptionMenu.json");
 
 	return true;
 }
 
 void Game::Update()
 {
-	layout->Update();
+	//layout->Update();
 }
 
 void Game::Render(RenderContext& rc)
 {
-	layout->Render(rc);
+	//layout->Render(rc);
 }
