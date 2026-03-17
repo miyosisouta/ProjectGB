@@ -11,7 +11,7 @@
 class OutGameScene : public IScene
 {
 public:
-	appScene(OutGameScene);
+	Scene(OutGameScene);
 
 
 public:
