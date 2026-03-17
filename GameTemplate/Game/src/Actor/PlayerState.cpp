@@ -108,10 +108,10 @@ Vector3 PlayerStateBase::CalcMovementVelocity(float speed)
 	auto* stateMachine = player_->GetStateMachine();
 
 	// 左スティックの入力量を取得
-	float stickL = stateMachine->GetStickLAmount();
+	float stickLAmount = stateMachine->GetStickLAmount();
 
 	// 入力がなければゼロベクトルを返す
-	if (stickL < 0.01f) { return Vector3::Zero; }
+	if (stickLAmount < 0.01f) { return Vector3::Zero; }
 
 	// 方向を取得
 	Vector3 dir = stateMachine->GetDirection();
