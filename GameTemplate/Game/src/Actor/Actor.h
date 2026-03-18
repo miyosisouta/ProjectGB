@@ -23,4 +23,9 @@ public:
 	virtual void Update() override;
 	/* 描画処理 */
 	virtual void Render(RenderContext& rc) override;
+
+
+public:
+	/** グローバル位置を取得 */
+	inline const Vector3 GetGlobalPosition() const { return transform_.position; }
 };
