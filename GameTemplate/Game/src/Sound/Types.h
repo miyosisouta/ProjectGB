@@ -11,6 +11,7 @@ enum enSoundKind
 {
 	enSoundKind_SE = 0,
 	enSoundKind_Player_NormalAttack = enSoundKind_SE,
+	enSoundKind_Player_Bite,
 	enSoundKind_SE_Max,
 };
 
@@ -31,6 +32,7 @@ static SoundInformation soundInformation[enSoundKind_SE_Max] =
 	
 
 	// SE
-	SoundInformation("Assets/Audio/SE/Player/NormalAttack.wav")
+	SoundInformation("Assets/Audio/SE/Player/NormalAttack/Bite.wav"),
+	SoundInformation("Assets/Audio/SE/Player/SpecialAbility/DefaultAttack.wav")
 };
 

@@ -1,34 +1,53 @@
 #pragma once
 #include "Character.h"
-
+#include "src/CharacterDataBase.h"
 
 class State;
+class NormalAttackBase;
+class AbilityBase;
+class UtilityBase;
 class Player : public Character
 {
 private:
-	std::unique_ptr<GhostBody> playerHitbox_; //!< プレイヤーの当たり判定用コリジョン
-	Vector3 moveVelocity_ = Vector3::Zero; //!< 毎フレームの移動速度を保持する変数
+	float specialAblityCoolDown_ = 5.0f; //!< 特殊能力のクールタイムの時間
+	float specialAblityCoolTime_ = 0.0f; //!< 特殊能力の残りクールタイム
 
 public:
-	inline void SetMoveVelocity(const Vector3& velocity) { moveVelocity_ = velocity; } //!< 移動速度の設定
-	inline Vector3 GetMoveVelocity() { return moveVelocity_; } //!< 移動速度を取得
+	/* 特殊能力のクールタイムを取得 */
+	float GetSpecialAbilityColTime() { return specialAblityCoolTime_; }
+
+private:
+	/* 特殊能力が使えるか */
+	bool CanSpecialAbility();
+
 
 public:
 	/** 遷移ルールのセットアップ */
 	void SetUpTranslateRulu();
+	/* スキルの設定、作成 */
+	void CreateSkill(NormalAttackType nAttackType, AbilityType abilityType, UtilityType utilityType)override;
 
 	/** 
 	 * アニメーションの再生。
 	 * id : ステートのIDによってアニメーションのインデックスを決める
 	 */
-	void PlayAnimation(StateID id);
+	void PlayAnimation(int id)override;
+
+
+	/*======================================*/
+	/* スキル関連 */
+	/*======================================*/
+private:
+	void EquipNormalAttack(NormalAttackType type);
+	void EquipAbility(AbilityType type);
+	void EquipUtility(UtilityType type);
 
 
 public:
 	/* コンストラクタ */
 	Player();
 	/* デストラクタ */
-	~Player() {}
+	~Player();
 
 	/* スタート処理 */
 	virtual bool Start() override;

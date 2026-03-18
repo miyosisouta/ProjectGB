@@ -13,7 +13,7 @@ struct CollisionAttribute
 	{
 		Ground			= 1 << 0,
 		Character		= 1 << 1,
-		Enemy			= 1 << 2,
+		Boss			= 1 << 2,
 	};
 };
 
@@ -38,10 +38,7 @@ namespace ghost
 		{
 			None = 0,
 			Player = 1 << 0,
-			Enemy = 1 << 1,
-			StaticGimmick = 1 << 2,
-			Pipe = 1 << 3,
-			Coin = 1 << 4,
+			Boss = 1 << 1,
 		};
 	};
 
@@ -50,11 +47,8 @@ namespace ghost
 	{
 		enum Enum : uint32_t
 		{
-			Player			= CollisionAttribute::Enemy | CollisionAttribute::Pipe | CollisionAttribute::Coin,
-			Enemy			= 1 << 1,
-			StaticGimmick	= 1 << 2,
-			Pipe			= CollisionAttribute::Player,
-			Coin			= CollisionAttribute::Player,
+			Player			= CollisionAttribute::Boss,
+			Boss			= 1 << 1,
 			All				= 0xFFFFFFFF,
 		};
 	};

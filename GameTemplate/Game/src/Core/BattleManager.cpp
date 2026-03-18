@@ -26,6 +26,17 @@ BattleManager::BattleManager()
 	playerController_->SetTarget(player_);		//PlayerControllerの操作対象をPlayerに設定
 	stage_ = NewGO<Stage>(0, "stage");		//Stageの生成
 	gameCamera_ = new GameCamera();		//GameCameraの生成
+
+	// TODO : スキルの設定のテスト
+	CharacterDataBase::Get().SetPlayerNormalAttack(NormalAttackType::enBite);
+	CharacterDataBase::Get().SetPlayerAbility(AbilityType::enDefault);
+	CharacterDataBase::Get().SetPlayerUtility(UtilityType::enNone);
+
+	player_->CreateSkill(
+		CharacterDataBase::Get().GetPlayerParam().nAttack,
+		CharacterDataBase::Get().GetPlayerParam().ability,
+		CharacterDataBase::Get().GetPlayerParam().utility
+	);
 }
 
 

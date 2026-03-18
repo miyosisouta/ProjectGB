@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
@@ -233,6 +233,7 @@
     <ClCompile Include="src\Actor\PlayerState.cpp" />
     <ClCompile Include="src\Actor\StateMachine.cpp" />
     <ClCompile Include="src\Camera\GameCamera.cpp" />
+    <ClCompile Include="src\CharacterDataBase.cpp" />
     <ClCompile Include="src\collision\BoundingVolume.cpp" />
     <ClCompile Include="src\collision\BroadphaseImpl.cpp" />
     <ClCompile Include="src\collision\BroadphaseInterface.cpp" />
@@ -250,6 +251,14 @@
     <ClCompile Include="src\Scene\LoadingScreen.cpp" />
     <ClCompile Include="src\Scene\OutGameScene.cpp" />
     <ClCompile Include="src\Scene\SceneManager.cpp" />
+    <ClCompile Include="src\Skill\ISkill.cpp" />
+    <ClCompile Include="src\Skill\NormalAttack\NormalAtatck.cpp" />
+    <ClCompile Include="src\Skill\SpecialAbility\AbilityBase.cpp" />
+    <ClCompile Include="src\Skill\SpecialAbility\Bomb.cpp" />
+    <ClCompile Include="src\Skill\SpecialAbility\DefaultAttack.cpp" />
+    <ClCompile Include="src\Skill\SpecialAbility\Guard.cpp" />
+    <ClCompile Include="src\Skill\SpecialAbility\Magic.cpp" />
+    <ClCompile Include="src\Skill\Utility\Utility.cpp" />
     <ClCompile Include="src\Sound\SoundManager.cpp" />
     <ClCompile Include="src\Stage\Stage.cpp" />
     <ClCompile Include="src\UI\InGameUIManager.cpp" />
@@ -278,6 +287,7 @@
     <ClInclude Include="src\Actor\PlayerState.h" />
     <ClInclude Include="src\Actor\StateMachine.h" />
     <ClInclude Include="src\Camera\GameCamera.h" />
+    <ClInclude Include="src\CharacterDataBase.h" />
     <ClInclude Include="src\collision\BoundingVolume.h" />
     <ClInclude Include="src\collision\BroadphaseImpl.h" />
     <ClInclude Include="src\collision\BroadphaseInterface.h" />
@@ -297,6 +307,14 @@
     <ClInclude Include="src\Scene\LoadingScreen.h" />
     <ClInclude Include="src\Scene\OutGameScene.h" />
     <ClInclude Include="src\Scene\SceneManager.h" />
+    <ClInclude Include="src\Skill\ISkill.h" />
+    <ClInclude Include="src\Skill\NormalAttack\NormalAtatck.h" />
+    <ClInclude Include="src\Skill\SpecialAbility\AbilityBase.h" />
+    <ClInclude Include="src\Skill\SpecialAbility\Bomb.h" />
+    <ClInclude Include="src\Skill\SpecialAbility\DefaultAttack.h" />
+    <ClInclude Include="src\Skill\SpecialAbility\Guard.h" />
+    <ClInclude Include="src\Skill\SpecialAbility\Magic.h" />
+    <ClInclude Include="src\Skill\Utility\Utility.h" />
     <ClInclude Include="src\Sound\SoundManager.h" />
     <ClInclude Include="src\Sound\Types.h" />
     <ClInclude Include="src\Stage\Stage.h" />
