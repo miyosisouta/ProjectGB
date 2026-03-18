@@ -40,6 +40,9 @@
     <ClCompile Include="src\Sound\SoundManager.cpp">
       <Filter>src\Sound</Filter>
     </ClCompile>
+    <ClCompile Include="src\Stage\Stage.cpp">
+      <Filter>src\Stage</Filter>
+    </ClCompile>
     <ClCompile Include="src\collision\BoundingVolume.cpp" />
     <ClCompile Include="src\collision\BroadphaseImpl.cpp" />
     <ClCompile Include="src\collision\BroadphaseInterface.cpp" />
@@ -141,6 +144,8 @@
     <ClInclude Include="src\Sound\Types.h">
       <Filter>src\Sound</Filter>
     </ClInclude>
+    <ClInclude Include="src\Stage\Stage.h">
+      <Filter>src\Stage</Filter>
     <ClInclude Include="src\collision\BoundingVolume.h" />
     <ClInclude Include="src\collision\BroadphaseImpl.h" />
     <ClInclude Include="src\collision\BroadphaseInterface.h" />
@@ -234,6 +239,9 @@
     </Filter>
     <Filter Include="src\Effect">
       <UniqueIdentifier>{2af746e8-ec3b-4478-94ce-ed3cf306f224}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Stage">
+      <UniqueIdentifier>{6e3e26a6-f4c9-4a95-b04b-fae3c1c5cf0b}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

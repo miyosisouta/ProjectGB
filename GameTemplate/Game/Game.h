@@ -4,6 +4,7 @@
 
 class Player;
 class PlayerController;
+class Stage;
 class EffectManager;
 
 class Game : public IGameObject
@@ -20,6 +21,7 @@ private:
 	Vector3 m_pos;
 	Player* player_ = nullptr;
 	PlayerController* playerController_ = nullptr;
+	Stage* stage_ = nullptr;
 	EffectManagerObject* effect_ = nullptr;
 	SoundManagerObject* sound_ = nullptr;
 };
