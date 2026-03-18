@@ -10,6 +10,7 @@
 enum enSoundKind
 {
 	enSoundKind_SE = 0,
+	enSoundKind_Player_NormalAttack = enSoundKind_SE,
 	enSoundKind_SE_Max,
 };
 
@@ -27,8 +28,9 @@ struct SoundInformation
 static SoundInformation soundInformation[enSoundKind_SE_Max] =
 {
 	//BGM
-	SoundInformation("Assets/Sound/BGM.wav")
+	
 
-	// SE	
+	// SE
+	SoundInformation("Assets/Audio/SE/Player/NormalAttack.wav")
 };
 

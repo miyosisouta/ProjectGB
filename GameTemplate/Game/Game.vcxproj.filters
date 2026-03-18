@@ -87,6 +87,11 @@
     <ClCompile Include="src\Scene\IScene.cpp">
       <Filter>src\Scene</Filter>
     </ClCompile>
+    <ClCompile Include="src\Scene\InGameScene.cpp" />
+    <ClCompile Include="src\Scene\IScene.cpp" />
+    <ClCompile Include="src\Scene\LoadingScreen.cpp" />
+    <ClCompile Include="src\Scene\OutGameScene.cpp" />
+    <ClCompile Include="src\Scene\SceneManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Game.h" />
@@ -175,6 +180,11 @@
     <ClInclude Include="src\Util\TaskSchedulerSystem.h">
       <Filter>src\Util</Filter>
     </ClInclude>
+    <ClInclude Include="src\Scene\InGameScene.h" />
+    <ClInclude Include="src\Scene\IScene.h" />
+    <ClInclude Include="src\Scene\LoadingScreen.h" />
+    <ClInclude Include="src\Scene\OutGameScene.h" />
+    <ClInclude Include="src\Scene\SceneManager.h" />
     <ClInclude Include="src\UI\SoundOptionMenu.h">
       <Filter>src\UI</Filter>
     </ClInclude>

@@ -26,6 +26,9 @@ public:
 	virtual void Enter() override= 0;
 	virtual void Update() override = 0;
 	virtual void Exit() override = 0;
+
+	virtual bool IsFinished() const{ return false; }
+	virtual bool IsCancelable() const { return false; }
 };
 
 /*==========================================*/
@@ -67,6 +70,33 @@ public:
 	void Update()override;
 	void Exit()override;
 };
+
+
+/*==========================================*/
+// 通常攻撃状態
+/*==========================================*/
+class NormalAttackState : public PlayerStateBase
+{
+private:
+	std::unique_ptr<GhostBody> attackHitbox_; //!< 攻撃用の当たり判定（ゴースト）を管理
+	std::unique_ptr<TaskSchedulerSystem> taskScheduler_; //!< 特定の時間経過後何をするか逐一決めることができる
+
+	bool isFinished_ = false;
+	bool isCancelable_ = false;
+
+public:
+	bool IsFinished() const override { return isFinished_; }
+	bool IsCancelable() const override { return isCancelable_; }
+
+
+public:
+	NormalAttackState(Player* p) : PlayerStateBase(p) {}
+
+	void Enter()override;
+	void Update()override;
+	void Exit()override;
+};
+
 
 /************************************************************/
 // ここからは強制的な状態のものを書く
