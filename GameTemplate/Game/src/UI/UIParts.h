@@ -1,46 +1,75 @@
-/**
- * UIBase.h
- * UIの基本的な処理をするクラス群
+﻿/**
+ * UIParts.h
+ * UIのパーツ群
  */
 #pragma once
 #include "UIAnimation.h"
-#include <memory>
-#include <vector>
-#include "src/Math/Transform.h"
 
- //class UIAnimationBase;
 
- /** 基底クラス */
+class UICanvas; // 前方宣言
+
+/** UI基底クラス */
 class UIBase : public Noncopyable
 {
 public:
 	Transform transform;
+
+	/**
+	 * ユーザーが設定するカラー（アニメーションもここに書き込む）
+	 * 描画には使わず、finalColor_ の計算元になる
+	 */
 	Vector4 color = Vector4::White;
 
-	/*bool isStart = false;
-	bool isUpdate = true;*/
+	/**
+	 * 実際に描画に使うカラー
+	 * Update 時に「自分の color × 親 Canvas の finalColor_」で自動計算される
+	 * 外部から直接書き換えないこと
+	 */
+	Vector4 finalColor_ = Vector4::White;
+
+	Vector2 pivot = Vector2(0.5f, 0.5f);
 	bool isDraw = true;
 
-public:
-	// deleteがいらない
-	//std::vector<std::unique_ptr<UIAnimationBase>> m_uiAnimationList;
-	std::unordered_map<uint32_t, std::unique_ptr<UIAnimationBase>> uiAnimationList;
+
+protected:
+	std::unordered_map<uint32_t, std::unique_ptr<UIAnimationBase>> uiAnimationMap_;
+	uint32_t key_;
+
+	/** 親 Canvas への参照（color 伝播に使用） */
+	UICanvas* parentCanvas_ = nullptr;
 
 
 public:
 	UIBase()
 	{
-		uiAnimationList.clear();
+		uiAnimationMap_.clear();
 	}
 	virtual ~UIBase()
 	{
-		// 明示的に消しているだけ。本来は要らない
-		uiAnimationList.clear();
+		uiAnimationMap_.clear();
 	}
 
-	//virtual bool Start() = 0;
 	virtual void Update() = 0;
 	virtual void Render(RenderContext& rc) = 0;
+
+
+public:
+	void SetKey(const uint32_t key)
+	{
+		key_ = key;
+	}
+	uint32_t GetKey() const { return key_; }
+
+	/** 親 Canvas を設定する（UICanvas::CreateUI から呼ばれる） */
+	void SetParentCanvas(UICanvas* canvas) { parentCanvas_ = canvas; }
+
+	/**
+	 * finalColor_ を更新する
+	 * 自分の color と親 Canvas の finalColor_ を乗算して保持する
+	 * 各 Update の先頭で呼ぶこと
+	 */
+	void ComputeFinalColor();
+
 
 
 public:
@@ -58,16 +87,9 @@ public:
 				animation->Play();
 			});
 	}
-	void ResetAnimation()
+	bool IsPlayAnimation()
 	{
-		ForEachAnimation([](UIAnimationBase* animation)
-			{
-				animation->Reset();
-			});
-	}
-	bool IsPlayAniamtion()
-	{
-		auto it = std::find_if(uiAnimationList.begin(), uiAnimationList.end(), [&](const auto& animationPair)
+		auto it = std::find_if(uiAnimationMap_.begin(), uiAnimationMap_.end(), [&](const auto& animationPair)
 			{
 				auto* animation = animationPair.second.get();
 				if (animation->IsPlay()) {
@@ -75,7 +97,7 @@ public:
 				}
 				return false;
 			});
-		return it != uiAnimationList.end();
+		return it != uiAnimationMap_.end();
 	}
 	void StopSpriteAnimation()
 	{
@@ -84,42 +106,45 @@ public:
 				animation->Stop();
 			});
 	}
-	bool IsComplted() const
+	bool IsCompleted() const
 	{
-		// すべて再生済みか
-		auto it = std::find_if(uiAnimationList.begin(), uiAnimationList.end(), [&](const auto& animationPair)
+		// すべてのアニメーションが再生終了しているか
+		return std::none_of(uiAnimationMap_.begin(), uiAnimationMap_.end(),
+			[](const auto& animationPair)
 			{
-				auto* animation = animationPair.second.get();
-				return !animation->IsPlay();
+				return animationPair.second->IsPlay();
 			});
-		return it != uiAnimationList.end();
 	}
 
 
 	void AddAnimation(const uint32_t key, std::unique_ptr<UIAnimationBase> animation)
 	{
 		animation->SetUI(this);
-		uiAnimationList.emplace(key, std::move(animation));
+		uiAnimationMap_.emplace(key, std::move(animation));
 	}
+
 
 	void RemoveAnimation(const uint32_t key)
 	{
-		uiAnimationList.erase(key);
+		uiAnimationMap_.erase(key);
 	}
+
 
 	void ForEachAnimation(const std::function<void(UIAnimationBase*)>& func)
 	{
-		for (auto& animation : uiAnimationList)
-		{
+		for (auto& animation : uiAnimationMap_) {
 			func(animation.second.get());
 		}
 	}
 
-	UIAnimationBase* FindAnimaion(const uint32_t key)
+
+	UIAnimationBase* FindAnimation(const uint32_t key)
 	{
-		auto it = uiAnimationList.find(key);
-		if (it != uiAnimationList.end())
-		{
+		if (uiAnimationMap_.size() == 0) {
+			return nullptr;
+		}
+		auto it = uiAnimationMap_.find(key);
+		if (it != uiAnimationMap_.end()) {
 			return it->second.get();
 		}
 		return nullptr;
@@ -140,7 +165,7 @@ protected:
 	SpriteRender spriteRender_;
 
 
-protected:
+public:
 	UIImage();
 	~UIImage();
 
@@ -149,11 +174,12 @@ public:
 	virtual void Update() override;
 	virtual void Render(RenderContext& rc) override;
 
-public:
-	/** スプライトレンダーの取得 */
-	SpriteRender* GetSpriteRender() { return &spriteRender_; }
+	void SetPivot(const Vector2& pivot)
+	{
+		this->pivot = pivot;
+		spriteRender_.SetPivot(pivot);
+	}
 };
-
 
 
 /**
@@ -161,10 +187,7 @@ public:
  */
 class UIGauge : public UIImage
 {
-	friend class UICanvas;
-
-
-private:
+public:
 	UIGauge();
 	~UIGauge();
 
@@ -183,9 +206,6 @@ public:
  */
 class UIIcon : public UIImage
 {
-	friend class UICanvas;
-
-	//private:
 public:
 	UIIcon();
 	~UIIcon();
@@ -214,7 +234,7 @@ protected:
 	FontRender fontRender_;
 
 
-private:
+public:
 	UIText();
 	~UIText();
 
@@ -222,6 +242,14 @@ private:
 public:
 	virtual void Update() override;
 	virtual void Render(RenderContext& rc) override;
+
+
+	void SetPivot(const Vector2& pivot)
+	{
+		this->pivot = pivot;
+		fontRender_.SetPivot(pivot);
+	}
+
 
 	void SetText(const wchar_t* text)
 	{
@@ -241,7 +269,7 @@ private:
 	std::function<void()> delegate_;
 
 
-private:
+public:
 	UIButton();
 	~UIButton();
 
@@ -262,14 +290,14 @@ private:
 	/** 画像表示機能の可変長配列 */
 	std::vector<SpriteRender*> renderList_;
 	/** 表示される数字 */
-	int number_;
-	int requestNumber_;
-	int digit_;
+	int number_ = 0;
+	int requestNumber_ = 0;
+	int digit_ = 0;
 	/** 数字表示に必要な画像が入った */
 	std::string assetPath_;
 
-	int w;
-	int h;
+	int w_ = 0;
+	int h_ = 0;
 
 
 
@@ -313,6 +341,8 @@ private:
 	void UpdateNumber(const int targetDigit, const int number);
 	void UpdatePosition(const int index);
 
+	int ComputeDigit();
+
 	/** 対象の桁 */
 	int GetDigit(int digit);
 };
@@ -342,9 +372,9 @@ class UICanvas : public UIBase
 private:
 	/**
 	 * NOTE: 各UI自体に親子関係持たせたいけど使わない可能性があるので、一旦ここだけにしてみる
+	 *       実行順を担保したかったためvectorで処理
 	 */
-	 //std::vector<UIBase*> m_uiList;
-	std::unordered_map<uint32_t, std::unique_ptr<UIBase>> uiList_;
+	std::vector<std::unique_ptr<UIBase>> uiList_;
 
 
 public:
@@ -358,37 +388,35 @@ public:
 
 public:
 	template <typename T>
-	T* CreateUI(const uint32_t key)
+	void CreateUI(const uint32_t key)
 	{
 		auto ui = std::make_unique<T>();
-		// transformの名前が違うかも もしエラーはいたら確認
+		ui->SetKey(key);
 		ui->transform.SetParent(&transform);
-		uiList_.emplace(key, std::move(ui));
-		return static_cast<T*>(uiList_[key].get());
+		ui->SetParentCanvas(this); // 親 Canvas を登録（finalColor_ 伝播用）
+		uiList_.push_back(std::move(ui));
 	}
 
 	void RemoveUI(const uint32_t key)
 	{
-		uiList_.erase(key);
+		// TODO:本当はstd::find使いたい
+		for (auto it = uiList_.begin(); it != uiList_.end(); it++) {
+			if ((*it)->GetKey() == key) {
+				uiList_.erase(it);
+				break;
+			}
+		}
 	}
 
 	template <typename T>
 	T* FindUI(const uint32_t key)
 	{
-		auto it = uiList_.find(key);
-		if (it != uiList_.end())
-		{
-			return dynamic_cast<T*>(it->second.get());
+		// TODO:本当はstd::find使いたい
+		for (auto it = uiList_.begin(); it != uiList_.end(); it++) {
+			if ((*it)->GetKey() == key) {
+				return dynamic_cast<T*>(it->get());
+			}
 		}
 		return nullptr;
 	}
-
-	/*template <typename T>
-	T* CreateUI()
-	{
-		T* ui = new T();
-		ui->m_transform.SetParent(&m_transform);
-		m_uiList.push_back(ui);
-		return ui;
-	}*/
 };

@@ -126,7 +126,7 @@ namespace nsK2Engine {
 		const bool IsHit(CollisionObject* collisionObject) const
 		{
 			bool isCollision = false;
-			PhysicsWorld::GetInstance()->ContactTest(&collisionObject->GetbtCollisionObject(), [&](const btCollisionObject& contactObject) {
+			PhysicsWorld::Get().ContactTest(&collisionObject->GetbtCollisionObject(), [&](const btCollisionObject& contactObject) {
 				if (m_physicsGhostObject.IsSelf(contactObject) == true) {
 					isCollision = true;
 				}
@@ -141,11 +141,11 @@ namespace nsK2Engine {
 		const bool IsHit(CharacterController& characterController) const
 		{
 			bool isCollision = false;
-			PhysicsWorld::GetInstance()->ContactTest(characterController, [&](const btCollisionObject& contactObject) {
+			/*PhysicsWorld::Get().ContactTest(characterController, [&](const btCollisionObject& contactObject) {
 				if (m_physicsGhostObject.IsSelf(contactObject) == true) {
 					isCollision = true;
 				}
-			});
+			});*/
 			return isCollision;
 		}
 		//何故か反応しないので現在は使用不可。

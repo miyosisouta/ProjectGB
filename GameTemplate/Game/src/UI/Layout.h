@@ -1,13 +1,12 @@
-/**
+﻿/**
  * Layout.h
  * UIのレイアウト管理
  */
 #pragma once
 #include "Menu.h"
-#include "src/json/json.hpp"
 
 
-#ifdef APP_DEBUG
+#ifdef _DEBUG
 #define APP_ENABLE_LAYOUT_HOTRELOAD
 #endif
 
@@ -20,7 +19,7 @@ private:
 #endif // APP_ENABLE_LAYOUT_HOTRELOAD
 
     std::string filePath_ = "";
-    std::unique_ptr<MenuBase> menu = nullptr;
+    std::unique_ptr<MenuBase> menu_ = nullptr;
 
 public:
     Layout() {}
@@ -30,17 +29,29 @@ public:
     void Initialize(const std::string& path)
     {
         filePath_ = path;
-        menu = std::make_unique<T>();
+        menu_ = std::make_unique<T>();
         Reload();
     }
 
-    MenuBase* GetMenu() const { return menu.get(); }
+    MenuBase* GetMenu() const { return menu_.get(); }
 
     void Update();
     void Render(RenderContext& rc);
 
-
     void Reload();
+
+    /** ファイルパスを取得（Swap の戻り先再構築用） */
+    const std::string& GetFilePath() const { return filePath_; }
+
+    /**
+     * パスを指定して再ロードする（Swap の戻り先再構築用）
+     * Initialize と異なり MenuBase の型を変えずにレイアウトだけ再読み込みする
+     */
+    void ReloadFromPath(const std::string& path)
+    {
+        filePath_ = path;
+        Reload();
+    }
 
 
 private:

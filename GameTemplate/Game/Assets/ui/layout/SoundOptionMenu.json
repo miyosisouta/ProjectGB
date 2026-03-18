@@ -1,0 +1,598 @@
+{
+  "canvas": {
+    "elements": [
+      {
+        "type": "UIIcon",
+        "name": "BackgroundA",
+        "asset": "Assets/ui/SoundOption/haikei/back.DDS",
+        "width": 1920,
+        "height": 1080,
+        "position": [0, 0, 0],
+        "scale": [1, 1, 1],
+        "rotation": 0,
+        "color": [1, 1, 1, 1]
+      },
+
+
+      {
+        "type": "UIIcon",
+        "name": "nikukyu1",
+        "asset": "Assets/ui/SoundOption/haikei/nikukyu.DDS",
+        "width": 280,
+        "height": 240,
+        "position": [500, -500, 0],
+        "scale": [1, 1, 1],
+        "rotation": 0,
+        "color": [1, 1, 1, 0]
+      },
+      {
+        "type": "UIIcon",
+        "name": "nikukyu2",
+        "asset": "Assets/ui/SoundOption/haikei/nikukyu.DDS",
+        "width": 280,
+        "height": 240,
+        "position": [800, -250, 0],
+        "scale": [1, 1, 1],
+        "rotation": 0,
+        "color": [1, 1, 1, 0]
+      },
+      {
+        "type": "UIIcon",
+        "name": "nikukyu3",
+        "asset": "Assets/ui/SoundOption/haikei/nikukyu.DDS",
+        "width": 280,
+        "height": 240,
+        "position": [600, 100, 0],
+        "scale": [1, 1, 1],
+        "rotation": 0,
+        "color": [1, 1, 1, 0]
+      },
+      {
+        "type": "UIIcon",
+        "name": "nikukyu4",
+        "asset": "Assets/ui/SoundOption/haikei/nikukyu.DDS",
+        "width": 280,
+        "height": 240,
+        "position": [1000, 350, 0],
+        "scale": [1, 1, 1],
+        "rotation": 0,
+        "color": [1, 1, 1, 0]
+      },
+
+
+      {
+        "type": "UIIcon",
+        "name": "Background_obi",
+        "asset": "Assets/ui/SoundOption/haikei/obi.DDS",
+        "width": 1920,
+        "height": 250,
+        "position": [0, 500, 0],
+        "scale": [1, 1, 1],
+        "rotation": 0,
+        "color": [1, 1, 1, 1]
+      },
+      {
+        "type": "UIIcon",
+        "name": "Gear",
+        "asset": "Assets/ui/SoundOption/tab/haguruma.DDS",
+        "width": 150,
+        "height": 150,
+        "position": [-850, 460, 0],
+        "scale": [1, 1, 1],
+        "rotation": 0,
+        "color": [1, 1, 1, 1]
+      },
+
+
+      {
+        "type": "UIIcon",
+        "name": "flame",
+        "asset": "Assets/ui/SoundOption/tab/waku.DDS",
+        "width": 1850,
+        "height": 90,
+        "position": [0, 250, 0],
+        "scale": [1, 2, 1],
+        "rotation": 0,
+        "color": [1, 1, 1, 1]
+      },
+
+
+      {
+        "type": "UIIcon",
+        "name": "FadeA",
+        "asset": "Assets/ui/SoundOption/haikei/fade.DDS",
+        "width": 1800,
+        "height": 150,
+        "position": [0, 250, 0],
+        "scale": [1, 1, 1],
+        "rotation": 0,
+        "color": [1, 1, 1, 1]
+      },
+      {
+        "type": "UIIcon",
+        "name": "FadeB",
+        "asset": "Assets/ui/SoundOption/haikei/fade.DDS",
+        "width": 1800,
+        "height": 150,
+        "position": [0, 25, 0],
+        "scale": [1, 1, 1],
+        "rotation": 0,
+        "color": [1, 1, 1, 1]
+      },
+      {
+        "type": "UIIcon",
+        "name": "FadeC",
+        "asset": "Assets/ui/SoundOption/haikei/fade.DDS",
+        "width": 1800,
+        "height": 150,
+        "position": [0, -200, 0],
+        "scale": [1, 1, 1],
+        "rotation": 0,
+        "color": [1, 1, 1, 1]
+      },
+
+
+      {
+        "type": "UIIcon",
+        "name": "Button_Default",
+        "asset": "Assets/ui/SoundOption/tab/default_back.DDS",
+        "width": 500,
+        "height": 150,
+        "position": [0, -410, 0],
+        "scale": [1, 1, 1],
+        "rotation": 0,
+        "color": [1, 1, 1, 1]
+      },
+
+
+      {
+        "type": "UIIcon",
+        "name": ",word1",
+        "asset": "Assets/ui/SoundOption/moji/option.DDS",
+        "width": 500,
+        "height": 90,
+        "position": [-480, 450, 0],
+        "scale": [1, 1, 1],
+        "rotation": 0,
+        "color": [1, 1, 1, 1]
+      },
+      {
+        "type": "UIIcon",
+        "name": ",word2",
+        "asset": "Assets/ui/SoundOption/moji/master.DDS",
+        "width": 250,
+        "height": 40,
+        "position": [-750, 250, 0],
+        "scale": [1, 1, 1],
+        "rotation": 0,
+        "color": [1, 1, 1, 1]
+      },
+      {
+        "type": "UIIcon",
+        "name": ",word3",
+        "asset": "Assets/ui/SoundOption/moji/bgm.DDS",
+        "width": 250,
+        "height": 40,
+        "position": [-750, 20, 0],
+        "scale": [1, 1, 1],
+        "rotation": 0,
+        "color": [1, 1, 1, 1]
+      },
+      {
+        "type": "UIIcon",
+        "name": ",word4",
+        "asset": "Assets/ui/SoundOption/moji/se.DDS",
+        "width": 250,
+        "height": 40,
+        "position": [-750, -200, 0],
+        "scale": [1, 1, 1],
+        "rotation": 0,
+        "color": [1, 1, 1, 1]
+      },
+      {
+        "type": "UIIcon",
+        "name": ",word5",
+        "asset": "Assets/ui/SoundOption/moji/default.DDS",
+        "width": 250,
+        "height": 40,
+        "position": [0, -410, 0],
+        "scale": [1, 1, 1],
+        "rotation": 0,
+        "color": [1, 1, 1, 1]
+      },
+      {
+        "type": "UIIcon",
+        "name": ",word6",
+        "asset": "Assets/ui/SoundOption/moji/back_button.DDS",
+        "width": 250,
+        "height": 40,
+        "position": [850, -500, 0],
+        "scale": [1, 1, 1],
+        "rotation": 0,
+        "color": [1, 1, 1, 1]
+      },
+
+
+      {
+        "type": "UIIcon",
+        "name": "ButtonB",
+        "asset": "Assets/ui/SoundOption/tab/b_button.DDS",
+        "width": 50,
+        "height": 50,
+        "position": [740, -500, 0],
+        "scale": [1, 1, 1],
+        "rotation": 0,
+        "color": [1, 1, 1, 1]
+      },
+
+
+      {
+        "type": "UIIcon",
+        "name": "Ber_back1",
+        "asset": "Assets/ui/SoundOption/bar/ber_back.DDS",
+        "width": 85,
+        "height": 57.5,
+        "position": [96, 250, 0],
+        "scale": [12, 1, 1],
+        "rotation": 0,
+        "color": [1, 1, 1, 1]
+      },
+      {
+        "type": "UIIcon",
+        "name": "Ber_back_Right1",
+        "asset": "Assets/ui/SoundOption/bar/ber_lr.DDS",
+        "width": 25,
+        "height": 53,
+        "position": [600, 250.5, 0],
+        "scale": [1, 1, 1],
+        "rotation": 180,
+        "color": [1, 1, 1, 1]
+      },
+      {
+        "type": "UIIcon",
+        "name": "Ber_back_left1",
+        "asset": "Assets/ui/SoundOption/bar/ber_lr.DDS",
+        "width": 25,
+        "height": 53,
+        "position": [-396, 250.5, 0],
+        "scale": [1, 1, 1],
+        "rotation": 0,
+        "color": [1, 1, 1, 1]
+      },
+      {
+        "type": "UIIcon",
+        "name": "Ber_green_left1",
+        "asset": "Assets/ui/SoundOption/bar/ber_green_lr.DDS",
+        "width": 23,
+        "height": 45,
+        "position": [-392, 250.5, 0],
+        "scale": [1, 1, 1],
+        "rotation": 0,
+        "color": [1, 1, 1, 1]
+      },
+      {
+        "type": "UIIcon",
+        "name": "Ber_greenback1",
+        "asset": "Assets/ui/SoundOption/bar/ber_green_white.DDS",
+        "width": 81,
+        "height": 45,
+        "position": [-383, 250, 0],
+        "scale": [12, 1, 1],
+        "rotation": 0,
+        "color": [0.14, 0.9, 0.48, 1]
+      },
+      {
+        "type": "UIIcon",
+        "name": "bar_maru1",
+        "asset": "Assets/ui/SoundOption/bar/ber_maru.DDS",
+        "width": 60,
+        "height": 60,
+        "position": [600, 250, 0],
+        "scale": [1, 1, 1],
+        "rotation": 0,
+        "color": [0.14, 0.9, 0.48, 1]
+      },
+      {
+        "type": "UIIcon",
+        "name": "bar_waku1",
+        "asset": "Assets/ui/SoundOption/bar/ber_waku.DDS",
+        "width": 65,
+        "height": 65,
+        "position": [600, 250, 0],
+        "scale": [1, 1, 1],
+        "rotation": 0,
+        "color": [1, 1, 1, 1]
+      },
+      {
+        "type": "UIIcon",
+        "name": "speaker0",
+        "asset": "Assets/ui/SoundOption/speaker/mute.DDS",
+        "width": 100,
+        "height": 80,
+        "position": [-570, 250, 0],
+        "scale": [1, 1, 1],
+        "rotation": 0,
+        "color": [1, 1, 1, 1]
+      },
+      {
+        "type": "UIIcon",
+        "name": "speaker1",
+        "asset": "Assets/ui/SoundOption/speaker/sound_1.DDS",
+        "width": 100,
+        "height": 80,
+        "position": [-570, 250, 0],
+        "scale": [1, 1, 1],
+        "rotation": 0,
+        "color": [1, 1, 1, 1]
+      },
+      {
+        "type": "UIIcon",
+        "name": "speaker2",
+        "asset": "Assets/ui/SoundOption/speaker/sound_2.DDS",
+        "width": 100,
+        "height": 80,
+        "position": [-570, 250, 0],
+        "scale": [1, 1, 1],
+        "rotation": 0,
+        "color": [1, 1, 1, 1]
+      },
+      {
+        "type": "UIIcon",
+        "name": "speaker3",
+        "asset": "Assets/ui/SoundOption/speaker/sound_3.DDS",
+        "width": 100,
+        "height": 80,
+        "position": [-570, 250, 0],
+        "scale": [1, 1, 1],
+        "rotation": 0,
+        "color": [1, 1, 1, 1]
+      },
+
+
+      {
+        "type": "UIIcon",
+        "name": "Ber_back2",
+        "asset": "Assets/ui/SoundOption/bar/ber_back.DDS",
+        "width": 85,
+        "height": 57.5,
+        "position": [96, 25, 0],
+        "scale": [12, 1, 1],
+        "rotation": 0,
+        "color": [1, 1, 1, 1]
+      },
+      {
+        "type": "UIIcon",
+        "name": "Ber_back_Right2",
+        "asset": "Assets/ui/SoundOption/bar/ber_lr.DDS",
+        "width": 25,
+        "height": 53,
+        "position": [600, 25.5, 0],
+        "scale": [1, 1, 1],
+        "rotation": 180,
+        "color": [1, 1, 1, 1]
+      },
+      {
+        "type": "UIIcon",
+        "name": "Ber_back_left2",
+        "asset": "Assets/ui/SoundOption/bar/ber_lr.DDS",
+        "width": 25,
+        "height": 53,
+        "position": [-396, 25.5, 0],
+        "scale": [1, 1, 1],
+        "rotation": 0,
+        "color": [1, 1, 1, 1]
+      },
+      {
+        "type": "UIIcon",
+        "name": "Ber_green_left2",
+        "asset": "Assets/ui/SoundOption/bar/ber_green_lr.DDS",
+        "width": 23,
+        "height": 45,
+        "position": [-392, 25.5, 0],
+        "scale": [1, 1, 1],
+        "rotation": 0,
+        "color": [1, 1, 1, 1]
+      },
+      {
+        "type": "UIIcon",
+        "name": "Ber_greenback2",
+        "asset": "Assets/ui/SoundOption/bar/ber_green_white.DDS",
+        "width": 81,
+        "height": 45,
+        "position": [-383, 25, 0],
+        "scale": [12, 1, 1],
+        "rotation": 0,
+        "color": [0.14, 0.9, 0.48, 1]
+      },
+      {
+        "type": "UIIcon",
+        "name": "bar_maru2",
+        "asset": "Assets/ui/SoundOption/bar/ber_maru.DDS",
+        "width": 60,
+        "height": 60,
+        "position": [600, 25, 0],
+        "scale": [1, 1, 1],
+        "rotation": 0,
+        "color": [0.14, 0.9, 0.48, 1]
+      },
+      {
+        "type": "UIIcon",
+        "name": "bar_waku2",
+        "asset": "Assets/ui/SoundOption/bar/ber_waku.DDS",
+        "width": 65,
+        "height": 65,
+        "position": [600, 25, 0],
+        "scale": [1, 1, 1],
+        "rotation": 0,
+        "color": [1, 1, 1, 1]
+      },
+      {
+        "type": "UIIcon",
+        "name": "speaker00",
+        "asset": "Assets/ui/SoundOption/speaker/mute.DDS",
+        "width": 100,
+        "height": 80,
+        "position": [-570, 20, 0],
+        "scale": [1, 1, 1],
+        "rotation": 0,
+        "color": [0.14, 0.9, 0.48, 1]
+      },
+      {
+        "type": "UIIcon",
+        "name": "speaker01",
+        "asset": "Assets/ui/SoundOption/speaker/sound_1.DDS",
+        "width": 100,
+        "height": 80,
+        "position": [-570, 20, 0],
+        "scale": [1, 1, 1],
+        "rotation": 0,
+        "color": [1, 1, 1, 1]
+      },
+      {
+        "type": "UIIcon",
+        "name": "speaker02",
+        "asset": "Assets/ui/SoundOption/speaker/sound_2.DDS",
+        "width": 100,
+        "height": 80,
+        "position": [-570, 20, 0],
+        "scale": [1, 1, 1],
+        "rotation": 0,
+        "color": [1, 1, 1, 1]
+      },
+      {
+        "type": "UIIcon",
+        "name": "speaker03",
+        "asset": "Assets/ui/SoundOption/speaker/sound_3.DDS",
+        "width": 100,
+        "height": 80,
+        "position": [-570, 20, 0],
+        "scale": [1, 1, 1],
+        "rotation": 0,
+        "color": [1, 1, 1, 1]
+      },
+
+
+      {
+        "type": "UIIcon",
+        "name": "Ber_back3",
+        "asset": "Assets/ui/SoundOption/bar/ber_back.DDS",
+        "width": 85,
+        "height": 57.5,
+        "position": [96, -200, 0],
+        "scale": [12, 1, 1],
+        "rotation": 0,
+        "color": [1, 1, 1, 1]
+      },
+      {
+        "type": "UIIcon",
+        "name": "Ber_back_Right3",
+        "asset": "Assets/ui/SoundOption/bar/ber_lr.DDS",
+        "width": 25,
+        "height": 53,
+        "position": [600, -200, 0],
+        "scale": [1, 1, 1],
+        "rotation": 180,
+        "color": [1, 1, 1, 1]
+      },
+      {
+        "type": "UIIcon",
+        "name": "Ber_back_left3",
+        "asset": "Assets/ui/SoundOption/bar/ber_lr.DDS",
+        "width": 25,
+        "height": 53,
+        "position": [-396, -200, 0],
+        "scale": [1, 1, 1],
+        "rotation": 0,
+        "color": [1, 1, 1, 1]
+      },
+      {
+        "type": "UIIcon",
+        "name": "Ber_green_left3",
+        "asset": "Assets/ui/SoundOption/bar/ber_green_lr.DDS",
+        "width": 23,
+        "height": 45,
+        "position": [-392, -200, 0],
+        "scale": [1, 1, 1],
+        "rotation": 0,
+        "color": [1, 1, 1, 1]
+      },
+      {
+        "type": "UIIcon",
+        "name": "Ber_greenback3",
+        "asset": "Assets/ui/SoundOption/bar/ber_green_white.DDS",
+        "width": 81,
+        "height": 45,
+        "position": [-383, -200, 0],
+        "scale": [12, 1, 1],
+        "rotation": 0,
+        "color": [0.14, 0.9, 0.48, 1]
+      },
+      {
+        "type": "UIIcon",
+        "name": "bar_maru3",
+        "asset": "Assets/ui/SoundOption/bar/ber_maru.DDS",
+        "width": 60,
+        "height": 60,
+        "position": [600, -200, 0],
+        "scale": [1, 1, 1],
+        "rotation": 0,
+        "color": [0.14, 0.9, 0.48, 1]
+      },
+      {
+        "type": "UIIcon",
+        "name": "bar_waku3",
+        "asset": "Assets/ui/SoundOption/bar/ber_waku.DDS",
+        "width": 65,
+        "height": 65,
+        "position": [600, -200, 0],
+        "scale": [1, 1, 1],
+        "rotation": 0,
+        "color": [1, 1, 1, 1]
+      },
+      {
+        "type": "UIIcon",
+        "name": "speaker000",
+        "asset": "Assets/ui/SoundOption/speaker/mute.DDS",
+        "width": 100,
+        "height": 80,
+        "position": [-570, -200, 0],
+        "scale": [1, 1, 1],
+        "rotation": 0,
+        "color": [0.14, 0.9, 0.48, 1]
+      },
+      {
+        "type": "UIIcon",
+        "name": "speaker001",
+        "asset": "Assets/ui/SoundOption/speaker/sound_1.DDS",
+        "width": 100,
+        "height": 80,
+        "position": [-570, -200, 0],
+        "scale": [1, 1, 1],
+        "rotation": 0,
+        "color": [1, 1, 1, 1]
+      },
+      {
+        "type": "UIIcon",
+        "name": "speaker002",
+        "asset": "Assets/ui/SoundOption/speaker/sound_2.DDS",
+        "width": 100,
+        "height": 80,
+        "position": [-570, -200, 0],
+        "scale": [1, 1, 1],
+        "rotation": 0,
+        "color": [1, 1, 1, 1]
+      },
+      {
+        "type": "UIIcon",
+        "name": "speaker003",
+        "asset": "Assets/ui/SoundOption/speaker/sound_3.DDS",
+        "width": 100,
+        "height": 80,
+        "position": [-570, -200, 0],
+        "scale": [1, 1, 1],
+        "rotation": 0,
+        "color": [1, 1, 1, 1]
+      }
+    ]
+  }
+}

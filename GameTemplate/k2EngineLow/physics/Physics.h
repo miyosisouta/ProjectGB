@@ -6,155 +6,207 @@
 namespace nsK2EngineLow {
 	class CharacterController;
 
+
+	/** btVector3をVector3にコピー */
+	inline void Vector3CopyFrom(Vector3& vDst, btVector3& vSrc)
+	{
+		vDst.x = vSrc.x();
+		vDst.y = vSrc.y();
+		vDst.z = vSrc.z();
+	}
+
+	/** Vector3をbtVector3にコピー */
+	inline void Vector3CopyTo(btVector3& vDst, const Vector3& vSrc)
+	{
+		vDst.setX(vSrc.x);
+		vDst.setY(vSrc.y);
+		vDst.setZ(vSrc.z);
+	}
+
+
+	/** Vector3をbtVector3に変換 */
+	inline btVector3 ConvertVector3(const Vector3& vSrc)
+	{
+		return btVector3(vSrc.x, vSrc.y, vSrc.z);
+	}
+
+	/** btVector3をVector3に変換 */
+	inline Vector3 ConvertVector3(const btVector3& vSrc)
+	{
+		return Vector3(vSrc.x(), vSrc.y(), vSrc.z());
+	}
+
+
+	constexpr uint32_t ALL_COLLISION_ATTRIBUTE_MASK = 0xFFFFFFFF;
+
+
+	/** レイキャストのヒット情報 */
+	struct RaycastHit
+	{
+		Vector3 point;							// 衝突点
+		Vector3 normal;							// 衝突面法線
+		float distance;							// 発射点からの距離（0.0f - 1.0f の割合ではなく実距離が必要な場合は別途計算も可能だが、Bulletはfractionを返す）
+		float fraction;							// 0.0f(始点) ～ 1.0f(終点) の割合
+		btCollisionObject* colObject = nullptr; // ヒットしたBulletオブジェクト
+		void* ptr = nullptr;					// ヒットしたオブジェクトのポインタ(UserPointer経由で取得)
+	};
+
+
+	/** スイープテストのヒット情報 */
+	struct SweepHit
+	{
+		Vector3 point;
+		Vector3 normal;
+		float fraction;
+		btCollisionObject* colObject = nullptr;
+		void* ptr = nullptr;
+	};
+
+
+	/** 物理空間全体を管理するシングルトンクラス */
 	class PhysicsWorld : public Noncopyable
 	{
-		static PhysicsWorld* m_instance;	//唯一のインスタンス。
-		std::unique_ptr<btDefaultCollisionConfiguration> 	 m_collisionConfig;
-		std::unique_ptr<btCollisionDispatcher>				 m_collisionDispatcher;	//!<衝突解決処理。
-		std::unique_ptr<btBroadphaseInterface>				 m_overlappingPairCache;	//!<ブロードフェーズ。衝突判定の枝切り。
-		std::unique_ptr<btSequentialImpulseConstraintSolver> m_constraintSolver;		//!<コンストレイントソルバー。拘束条件の解決処理。
-		std::unique_ptr<btDiscreteDynamicsWorld>			 m_dynamicWorld;			//!<ワールド。
-#ifdef _DEBUG
-		DebugWireframe m_debugWireFrame;
-		bool m_isDrawDebugWireFrame = false;
+		/** Bulletのコアメンバ */
+		std::unique_ptr<btDefaultCollisionConfiguration> collisionConfig_;
+		std::unique_ptr<btCollisionDispatcher> collisionDispatcher_;
+		std::unique_ptr<btBroadphaseInterface> overlappingPairCache_;
+		std::unique_ptr<btSequentialImpulseConstraintSolver> constraintSolver_;
+		std::unique_ptr<btDiscreteDynamicsWorld> dynamicWorld_;
+
+#ifdef K2_DEBUG
+		DebugWireframe debugWireFrame_;
+		bool isDrawDebugWireFrame_ = false;
 #endif
 
-	public:
-		static void CreateInstance()
-		{
-			m_instance = new PhysicsWorld();
-		}
-		static PhysicsWorld* GetInstance()
-		{
-			return m_instance;
-		}
-		static void DeleteInstance()
-		{
-			delete m_instance;
-		}
-
-		void Update(float deltaTime);
-		void DebubDrawWorld(RenderContext& rc)
-		{
-#ifdef _DEBUG
-			if (m_isDrawDebugWireFrame) {
-				m_debugWireFrame.Begin();
-				//実際にdrawLineを呼んでます。
-				m_dynamicWorld->debugDrawWorld();
-				m_debugWireFrame.End(rc);
-			}
-#endif
-		}
-
-		//当たり判定描画を有効にする。
-		void EnableDrawDebugWireFrame()
-		{
-#ifdef _DEBUG
-			m_isDrawDebugWireFrame = true;
-#endif
-		}
-
-		//当たり判定描画を無効にする。
-		void DisableDrawDebugWireFrame()
-		{
-#ifdef _DEBUG
-			m_isDrawDebugWireFrame = false;
-#endif
-		}
-
-		void Release();
-		/*!
-		* @brief	重力を設定。。
-		*/
-		void SetGravity(Vector3 g)
-		{
-			m_dynamicWorld->setGravity(btVector3(g.x, g.y, g.z));
-		}
-		/*!
-		* @brief	ダイナミックワールドを取得。
-		*/
-		btDiscreteDynamicsWorld* GetDynamicWorld()
-		{
-			return m_dynamicWorld.get();
-		}
-
-		/*!
-		* @brief	剛体を登録。
-		*/
-		void AddRigidBody(RigidBody& rb)
-		{
-			m_dynamicWorld->addRigidBody(rb.GetBody());
-		}
-
-
-		/*!
-		* @brief	剛体を破棄。
-		*/
-		void RemoveRigidBody(RigidBody& rb)
-		{
-			m_dynamicWorld->removeRigidBody(rb.GetBody());
-		}
-		
-		void ConvexSweepTest(
-			const btConvexShape* castShape,
-			const btTransform& convexFromWorld,
-			const btTransform& convexToWorld,
-			btCollisionWorld::ConvexResultCallback& resultCallback,
-			btScalar allowedCcdPenetration = 0.0f
-		) const
-		{
-			m_dynamicWorld->convexSweepTest(castShape, convexFromWorld, convexToWorld, resultCallback, allowedCcdPenetration);
-		}
-		/// <summary>
-		/// 物理ワールドに対して、凸型コライダーSweepテストを行う。
-		/// </summary>
-		/// <param name="collider">コライダー</param>
-		/// <param name="convexStart">コライダーの開始座標</param>
-		/// <param name="rayEnd">コライダーの終了座標</param>
-		/// <returns>trueがかえってきたら当たっている。</returns>
-		bool ConvexSweepTest(ICollider& collider, const Vector3& rayStart, const Vector3& rayEnd) const;
-		/// <summary>
-		/// レイテストを実施。
-		/// </summary>
-		/// <param name="rayStart">レイの始点</param>
-		/// <param name="rayEnd">レイの終点</param>
-		/// <param name="hitPos">交点の格納先</param>
-		/// <returns>trueが返ってきたら衝突している。</returns>
-		bool RayTest(const Vector3& rayStart, const Vector3& rayEnd, Vector3& hitPos) const;
-		/*!
-		* @brief	コリジョンオブジェクトをワールドに登録。
-		*@param[in]	colliObj	コリジョンオブジェクト。
-		*/
-		void AddCollisionObject(btCollisionObject& colliObj)
-		{
-			m_dynamicWorld->addCollisionObject(&colliObj);
-		}
-		/*!
-		* @brief	コリジョンオブジェクトをワールドから削除。
-		*@param[in]	colliObj	コリジョンオブジェクト。
-		*/
-		void RemoveCollisionObject(btCollisionObject& colliObj)
-		{
-			m_dynamicWorld->removeCollisionObject(&colliObj);
-		}
-
-		void ContactTest(
-			btCollisionObject* colObj,
-			std::function<void(const btCollisionObject& contactCollisionObject)> cb
-		);
-		void ContactTest(
-			RigidBody& rb,
-			std::function<void(const btCollisionObject& contactCollisionObject)> cb
-		);
-
-		void ContactTest(
-			CharacterController& charaCon,
-			std::function<void(const btCollisionObject& contactCollisionObject)> cb
-		);
 
 	private:
 		PhysicsWorld();
 		~PhysicsWorld();
-		void Init();
+
+		void Setup();
+
+	public:
+		void Update(float deltaTime);
+		void Release();
+
+
+		/**
+		 * 設定・管理
+		 */
+		btDiscreteDynamicsWorld* GetDynamicWorld() { return dynamicWorld_.get(); }
+		void SetGravity(const Vector3& gravity);
+		void AddRigidBody(RigidBody& rb);
+		void AddRigidBody(RigidBody& rb, void* ptr);
+		void RemoveRigidBody(RigidBody& rb);
+		void AddCollisionObject(btCollisionObject& colliObj);
+		void RemoveCollisionObject(btCollisionObject& colliObj);
+
+
+
+
+		/**
+		 * ========================================================================
+		 * Raycast (レイキャスト)
+		 * ========================================================================
+		 */
+
+
+		 /**
+		  * シンプルなレイキャスト
+		  * NOTE: ヒットしたかどうかだけを知りたい場合に使用する
+		  */
+		bool Raycast(const Vector3& start, const Vector3& end, const uint32_t filterMask = ALL_COLLISION_ATTRIBUTE_MASK) const;
+
+		/**
+		 * 詳細なレイキャスト。ヒット情報を受け取る。
+		 * @param start 始点
+		 * @param end 終点
+		 * @param result 結果格納用構造体
+		 * @param filterMask 衝突判定を行うレイヤーマスク（ビット演算）
+		 * @param filterCallback さらに細かい除外条件を指定するラムダ式（trueを返すとヒット対象）
+		 * @return ヒットしたらtrue
+		 */
+		bool Raycast(const Vector3& start, const Vector3& end, RaycastHit& result, const uint32_t filterMask = ALL_COLLISION_ATTRIBUTE_MASK, std::function<bool(const btCollisionObject&)> filterCallback = nullptr) const;
+
+
+
+
+
+		/**
+		 * ========================================================================
+		 * ConvexSweep(形状キャスト)
+		 * ========================================================================
+		 */
+
+
+		 /** コライダーを使ったSweepTest */
+		bool ConvexSweepTest(const ICollider& collider, const Vector3& start, const Vector3& end, SweepHit& result, const uint32_t filterMask = ALL_COLLISION_ATTRIBUTE_MASK, std::function<bool(const btCollisionObject&)> filterCallback = nullptr) const;
+		/**
+		 * 生のbtConvexShapeを使ったSweepTest
+		 * NOTE: 内部用あるいは上級者用
+		 */
+		bool ConvexSweepTest(const btConvexShape* shape, const Vector3& start, const Vector3& end, SweepHit& result, const uint32_t filterMask = ALL_COLLISION_ATTRIBUTE_MASK, std::function<bool(const btCollisionObject&)> filterCallback = nullptr) const;
+
+		/** 自由度の高いSweepTest */
+		void ConvexSweepTest(const ICollider& collider, const Vector3& start, const Vector3& end, btCollisionWorld::ConvexResultCallback& resultCallback, btScalar allowedCcdPenetration = 0.0f) const;
+		void ConvexSweepTest(const btConvexShape* shape, const Vector3& start, const Vector3& end, btCollisionWorld::ConvexResultCallback& resultCallback, btScalar allowedCcdPenetration = 0.0f) const;
+
+
+		// ========================================================================
+		//  ContactTest (接触判定)
+		// ========================================================================
+		void ContactTest(btCollisionObject* colObj, std::function<void(const btCollisionObject& contactCollisionObject)> cb);
+		void ContactTest(RigidBody& rb, std::function<void(const btCollisionObject&)> cb);
+		void ContactTest(CharacterController* characterContoller, std::function<void(const btCollisionObject&)> cb);
+
+
+
+
+		/**
+		 * デバッグ描画関連
+		 */
+#ifdef K2_DEBUG 
+		void DebubDrawWorld(RenderContext& rc);
+		void EnableDrawDebugWireFrame()
+		{
+			isDrawDebugWireFrame_ = true;
+		}
+		void DisableDrawDebugWireFrame()
+		{
+			isDrawDebugWireFrame_ = false;
+		}
+#endif 
+
+
+	public:
+		/** Bulletのコアメンバ取得用 */
+		btCollisionDispatcher* GetCollisionDispatcher() { return collisionDispatcher_.get(); }
+		btDispatcherInfo& GetDispatchInfo() { return dynamicWorld_->getDispatchInfo(); }
+
+
+
+
+		/**
+		 * シングルト関連
+		 */
+	private:
+		static PhysicsWorld* instance_;
+
+
+	public:
+		static void Initialize()
+		{
+			if (instance_ == nullptr) {
+				instance_ = new PhysicsWorld();
+			}
+		}
+		static PhysicsWorld& Get() { return *instance_; }
+		static void Finalize()
+		{
+			if (instance_) {
+				delete instance_;
+				instance_ = nullptr;
+			}
+		}
 	};
 }

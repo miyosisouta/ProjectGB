@@ -8,7 +8,7 @@ enum class StateID
 	Idle,
 	Walk,
 	Run,
-	Jump,
+	NormalAttack,
 	Dead
 };
 
@@ -67,6 +67,8 @@ public:
 	inline bool IsActionButtonX() { return actionButtonX_; }			//!< Xボタンされているか
 	inline void ActionButtonX(const bool flg) { actionButtonX_ = flg; }	//!< Xボタンの設定
 
+
+	inline IState* GetCurrentState() const{ return currentState_; }
 public:
 	/* コンストラクタ */
 	StateMachine() {}

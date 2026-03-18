@@ -11,7 +11,7 @@ namespace nsK2EngineLow {
 		m_ghostObject.setWorldTransform(btTrans);
 
 		//•¨—ƒGƒ“ƒWƒ“‚É“o˜^B
-		PhysicsWorld::GetInstance()->AddCollisionObject(m_ghostObject);
+		PhysicsWorld::Get().AddCollisionObject(m_ghostObject);
 		m_isRegistPhysicsWorld = true;
 	}
 

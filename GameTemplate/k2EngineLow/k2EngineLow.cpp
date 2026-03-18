@@ -16,7 +16,7 @@ namespace nsK2EngineLow {
 		
 		//ゲームオブジェクトマネージャーを削除。
 		GameObjectManager::DeleteInstance();
-		PhysicsWorld::DeleteInstance();
+		PhysicsWorld::Finalize();
 		EffectEngine::DeleteInstance();
 
 		delete g_soundEngine;
@@ -45,7 +45,7 @@ namespace nsK2EngineLow {
 		}
 
 		GameObjectManager::CreateInstance();
-		PhysicsWorld::CreateInstance();
+		PhysicsWorld::Initialize();
 		g_soundEngine = new SoundEngine();
 		if (m_graphicsEngine) {
 			//エフェクトエンジンの初期化。
@@ -117,6 +117,6 @@ namespace nsK2EngineLow {
 	{
 		auto& renderContext = g_graphicsEngine->GetRenderContext();
 		//当たり判定描画処理を実行。
-		PhysicsWorld::GetInstance()->DebubDrawWorld(renderContext);
+		PhysicsWorld::Get().DebubDrawWorld(renderContext);
 	}
 }
