@@ -3,6 +3,7 @@
 #include "Src/Actor/Player.h"
 #include "Src/Actor/PlayerController.h"
 #include "src/Stage/Stage.h"
+#include "src/Camera/GameCamera.h"
 
 
 // @todo for test
@@ -26,6 +27,7 @@ bool Game::Start()
 	playerController_ = NewGO<PlayerController>(10, "playerController");
 	playerController_->SetTarget(player_);
 	stage_ = NewGO<Stage>(0, "stage");
+	gameCamera_ = new GameCamera();
 
 
 	UIAnimationParameter::Get().Load("Assets/ui/uiAnimation/UIAnimation.json");
@@ -41,6 +43,7 @@ bool Game::Start()
 void Game::Update()
 {
 	//layout->Update();
+	gameCamera_->Update();
 }
 
 void Game::Render(RenderContext& rc)

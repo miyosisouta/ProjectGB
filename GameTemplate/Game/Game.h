@@ -5,6 +5,7 @@
 class Player;
 class PlayerController;
 class Stage;
+class GameCamera;
 class EffectManager;
 
 class Game : public IGameObject
@@ -22,6 +23,7 @@ private:
 	Player* player_ = nullptr;
 	PlayerController* playerController_ = nullptr;
 	Stage* stage_ = nullptr;
+	GameCamera* gameCamera_ = nullptr;
 	EffectManagerObject* effect_ = nullptr;
 	SoundManagerObject* sound_ = nullptr;
 };
