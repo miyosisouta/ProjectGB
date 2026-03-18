@@ -2,11 +2,20 @@
 #include "Player.h"
 #include "StateMachine.h"
 #include "PlayerState.h"
+#include "src/Skill/ISkill.h"
+#include "src/Skill/NormalAttack/NormalAtatck.h"  
+#include "src/Skill/SpecialAbility/DefaultAttack.h"
+#include "src/Skill/SpecialAbility/Guard.h"
+#include "src/Skill/SpecialAbility/Magic.h"
+#include "src/Skill/SpecialAbility/Bomb.h"
+#include "src/Skill/Utility/Utility.h"
 
 
-/*
- * アニメーションの名前空間
- */
+
+/* ==================================== */
+/* アニメーション */
+/* ==================================== */
+
 namespace anim
 {
 	// アニメーション設定
@@ -31,8 +40,42 @@ namespace anim
 	constexpr uint8_t ANIMATION_WALK = 1; // 歩く
 	constexpr uint8_t ANIMATION_RUN = 2;  // 走る
 	constexpr uint8_t ANIMATION_NORMAL_ATTACK = 3;  // 通常攻撃
+	constexpr uint8_t ANIMATION_SPECIAL_ABILITY = 3; // 特殊能力
 }
 
+void Player::PlayAnimation(const int id)
+{
+	// StateID と アニメーションのインデックス(sAnimPathsの並び順)を紐づける
+	int animIndex = 0;
+	switch (static_cast<StateID>(id)) {
+	case StateID::Idle: animIndex = anim::ANIMATION_IDLE; break;	// 待機。
+	case StateID::Walk: animIndex = anim::ANIMATION_WALK; break;	// 歩き。
+	case StateID::Run:  animIndex = anim::ANIMATION_RUN; break;		// 走る。
+	case StateID::NormalAttack:  animIndex = anim::ANIMATION_NORMAL_ATTACK; break;		// 通常攻撃。
+	case StateID::SpecialAbility:  animIndex = anim::ANIMATION_SPECIAL_ABILITY; break;	// 特殊能力。
+
+	default: return; // ないなら処理を返す
+	}
+
+	modelRender_.PlayAnimation(animIndex); // Idをもとにそのアニメーションの再生
+}
+
+
+
+/* ==================================== */
+/* セットアップ */
+/* ==================================== */
+
+bool Player::CanSpecialAbility()
+{
+	if (stateMachine_.IsActionButtonY()) {
+		if (specialAblityCoolTime_ <= 0.0f) {
+			return true;
+		}
+	}
+	
+	return false;
+}
 
 void Player::SetUpTranslateRulu()
 {
@@ -42,6 +85,8 @@ void Player::SetUpTranslateRulu()
 		stateMachine_.AddState(StateID::Walk, new WalkState(this));
 		stateMachine_.AddState(StateID::Run, new RunState(this));
 		stateMachine_.AddState(StateID::NormalAttack, new NormalAttackState(this));
+		stateMachine_.AddState(StateID::SpecialAbility, new SpecialAbilityState(this));
+		stateMachine_.AddState(StateID::Utility, new UtilityState(this));
 		stateMachine_.AddState(StateID::Dead, new DeadState(this));
 	}
 
@@ -71,6 +116,16 @@ void Player::SetUpTranslateRulu()
 				stateMachine_.AddTransition(StateID::Idle, StateID::NormalAttack, [this]() {
 					return stateMachine_.IsActionButtonB();
 					});
+				// 待機 -> 特殊能力
+				stateMachine_.AddTransition(StateID::Idle, StateID::SpecialAbility, [this]() {
+					// TODO :: 後で変えます
+					if (CanSpecialAbility()) 
+					{ 
+						specialAblityCoolTime_ = specialAblityCoolDown_;
+						return true;
+					}
+					return false;
+					});
 			}
 
 			/** 歩き */
@@ -88,6 +143,16 @@ void Player::SetUpTranslateRulu()
 				// 歩き -> 通常攻撃
 				stateMachine_.AddTransition(StateID::Walk, StateID::NormalAttack, [this]() {
 					return stateMachine_.IsActionButtonB();
+					});
+				// 歩き -> 特殊能力
+				stateMachine_.AddTransition(StateID::Walk, StateID::SpecialAbility, [this]() {
+					// TODO :: 後で変えます
+					if (CanSpecialAbility())
+					{
+						specialAblityCoolTime_ = specialAblityCoolDown_;
+						return true;
+					}
+					return false;
 					});
 			}
 
@@ -107,58 +172,55 @@ void Player::SetUpTranslateRulu()
 				stateMachine_.AddTransition(StateID::Run, StateID::NormalAttack, [this]() {
 					return stateMachine_.IsActionButtonB();
 					});
+
+				// 走り -> 特殊能力
+				stateMachine_.AddTransition(StateID::Run, StateID::SpecialAbility, [this]() {
+					return CanSpecialAbility();
+					});
 			}
 
 			/** 通常攻撃 */
 			{
 				// 通常攻撃 → 待機
 				stateMachine_.AddTransition(StateID::NormalAttack, StateID::Idle, [this]() {
-					auto* currentState = static_cast<PlayerStateBase*>(stateMachine_.GetCurrentState());
+					auto* currentState = static_cast<NormalAttackState*>(stateMachine_.GetCurrentState());
 					return currentState && currentState->IsFinished();
 					});
+			}
 
-				// 通常攻撃 → 歩き
-				stateMachine_.AddTransition(StateID::NormalAttack, StateID::Walk, [this]() {
-					auto* currentState = static_cast<PlayerStateBase*>(stateMachine_.GetCurrentState());
+			/* 特殊能力 */
+			{
+				// 特殊能力 → 待機
+				stateMachine_.AddTransition(StateID::SpecialAbility, StateID::Idle, [this]() {
+					auto* currentState = static_cast<NormalAttackState*>(stateMachine_.GetCurrentState());
 					return currentState && currentState->IsFinished();
-					});
-
-				// 通常攻撃 → 走る
-				stateMachine_.AddTransition(StateID::NormalAttack, StateID::Run, [this]() {
-					auto* currentState = static_cast<PlayerStateBase*>(stateMachine_.GetCurrentState());
-					return currentState && currentState->IsCancelable() && stateMachine_.IsDash();
 					});
 			}
 		}
 	}
 }
 
-
-void Player::PlayAnimation(const StateID id)
+void Player::CreateSkill(NormalAttackType nAttackType, AbilityType abilityType, UtilityType utilityType)
 {
-	// StateID と アニメーションのインデックス(sAnimPathsの並び順)を紐づける
-	int animIndex = 0;
-	switch (id) {
-	case StateID::Idle: animIndex = anim::ANIMATION_IDLE; break;	// 待機。
-	case StateID::Walk: animIndex = anim::ANIMATION_WALK; break;	// 歩き。
-	case StateID::Run:  animIndex = anim::ANIMATION_RUN; break;		// 走る。
-	case StateID::NormalAttack:  animIndex = anim::ANIMATION_NORMAL_ATTACK; break;		// 走る。
-	
-	default: return; // ないなら処理を返す
-	}
-
-	modelRender_.PlayAnimation(animIndex); // Idをもとにそのアニメーションの再生
+	EquipNormalAttack(nAttackType);
+	EquipAbility(abilityType);
+	EquipUtility(utilityType);
 }
 
 
+/* ==================================== */
+/* 更新・描画処理 */
+/* ==================================== */
 Player::Player()
 {
 }
-
+Player::~Player()
+{
+}
 bool Player::Start()
 {
 	// 自分はPlayerグループであることを宣言する
-	SetUpdateGroup(UpdateGroup::Player);
+	// SetUpdateGroup(UpdateGroup::Player);
 
 	// アニメーション
 	{
@@ -198,11 +260,9 @@ bool Player::Start()
 	// ステート遷移のルール設定
 	SetUpTranslateRulu();
 
-
 	// 共通処理を呼び出す
 	return Character::Start();
 }
-
 
 void Player::Update()
 {
@@ -225,11 +285,88 @@ void Player::Update()
 		modelRender_.SetRotation(transform_.rotation);
 		modelRender_.Update();
 	}
-}
 
+	if (specialAblityCoolTime_ > 0.0f) { specialAblityCoolTime_ -= g_gameTime->GetFrameDeltaTime();	}
+	else { specialAblityCoolTime_ = 0.0f; }
+}
 
 void Player::Render(RenderContext& rc)
 {
 	// 共通処理を呼び出す
 	Character::Render(rc);
+}
+
+
+
+/* ==================================== */
+/* スキルの設定・生成 */
+/* ==================================== */
+
+void Player::EquipNormalAttack(NormalAttackType type)
+{
+	
+
+	switch (type)
+	{
+	case NormalAttackType::enBite:
+		activeNormalAttack_ = std::make_unique<Bite>();
+		break;
+	default:
+		activeNormalAttack_.reset(); // 何も装備していない状態
+		break;
+	}
+}
+
+void Player::EquipAbility(AbilityType type) 
+{
+
+	switch (type) {
+		// --- ガード関連 ---
+	case AbilityType::enGuard:
+		// activeAbility_ = std::make_unique<SkillGuard>(); 
+		break;
+	case AbilityType::enReflectiveGuard:
+		// activeAbility_ = std::make_unique<SkillReflectiveGuard>();
+		break;
+	case AbilityType::enCounter:
+		// activeAbility_ = std::make_unique<SkillCounter>();
+		break;
+
+		// --- 魔法関連 ---
+	case AbilityType::enFireMagic:
+		// activeAbility_ = std::make_unique<SkillFireMagic>();
+		break;
+	case AbilityType::enFireMagic_Strong:
+		// activeAbility_ = std::make_unique<SkillFireMagicStrong>();
+		break;
+	case AbilityType::enAbsorption:
+		// activeAbility_ = std::make_unique<SkillAbsorption>();
+		break;
+
+		// --- 爆弾関連 ---
+	case AbilityType::enBomb:
+		// activeAbility_ = std::make_unique<SkillBomb>();
+		break;
+	case AbilityType::enBomb_Decoy:
+		// activeAbility_ = std::make_unique<SkillBombDecoy>();
+		break;
+	case AbilityType::enLandmine:
+		// activeAbility_ = std::make_unique<SkillLandmine>();
+		break;
+	default:
+		activeAbility_ = std::make_unique<DefaultAttack>();
+		break;
+	}
+}
+
+void Player::EquipUtility(UtilityType type) 
+{
+	switch (type) {
+	case UtilityType::enDodgeRoll:
+		// activeUtility_ = std::make_unique<SkillDodgeRoll>();
+		break;
+	default:
+		activeUtility_.reset();
+		break;
+	}
 }

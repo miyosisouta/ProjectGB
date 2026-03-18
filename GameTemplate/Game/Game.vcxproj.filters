@@ -26,6 +26,11 @@
     <ClCompile Include="src\Scene\LoadingScreen.cpp" />
     <ClCompile Include="src\Scene\OutGameScene.cpp" />
     <ClCompile Include="src\Scene\SceneManager.cpp" />
+    <ClCompile Include="src\Skill\ISkill.cpp" />
+    <ClCompile Include="src\Skill\SpecialAbility\Bomb.cpp" />
+    <ClCompile Include="src\Skill\SpecialAbility\Guard.cpp" />
+    <ClCompile Include="src\Skill\SpecialAbility\Magic.cpp" />
+    <ClCompile Include="src\Skill\Utility\Utility.cpp" />
     <ClCompile Include="src\Sound\SoundManager.cpp" />
     <ClCompile Include="src\Stage\Stage.cpp" />
     <ClCompile Include="src\UI\Layout.cpp" />
@@ -41,6 +46,10 @@
     <ClCompile Include="src\Camera\GameCamera.cpp" />
     <ClCompile Include="src\Core\BattleManager.cpp" />
     <ClCompile Include="src\UI\InGameUIManager.cpp" />
+    <ClCompile Include="src\Skill\NormalAttack\NormalAtatck.cpp" />
+    <ClCompile Include="src\Skill\SpecialAbility\AbilityBase.cpp" />
+    <ClCompile Include="src\Skill\SpecialAbility\DefaultAttack.cpp" />
+    <ClCompile Include="src\CharacterDataBase.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Game.h" />
@@ -69,6 +78,11 @@
     <ClInclude Include="src\Scene\LoadingScreen.h" />
     <ClInclude Include="src\Scene\OutGameScene.h" />
     <ClInclude Include="src\Scene\SceneManager.h" />
+    <ClInclude Include="src\Skill\ISkill.h" />
+    <ClInclude Include="src\Skill\SpecialAbility\Bomb.h" />
+    <ClInclude Include="src\Skill\SpecialAbility\Guard.h" />
+    <ClInclude Include="src\Skill\SpecialAbility\Magic.h" />
+    <ClInclude Include="src\Skill\Utility\Utility.h" />
     <ClInclude Include="src\Sound\SoundManager.h" />
     <ClInclude Include="src\Sound\Types.h" />
     <ClInclude Include="src\Stage\Stage.h" />
@@ -86,8 +100,12 @@
     <ClInclude Include="src\Util\TaskSchedulerSystem.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="system\system.h" />
+    <ClInclude Include="src\Skill\NormalAttack\NormalAtatck.h" />
+    <ClInclude Include="src\Skill\SpecialAbility\AbilityBase.h" />
+    <ClInclude Include="src\Skill\SpecialAbility\DefaultAttack.h" />
     <ClInclude Include="src\Camera\GameCamera.h" />
     <ClInclude Include="src\Core\BattleManager.h" />
     <ClInclude Include="src\UI\InGameUIManager.h" />
+    <ClInclude Include="src\CharacterDataBase.h" />
   </ItemGroup>
 </Project>

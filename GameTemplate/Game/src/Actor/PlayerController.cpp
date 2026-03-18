@@ -14,6 +14,10 @@ void PlayerController::Update()
 	targetStateMachine->SetDash(g_pad[0]->IsPress(enButtonA));
 	// Bボタンで通常攻撃
 	targetStateMachine->ActionButtonB(g_pad[0]->IsPress(enButtonB));
+	// Yボタンで特殊能力
+	targetStateMachine->ActionButtonY(g_pad[0]->IsPress(enButtonY));
+	// Xボタンで汎用能力
+	targetStateMachine->ActionButtonX(g_pad[0]->IsPress(enButtonX));
 
 	// スティックの入力を取得
 	float stickX = g_pad[0]->GetLStickXF();

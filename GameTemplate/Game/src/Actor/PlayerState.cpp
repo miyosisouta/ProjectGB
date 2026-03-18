@@ -1,6 +1,9 @@
 #include "stdafx.h"
 #include "PlayerState.h"
 #include "Player.h"
+#include "src/Skill/NormalAttack/NormalAtatck.h"
+#include "src/Skill/SpecialAbility/AbilityBase.h"
+#include "src/Skill/Utility/Utility.h"
 #include "src/collision/GhostBody.h"
 
 
@@ -18,7 +21,7 @@ namespace
 void IdleState::Enter()
 {
 	// 待機アニメーション
-	player_->PlayAnimation(StateID::Idle);
+	player_->PlayAnimation(static_cast<int>(StateID::Idle));
 }
 
 void IdleState::Update()
@@ -39,7 +42,7 @@ void IdleState::Exit()
 void WalkState::Enter()
 {
 	// 歩きアニメーショ
-	player_->PlayAnimation(StateID::Walk);
+	player_->PlayAnimation(static_cast<int>(StateID::Walk));
 }
 
 void WalkState::Update()
@@ -63,7 +66,7 @@ void WalkState::Exit()
 void RunState::Enter()
 {
 	// 走るアニメーション
-	player_->PlayAnimation(StateID::Run);
+	player_->PlayAnimation(static_cast<int>(StateID::Run));
 }
 
 void RunState::Update()
@@ -80,93 +83,134 @@ void RunState::Exit()
 }
 
 
+
 /*==================================================*/
 /* 通常攻撃状態 */
 /*==================================================*/
-
 void NormalAttackState::Enter()
 {
-	// 初期化
-	{
-		isCancelable_ = false;
-		isFinished_ = false;
-	}
+	// playerの通常攻撃タイプを取得
+	currentSkill_ = player_->GetNormalAttackSkill();
 
-
-	// 通常攻撃アニメーション
-	player_->PlayAnimation(StateID::NormalAttack);
-	// 移動速度はゼロに
-	player_->SetMoveVelocity(Vector3::Zero);
-
-
-	// 攻撃コリジョンの生成・破棄
-	{
-		// タスクシステムを作成
-		taskScheduler_ = std::make_unique<TaskSchedulerSystem>();
-	
-		// スケジュール
-		{
-			// 1. ゴースト当たり判定を0.1秒後に1フレームのみ作成
-			taskScheduler_->AddTimer(0.1f, [&]()
-				{
-					// ゴーストコリジョンを生成
-					attackHitbox_ = std::make_unique<GhostBody>(); 
-					attackHitbox_->CreateSphere(player_, Hash32("Player"), 50.0f, ghost::CollisionAttribute::Player, ghost::CollisionAttributeMask::Enemy);
-
-					// 座標計算
-					Vector3 playerPos = player_->transform_.position;				// プレイヤーの現在の座標を取得
-					Quaternion playerRot = player_->GetStateMachine()->GetRotation(); 
-					Vector3 forwardDir = player_->GetStateMachine()->GetDirection();// プレイヤーが最後に向いていた方向を取得
-					float forwardOffset = 100.0f;									// 目の前にどれくらいズラすか
-					float heightOffset = 50.0f;										// 高さの調整
-					Vector3 targetPos = playerPos + (forwardDir * forwardOffset);	// 前方向の座標を決定
-					targetPos.y += heightOffset;									// 高さを決定
-
-					// コリジョンの座標を設定
-					attackHitbox_->SetPosition(targetPos);
-					// エフェクトのPRSを決める
-					Quaternion hoge = playerRot;
-					playerRot.AddRotationDegY(360.0f);
-					EffectManager::Get().PlayEffect(enEffectKind_Wind_Blast, targetPos, playerRot,Vector3(2.0f,2.0f,2.0f));
-					// 通常攻撃のSEを再生
-					SoundManager::Get().PlaySE(enSoundKind_Player_NormalAttack);
-				});
-			// 2. 1フレーム生成後、削除
-			taskScheduler_->AddTimer(0.1f, [&]()
-				{
-					attackHitbox_.reset(nullptr);
-				},
-				true);
-			// 3. 0.3秒経過後回避が可能
-			taskScheduler_->AddTimer(0.4f, [&]() {
-				isCancelable_ = true;
-				});
-
-			// 4. 0.8秒後：攻撃（硬直）が完全に終わる！
-			taskScheduler_->AddTimer(0.6f, [&]() {
-				isFinished_ = true;
-				});
-		}
+	// スキルに処理を丸投げ！
+	if (currentSkill_) {
+		currentSkill_->Enter(player_);
 	}
 }
 
 void NormalAttackState::Update()
 {
-	if (attackHitbox_) {
-		attackHitbox_->SetPosition(player_->transform_.position);
-
-	}
-
-	taskScheduler_->Update(g_gameTime->GetFrameDeltaTime());
+	if (currentSkill_) { currentSkill_->Update(player_); }
 }
 
 void NormalAttackState::Exit()
 {
-	taskScheduler_.reset(nullptr);
-	
+	// スキルに処理を丸投げ！
+	if (currentSkill_) {
+		currentSkill_->Exit(player_);
+	}
+	// 借りていたポインタを空にする（deleteはされないので安全）
+	currentSkill_ = nullptr;
+}
+
+bool NormalAttackState::IsFinished() const
+{
+	if (currentSkill_ && currentSkill_->IsFinished()) { return true; }
+	return false;
+}
+
+bool NormalAttackState::IsCancelable() const
+{
+	if (currentSkill_ && currentSkill_->IsCancelable()) { return true; }
+	return false;
 }
 
 
+/*==================================================*/
+/* 特殊攻撃状態 */
+/*==================================================*/
+void SpecialAbilityState::Enter()
+{
+	// playerの通常攻撃タイプを取得
+	currentSkill_ = player_->GetAbilitySkill();
+
+	// スキルに処理を丸投げ！
+	if (currentSkill_) {
+		currentSkill_->Enter(player_);
+	}
+}
+
+void SpecialAbilityState::Update()
+{
+	if (currentSkill_) { currentSkill_->Update(player_); }
+}
+
+void SpecialAbilityState::Exit()
+{
+	// スキルに処理を丸投げ！
+	if (currentSkill_) {
+		currentSkill_->Exit(player_);
+	}
+	// 借りていたポインタを空にする（deleteはされないので安全）
+	currentSkill_ = nullptr;
+}
+
+
+bool SpecialAbilityState::IsFinished() const
+{
+	if (currentSkill_ && currentSkill_->IsFinished()) { return true; }
+	return false;
+}
+
+bool SpecialAbilityState::IsCancelable() const
+{
+	if (currentSkill_ && currentSkill_->IsCancelable()) { return true; }
+	return false;
+}
+
+
+
+/*==================================================*/
+/* 特殊行動状態 */
+/*==================================================*/
+void UtilityState::Enter()
+{
+	// playerの通常攻撃タイプを取得
+	currentSkill_ = player_->GetUtilitySkill();
+
+	// スキルに処理を丸投げ！
+	if (currentSkill_) {
+		currentSkill_->Enter(player_);
+	}
+}
+
+void UtilityState::Update()
+{
+	if (currentSkill_) { currentSkill_->Update(player_); }
+}
+
+void UtilityState::Exit()
+{
+	// スキルに処理を丸投げ！
+	if (currentSkill_) {
+		currentSkill_->Exit(player_);
+	}
+	// 借りていたポインタを空にする（deleteはされないので安全）
+	currentSkill_ = nullptr;
+
+}
+
+bool UtilityState::IsFinished() const
+{
+	if (currentSkill_ && currentSkill_->IsFinished()) { return true; }
+	return false;
+}
+
+bool UtilityState::IsCancelable() const
+{
+	if (currentSkill_ && currentSkill_->IsCancelable()) { return true; }
+	return false;
+}
 /*==================================================*/
 /* 死亡状態 */
 /*==================================================*/
@@ -174,7 +218,7 @@ void NormalAttackState::Exit()
 void DeadState::Enter()
 {
 	// 死亡アニメーション
-	player_->PlayAnimation(StateID::Dead);
+	player_->PlayAnimation(static_cast<int>(StateID::Dead));
 	// 移動速度はゼロに
 	player_->SetMoveVelocity(Vector3::Zero);
 }

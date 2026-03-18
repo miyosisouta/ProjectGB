@@ -9,6 +9,8 @@ enum class StateID
 	Walk,
 	Run,
 	NormalAttack,
+	SpecialAbility,
+	Utility,
 	Dead
 };
 

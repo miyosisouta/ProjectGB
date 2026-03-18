@@ -2,6 +2,9 @@
 #include "IState.h"
 
 class Player;
+class NormalAttackBase;
+class AbilityBase;
+class UtilityBase;
 /*
  * Stateの基底クラス
  */
@@ -78,19 +81,57 @@ public:
 class NormalAttackState : public PlayerStateBase
 {
 private:
-	std::unique_ptr<GhostBody> attackHitbox_; //!< 攻撃用の当たり判定（ゴースト）を管理
-	std::unique_ptr<TaskSchedulerSystem> taskScheduler_; //!< 特定の時間経過後何をするか逐一決めることができる
-
-	bool isFinished_ = false;
-	bool isCancelable_ = false;
+	NormalAttackBase* currentSkill_ = nullptr;
 
 public:
-	bool IsFinished() const override { return isFinished_; }
-	bool IsCancelable() const override { return isCancelable_; }
-
+	bool IsFinished() const;
+	bool IsCancelable() const;
 
 public:
 	NormalAttackState(Player* p) : PlayerStateBase(p) {}
+
+	void Enter()override;
+	void Update()override;
+	void Exit()override;
+};
+
+/*==========================================*/
+// 特殊スキル状態
+/*==========================================*/
+class SpecialAbilityState : public PlayerStateBase
+{
+private:
+	AbilityBase* currentSkill_ = nullptr;
+
+
+public:
+	bool IsFinished() const;
+	bool IsCancelable() const;
+
+
+public:
+	SpecialAbilityState(Player* p) : PlayerStateBase(p) {}
+
+	void Enter()override;
+	void Update()override;
+	void Exit()override;
+};
+
+/*==========================================*/
+// 特殊行動状態
+/*==========================================*/
+class UtilityState : public PlayerStateBase
+{
+private:
+	UtilityBase* currentSkill_ = nullptr;
+
+
+public:
+	bool IsFinished() const;
+	bool IsCancelable() const;
+
+public:
+	UtilityState(Player* p) : PlayerStateBase(p) {}
 
 	void Enter()override;
 	void Update()override;

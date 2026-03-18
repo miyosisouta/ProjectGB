@@ -5,7 +5,7 @@
 #include<dxgidebug.h>
 
 #include "Game.h"
-
+#include "src/CharacterDataBase.h"
 #include "src/collision/GhostBodyManager.h"
 
 #include "src/Scene/SceneManager.h"
@@ -41,7 +41,7 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 
 
 	GhostBodyManager::Initialize();
-	
+	CharacterDataBase::CreateInstance();
 
 	//Gameクラスのオブジェクトを作成。
 	NewGO<Game>(0, "game");
@@ -65,6 +65,7 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 		K2Engine::GetInstance()->Execute();
 	}
 
+	CharacterDataBase::DestroyInstance();
 	GhostBodyManager::Finalize();
 
 	K2Engine::DeleteInstance();
