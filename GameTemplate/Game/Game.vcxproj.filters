@@ -3,46 +3,13 @@
   <ItemGroup>
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="stdafx.cpp" />
-    <ClCompile Include="src\Actor\Actor.cpp">
-      <Filter>src\Actor</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Actor\Character.cpp">
-      <Filter>src\Actor</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Actor\IState.cpp">
-      <Filter>src\Actor</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Actor\Player.cpp">
-      <Filter>src\Actor</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Actor\PlayerController.cpp">
-      <Filter>src\Actor</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Actor\PlayerState.cpp">
-      <Filter>src\Actor</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Actor\StateMachine.cpp">
-      <Filter>src\Actor</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Math\Transform.cpp">
-      <Filter>src\Math</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Memory\Array.cpp">
-      <Filter>src\Memory</Filter>
-    </ClCompile>
-    <ClCompile Include="system\system.cpp">
-      <Filter>system</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Effect\EffectManager.cpp">
-      <Filter>src\Effect</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Sound\SoundManager.cpp">
-      <Filter>src\Sound</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Stage\Stage.cpp">
-      <Filter>src\Stage</Filter>
-    </ClCompile>
+    <ClCompile Include="src\Actor\Actor.cpp" />
+    <ClCompile Include="src\Actor\Character.cpp" />
+    <ClCompile Include="src\Actor\IState.cpp" />
+    <ClCompile Include="src\Actor\Player.cpp" />
+    <ClCompile Include="src\Actor\PlayerController.cpp" />
+    <ClCompile Include="src\Actor\PlayerState.cpp" />
+    <ClCompile Include="src\Actor\StateMachine.cpp" />
     <ClCompile Include="src\collision\BoundingVolume.cpp" />
     <ClCompile Include="src\collision\BroadphaseImpl.cpp" />
     <ClCompile Include="src\collision\BroadphaseInterface.cpp" />
@@ -51,101 +18,39 @@
     <ClCompile Include="src\collision\GhostBodyManager.cpp" />
     <ClCompile Include="src\collision\GhostPrimitive.cpp" />
     <ClCompile Include="src\collision\PhysicalBody.cpp" />
-    <ClCompile Include="src\UI\UIAnimation.cpp">
-      <Filter>src\UI</Filter>
-    </ClCompile>
-    <ClCompile Include="src\UI\Menu.cpp">
-      <Filter>src\UI</Filter>
-    </ClCompile>
-    <ClCompile Include="src\UI\Layout.cpp">
-      <Filter>src\UI</Filter>
-    </ClCompile>
-    <ClCompile Include="src\UI\UIScreenManager.cpp">
-      <Filter>src\UI</Filter>
-    </ClCompile>
-    <ClCompile Include="src\UI\UIParts.cpp">
-      <Filter>src\UI</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Util\Curve.cpp">
-      <Filter>src\Util</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Util\TaskSchedulerSystem.cpp">
-      <Filter>src\Util</Filter>
-    </ClCompile>
-    <ClCompile Include="src\UI\SoundOptionMenu.cpp">
-      <Filter>src\UI</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Scene\LoadingScreen.cpp">
-      <Filter>src\Scene</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Scene\OutGameScene.cpp">
-      <Filter>src\Scene</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Scene\SceneManager.cpp">
-      <Filter>src\Scene</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Scene\InGameScene.cpp">
-      <Filter>src\Scene</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Scene\IScene.cpp">
-      <Filter>src\Scene</Filter>
-    </ClCompile>
+    <ClCompile Include="src\Effect\EffectManager.cpp" />
+    <ClCompile Include="src\Math\Transform.cpp" />
+    <ClCompile Include="src\Memory\Array.cpp" />
     <ClCompile Include="src\Scene\InGameScene.cpp" />
     <ClCompile Include="src\Scene\IScene.cpp" />
     <ClCompile Include="src\Scene\LoadingScreen.cpp" />
     <ClCompile Include="src\Scene\OutGameScene.cpp" />
     <ClCompile Include="src\Scene\SceneManager.cpp" />
+    <ClCompile Include="src\Sound\SoundManager.cpp" />
+    <ClCompile Include="src\Stage\Stage.cpp" />
+    <ClCompile Include="src\UI\Layout.cpp" />
+    <ClCompile Include="src\UI\Menu.cpp" />
+    <ClCompile Include="src\UI\SoundOptionMenu.cpp" />
+    <ClCompile Include="src\UI\UIAnimation.cpp" />
+    <ClCompile Include="src\UI\UIParts.cpp" />
+    <ClCompile Include="src\UI\UIScreenManager.cpp" />
+    <ClCompile Include="src\Util\Curve.cpp" />
+    <ClCompile Include="src\Util\TaskSchedulerSystem.cpp" />
+    <ClCompile Include="stdafx.cpp" />
+    <ClCompile Include="system\system.cpp" />
+    <ClCompile Include="src\Camera\GameCamera.cpp" />
+    <ClCompile Include="src\Core\BattleManager.cpp" />
+    <ClCompile Include="src\UI\InGameUIManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Game.h" />
-    <ClInclude Include="stdafx.h" />
-    <ClInclude Include="src\Actor\Actor.h">
-      <Filter>src\Actor</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Actor\Character.h">
-      <Filter>src\Actor</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Actor\IState.h">
-      <Filter>src\Actor</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Actor\Player.h">
-      <Filter>src\Actor</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Actor\PlayerController.h">
-      <Filter>src\Actor</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Actor\PlayerState.h">
-      <Filter>src\Actor</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Actor\StateMachine.h">
-      <Filter>src\Actor</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Math\Transform.h">
-      <Filter>src\Math</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Memory\Array.h">
-      <Filter>src\Memory</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Types.h">
-      <Filter>src</Filter>
-    </ClInclude>
-    <ClInclude Include="system\system.h">
-      <Filter>system</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Effect\EffectManager.h">
-      <Filter>src\Effect</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Effect\Types.h">
-      <Filter>src\Effect</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Sound\SoundManager.h">
-      <Filter>src\Sound</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Sound\Types.h">
-      <Filter>src\Sound</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Stage\Stage.h">
-      <Filter>src\Stage</Filter>
+    <ClInclude Include="src\Actor\Actor.h" />
+    <ClInclude Include="src\Actor\Character.h" />
+    <ClInclude Include="src\Actor\IState.h" />
+    <ClInclude Include="src\Actor\Player.h" />
+    <ClInclude Include="src\Actor\PlayerController.h" />
+    <ClInclude Include="src\Actor\PlayerState.h" />
+    <ClInclude Include="src\Actor\StateMachine.h" />
     <ClInclude Include="src\collision\BoundingVolume.h" />
     <ClInclude Include="src\collision\BroadphaseImpl.h" />
     <ClInclude Include="src\collision\BroadphaseInterface.h" />
@@ -155,93 +60,34 @@
     <ClInclude Include="src\collision\GhostPrimitive.h" />
     <ClInclude Include="src\collision\PhysicalBody.h" />
     <ClInclude Include="src\collision\Types.h" />
-    <ClInclude Include="src\UI\UIAnimationFactory.h">
-      <Filter>src\UI</Filter>
-    </ClInclude>
-    <ClInclude Include="src\UI\UIAnimation.h">
-      <Filter>src\UI</Filter>
-    </ClInclude>
-    <ClInclude Include="src\UI\Menu.h">
-      <Filter>src\UI</Filter>
-    </ClInclude>
-    <ClInclude Include="src\UI\Layout.h">
-      <Filter>src\UI</Filter>
-    </ClInclude>
-    <ClInclude Include="src\UI\UIScreenManager.h">
-      <Filter>src\UI</Filter>
-    </ClInclude>
-    <ClInclude Include="src\UI\UIParts.h">
-      <Filter>src\UI</Filter>
-    </ClInclude>
-    <ClInclude Include="src\UI\UIAnimationParameter.h">
-      <Filter>src\UI</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Util\Crc32.h">
-      <Filter>src\Util</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Util\Curve.h">
-      <Filter>src\Util</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Util\TaskSchedulerSystem.h">
-      <Filter>src\Util</Filter>
-    </ClInclude>
+    <ClInclude Include="src\Effect\EffectManager.h" />
+    <ClInclude Include="src\Effect\Types.h" />
+    <ClInclude Include="src\Math\Transform.h" />
+    <ClInclude Include="src\Memory\Array.h" />
     <ClInclude Include="src\Scene\InGameScene.h" />
     <ClInclude Include="src\Scene\IScene.h" />
     <ClInclude Include="src\Scene\LoadingScreen.h" />
     <ClInclude Include="src\Scene\OutGameScene.h" />
     <ClInclude Include="src\Scene\SceneManager.h" />
-    <ClInclude Include="src\UI\SoundOptionMenu.h">
-      <Filter>src\UI</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Scene\LoadingScreen.h">
-      <Filter>src\Scene</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Scene\OutGameScene.h">
-      <Filter>src\Scene</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Scene\SceneManager.h">
-      <Filter>src\Scene</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Scene\InGameScene.h">
-      <Filter>src\Scene</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Scene\IScene.h">
-      <Filter>src\Scene</Filter>
-    </ClInclude>
-  </ItemGroup>
-  <ItemGroup>
-    <Filter Include="src">
-      <UniqueIdentifier>{b888e0f0-dd25-41e5-80ca-354ec5c9b318}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="src\Actor">
-      <UniqueIdentifier>{4d4fd8cf-34ff-4a98-8dc7-e0c0d304a063}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="src\Math">
-      <UniqueIdentifier>{8bb9c55b-3e08-4cc3-bdff-4824871bd608}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="src\Memory">
-      <UniqueIdentifier>{b010943d-5260-4a82-baa1-46c4ad8bc45d}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="src\Scene">
-      <UniqueIdentifier>{31a1cf72-3973-44d7-be83-43828d295fc3}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="src\Util">
-      <UniqueIdentifier>{7e73a35f-0fa1-4d35-8c36-b341c8b646ab}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="system">
-      <UniqueIdentifier>{900e8c00-9aa1-4757-ba73-4eaac98f8115}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="src\UI">
-      <UniqueIdentifier>{a3928a48-4c2b-49ee-babe-960b9d548557}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="src\Sound">
-      <UniqueIdentifier>{7a1f4abf-3da9-4365-b7ee-2d7de52d6449}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="src\Effect">
-      <UniqueIdentifier>{2af746e8-ec3b-4478-94ce-ed3cf306f224}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="src\Stage">
-      <UniqueIdentifier>{6e3e26a6-f4c9-4a95-b04b-fae3c1c5cf0b}</UniqueIdentifier>
-    </Filter>
+    <ClInclude Include="src\Sound\SoundManager.h" />
+    <ClInclude Include="src\Sound\Types.h" />
+    <ClInclude Include="src\Stage\Stage.h" />
+    <ClInclude Include="src\Types.h" />
+    <ClInclude Include="src\UI\Layout.h" />
+    <ClInclude Include="src\UI\Menu.h" />
+    <ClInclude Include="src\UI\SoundOptionMenu.h" />
+    <ClInclude Include="src\UI\UIAnimation.h" />
+    <ClInclude Include="src\UI\UIAnimationFactory.h" />
+    <ClInclude Include="src\UI\UIAnimationParameter.h" />
+    <ClInclude Include="src\UI\UIParts.h" />
+    <ClInclude Include="src\UI\UIScreenManager.h" />
+    <ClInclude Include="src\Util\Crc32.h" />
+    <ClInclude Include="src\Util\Curve.h" />
+    <ClInclude Include="src\Util\TaskSchedulerSystem.h" />
+    <ClInclude Include="stdafx.h" />
+    <ClInclude Include="system\system.h" />
+    <ClInclude Include="src\Camera\GameCamera.h" />
+    <ClInclude Include="src\Core\BattleManager.h" />
+    <ClInclude Include="src\UI\InGameUIManager.h" />
   </ItemGroup>
 </Project>

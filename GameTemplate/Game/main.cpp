@@ -8,6 +8,10 @@
 
 #include "src/collision/GhostBodyManager.h"
 
+#include "src/Scene/SceneManager.h"
+#include "src/Effect/EffectManager.h"
+#include "src/Sound/SoundManager.h"
+
 
 
 void ReportLiveObjects()
@@ -41,6 +45,12 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 
 	//Gameクラスのオブジェクトを作成。
 	NewGO<Game>(0, "game");
+	// SceneManagerクラスのオブジェクトを生成
+	NewGO<SceneMangerObject>(0, "sceneManager");
+	// EffectManagerクラスのオブジェクトを生成
+	NewGO<EffectManagerObject>(20, "effect");
+	//SoundManagerクラスのオブジェクトを生成
+	NewGO<SoundManagerObject>(30, "sound");
 
 	//////////////////////////////////////
 	// 初期化を行うコードを書くのはここまで！！！

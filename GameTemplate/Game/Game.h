@@ -2,10 +2,7 @@
 
 #include "Level3DRender/LevelRender.h"
 
-class Player;
-class PlayerController;
-class Stage;
-class GameCamera;
+
 class EffectManager;
 
 class Game : public IGameObject
@@ -20,10 +17,6 @@ public:
 private:
 	ModelRender m_modelRender;
 	Vector3 m_pos;
-	Player* player_ = nullptr;
-	PlayerController* playerController_ = nullptr;
-	Stage* stage_ = nullptr;
-	GameCamera* gameCamera_ = nullptr;
 	EffectManagerObject* effect_ = nullptr;
 	SoundManagerObject* sound_ = nullptr;
 };
