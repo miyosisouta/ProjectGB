@@ -4,6 +4,7 @@
 
 class Player;
 class PlayerController;
+class Stage;
 
 class Game : public IGameObject
 {
@@ -19,5 +20,6 @@ private:
 	Vector3 m_pos;
 	Player* player_ = nullptr;
 	PlayerController* playerController_ = nullptr;
+	Stage* stage_ = nullptr;
 };
 

@@ -236,6 +236,7 @@
     <ClCompile Include="src\Math\Transform.cpp" />
     <ClCompile Include="src\Memory\Array.cpp" />
     <ClCompile Include="src\Sound\SoundManager.cpp" />
+    <ClCompile Include="src\Stage\Stage.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
@@ -258,6 +259,7 @@
     <ClInclude Include="src\Memory\Array.h" />
     <ClInclude Include="src\Sound\SoundManager.h" />
     <ClInclude Include="src\Sound\Types.h" />
+    <ClInclude Include="src\Stage\Stage.h" />
     <ClInclude Include="src\Types.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="system\system.h" />
