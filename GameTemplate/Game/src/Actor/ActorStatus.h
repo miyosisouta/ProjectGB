@@ -5,13 +5,20 @@ struct CoolDown
 public:
 	float coolTimer = 0.0f;		//!< クールタイムの時間計算用
 	float coolDownTime = 0.0f;	//!< クールタイムの時間設定用
-
+	bool isReadyFrame = false;	//!< クールダウン終わった1フレームだけtrue
 
 public:
 	/* 時間を経過させる */
 	void Update()
 	{
-		coolTimer -= g_gameTime->GetFrameDeltaTime();
+		isReadyFrame = false;
+		if (coolTimer > 0.0f) {
+			coolTimer -= g_gameTime->GetFrameDeltaTime();
+		}
+		if (coolTimer < 0.0f) {
+			isReadyFrame = true;
+			coolTimer = 0.0f;
+		}
 	}
 
 	/* 
@@ -38,6 +45,12 @@ public:
 	bool CanExecute() const
 	{
 		return coolTimer <= 0.0f;
+	}
+
+
+	bool IsReadyFrame() const
+	{
+		return isReadyFrame;
 	}
 };
 
@@ -159,6 +172,20 @@ public:
 	{
 		return skillUtility.CanExecute();
 	}
+
+
+	bool IsReadyFrameNormalAttack() const
+	{
+		return skillNormalAttack.IsReadyFrame();
+	}
+	bool IsReadyFrameSpecialAbility() const
+	{
+		return skillSpecialAbility.IsReadyFrame();
+	}
+	bool IsReadyFrameUtility() const
+	{
+		return skillUtility.IsReadyFrame();
+	}
 };
 
 
@@ -166,6 +193,13 @@ public:
 
 class PlayerStatus : public CharacterStatus
 {
+public:
+	PlayerStatus()
+	{
+		// TODO: 仮
+		hp_ = 5;
+		maxHp_ = 5;
+	}
 };
 
 

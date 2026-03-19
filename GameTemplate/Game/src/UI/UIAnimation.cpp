@@ -148,6 +148,7 @@ void UIAnimationSequence::StartCurrentStep()
 	UIAnimationBase* anim = target_->FindAnimation(step.animationKey);
 	if (anim) {
 		if (step.onStart) step.onStart();
+		anim->Clear();
 		anim->Play();
 	}
 	else {

@@ -98,6 +98,24 @@
             "duration": 0.5,
             "easing": "EaseOut",
             "loop": "Once"
+        },
+        {
+            "key": "SkillReadyScaleUp",
+            "valueType": "Vector3",
+            "startValue": { "x": 1, "y": 1, "z": 1 },
+            "endValue":   { "x": 1.15, "y": 1.15, "z": 1.0 },
+            "duration": 0.1,
+            "easing": "Linear",
+            "loop": "Once"
+        },
+        {
+            "key": "SkillReadyScaleDown",
+            "valueType": "Vector3",
+            "startValue": { "x": 1.15, "y": 1.15, "z": 1 },
+            "endValue":   { "x": 1, "y": 1, "z": 1.0 },
+            "duration": 0.05,
+            "easing": "Linear",
+            "loop": "Once"
         }
     ]
 }
