@@ -9,6 +9,7 @@
 #include "src/Scene/IScene.h"
 #include "src/Scene/InGameScene.h"
 #include "src/Scene/OutGameScene.h"
+#include "src/Scene/titleScene.h"
 #include "src/Scene/LoadingScreen.h"
 
 
@@ -20,12 +21,16 @@ SceneManager::SceneManager()
 	// 各シーンを配列に追加
 	AddSceneMap <InGameScene>();
 	AddSceneMap <OutGameScene>();
+	AddSceneMap <TitleScene>();
 
-	//ロード画面クラスを生成
-	loadingScreen_ = NewGO<LoadingScreen>(0, "LoadingScreen");
+	// ロード画面クラスを生成
+	loadingScreen_ = NewGO<LoadingScreen>(100, "LoadingScreen");
 
-	//最初のシーンを生成（アウトゲームシーン）
-	CreateScene(OutGameScene::ID());
+	// 最初のシーンを生成（タイトルシーン）
+	CreateScene(TitleScene::ID());
+
+	// タスクシステムの生成
+	taskScheduler_ = std::make_unique<TaskSchedulerSystem>();
 }
 
 
@@ -43,18 +48,67 @@ void SceneManager::Update()
 		currentScene_->Update();
 		if (currentScene_->RequestScene(requestSceneID_)) {
 
-			//ロード画面表示のフラグをたてる
-			loadingScreen_->SetDraw(true);
+			// スケジュール
+			//{
+			//	// 1. ロード画面を描画させる
+			//	taskScheduler_->AddTimer(1.1f, [&]()
+			//		{
+			//			loadingScreen_->StartDraw();
+			//		});
+			//	// 2. 次のシーンを生成
+			//	taskScheduler_->AddTimer(0.1f, [&]()
+			//		{
+			//			delete currentScene_;
+			//			CreateScene(requestSceneID_);
+			//		});
+			//	// 3. ロード画面描画を終了
+			//	taskScheduler_->AddTimer(1.1f, [&]() 
+			//		{
+			//			loadingScreen_->EndDraw();
+			//		});				
+			//}
 
-			//次のシーンへ
-			delete currentScene_;
-			CreateScene(requestSceneID_);
+			nextSceneID_ = requestSceneID_;
+			isChange_ = true;
+			loadingScreen_->StartDraw();
+		}
 
-			//ロード画面表示のフラグをおろす
-			loadingScreen_->SetDraw(false);
+		if (isChange_) {
+
+			testTime += g_gameTime->GetFrameDeltaTime();
+
+			switch (sceneState_)
+			{
+			case StartChange:
+			{
+				if (testTime >= 3.1f) {
+					delete currentScene_;
+					CreateScene(nextSceneID_);
+					sceneState_ = EndChange;
+					testTime = 0.0f;
+				}
+
+				break;
+			}
+
+			case EndChange:
+			{
+				if (testTime >= 1.1f) {
+					loadingScreen_->EndDraw();
+					sceneState_ = StartChange;
+					testTime = 0.0f;
+					isChange_ = false;
+				}
+
+				break;
+			}
+
+
+			default:
+				break;
+			}
 		}
 	}
-
 }
 
 
