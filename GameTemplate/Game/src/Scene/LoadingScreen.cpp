@@ -73,7 +73,5 @@ void LoadingScreen::Update()
 
 void LoadingScreen::Render(RenderContext& rc)
 {
-	if (isDraw_) {
-		loadingImage_.Draw(rc);
-	}
+	if (isDraw_) loadingImage_.Draw(rc);
 }
