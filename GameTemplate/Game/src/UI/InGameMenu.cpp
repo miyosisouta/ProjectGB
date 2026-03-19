@@ -90,6 +90,13 @@ void InGameMenu::Update()
 	dodegButton->color = dodeg_button;
 
 
+	auto* dummy = GetUI<UIDummy>(Hash32("AbilitySkillIcon/ColorDummy"));
+	auto* skillIconFrame = GetUI<UIIcon>(Hash32("AbilitySkillIcon/SkillIconFlame"));
+	if (skillIconFrame) {
+		bool isChange = g_pad[0]->IsPress(enButtonLeft);
+		skillIconFrame->color = isChange ? dummy->color : Vector4::White;
+	}
+
 	MenuBase::Update();
 }
 

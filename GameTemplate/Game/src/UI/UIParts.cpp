@@ -351,6 +351,35 @@ int UIDigit::GetDigit(int digit)
 /************************************/
 
 
+UIDummy::UIDummy()
+{
+}
+
+
+UIDummy::~UIDummy()
+{
+}
+
+
+void UIDummy::Update()
+{
+	UpdateAnimation();
+	ComputeFinalColor();
+	transform.UpdateTransform();
+}
+
+
+void UIDummy::Render(RenderContext& rc)
+{
+	// 描画なし
+}
+
+
+
+
+/************************************/
+
+
 UICanvas::UICanvas()
 {
 	uiList_.clear();
