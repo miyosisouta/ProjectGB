@@ -31,6 +31,7 @@ public:
 	virtual void Update() = 0;
 	virtual void Play() = 0;
 	virtual void Stop() = 0;
+	virtual void Clear() = 0;
 	virtual bool IsPlay() = 0;
 
 	void SetUI(UIBase* ui) { ui_ = ui; }
@@ -78,6 +79,12 @@ public:
 	void Stop() override
 	{
 		curve_.Stop();
+	}
+
+	/** クリア */
+	void Clear() override
+	{
+		curve_.Clear();
 	}
 
 	/** 再生中か */
@@ -145,6 +152,12 @@ public:
 	void Stop() override
 	{
 		curve_.Stop();
+	}
+
+	/** クリア */
+	void Clear() override
+	{
+		curve_.Clear();
 	}
 
 	/** 再生してるか */
@@ -222,6 +235,11 @@ public:
 		curve_.Stop();
 	}
 
+	void Clear() override
+	{
+		curve_.Clear();
+	}
+
 	bool IsPlay() override
 	{
 		return curve_.IsPlaying();
@@ -290,6 +308,11 @@ public:
 	void Stop() override
 	{
 		curve_.Stop();
+	}
+
+	void Clear() override
+	{
+		curve_.Clear();
 	}
 
 	bool IsPlay() override

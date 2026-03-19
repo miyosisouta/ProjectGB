@@ -1,0 +1,78 @@
+{
+  "canvas": {
+    "elements": [
+      {
+        "coment": "アビリティアイコンのボタン表示の背景",
+        "type": "UIIcon",
+        "name": "ButtonIconback",
+        "asset": "Assets/ui/inGameUI/skillIcon/back.DDS",
+        "width": 80,
+        "height": 80,
+        "position": [80, -75, 0],
+        "scale": [1, 1, 1],
+        "rotation": 0,
+        "color": [1, 1, 1, 1]
+      },
+      {
+        "coment": "アビリティアイコンのボタン表示",
+        "type": "UIIcon",
+        "name": "buttonIcon",
+        "asset": "Assets/ui/inGameUI/skillIcon/y_button.DDS",
+        "width": 50,
+        "height": 50,
+        "position": [82, -75, 0],
+        "scale": [1, 1, 1],
+        "rotation": 0,
+        "color": [1, 1, 1, 1]
+      },
+
+
+      {
+        "coment": "アビリティアイコンの背景",
+        "type": "UIIcon",
+        "name": "skillIconBack",
+        "asset": "Assets/ui/inGameUI/skillIcon/back_skill.DDS",
+        "width": 180,
+        "height": 180,
+        "position": [0, 0, 0],
+        "scale": [1, 1, 1],
+        "rotation": 0,
+        "color": [1, 1, 1, 1]
+      },
+      {
+        "coment": "アビリティアイコンの枠",
+        "type": "UIIcon",
+        "name": "SkillIconFlame",
+        "asset": "Assets/ui/inGameUI/skillIcon/back_flame.DDS",
+        "width": 180,
+        "height": 180,
+        "position": [0, 0, 0],
+        "scale": [1, 1, 1],
+        "rotation": 0,
+        "color": [1, 1, 1, 1]
+      },
+      {
+        "coment": "アビリティアイコン",
+        "type": "UIIcon",
+        "name": "SkillIcon",
+        "asset": "Assets/ui/inGameUI/skillIcon/skill.DDS",
+        "width": 150,
+        "height": 150,
+        "position": [0, 0, 0],
+        "scale": [1, 1, 1],
+        "rotation": 0,
+        "color": [1, 1, 1, 1]
+      },
+
+
+      {
+        "comment": "ダミー(カラー取得用)",
+        "type": "UIDummy",
+        "name": "CoolDownColorDummy",
+        "position": [0, 0, 0],
+        "scale": [0, 0, 0],
+        "color": [0.3, 0.3, 0.3, 1.0]
+      }
+    ]
+  }
+}

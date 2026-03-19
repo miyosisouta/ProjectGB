@@ -8,6 +8,9 @@
 
 #include "src/Util/TaskSchedulerSystem.h"
 
+#include "src/Actor/Player.h"
+#include "src/Actor/ActorStatus.h"
+
 
 namespace
 {
@@ -15,34 +18,47 @@ namespace
 
 	static float playerHP = 10.0f;
 	static float bossHP = 10.0f;
-
-	static Vector4 attack_button = { 1.0f, 1.0f, 1.0f, 1.0f };
-	static Vector4 dodeg_button = { 1.0f, 1.0f, 1.0f, 1.0f };
 }
 
 
 void InGameMenu::Update()
 {
-	//taskScheduler->Update(g_gameTime->GetFrameDeltaTime());
+	// NOTE: FindoGOにて行う
+	// 　　　できれば管理者から受け取るようにしたい
+	bool isUseNormalAttack = false;
+	bool isUseAbility = false;
+	bool isUseDodgeRoll = false;
+	bool isCoolDownAbility = false;
+	bool isReadyAbilityFrame = false;
+	int playerHP = 0;
+	int playerMaxHP = 0;
+	auto* player = FindGO<Player>("player");
+	if (player) {
+		auto* stateMachine = player->GetStateMachine();
+		isUseNormalAttack = stateMachine->IsActionButtonB();
+		isUseAbility = stateMachine->IsActionButtonY();
+		isUseDodgeRoll = stateMachine->IsActionButtonX();
+
+		auto* playerStatus = player->GetStatus()->As<PlayerStatus>();
+		isCoolDownAbility = !playerStatus->CanExecuteSpecialAbility();
+		isReadyAbilityFrame = playerStatus->IsReadyFrameSpecialAbility();
+
+		playerHP = player->GetStatus()->GetHP();
+		playerMaxHP = player->GetStatus()->GetMaxHP();
+	}
+
+	Vector4 frameIconColor = Vector4::White;
+	auto* dummy = GetUI<UIDummy>(Hash32("FrameColorDummy"));
+	if (dummy) {
+		frameIconColor = dummy->color;
+	}
 
 	// プレイヤーHPの増減
 	auto* playerGauge = GetUI<UIIcon>(Hash32("Player_HP_gauge"));
 	if(playerGauge)
 	{
-		if (g_pad[0]->IsTrigger(enButtonDown)) {
-			playerHP -= 1.0f;
-			if (playerHP < 0.0f) {
-				playerHP = 0.0f;
-			}
-		}
-		else if (g_pad[0]->IsTrigger(enButtonUp)) {
-			playerHP += 1.0f;
-			if (playerHP > 10.0f){
-				playerHP = 10.0f;
-			}
-		}
+		playerGauge->transform.localScale.x = playerHP / static_cast<float>(playerMaxHP);
 	}
-	playerGauge->transform.localScale.x = playerHP / 10.0f;
 	
 
 	// プレイヤーHPの増減
@@ -68,34 +84,60 @@ void InGameMenu::Update()
 	// 攻撃ボタン枠の色変化
 	auto* attackButton = GetUI<UIIcon>(Hash32("Attack_Icon_flame")); 
 	if(attackButton){
-		if (g_pad[0]->IsPress(enButtonRight)) {
-			attack_button = Vector4{ 0.92f,0.57f,0.31f,1.0f };
-		}
-		else if(!g_pad[0]->IsPress(enButtonRight)){
-			attack_button = Vector4{ 1.0f, 1.0f, 1.0f, 1.0f };
-		}
+		attackButton->color = isUseNormalAttack ? frameIconColor : Vector4::White;
 	}
-	attackButton->color = attack_button;
 	
 	// 回避ボタン枠の色変化
 	auto* dodegButton = GetUI<UIIcon>(Hash32("dodeg_Icon_flame"));
 	if (dodegButton) {
-		if (g_pad[0]->IsPress(enButtonLeft)) {
-			dodeg_button = Vector4{ 0.92f, 0.57f, 0.31f, 1.0f };
-		}
-		else if (!g_pad[0]->IsPress(enButtonLeft)) {
-			dodeg_button = Vector4{ 1.0f, 1.0f, 1.0f, 1.0f };
-		}
+		dodegButton->color = isUseDodgeRoll ? frameIconColor : Vector4::White;
 	}
-	dodegButton->color = dodeg_button;
 
+	// スキルボタン
+	{
+		auto* dummyColor = GetUI<UIDummy>(Hash32("AbilitySkillIcon/CoolDownColorDummy"));
+		const Vector4 coolDownColor = dummyColor->color;
 
-	auto* dummy = GetUI<UIDummy>(Hash32("AbilitySkillIcon/ColorDummy"));
-	auto* skillIconFrame = GetUI<UIIcon>(Hash32("AbilitySkillIcon/SkillIconFlame"));
-	if (skillIconFrame) {
-		bool isChange = g_pad[0]->IsPress(enButtonLeft);
-		skillIconFrame->color = isChange ? dummy->color : Vector4::White;
+		// スキルボタン枠の色変化
+		auto* skillIconFrame = GetUI<UIIcon>(Hash32("AbilitySkillIcon/SkillIconFlame"));
+		if (skillIconFrame) {
+			Vector4 color = Vector4::White;
+			if (isUseAbility) {
+				color = frameIconColor;
+			}
+			if (isCoolDownAbility) {
+				color = coolDownColor;
+			}
+			skillIconFrame->color = color;
+		}
+		// スキルボタンの色変化
+		auto* skillIconBack = GetUI<UIIcon>(Hash32("AbilitySkillIcon/skillIconBack"));
+		if (skillIconBack) {
+			// クールダウン中なら暗くしたい
+			// isCoolDownAbility == true なら、白で、それ以外は暗くする色をダミーからとってくる
+			skillIconBack->color = isCoolDownAbility ? coolDownColor : Vector4::White;
+		}
+		// コントローラーボタンアイコン
+		auto* buttonIcon = GetUI<UIIcon>(Hash32("AbilitySkillIcon/buttonIcon"));
+		if (buttonIcon) {
+			buttonIcon->color = isCoolDownAbility ? coolDownColor : Vector4::White;
+		}
+		// コントローラーボタン背景アイコン
+		auto* buttonBackIcon = GetUI<UIIcon>(Hash32("AbilitySkillIcon/ButtonIconback"));
+		if (buttonBackIcon) {
+			buttonBackIcon->color = isCoolDownAbility ? coolDownColor : Vector4::White;
+		}
+		// スキルボタンのキャンバス
+		auto* abilitySkillIconCanvas = GetUI<UICanvas>(Hash32("AbilitySkillIcon"));
+		if (abilitySkillIconCanvas) {
+			if (isReadyAbilityFrame) {
+				abilitySkillIconScaleSequence->Play(abilitySkillIconCanvas);
+			}
+		}
+		abilitySkillIconScaleSequence->Update(g_gameTime->GetFrameDeltaTime());
 	}
+	
+
 
 	MenuBase::Update();
 }
@@ -113,4 +155,12 @@ void InGameMenu::InitializeLogic()
 	playerHPGauge->SetPivot(Vector2(0.0f, 0.5f));
 	auto* bossHPGauge = GetUI<UIIcon>(Hash32("Boss_HP_gauge"));
 	bossHPGauge->SetPivot(Vector2(0.0f, 0.5f));
+
+
+	// アビリティアイコンのキャンバス
+	auto* abilitySkillIconCanvas = GetUI<UICanvas>(Hash32("AbilitySkillIcon"));
+	UIAnimationFactory::Attach<UIScaleAnimation>(abilitySkillIconCanvas, Hash32("SkillReadyScaleUp"));
+	UIAnimationFactory::Attach<UIScaleAnimation>(abilitySkillIconCanvas, Hash32("SkillReadyScaleDown"));
+	abilitySkillIconScaleSequence = std::make_unique<UIAnimationSequence>();
+	abilitySkillIconScaleSequence->Add(Hash32("SkillReadyScaleUp")).Add(Hash32("SkillReadyScaleDown"));
 }

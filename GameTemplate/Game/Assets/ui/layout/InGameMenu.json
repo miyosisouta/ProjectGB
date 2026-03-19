@@ -240,6 +240,26 @@
         "scale": [1, 1, 1],
         "rotation": 0,
         "color": [1, 1, 1, 1]
+      },
+
+
+      {
+        "comment": "アビリティスキルアイコン",
+        "type": "UIPrefab",
+        "name": "AbilitySkillIcon",
+        "source": "Assets/ui/layout/AbilitySkillParts.json",
+        "position": [700, -170, 0],
+        "scale": [1, 1, 1]
+      },
+
+
+      {
+        "comment": "ダミー(カラー取得用)",
+        "type": "UIDummy",
+        "name": "FrameColorDummy",
+        "position": [0, 0, 0],
+        "scale": [0, 0, 0],
+        "color": [0.92, 0.57, 0.31, 1.0]
       }
     ]
   }

@@ -86,7 +86,14 @@ T clamp(T value, T low, T high) {
      void Stop()
      {
          isPlaying_ = false;
-	}
+     }
+
+     /** クリア */
+     void Clear()
+     {
+         currentTime_ = 0.0f;
+         direction_ = 1;
+     }
 
      /** 更新 */
      void Update(float deltaTime)
