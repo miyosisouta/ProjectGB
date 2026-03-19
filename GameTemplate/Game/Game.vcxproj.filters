@@ -50,6 +50,7 @@
     <ClCompile Include="src\Skill\SpecialAbility\AbilityBase.cpp" />
     <ClCompile Include="src\Skill\SpecialAbility\DefaultAttack.cpp" />
     <ClCompile Include="src\CharacterDataBase.cpp" />
+    <ClCompile Include="src\Actor\ActorStatus.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Game.h" />
@@ -107,5 +108,6 @@
     <ClInclude Include="src\Core\BattleManager.h" />
     <ClInclude Include="src\UI\InGameUIManager.h" />
     <ClInclude Include="src\CharacterDataBase.h" />
+    <ClInclude Include="src\Actor\ActorStatus.h" />
   </ItemGroup>
 </Project>

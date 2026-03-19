@@ -25,7 +25,7 @@ void DefaultAttack::Enter(Character* p)
 		// スケジュール
 		{
 			// 1. ゴースト当たり判定を0.1秒後に1フレームのみ作成
-			taskScheduler_->AddTimer(0.1f, [&]()
+			taskScheduler_->AddTimer(0.1f, [&, p]()
 				{
 					// ゴーストコリジョンを生成
 					attackHitbox_ = std::make_unique<GhostBody>();
@@ -80,5 +80,5 @@ void DefaultAttack::Update(Character* p)
 
 void DefaultAttack::Exit(Character* p)
 {
-	taskScheduler_.reset(nullptr);
+	taskScheduler_.reset();
 }

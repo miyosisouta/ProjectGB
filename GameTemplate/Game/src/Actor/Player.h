@@ -9,14 +9,6 @@ class UtilityBase;
 class Player : public Character
 {
 private:
-	float specialAblityCoolDown_ = 5.0f; //!< 特殊能力のクールタイムの時間
-	float specialAblityCoolTime_ = 0.0f; //!< 特殊能力の残りクールタイム
-
-public:
-	/* 特殊能力のクールタイムを取得 */
-	float GetSpecialAbilityColTime() { return specialAblityCoolTime_; }
-
-private:
 	/* 特殊能力が使えるか */
 	bool CanSpecialAbility();
 

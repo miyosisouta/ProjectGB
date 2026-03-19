@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "PlayerState.h"
 #include "Player.h"
+#include "ActorStatus.h"
 #include "src/Skill/NormalAttack/NormalAtatck.h"
 #include "src/Skill/SpecialAbility/AbilityBase.h"
 #include "src/Skill/Utility/Utility.h"
@@ -131,6 +132,9 @@ bool NormalAttackState::IsCancelable() const
 /*==================================================*/
 void SpecialAbilityState::Enter()
 {
+	auto* status = player_->GetStatus()->As<PlayerStatus>();
+	status->ExecuteSpecialAbility();
+
 	// playerの通常攻撃タイプを取得
 	currentSkill_ = player_->GetAbilitySkill();
 
