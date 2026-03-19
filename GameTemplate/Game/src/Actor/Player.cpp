@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "Player.h"
+#include "ActorStatus.h"
 #include "StateMachine.h"
 #include "PlayerState.h"
 #include "src/Skill/ISkill.h"
@@ -69,7 +70,8 @@ void Player::PlayAnimation(const int id)
 bool Player::CanSpecialAbility()
 {
 	if (stateMachine_.IsActionButtonY()) {
-		if (specialAblityCoolTime_ <= 0.0f) {
+		PlayerStatus* status = GetStatus()->As<PlayerStatus>();
+		if (status->CanExecuteSpecialAbility()) {
 			return true;
 		}
 	}
@@ -118,13 +120,7 @@ void Player::SetUpTranslateRulu()
 					});
 				// ‘Ò‹@ -> “ÁŽê”\—Í
 				stateMachine_.AddTransition(StateID::Idle, StateID::SpecialAbility, [this]() {
-					// TODO :: Œã‚Å•Ï‚¦‚Ü‚·
-					if (CanSpecialAbility()) 
-					{ 
-						specialAblityCoolTime_ = specialAblityCoolDown_;
-						return true;
-					}
-					return false;
+					return CanSpecialAbility();
 					});
 			}
 
@@ -146,13 +142,7 @@ void Player::SetUpTranslateRulu()
 					});
 				// •à‚« -> “ÁŽê”\—Í
 				stateMachine_.AddTransition(StateID::Walk, StateID::SpecialAbility, [this]() {
-					// TODO :: Œã‚Å•Ï‚¦‚Ü‚·
-					if (CanSpecialAbility())
-					{
-						specialAblityCoolTime_ = specialAblityCoolDown_;
-						return true;
-					}
-					return false;
+					return CanSpecialAbility();
 					});
 			}
 
@@ -213,6 +203,11 @@ void Player::CreateSkill(NormalAttackType nAttackType, AbilityType abilityType, 
 /* ==================================== */
 Player::Player()
 {
+	auto* playerStatus = new PlayerStatus();
+	status_ = playerStatus;
+
+	playerStatus->SetupSkillCoolDown(0.0f, 5.0f, 1.0f);
+	
 }
 Player::~Player()
 {
@@ -286,8 +281,8 @@ void Player::Update()
 		modelRender_.Update();
 	}
 
-	if (specialAblityCoolTime_ > 0.0f) { specialAblityCoolTime_ -= g_gameTime->GetFrameDeltaTime();	}
-	else { specialAblityCoolTime_ = 0.0f; }
+	PlayerStatus* status = GetStatus()->As<PlayerStatus>();
+	status->Update();
 }
 
 void Player::Render(RenderContext& rc)

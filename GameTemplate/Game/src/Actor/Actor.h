@@ -1,6 +1,9 @@
 #pragma once
 
 
+class ActorStatus;
+
+
 class Actor : public IGameObject
 {
 public:
@@ -9,6 +12,8 @@ public:
 
 protected:
 	ModelRender modelRender_; //!< モデルレンダー
+
+	ActorStatus* status_ = nullptr;
 
 
 public:
@@ -28,4 +33,7 @@ public:
 public:
 	/** グローバル位置を取得 */
 	inline const Vector3 GetGlobalPosition() const { return transform_.position; }
+
+
+	ActorStatus* GetStatus() { return status_; }
 };

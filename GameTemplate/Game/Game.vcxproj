@@ -226,6 +226,7 @@
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="src\Actor\Actor.cpp" />
+    <ClCompile Include="src\Actor\ActorStatus.cpp" />
     <ClCompile Include="src\Actor\Character.cpp" />
     <ClCompile Include="src\Actor\IState.cpp" />
     <ClCompile Include="src\Actor\Player.cpp" />
@@ -281,6 +282,7 @@
   <ItemGroup>
     <ClInclude Include="Game.h" />
     <ClInclude Include="src\Actor\Actor.h" />
+    <ClInclude Include="src\Actor\ActorStatus.h" />
     <ClInclude Include="src\Actor\Character.h" />
     <ClInclude Include="src\Actor\IState.h" />
     <ClInclude Include="src\Actor\Player.h" />
