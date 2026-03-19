@@ -1,0 +1,246 @@
+{
+  "canvas": {
+    "elements": [
+      {
+        "coment": "プレイヤーのHPの背景",
+        "type": "UIIcon",
+        "name": "Player_HP_back",
+        "asset": "Assets/ui/inGameUI/gauge/player_back.DDS",
+        "width": 480,
+        "height": 150,
+        "position": [-500, -380, 0],
+        "scale": [1, 1, 1],
+        "rotation": 0,
+        "color": [1, 1, 1, 1]
+      },
+      {
+        "coment": "プレイヤーのHPの文字",
+        "type": "UIIcon",
+        "name": "Player_HP_word",
+        "asset": "Assets/ui/inGameUI/word/player_hp.DDS",
+        "width": 60,
+        "height": 30,
+        "position": [-610, -360, 0],
+        "scale": [1, 1, 1],
+        "rotation": 0,
+        "color": [1, 1, 1, 1]
+      },
+      {
+        "coment": "プレイヤーのHPゲージの背面",
+        "type": "UIIcon",
+        "name": "Player_HP_gauge_back",
+        "asset": "Assets/ui/inGameUI/gauge/gauge_back.DDS",
+        "width": 335,
+        "height": 30,
+        "position": [-480, -400, 0],
+        "scale": [1, 1, 1],
+        "rotation": 0,
+        "color": [1, 1, 1, 1]
+      },
+      {
+        "coment": "プレイヤーのHPゲージ",
+        "type": "UIIcon",
+        "name": "Player_HP_gauge",
+        "asset": "Assets/ui/inGameUI/gauge/gauge_player.DDS",
+        "width": 340,
+        "height": 30,
+        "position": [-650, -400, 0],
+        "scale": [1, 1, 1],
+        "rotation": 0,
+        "color": [1, 1, 1, 1]
+      },
+      {
+        "coment": "プレイヤーのHPの枠",
+        "type": "UIIcon",
+        "name": "Player_HP_flame",
+        "asset": "Assets/ui/inGameUI/gauge/player_hp_gauge_flame.DDS",
+        "width": 350,
+        "height": 40,
+        "position": [-480, -400, 0],
+        "scale": [1, 1, 1],
+        "rotation": 0,
+        "color": [1, 1, 1, 1]
+      },
+
+
+
+
+      {
+        "coment": "ボスのHPの文字",
+        "type": "UIIcon",
+        "name": "Boss_HP_word",
+        "asset": "Assets/ui/inGameUI/word/gollira.DDS",
+        "width": 200,
+        "height": 100,
+        "position": [0, 460, 0],
+        "scale": [1, 1, 1],
+        "rotation": 0,
+        "color": [1, 1, 1, 1]
+      },
+      {
+        "coment": "ボスのHPゲージの背面",
+        "type": "UIIcon",
+        "name": "Boss_HP_gauge_back",
+        "asset": "Assets/ui/inGameUI/gauge/gauge_back.DDS",
+        "width": 1000,
+        "height": 30,
+        "position": [0, 370, 0],
+        "scale": [1, 1, 1],
+        "rotation": 0,
+        "color": [1, 1, 1, 1]
+      },
+      {
+        "coment": "ボスのHPゲージ",
+        "type": "UIIcon",
+        "name": "Boss_HP_gauge",
+        "asset": "Assets/ui/inGameUI/gauge/gauge_boss.DDS",
+        "width": 960,
+        "height": 30,
+        "position": [-488, 370, 0],
+        "scale": [1, 1, 1],
+        "rotation": 0,
+        "color": [1, 1, 1, 1]
+      },
+      {
+        "coment": "ボスのHPゲージの枠",
+        "type": "UIIcon",
+        "name": "Boss_HP_gauge_flame",
+        "asset": "Assets/ui/inGameUI/gauge/boss_hp_gauge_flame.DDS",
+        "width": 1000,
+        "height": 70,
+        "position": [0, 370, 0],
+        "scale": [1, 1, 1],
+        "rotation": 0,
+        "color": [1, 1, 1, 1]
+      },
+
+
+
+
+      {
+        "coment": "攻撃アイコンのボタン表示の背景",
+        "type": "UIIcon",
+        "name": "Attack_Icon_punch_back",
+        "asset": "Assets/ui/inGameUI/skillIcon/back.DDS",
+        "width": 80,
+        "height": 80,
+        "position": [888, -450, 0],
+        "scale": [1, 1, 1],
+        "rotation": 0,
+        "color": [1, 1, 1, 1]
+      },
+      {
+        "coment": "攻撃アイコンのボタン表示",
+        "type": "UIIcon",
+        "name": "Attack_Icon_punch_Bbutton",
+        "asset": "Assets/ui/inGameUI/skillIcon/b_button.DDS",
+        "width": 50,
+        "height": 50,
+        "position": [890, -450, 0],
+        "scale": [1, 1, 1],
+        "rotation": 0,
+        "color": [1, 1, 1, 1]
+      },
+      {
+        "coment": "攻撃アイコンの背景",
+        "type": "UIIcon",
+        "name": "Attack_Icon_back",
+        "asset": "Assets/ui/inGameUI/skillIcon/back_attack.DDS",
+        "width": 180,
+        "height": 180,
+        "position": [800, -375, 0],
+        "scale": [1, 1, 1],
+        "rotation": 0,
+        "color": [1, 1, 1, 1]
+      },
+      {
+        "coment": "攻撃アイコンの枠",
+        "type": "UIIcon",
+        "name": "Attack_Icon_flame",
+        "asset": "Assets/ui/inGameUI/skillIcon/back_flame.DDS",
+        "width": 180,
+        "height": 180,
+        "position": [800, -375, 0],
+        "scale": [1, 1, 1],
+        "rotation": 0,
+        "color": [1, 1, 1, 1]
+      },
+      {
+        "coment": "攻撃アイコン",
+        "type": "UIIcon",
+        "name": "Attack_Icon_punch",
+        "asset": "Assets/ui/inGameUI/skillIcon/punch.DDS",
+        "width": 150,
+        "height": 150,
+        "position": [800, -375, 0],
+        "scale": [1, 1, 1],
+        "rotation": 0,
+        "color": [1, 1, 1, 1]
+      },
+      
+
+
+
+      {
+        "coment": "回避アイコンのボタン表示の背景",
+        "type": "UIIcon",
+        "name": "dodeg_Icon_run_back",
+        "asset": "Assets/ui/inGameUI/skillIcon/back.DDS",
+        "width": 80,
+        "height": 80,
+        "position": [680, -450, 0],
+        "scale": [1, 1, 1],
+        "rotation": 0,
+        "color": [1, 1, 1, 1]
+      },
+      {
+        "coment": "回避アイコンのボタン表示",
+        "type": "UIIcon",
+        "name": "dodeg_Icon_Bbutton",
+        "asset": "Assets/ui/inGameUI/skillIcon/a_button.DDS",
+        "width": 50,
+        "height": 50,
+        "position": [682, -450, 0],
+        "scale": [1, 1, 1],
+        "rotation": 0,
+        "color": [1, 1, 1, 1]
+      },
+      {
+        "coment": "回避アイコンの背景",
+        "type": "UIIcon",
+        "name": "dodeg_Icon_back",
+        "asset": "Assets/ui/inGameUI/skillIcon/back_run.DDS",
+        "width": 180,
+        "height": 180,
+        "position": [600, -375, 0],
+        "scale": [1, 1, 1],
+        "rotation": 0,
+        "color": [1, 1, 1, 1]
+      },
+      {
+        "coment": "回避アイコンの枠",
+        "type": "UIIcon",
+        "name": "dodeg_Icon_flame",
+        "asset": "Assets/ui/inGameUI/skillIcon/back_flame.DDS",
+        "width": 180,
+        "height": 180,
+        "position": [600, -375, 0],
+        "scale": [1, 1, 1],
+        "rotation": 0,
+        "color": [1, 1, 1, 1]
+      },
+      {
+        "coment": "回避アイコン",
+        "type": "UIIcon",
+        "name": "dodeg_Icon_punch",
+        "asset": "Assets/ui/inGameUI/skillIcon/dog.DDS",
+        "width": 150,
+        "height": 150,
+        "position": [600, -375, 0],
+        "scale": [1, 1, 1],
+        "rotation": 0,
+        "color": [1, 1, 1, 1]
+      }
+    ]
+  }
+}

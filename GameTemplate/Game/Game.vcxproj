@@ -261,6 +261,7 @@
     <ClCompile Include="src\Skill\Utility\Utility.cpp" />
     <ClCompile Include="src\Sound\SoundManager.cpp" />
     <ClCompile Include="src\Stage\Stage.cpp" />
+    <ClCompile Include="src\UI\InGameMenu.cpp" />
     <ClCompile Include="src\UI\InGameUIManager.cpp" />
     <ClCompile Include="src\UI\Layout.cpp" />
     <ClCompile Include="src\UI\Menu.cpp" />
@@ -319,6 +320,7 @@
     <ClInclude Include="src\Sound\Types.h" />
     <ClInclude Include="src\Stage\Stage.h" />
     <ClInclude Include="src\Types.h" />
+    <ClInclude Include="src\UI\InGameMenu.h" />
     <ClInclude Include="src\UI\InGameUIManager.h" />
     <ClInclude Include="src\UI\Layout.h" />
     <ClInclude Include="src\UI\Menu.h" />
