@@ -124,6 +124,40 @@ namespace
         // 初期値の数値は0としておく
         text->Initialize(assetName.c_str(), digitCount, 0, w, h, position, scale, rotation);
     }
+    void InitializeUIParts(UIDummy* dummy, const nlohmann::json& item)
+    {
+        // オプション（ダミーだが、情報として持てる）
+        if (item.contains("position")) {
+            const Vector3 position = ParseVector3(item["position"]);
+            dummy->transform.localPosition = position;
+        }
+        if (item.contains("scale")) {
+            const Vector3 scale = ParseVector3(item["scale"]);
+            dummy->transform.localScale = scale;
+        }
+        if (item.contains("rotation")) {
+            const Quaternion rotation = ParseRotation(item["rotation"].get<float>());
+            dummy->transform.localRotation = rotation;
+        }
+        if (item.contains("color")) {
+            dummy->color = ParseVector4(item["color"]);
+        }
+    }
+
+
+    /**
+     * スコープ付きキーを生成する
+     * prefix が空なら Hash32(name) をそのまま返す
+     * prefix があれば Hash32("prefix/name") を返す
+     */
+    uint32_t MakeScopedKey(const std::string& prefix, const std::string& name)
+    {
+        if (prefix.empty()) {
+            return Hash32(name.c_str());
+        }
+        std::string scoped = prefix + "/" + name;
+        return Hash32(scoped.c_str());
+    }
 }
 
 
@@ -170,17 +204,20 @@ void Layout::Reload()
     auto* canvas = menu_->GetCanvas();
     auto& elements = j["canvas"]["elements"];
 
+    // ルート直下は prefix 空
+    const std::string emptyPrefix;
+
     for (auto& item : elements) {
         std::string type = item["type"];
         std::string name = item["name"];
 
-        // すでに存在するUIならパラメータ更新のみ
+        // ルート直下なので prefix なしのキー
         const uint32_t key = Hash32(name.c_str());
         if (menu_->HasUI(key)) {
             menu_->UnregisterUI(key);
             canvas->RemoveUI(key);
         }
-        auto* ui = CreateUI(canvas, type, key, item);
+        auto* ui = CreateUI(canvas, type, key, item, emptyPrefix);
         if (ui == nullptr) {
             K2_LOG("Layout::Reload: unknown UI type [%s] name=[%s]\n", type.c_str(), name.c_str());
             continue;
@@ -192,7 +229,8 @@ void Layout::Reload()
 }
 
 
-UIBase* Layout::CreateUI(UICanvas* canvas, const std::string& type, const uint32_t key, const nlohmann::json& item)
+UIBase* Layout::CreateUI(UICanvas* canvas, const std::string& type, const uint32_t key,
+    const nlohmann::json& item, const std::string& prefix)
 {
     if (type == "UIIcon") {
         canvas->CreateUI<UIIcon>(key);
@@ -212,7 +250,113 @@ UIBase* Layout::CreateUI(UICanvas* canvas, const std::string& type, const uint32
         InitializeUIParts(digit, item);
         return digit;
     }
+    if (type == "UIDummy") {
+        canvas->CreateUI<UIDummy>(key);
+        auto* dummy = canvas->FindUI<UIDummy>(key);
+        InitializeUIParts(dummy, item);
+        return dummy;
+    }
+    // -------------------------------------------------------
+    // プレハブ: 別JSONで定義されたUIの塊を子Canvasとして埋め込む
+    // -------------------------------------------------------
+    if (type == "UIPrefab") {
+        return LoadPrefab(canvas, key, item, prefix);
+    }
     //if (type == "UIButton") return canvas->CreateUI<UIButton>(key);
     //if (type == "UIGauge")  return canvas->CreateUI<UIGauge>(key);
     return nullptr;
+}
+
+
+UIBase* Layout::LoadPrefab(UICanvas* parentCanvas, const uint32_t key,
+    const nlohmann::json& item,
+    const std::string& prefix, int depth)
+{
+    // 無限再帰ガード
+    if (depth >= kMaxPrefabDepth) {
+        K2_LOG("Layout::LoadPrefab: max depth reached (%d)\n", kMaxPrefabDepth);
+        return nullptr;
+    }
+
+    // 子JSONのパスを取得
+    if (!item.contains("source")) {
+        K2_LOG("Layout::LoadPrefab: 'source' field missing\n");
+        return nullptr;
+    }
+    const std::string sourcePath = item["source"].get<std::string>();
+
+    // このプレハブの name を取得してスコープを構築
+    // 親JSON側の "name" が "Player1Status" なら childPrefix = "Player1Status"
+    // ネストしている場合は "Player1Status/InnerGroup" のように連結される
+    const std::string prefabName = item.value("name", "");
+    std::string childPrefix;
+    if (prefix.empty()) {
+        childPrefix = prefabName;
+    }
+    else {
+        childPrefix = prefix + "/" + prefabName;
+    }
+
+    // 子JSONを読み込む
+    std::ifstream file(sourcePath);
+    if (!file.is_open()) {
+        K2_LOG("Layout::LoadPrefab: file not found [%s]\n", sourcePath.c_str());
+        return nullptr;
+    }
+
+    nlohmann::json childJson;
+    file >> childJson;
+
+    if (!childJson.contains("canvas") || !childJson["canvas"].contains("elements")) {
+        K2_LOG("Layout::LoadPrefab: invalid format [%s]\n", sourcePath.c_str());
+        return nullptr;
+    }
+
+    // 子Canvas を親Canvas の子UIとして生成
+    parentCanvas->CreateUI<UICanvas>(key);
+    auto* childCanvas = parentCanvas->FindUI<UICanvas>(key);
+    if (!childCanvas) return nullptr;
+
+    // 親JSON側の overrides を子Canvasに適用
+    if (item.contains("position")) {
+        childCanvas->transform.localPosition = ParseVector3(item["position"]);
+    }
+    if (item.contains("scale")) {
+        childCanvas->transform.localScale = ParseVector3(item["scale"]);
+    }
+    if (item.contains("color")) {
+        childCanvas->color = ParseVector4(item["color"]);
+    }
+
+    // 子JSONの elements を走査して、子Canvas上にUIを生成
+    auto& elements = childJson["canvas"]["elements"];
+    for (auto& childItem : elements) {
+        std::string childType = childItem["type"];
+        std::string childName = childItem["name"];
+
+        // スコープ付きキー: "Player1Status/HpIcon" → Hash32
+        const uint32_t childKey = MakeScopedKey(childPrefix, childName);
+
+        UIBase* childUI = nullptr;
+
+        if (childType == "UIPrefab") {
+            // プレハブの中にプレハブ（再帰）
+            // childPrefix をさらに引き継ぐ
+            childUI = LoadPrefab(childCanvas, childKey, childItem, childPrefix, depth + 1);
+        }
+        else {
+            childUI = CreateUI(childCanvas, childType, childKey, childItem, childPrefix);
+        }
+
+        if (childUI == nullptr) {
+            K2_LOG("Layout::LoadPrefab: unknown type [%s] in [%s]\n",
+                childType.c_str(), sourcePath.c_str());
+            continue;
+        }
+
+        // 子UIも menu_ の uiMap_ にフラットに登録 → GetUI で取れる
+        menu_->RegisterUI(childKey, childUI);
+    }
+
+    return childCanvas;
 }

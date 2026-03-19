@@ -351,6 +351,25 @@ private:
 
 
 // ============================================
+// ダミーUI（描画なし・Transform/Animation情報のみ）
+// ============================================
+
+
+class UIDummy : public UIBase
+{
+public:
+	UIDummy();
+	~UIDummy();
+
+public:
+	virtual void Update() override;
+	virtual void Render(RenderContext& rc) override;
+};
+
+
+
+
+// ============================================
 // キャンバス
 // ============================================
 

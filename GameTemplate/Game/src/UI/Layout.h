@@ -54,6 +54,38 @@ public:
     }
 
 
+    /**
+     * コード側からプレハブ内のUIを取得するためのキー生成ヘルパー
+     *
+     * 使用例:
+     *   auto* hp = menu->GetUI<UIIcon>(Layout::MakeScopedKey("Player1Status", "HpIcon"));
+     *   // ルート直下のUIは今まで通り Hash32("Background") でOK
+     */
+    static uint32_t MakeScopedKey(const std::string& prefabName, const std::string& childName)
+    {
+        std::string scoped = prefabName + "/" + childName;
+        return Hash32(scoped.c_str());
+    }
+
+
 private:
-    static UIBase* CreateUI(UICanvas* canvas, const std::string& type, const uint32_t key, const nlohmann::json& item);
+    /**
+     * UIを1つ生成して canvas に追加する
+     * @param prefix プレハブのスコープ名（空ならルート直下）
+     */
+    UIBase* CreateUI(UICanvas* canvas, const std::string& type,
+        const uint32_t key, const nlohmann::json& item,
+        const std::string& prefix);
+
+    /**
+     * プレハブ(別JSON)を子Canvasとして読み込み、親Canvasに埋め込む
+     * @param prefix 親から引き継ぐスコープ名（ネスト時に連結される）
+     * @param depth 再帰の深さ（無限ループ防止用）
+     */
+    UIBase* LoadPrefab(UICanvas* parentCanvas, const uint32_t key,
+        const nlohmann::json& item,
+        const std::string& prefix, int depth = 0);
+
+    /** プレハブの最大ネスト深度 */
+    static const int kMaxPrefabDepth = 8;
 };
