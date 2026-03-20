@@ -51,48 +51,10 @@ void SceneManager::Update()
 				GnangeNextScene(requestSceneID_);
 				isNextScene_ = true;				
 			}			
-
-			/*nextSceneID_ = requestSceneID_;
-			isChange_ = true;
-			loadingScreen_->StartDraw();*/
 		}
-
-		/*if (isChange_) {
-
-			testTime += g_gameTime->GetFrameDeltaTime();
-
-			switch (sceneState_)
-			{
-			case StartChange:
-			{
-				if (testTime >= 3.1f) {
-					delete currentScene_;
-					CreateScene(nextSceneID_);
-					sceneState_ = EndChange;
-					testTime = 0.0f;
-				}
-
-				break;
-			}
-
-			case EndChange:
-			{
-				if (testTime >= 1.1f) {
-					loadingScreen_->EndDraw();
-					sceneState_ = StartChange;
-					testTime = 0.0f;
-					isChange_ = false;
-				}
-
-				break;
-			}
-
-
-			default:
-				break;
-			}
-		}*/
 	}
+
+	if (taskScheduler_) taskScheduler_->Update(g_gameTime->GetFrameDeltaTime());
 }
 
 void SceneManager::GnangeNextScene(const uint32_t id)
@@ -104,18 +66,18 @@ void SceneManager::GnangeNextScene(const uint32_t id)
 	// スケジュール
 	{
 		// 1. ロード画面を描画させる
-		taskScheduler_->AddTimer(5.0f, [&]()
+		taskScheduler_->AddTimer(0.1f, [&]()
 			{
 				loadingScreen_->StartDraw();
 			});
 		// 2. 次のシーンを生成
-		taskScheduler_->AddTimer(6.2f, [&]()
+		taskScheduler_->AddTimer(1.5f, [&]()
 			{
 				delete currentScene_;
 				CreateScene(requestSceneID_);
 			});
 		// 3. ロード画面描画を終了
-		taskScheduler_->AddTimer(6.3f, [&]()
+		taskScheduler_->AddTimer(1.6f, [&]()
 			{
 				loadingScreen_->EndDraw();
 

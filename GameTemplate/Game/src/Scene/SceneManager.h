@@ -34,18 +34,6 @@ private:
 	/** 次のシーン井切り替えた */
 	bool isNextScene_ = false;
 
-	// todo test
-	bool isChange_ = false;
-	float testTime = 0.0f;
-	uint32_t nextSceneID_ = 0;
-	int sceneState_ = 0;
-	enum SceneState
-	{
-		StartChange,
-		Changing,
-		EndChange,
-	};
-
 
 private:
 	SceneManager();
