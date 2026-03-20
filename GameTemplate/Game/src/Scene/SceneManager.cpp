@@ -24,7 +24,7 @@ SceneManager::SceneManager()
 	AddSceneMap <TitleScene>();
 
 	// ロード画面クラスを生成
-	loadingScreen_ = NewGO<LoadingScreen>(100, "LoadingScreen");
+	loadingScreen_ = NewGO<LoadingScreen>(GameObjectPriority::enLoadScreen,"LoadingScreen");
 
 	// 最初のシーンを生成（タイトルシーン）
 	CreateScene(TitleScene::ID());
@@ -59,7 +59,6 @@ void SceneManager::Update()
 
 void SceneManager::GnangeNextScene(const uint32_t id)
 {
-
 	// タスクシステムの生成
 	taskScheduler_ = std::make_unique<TaskSchedulerSystem>();
 

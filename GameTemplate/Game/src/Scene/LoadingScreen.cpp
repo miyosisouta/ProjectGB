@@ -42,7 +42,9 @@ void LoadingScreen::Update()
 	currentFadeTime_ += g_gameTime->GetFrameDeltaTime();
 
 	// フェードの補完率を算出
-	const float fadeRate = currentFadeTime_ / FADE_TIME;
+	float fadeRate = currentFadeTime_ / FADE_TIME;
+	if (fadeRate < 0.0f) fadeRate = 0.0f;
+	else if (fadeRate > 1.0f) fadeRate = 1.0f;
 
 	// フェードイン
 	if (isStartDraw_) {
