@@ -1,6 +1,11 @@
 #pragma once
 #include <cstdint>
 
+/** ゲームオブジェクトの優先度（priority） */
+enum GameObjectPriority {
+    enLoadScreen = 100 //!< ロード画面
+};
+
 /* 通常攻撃タイプ */
 enum class NormalAttackType {
     enNone, //!< 何もない

@@ -21,6 +21,8 @@ class SceneManager
 private:
 	/** 切り替えたいシーンのID */
 	uint32_t requestSceneID_ = 0;
+	/** タスクシステムのポインタ */
+	std::unique_ptr<TaskSchedulerSystem> taskScheduler_;
 	/** 現在のシーン */
 	IScene* currentScene_ = nullptr;
 	/** シーンのマップ */
@@ -29,6 +31,8 @@ private:
 	LoadingScreen* loadingScreen_ = nullptr;
 	/** シーン生成のフラグが経ってからの時間 */
 	float changeSceneElapsed = 0.0f;
+	/** 次のシーン井切り替えた */
+	bool isNextScene_ = false;
 
 
 private:
@@ -38,6 +42,11 @@ private:
 
 public:
 	void Update();
+
+
+private:
+	/** 次のシーンへの切り替え */
+	void GnangeNextScene(const uint32_t id);
 
 
 private:

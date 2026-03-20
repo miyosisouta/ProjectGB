@@ -51,6 +51,9 @@
     <ClCompile Include="src\Skill\SpecialAbility\DefaultAttack.cpp" />
     <ClCompile Include="src\CharacterDataBase.cpp" />
     <ClCompile Include="src\Actor\ActorStatus.cpp" />
+    <ClCompile Include="src\Scene\TitleScene.cpp" />
+    <ClCompile Include="src\Scene\OutGameScreen.cpp" />
+    <ClCompile Include="src\Scene\TitleScreen.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Game.h" />
@@ -109,5 +112,8 @@
     <ClInclude Include="src\UI\InGameUIManager.h" />
     <ClInclude Include="src\CharacterDataBase.h" />
     <ClInclude Include="src\Actor\ActorStatus.h" />
+    <ClInclude Include="src\Scene\TitleScene.h" />
+    <ClInclude Include="src\Scene\OutGameScreen.h" />
+    <ClInclude Include="src\Scene\TitleScreen.h" />
   </ItemGroup>
 </Project>

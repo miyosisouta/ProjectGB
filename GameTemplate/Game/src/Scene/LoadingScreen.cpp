@@ -8,6 +8,12 @@
 #include "LoadingScreen.h"
 
 
+namespace
+{
+	constexpr float FADE_TIME = 1.0f;		//フェードにかかる時間
+}
+
+
 LoadingScreen::LoadingScreen()
 {
 }
@@ -15,7 +21,6 @@ LoadingScreen::LoadingScreen()
 
 LoadingScreen::~LoadingScreen()
 {
-
 }
 
 
@@ -30,6 +35,41 @@ bool LoadingScreen::Start()
 
 void LoadingScreen::Update()
 {
+	// フェードが終了しているなら実行しない
+	if (currentFadeTime_ >= FADE_TIME) return;
+
+	// フェード時間を加算
+	currentFadeTime_ += g_gameTime->GetFrameDeltaTime();
+
+	// フェードの補完率を算出
+	float fadeRate = currentFadeTime_ / FADE_TIME;
+	if (fadeRate < 0.0f) fadeRate = 0.0f;
+	else if (fadeRate > 1.0f) fadeRate = 1.0f;
+
+	// フェードイン
+	if (isStartDraw_) {
+
+		// フェード終了
+		if (fadeRate >= 1.0f) {
+			isStartDraw_ = false;
+		}
+
+		// フェード続行
+		loadingImage_.SetMulColor(Vector4(0.0f, 0.0f, 0.0f, fadeRate));
+	}
+
+	// フェードアウト
+	if(isEndDraw_) {
+
+		// フェード終了
+		if (fadeRate >= 1.0f) {
+			isDraw_ = false;
+			isEndDraw_ = false;
+		}
+
+		// フェード続行
+		loadingImage_.SetMulColor(Vector4(0.0f, 0.0f, 0.0f, 1.0f - fadeRate));
+	}
 }
 
 

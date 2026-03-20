@@ -9,6 +9,7 @@
 #include "src/Scene/IScene.h"
 #include "src/Scene/InGameScene.h"
 #include "src/Scene/OutGameScene.h"
+#include "src/Scene/titleScene.h"
 #include "src/Scene/LoadingScreen.h"
 
 
@@ -20,12 +21,15 @@ SceneManager::SceneManager()
 	// 各シーンを配列に追加
 	AddSceneMap <InGameScene>();
 	AddSceneMap <OutGameScene>();
+	AddSceneMap <TitleScene>();
 
-	//ロード画面クラスを生成
-	loadingScreen_ = NewGO<LoadingScreen>(0, "LoadingScreen");
+	// ロード画面クラスを生成
+	loadingScreen_ = NewGO<LoadingScreen>(GameObjectPriority::enLoadScreen,"LoadingScreen");
 
-	//最初のシーンを生成（アウトゲームシーン）
-	CreateScene(OutGameScene::ID());
+	// 最初のシーンを生成（タイトルシーン）
+	CreateScene(TitleScene::ID());
+
+	
 }
 
 
@@ -43,18 +47,42 @@ void SceneManager::Update()
 		currentScene_->Update();
 		if (currentScene_->RequestScene(requestSceneID_)) {
 
-			//ロード画面表示のフラグをたてる
-			loadingScreen_->SetDraw(true);
-
-			//次のシーンへ
-			delete currentScene_;
-			CreateScene(requestSceneID_);
-
-			//ロード画面表示のフラグをおろす
-			loadingScreen_->SetDraw(false);
+			if (!isNextScene_) {
+				GnangeNextScene(requestSceneID_);
+				isNextScene_ = true;				
+			}			
 		}
 	}
 
+	if (taskScheduler_) taskScheduler_->Update(g_gameTime->GetFrameDeltaTime());
+}
+
+void SceneManager::GnangeNextScene(const uint32_t id)
+{
+	// タスクシステムの生成
+	taskScheduler_ = std::make_unique<TaskSchedulerSystem>();
+
+	// スケジュール
+	{
+		// 1. ロード画面を描画させる
+		taskScheduler_->AddTimer(0.1f, [&]()
+			{
+				loadingScreen_->StartDraw();
+			});
+		// 2. 次のシーンを生成
+		taskScheduler_->AddTimer(1.5f, [&]()
+			{
+				delete currentScene_;
+				CreateScene(requestSceneID_);
+			});
+		// 3. ロード画面描画を終了
+		taskScheduler_->AddTimer(1.6f, [&]()
+			{
+				loadingScreen_->EndDraw();
+
+				isNextScene_ = false;
+			});
+	}
 }
 
 
