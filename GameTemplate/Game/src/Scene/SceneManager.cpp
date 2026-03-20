@@ -29,8 +29,7 @@ SceneManager::SceneManager()
 	// 最初のシーンを生成（タイトルシーン）
 	CreateScene(TitleScene::ID());
 
-	// タスクシステムの生成
-	taskScheduler_ = std::make_unique<TaskSchedulerSystem>();
+	
 }
 
 
@@ -48,32 +47,17 @@ void SceneManager::Update()
 		currentScene_->Update();
 		if (currentScene_->RequestScene(requestSceneID_)) {
 
-			// スケジュール
-			//{
-			//	// 1. ロード画面を描画させる
-			//	taskScheduler_->AddTimer(1.1f, [&]()
-			//		{
-			//			loadingScreen_->StartDraw();
-			//		});
-			//	// 2. 次のシーンを生成
-			//	taskScheduler_->AddTimer(0.1f, [&]()
-			//		{
-			//			delete currentScene_;
-			//			CreateScene(requestSceneID_);
-			//		});
-			//	// 3. ロード画面描画を終了
-			//	taskScheduler_->AddTimer(1.1f, [&]() 
-			//		{
-			//			loadingScreen_->EndDraw();
-			//		});				
-			//}
+			if (!isNextScene_) {
+				GnangeNextScene(requestSceneID_);
+				isNextScene_ = true;				
+			}			
 
-			nextSceneID_ = requestSceneID_;
+			/*nextSceneID_ = requestSceneID_;
 			isChange_ = true;
-			loadingScreen_->StartDraw();
+			loadingScreen_->StartDraw();*/
 		}
 
-		if (isChange_) {
+		/*if (isChange_) {
 
 			testTime += g_gameTime->GetFrameDeltaTime();
 
@@ -107,7 +91,36 @@ void SceneManager::Update()
 			default:
 				break;
 			}
-		}
+		}*/
+	}
+}
+
+void SceneManager::GnangeNextScene(const uint32_t id)
+{
+
+	// タスクシステムの生成
+	taskScheduler_ = std::make_unique<TaskSchedulerSystem>();
+
+	// スケジュール
+	{
+		// 1. ロード画面を描画させる
+		taskScheduler_->AddTimer(5.0f, [&]()
+			{
+				loadingScreen_->StartDraw();
+			});
+		// 2. 次のシーンを生成
+		taskScheduler_->AddTimer(6.2f, [&]()
+			{
+				delete currentScene_;
+				CreateScene(requestSceneID_);
+			});
+		// 3. ロード画面描画を終了
+		taskScheduler_->AddTimer(6.3f, [&]()
+			{
+				loadingScreen_->EndDraw();
+
+				isNextScene_ = false;
+			});
 	}
 }
 

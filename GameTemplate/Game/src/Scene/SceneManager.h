@@ -31,6 +31,8 @@ private:
 	LoadingScreen* loadingScreen_ = nullptr;
 	/** シーン生成のフラグが経ってからの時間 */
 	float changeSceneElapsed = 0.0f;
+	/** 次のシーン井切り替えた */
+	bool isNextScene_ = false;
 
 	// todo test
 	bool isChange_ = false;
@@ -52,6 +54,11 @@ private:
 
 public:
 	void Update();
+
+
+private:
+	/** 次のシーンへの切り替え */
+	void GnangeNextScene(const uint32_t id);
 
 
 private:
