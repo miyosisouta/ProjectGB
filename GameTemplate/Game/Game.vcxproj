@@ -270,6 +270,7 @@
     <ClCompile Include="src\Stage\Stage.cpp" />
     <ClCompile Include="src\UI\InGameMenu.cpp" />
     <ClCompile Include="src\UI\Layout.cpp" />
+    <ClCompile Include="src\UI\LoadingMenu.cpp" />
     <ClCompile Include="src\UI\Menu.cpp" />
     <ClCompile Include="src\UI\SoundOptionMenu.cpp" />
     <ClCompile Include="src\UI\TitleMenu.cpp" />
@@ -337,6 +338,7 @@
     <ClInclude Include="src\Types.h" />
     <ClInclude Include="src\UI\InGameMenu.h" />
     <ClInclude Include="src\UI\Layout.h" />
+    <ClInclude Include="src\UI\LoadingMenu.h" />
     <ClInclude Include="src\UI\Menu.h" />
     <ClInclude Include="src\UI\SoundOptionMenu.h" />
     <ClInclude Include="src\UI\TitleMenu.h" />

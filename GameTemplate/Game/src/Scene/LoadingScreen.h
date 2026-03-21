@@ -6,12 +6,16 @@
 
 #pragma once
 
+class Layout;
+
 
 class LoadingScreen : public IGameObject
 {
 private:
+	/** レイアウトの生成 */
+	Layout* layout_ = nullptr;
 	/** ロード画面の画像 */
-	SpriteRender loadingImage_;
+	//SpriteRender loadingImage_;
 	/** 現在のフェード時間 */
 	float currentFadeTime_ = 0.0f;
 	/** ロード画面表示のフラグ */

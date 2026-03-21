@@ -6,6 +6,8 @@
 
 #include "stdafx.h"
 #include "LoadingScreen.h"
+#include "src/UI/Layout.h"
+#include "src/UI/LoadingMenu.h"
 
 
 namespace
@@ -21,13 +23,18 @@ LoadingScreen::LoadingScreen()
 
 LoadingScreen::~LoadingScreen()
 {
+	delete layout_;
 }
 
 
 bool LoadingScreen::Start()
 {
 	// 画像読み込み
-	loadingImage_.Init("Assets/ImageData/Loading.dds", 1920.0f, 1080.0f);
+	//loadingImage_.Init("Assets/ImageData/Loading.dds", 1920.0f, 1080.0f);
+
+	// レイアウト生成
+	layout_ = new Layout();
+	layout_->Initialize<LoadingMenu>("Assets/ui/layout/LoadingMenu.json");
 
 	return true;
 }
@@ -55,7 +62,7 @@ void LoadingScreen::Update()
 		}
 
 		// フェード続行
-		loadingImage_.SetMulColor(Vector4(0.0f, 0.0f, 0.0f, fadeRate));
+		//loadingImage_.SetMulColor(Vector4(0.0f, 0.0f, 0.0f, fadeRate));
 	}
 
 	// フェードアウト
@@ -68,12 +75,17 @@ void LoadingScreen::Update()
 		}
 
 		// フェード続行
-		loadingImage_.SetMulColor(Vector4(0.0f, 0.0f, 0.0f, 1.0f - fadeRate));
+		//loadingImage_.SetMulColor(Vector4(0.0f, 0.0f, 0.0f, 1.0f - fadeRate));
 	}
+
+	layout_->Update();
 }
 
 
 void LoadingScreen::Render(RenderContext& rc)
 {
-	if (isDraw_) loadingImage_.Draw(rc);
+	//if (isDraw_) loadingImage_.Draw(rc);
+	if (isDraw_) {
+		layout_->Render(rc);
+	}
 }

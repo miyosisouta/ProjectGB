@@ -8,10 +8,6 @@
 #include "src/Scene/IScene.h"
 
 
-//class TitleScreen;
-class Layout;
-
-
 class TitleScene : public IScene
 {
 public:
@@ -20,8 +16,7 @@ public:
 
 private:
 	/** タイトル画面を表示するクラスのポインタ */
-	//TitleScreen* titleScreen_ = nullptr;
-	Layout* layout_ = nullptr;
+	bool isRequestScene = false;
 
 
 public:

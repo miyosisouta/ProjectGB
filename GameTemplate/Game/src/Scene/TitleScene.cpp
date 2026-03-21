@@ -23,22 +23,13 @@ TitleScene::TitleScene()
 
 TitleScene::~TitleScene()
 {
-	//DeleteGO(titleScreen_);
-	//delete layout_;
 	UIScreenManager::Get().Pop();
 }
 
 
 bool TitleScene::Start()
 {
-	//titleScreen_ = NewGO<TitleScreen>(0, "titleScreen");
-	// 
-	// レイアウト生成
-	//layout_ = new Layout();
-	//layout_->Initialize<TitleMenu>("Assets/ui/layout/TitleMenu.json");
-
 	UIScreenManager::Get().Boot<TitleMenu>("Assets/ui/layout/TitleMenu.json");
-
 
 	return true;
 }
@@ -46,18 +37,34 @@ bool TitleScene::Start()
 
 void TitleScene::Update()
 {
-	//layout_->Update();
-
-	// @todo for test
-	static bool isOpenSound = false;
-	if (!isOpenSound && g_pad[0]->IsTrigger(enButtonY)) {
-		UIScreenManager::Get().Push<SoundOptionMenu>("Assets/ui/layout/SoundOptionMenu.json", UITransitionMode::Push, UIScreenTransitionPreset::FadeInOut());
-		isOpenSound = true;
+	auto* menu = UIScreenManager::Get().GetActiveMenu();
+	auto* titleMenu = dynamic_cast<TitleMenu*>(menu);
+	if (titleMenu) {
+		if (titleMenu->IsAbuttonEnabled()) {
+			if (titleMenu->IsSelectStat()) {
+				if (g_pad[0]->IsTrigger(enButtonA)) {
+					isRequestScene = true;
+				}
+			}
+			if (titleMenu->IsSelectSound()) {
+				if (g_pad[0]->IsTrigger(enButtonA)) {
+					UIScreenManager::Get().Push<SoundOptionMenu>("Assets/ui/layout/SoundOptionMenu.json", UITransitionMode::Push, UIScreenTransitionPreset::FadeInOut());
+				}
+			}
+			if (titleMenu->IsSelectExit()) {
+				if (g_pad[0]->IsTrigger(enButtonA)) {
+					exit(0);
+				}
+			}
+		}
 	}
-	if (isOpenSound && g_pad[0]->IsTrigger(enButtonB)) {
-		UIScreenManager::Get().Pop();
-		isOpenSound = false;
+	auto* soundMenu = dynamic_cast<SoundOptionMenu*>(menu);
+	if (soundMenu) {
+		if (!UIScreenManager::Get().IsTransitioning() && g_pad[0]->IsTrigger(enButtonB)) {
+			UIScreenManager::Get().Pop();
+		}
 	}
+	
 
 	UIScreenManager::Get().Update();
 }
@@ -73,7 +80,7 @@ void TitleScene::Render(RenderContext& rc)
 bool TitleScene::RequestScene(uint32_t& id)
 {
 	//Aボタンが押されたら次のシーンへ（仮）
-	if (g_pad[0]->IsTrigger(enButtonA)) {
+	if(isRequestScene) {
 		id = InGameScene::ID();
 		return true;
 	}
