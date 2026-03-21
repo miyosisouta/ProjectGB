@@ -138,14 +138,6 @@ public:
 
 
 public:
-	void SetupSkillCoolDown(const int normalAttackCD, const int specialAbilityCD, const int utilityCD)
-	{
-		skillNormalAttack.coolDownTime = normalAttackCD;
-		skillSpecialAbility.coolDownTime = specialAbilityCD;
-		skillUtility.coolDownTime = utilityCD;
-	}
-
-
 	void ExecuteNormalAttack()
 	{
 		skillNormalAttack.Execute();
@@ -200,6 +192,13 @@ public:
 		hp_ = 5;
 		maxHp_ = 5;
 	}
+
+	void SetupSkillCoolDown(const int normalAttackCD, const int specialAbilityCD, const int utilityCD)
+	{
+		skillNormalAttack.coolDownTime = normalAttackCD;
+		skillSpecialAbility.coolDownTime = specialAbilityCD;
+		skillUtility.coolDownTime = utilityCD;
+	}
 };
 
 
@@ -210,6 +209,12 @@ class BossStatus : public CharacterStatus
 protected:
 	CoolDown skillBossAttack_;
 	
+public:
+	void InitStatus(int maxHp, int attack) 
+	{
+		maxHp_ = maxHp;
+		attack_ = attack;
+	}
 
 public:
 	BossStatus() {}

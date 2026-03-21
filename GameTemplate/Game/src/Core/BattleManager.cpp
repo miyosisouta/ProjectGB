@@ -12,6 +12,7 @@
 
 #include "Src/Actor/Player.h"
 #include "Src/Actor/PlayerController.h"
+#include "src/Actor/BossSpawner.h"
 #include "src/Stage/Stage.h"
 #include "src/Camera/GameCamera.h"
 
@@ -24,6 +25,8 @@ BattleManager::BattleManager()
 	player_ = NewGO<Player>(0, "player");			//Playerの生成
 	playerController_ = NewGO<PlayerController>(10, "playerController");	//PlayerControllerの生成
 	playerController_->SetTarget(player_);		//PlayerControllerの操作対象をPlayerに設定
+	boss_ = new BossSpawner(); // ボス生成用クラス
+	boss_->SpawnBoss(player_);
 	stage_ = NewGO<Stage>(0, "stage");		//Stageの生成
 	gameCamera_ = new GameCamera();		//GameCameraの生成
 
@@ -47,5 +50,6 @@ BattleManager::~BattleManager()
 
 void BattleManager::Update()
 {
+	boss_->Update();
 	gameCamera_->Update();		//GameCameraの更新
 }

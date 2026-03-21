@@ -54,6 +54,9 @@
     <ClCompile Include="src\Scene\OutGameScreen.cpp" />
     <ClCompile Include="src\Scene\TitleScreen.cpp" />
     <ClCompile Include="src\UI\InGameMenu.cpp" />
+    <ClCompile Include="src\Actor\BossSpawner.cpp" />
+    <ClCompile Include="src\Actor\BossCharacter.cpp" />
+    <ClCompile Include="src\Actor\NPCController.cpp" />
     <ClCompile Include="src\UI\TitleMenu.cpp" />
     <ClCompile Include="src\Util\Selector.cpp" />
   </ItemGroup>
@@ -117,6 +120,9 @@
     <ClInclude Include="src\Scene\OutGameScreen.h" />
     <ClInclude Include="src\Scene\TitleScreen.h" />
     <ClInclude Include="src\UI\InGameMenu.h" />
+    <ClInclude Include="src\Actor\BossSpawner.h" />
+    <ClInclude Include="src\Actor\BossCharacter.h" />
+    <ClInclude Include="src\Actor\NPCController.h" />
     <ClInclude Include="src\UI\TitleMenu.h" />
     <ClInclude Include="src\Util\Selector.h" />
   </ItemGroup>

@@ -12,7 +12,7 @@ void StateMachine::Update()
 	}
 
 	// 次に現在のステートの遷移をチェック
-	if (nextStateId_ == StateID::None && currentStateId_ != StateID::None) {
+	if (nextStateId_ == PlayerStateID::None && currentStateId_ != PlayerStateID::None) {
 		auto it = stateTransitions_.find(currentStateId_); // 状態を見つける
 		if (it != stateTransitions_.end()) { // リストの中になかったら
 			for (const auto& transition : it->second) {
@@ -32,7 +32,7 @@ void StateMachine::Update()
 void StateMachine::UpdateState()
 {
 	// 次のステートのIDが設定されている場合
-	if (nextStateId_ != StateID::None) 
+	if (nextStateId_ != PlayerStateID::None) 
 	{
 		if (currentState_)
 		{
@@ -49,7 +49,7 @@ void StateMachine::UpdateState()
 		}
 	}
 	// 次のステートIDを何も入れない
-	nextStateId_ = StateID::None; 
+	nextStateId_ = PlayerStateID::None; 
 
 	// 現在のステートがある場合
 	if (currentState_)

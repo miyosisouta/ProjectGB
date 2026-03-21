@@ -227,8 +227,11 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="src\Actor\Actor.cpp" />
     <ClCompile Include="src\Actor\ActorStatus.cpp" />
+    <ClCompile Include="src\Actor\BossCharacter.cpp" />
+    <ClCompile Include="src\Actor\BossSpawner.cpp" />
     <ClCompile Include="src\Actor\Character.cpp" />
     <ClCompile Include="src\Actor\IState.cpp" />
+    <ClCompile Include="src\Actor\NPCController.cpp" />
     <ClCompile Include="src\Actor\Player.cpp" />
     <ClCompile Include="src\Actor\PlayerController.cpp" />
     <ClCompile Include="src\Actor\PlayerState.cpp" />
@@ -287,8 +290,11 @@
     <ClInclude Include="Game.h" />
     <ClInclude Include="src\Actor\Actor.h" />
     <ClInclude Include="src\Actor\ActorStatus.h" />
+    <ClInclude Include="src\Actor\BossCharacter.h" />
+    <ClInclude Include="src\Actor\BossSpawner.h" />
     <ClInclude Include="src\Actor\Character.h" />
     <ClInclude Include="src\Actor\IState.h" />
+    <ClInclude Include="src\Actor\NPCController.h" />
     <ClInclude Include="src\Actor\Player.h" />
     <ClInclude Include="src\Actor\PlayerController.h" />
     <ClInclude Include="src\Actor\PlayerState.h" />
