@@ -12,7 +12,7 @@ void Bite::Enter(Character* p)
 
 
 	// 通常攻撃アニメーション
-	p->PlayAnimation(static_cast<int>(StateID::NormalAttack));
+	p->PlayAnimation(static_cast<int>(PlayerStateID::NormalAttack));
 	// 移動速度はゼロに
 	p->SetMoveVelocity(Vector3::Zero);
 

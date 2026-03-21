@@ -12,6 +12,7 @@
 
 class Player;
 class PlayerController;
+class BossSpawner;
 class Stage;
 class GameCamera;
 
@@ -25,6 +26,7 @@ private:
     /** 各オブジェクトのポインタ */
     Player* player_ = nullptr;
     PlayerController* playerController_ = nullptr;
+    BossSpawner* boss_ = nullptr;
     Stage* stage_ = nullptr;
     GameCamera* gameCamera_ = nullptr;
 

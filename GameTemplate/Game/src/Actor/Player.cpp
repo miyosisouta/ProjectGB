@@ -48,12 +48,12 @@ void Player::PlayAnimation(const int id)
 {
 	// StateID と アニメーションのインデックス(sAnimPathsの並び順)を紐づける
 	int animIndex = 0;
-	switch (static_cast<StateID>(id)) {
-	case StateID::Idle: animIndex = anim::ANIMATION_IDLE; break;	// 待機。
-	case StateID::Walk: animIndex = anim::ANIMATION_WALK; break;	// 歩き。
-	case StateID::Run:  animIndex = anim::ANIMATION_RUN; break;		// 走る。
-	case StateID::NormalAttack:  animIndex = anim::ANIMATION_NORMAL_ATTACK; break;		// 通常攻撃。
-	case StateID::SpecialAbility:  animIndex = anim::ANIMATION_SPECIAL_ABILITY; break;	// 特殊能力。
+	switch (static_cast<PlayerStateID>(id)) {
+	case PlayerStateID::Idle: animIndex = anim::ANIMATION_IDLE; break;	// 待機。
+	case PlayerStateID::Walk: animIndex = anim::ANIMATION_WALK; break;	// 歩き。
+	case PlayerStateID::Run:  animIndex = anim::ANIMATION_RUN; break;		// 走る。
+	case PlayerStateID::NormalAttack:  animIndex = anim::ANIMATION_NORMAL_ATTACK; break;		// 通常攻撃。
+	case PlayerStateID::SpecialAbility:  animIndex = anim::ANIMATION_SPECIAL_ABILITY; break;	// 特殊能力。
 
 	default: return; // ないなら処理を返す
 	}
@@ -83,13 +83,13 @@ void Player::SetUpTranslateRulu()
 {
 	// ステート（状態）を登録
 	{
-		stateMachine_.AddState(StateID::Idle, new IdleState(this));
-		stateMachine_.AddState(StateID::Walk, new WalkState(this));
-		stateMachine_.AddState(StateID::Run, new RunState(this));
-		stateMachine_.AddState(StateID::NormalAttack, new NormalAttackState(this));
-		stateMachine_.AddState(StateID::SpecialAbility, new SpecialAbilityState(this));
-		stateMachine_.AddState(StateID::Utility, new UtilityState(this));
-		stateMachine_.AddState(StateID::Dead, new DeadState(this));
+		stateMachine_.AddState(PlayerStateID::Idle, new IdleState(this));
+		stateMachine_.AddState(PlayerStateID::Walk, new WalkState(this));
+		stateMachine_.AddState(PlayerStateID::Run, new RunState(this));
+		stateMachine_.AddState(PlayerStateID::NormalAttack, new NormalAttackState(this));
+		stateMachine_.AddState(PlayerStateID::SpecialAbility, new SpecialAbilityState(this));
+		stateMachine_.AddState(PlayerStateID::Utility, new UtilityState(this));
+		stateMachine_.AddState(PlayerStateID::Dead, new DeadState(this));
 	}
 
 
@@ -97,7 +97,7 @@ void Player::SetUpTranslateRulu()
 	{
 		// 優先される条件
 		{
-			stateMachine_.AddGlobalTransition([this]() { if (IsDead()) { return true; } return false; }, StateID::Dead); /* HPが0なら他のステート関係なく実行 */
+			stateMachine_.AddGlobalTransition([this]() { if (IsDead()) { return true; } return false; }, PlayerStateID::Dead); /* HPが0なら他のステート関係なく実行 */
 		}
 
 		// 一般ルール 
@@ -105,21 +105,21 @@ void Player::SetUpTranslateRulu()
 			/** 待機 */
 			{
 				// 待機 -> 歩き
-				stateMachine_.AddTransition(StateID::Idle, StateID::Walk, [this]() {
+				stateMachine_.AddTransition(PlayerStateID::Idle, PlayerStateID::Walk, [this]() {
 					return stateMachine_.GetStickLAmount() > 0.01f && !stateMachine_.IsDash();
 					});
 
 				// 待機 -> 走り
-				stateMachine_.AddTransition(StateID::Idle, StateID::Run, [this]() {
+				stateMachine_.AddTransition(PlayerStateID::Idle, PlayerStateID::Run, [this]() {
 					return stateMachine_.GetStickLAmount() > 0.01f && stateMachine_.IsDash();
 					});
 
 				// 待機 -> 通常攻撃
-				stateMachine_.AddTransition(StateID::Idle, StateID::NormalAttack, [this]() {
+				stateMachine_.AddTransition(PlayerStateID::Idle, PlayerStateID::NormalAttack, [this]() {
 					return stateMachine_.IsActionButtonB();
 					});
 				// 待機 -> 特殊能力
-				stateMachine_.AddTransition(StateID::Idle, StateID::SpecialAbility, [this]() {
+				stateMachine_.AddTransition(PlayerStateID::Idle, PlayerStateID::SpecialAbility, [this]() {
 					return CanSpecialAbility();
 					});
 			}
@@ -127,21 +127,21 @@ void Player::SetUpTranslateRulu()
 			/** 歩き */
 			{
 				// 歩き -> 待機
-				stateMachine_.AddTransition(StateID::Walk, StateID::Idle, [this]() {
+				stateMachine_.AddTransition(PlayerStateID::Walk, PlayerStateID::Idle, [this]() {
 					return stateMachine_.GetStickLAmount() < 0.01f;
 					});
 
 				// 歩き -> 走り
-				stateMachine_.AddTransition(StateID::Walk, StateID::Run, [this]() {
+				stateMachine_.AddTransition(PlayerStateID::Walk, PlayerStateID::Run, [this]() {
 					return stateMachine_.IsDash();
 					});
 
 				// 歩き -> 通常攻撃
-				stateMachine_.AddTransition(StateID::Walk, StateID::NormalAttack, [this]() {
+				stateMachine_.AddTransition(PlayerStateID::Walk, PlayerStateID::NormalAttack, [this]() {
 					return stateMachine_.IsActionButtonB();
 					});
 				// 歩き -> 特殊能力
-				stateMachine_.AddTransition(StateID::Walk, StateID::SpecialAbility, [this]() {
+				stateMachine_.AddTransition(PlayerStateID::Walk, PlayerStateID::SpecialAbility, [this]() {
 					return CanSpecialAbility();
 					});
 			}
@@ -149,22 +149,22 @@ void Player::SetUpTranslateRulu()
 			/** 走り */
 			{
 				// 走り -> 待機
-				stateMachine_.AddTransition(StateID::Run, StateID::Idle, [this]() {
+				stateMachine_.AddTransition(PlayerStateID::Run, PlayerStateID::Idle, [this]() {
 					return stateMachine_.GetStickLAmount() < 0.01f;
 					});
 
 				// 走り -> 歩き
-				stateMachine_.AddTransition(StateID::Run, StateID::Walk, [this]() {
+				stateMachine_.AddTransition(PlayerStateID::Run, PlayerStateID::Walk, [this]() {
 					return !stateMachine_.IsDash();
 					});
 
 				// 走り -> 通常攻撃
-				stateMachine_.AddTransition(StateID::Run, StateID::NormalAttack, [this]() {
+				stateMachine_.AddTransition(PlayerStateID::Run, PlayerStateID::NormalAttack, [this]() {
 					return stateMachine_.IsActionButtonB();
 					});
 
 				// 走り -> 特殊能力
-				stateMachine_.AddTransition(StateID::Run, StateID::SpecialAbility, [this]() {
+				stateMachine_.AddTransition(PlayerStateID::Run, PlayerStateID::SpecialAbility, [this]() {
 					return CanSpecialAbility();
 					});
 			}
@@ -172,7 +172,7 @@ void Player::SetUpTranslateRulu()
 			/** 通常攻撃 */
 			{
 				// 通常攻撃 → 待機
-				stateMachine_.AddTransition(StateID::NormalAttack, StateID::Idle, [this]() {
+				stateMachine_.AddTransition(PlayerStateID::NormalAttack, PlayerStateID::Idle, [this]() {
 					auto* currentState = static_cast<NormalAttackState*>(stateMachine_.GetCurrentState());
 					return currentState && currentState->IsFinished();
 					});
@@ -181,7 +181,7 @@ void Player::SetUpTranslateRulu()
 			/* 特殊能力 */
 			{
 				// 特殊能力 → 待機
-				stateMachine_.AddTransition(StateID::SpecialAbility, StateID::Idle, [this]() {
+				stateMachine_.AddTransition(PlayerStateID::SpecialAbility, PlayerStateID::Idle, [this]() {
 					auto* currentState = static_cast<NormalAttackState*>(stateMachine_.GetCurrentState());
 					return currentState && currentState->IsFinished();
 					});
@@ -211,6 +211,8 @@ Player::Player()
 }
 Player::~Player()
 {
+	delete status_;
+	status_ = nullptr;
 }
 bool Player::Start()
 {

@@ -5,7 +5,7 @@
 bool Character::Start()
 {
 	// ステートマシーンの初期化(待機)
-	stateMachine_.InitialState(StateID::Idle);
+	stateMachine_.InitialState(PlayerStateID::Idle);
 	
 	return Actor::Start();
 }

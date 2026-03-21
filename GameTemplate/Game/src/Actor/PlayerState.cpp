@@ -22,7 +22,7 @@ namespace
 void IdleState::Enter()
 {
 	// 待機アニメーション
-	player_->PlayAnimation(static_cast<int>(StateID::Idle));
+	player_->PlayAnimation(static_cast<int>(PlayerStateID::Idle));
 }
 
 void IdleState::Update()
@@ -43,7 +43,7 @@ void IdleState::Exit()
 void WalkState::Enter()
 {
 	// 歩きアニメーショ
-	player_->PlayAnimation(static_cast<int>(StateID::Walk));
+	player_->PlayAnimation(static_cast<int>(PlayerStateID::Walk));
 }
 
 void WalkState::Update()
@@ -67,7 +67,7 @@ void WalkState::Exit()
 void RunState::Enter()
 {
 	// 走るアニメーション
-	player_->PlayAnimation(static_cast<int>(StateID::Run));
+	player_->PlayAnimation(static_cast<int>(PlayerStateID::Run));
 }
 
 void RunState::Update()
@@ -222,7 +222,7 @@ bool UtilityState::IsCancelable() const
 void DeadState::Enter()
 {
 	// 死亡アニメーション
-	player_->PlayAnimation(static_cast<int>(StateID::Dead));
+	player_->PlayAnimation(static_cast<int>(PlayerStateID::Dead));
 	// 移動速度はゼロに
 	player_->SetMoveVelocity(Vector3::Zero);
 }

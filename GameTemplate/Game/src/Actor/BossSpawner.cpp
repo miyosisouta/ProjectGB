@@ -1,0 +1,149 @@
+﻿#include "stdafx.h"
+#include "src/Actor/ActorStatus.h"
+#include "src/Actor/BossSpawner.h"
+#include "src/Actor/BossCharacter.h"
+#include "src/Actor/NPCController.h"
+#include "src/Actor/Player.h"
+#include "src/Actor/PlayerController.h"
+
+namespace
+{
+	const float MODE_ATTACK_MULTIPLIER = 1.5f; // 攻撃力の倍率
+	const float MODE_HP_MULTIPLIER = 2.0f; // 体力の倍率
+}
+
+
+BossSpawner::BossSpawner()
+{
+	auto* bossStatus = new BossStatus();
+	status_ = bossStatus;
+}
+
+BossSpawner::~BossSpawner()
+{
+	// ボスを破棄
+	DeleteGO(boss_);
+
+	// statusを破棄
+	delete status_;
+	status_ = nullptr;
+}
+
+void BossSpawner::Update()
+{
+	// コントローラの更新
+	{
+		if (playerController_) { playerController_->Update(); } // プレイヤーのコントローラーの更新
+		if (bossController_) { bossController_->Update(); } // ボスのコントローラーの更新
+	}
+
+	// ボスのステータス更新
+	BossStatus* status = status_->As<BossStatus>();
+	status->Update();
+
+	if (boss_) { boss_->Update(); }
+}
+
+
+BossParam BossSpawner::CreateBossData(BossType type, GameModeType mode)
+{
+	BossParam param;
+	param.stageType_ = type;
+	param.mode_ = mode;
+
+	// TODO　: ここでjsonファイルを読み込むつもり
+
+
+	std::string modelpath = "Assets/Objects/Enemy/";
+	// ボスの種類を決める
+	switch (type)
+	{
+	case BossType::enGorilla:
+	{
+		// モデルtkm
+		std::string path = modelpath + "Gorilla/Model/Gorilla.tkm";
+		param.modelPath_ = path;
+
+		// アニメ登録を自動化
+		auto AddAnim = [&](BossAnimID id, const std::string& fileName, bool loop)
+			{
+				// ここでパスを結合して、paramに直接突っ込む！
+				param.anims[id].filePath = modelpath + "Gorilla/Animation/" + fileName;
+				param.anims[id].isLoop = loop;
+			};
+
+		// アニメーションの追加
+		AddAnim(enAnimIdle,"IdleA.tka",false);
+		AddAnim(enAnimRun,"Run.tka",true);
+		AddAnim(enAnimJump,"Jump.tka",false);
+		AddAnim(enAnimAttack,"Attack.tka",false);
+		AddAnim(enAnimHit,"Hit.tka",false);
+		AddAnim(enAnimDeath,"Death.tka",false);
+		AddAnim(enAnimSpin, "Spin.tka", true);
+		break;
+	}
+	default:
+		break;
+	}
+
+
+	// モード
+	switch (mode)
+	{
+	case GameModeType::enHighAttack:
+	{
+		param.attack_ = static_cast<int>(param.attack_ * MODE_ATTACK_MULTIPLIER);
+		break;
+	}
+	case GameModeType::enTimeAttack:
+	{
+		param.maxHp_ = static_cast<int>(param.maxHp_ * MODE_HP_MULTIPLIER);
+		break;
+	}
+	default:
+		break;
+	}
+	return param;
+}
+
+void BossSpawner::SpawnBoss(Character* chara)
+{
+	// データベースからはステージ選択で選ばれたタイプを取得
+	//BossType stageType = CharacterDataBase::Get().GetStageType();
+	//GameModeType mode = CharacterDataBase::Get().GetGameModeType();
+
+	BossType stageType = BossType::enGorilla;
+	GameModeType mode = GameModeType::enNormal;
+
+
+	// JSON読み込み ＋ モード補正 がここで完了
+	BossParam param = CreateBossData(stageType, mode);
+
+	// ボスを作って、見た目や当たり判定のデータを渡す
+	boss_ = NewGO<BossCharacter>(0, "boss");
+	boss_->SetupParam(param);
+
+	// ボスのステータスを作って、確定した数値を流し込む！
+	BossStatus* status = new BossStatus();
+	status->InitStatus(param.maxHp_, param.attack_);
+
+	// 体にステータスを持たせる
+	boss_->SetupStatus(status);
+	status_ = status;
+
+
+	// コントローラーの設定
+	{
+		// Charaがプレイヤーで存在するなら
+		if (dynamic_cast<Player*>(chara) != nullptr)
+		{
+			//playerController_ = NewGO<PlayerController>(0, "playerController");
+		}
+
+		// Charaがボスで存在するなら
+		else if (dynamic_cast<BossCharacter*>(chara) != nullptr)
+		{
+			//bossController_ = NewGO<NPCController>(0, "bossController");
+		}
+	}
+}

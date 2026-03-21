@@ -8,14 +8,23 @@ struct CharacterParam
     UtilityType      utility = UtilityType::enNone;
 };
 
+
+
+/* キャラクター用データベース */
 class CharacterDataBase
 {
 private:
-    CharacterParam playerData_; // プレイヤー用データ保管庫
-    CharacterParam bossData_;   // ボス用データ保管庫
+    CharacterParam playerData_; //!< プレイヤー用データ保管庫
+    CharacterParam bossData_;   //!< ボス用データ保管庫
+
+    BossParam bossParam_; //!< ボスに必要なパラメータ
 
 
 public:
+    /* ============================================================================ */
+    /* プレイヤーデータ */
+    /* ============================================================================ */
+
     /* プレイヤー用ゲッター・セッター */
     void SetPlayerParam(const CharacterParam& param) { playerData_ = param; }
     const CharacterParam& GetPlayerParam() const { return playerData_; }
@@ -25,9 +34,30 @@ public:
     void SetPlayerAbility(AbilityType type) { playerData_.ability = type; }
     void SetPlayerUtility(UtilityType type) { playerData_.utility = type; }
 
+
+    /* ============================================================================ */
+    /* ボスデータ */
+    /* ============================================================================ */
+
     /* ボス用ゲッター・セッター */
     void SetBossParam(const CharacterParam& param) { bossData_ = param; }
     const CharacterParam& GetBossParam() const { return bossData_; }
+
+
+    /* ============================================================================ */
+    /* ボスデータ */
+    /* ============================================================================ */
+
+    /* ボスのパラメータ */
+    void SetGameSettingParam(const BossParam& param) { bossParam_ = param; }   //!< 設定
+    const BossParam& GameSettingParam() const { return bossParam_; }           //!< 取得
+
+    /* ステージタイプ */
+    void SetStageType(BossType type) { bossParam_.stageType_ = type; }    //!< 設定
+    const BossType& GetStageType() const{ return bossParam_.stageType_; } //!< 取得
+    /* ゲームモード */
+    void SetGameModeType(GameModeType mode) { bossParam_.mode_ = mode; }      //!< 設定
+    const GameModeType& GetGameModeType() const { return bossParam_.mode_; }  //!< 取得
 
 
 private:
