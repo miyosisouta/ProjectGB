@@ -31,6 +31,15 @@ namespace
      * パース関連
      * ==========================================
      */
+    Vector2 ParseVector2(const nlohmann::json& arr)
+    {
+        return Vector2(
+            arr[0].get<float>(),
+            arr[1].get<float>()
+        );
+    }
+
+
     Vector3 ParseVector3(const nlohmann::json& arr)
     {
         return Vector3(
@@ -97,6 +106,12 @@ namespace
         image->transform.localScale = scale;
         image->transform.localRotation = rotation;
         image->color = color;
+        if (item.contains("isDraw")) {
+            image->isDraw = item["isDraw"].get<bool>();
+        }
+        if (item.contains("pivot")) {
+            image->SetPivot(ParseVector2(item["pivot"]));
+        }
     }
     void InitializeUIParts(UIText* text, const nlohmann::json& item)
     {
@@ -110,6 +125,12 @@ namespace
         text->transform.localPosition = position;
         text->transform.localScale = scale;
         text->color = color;
+        if (item.contains("isDraw")) {
+            text->isDraw = item["isDraw"].get<bool>();
+        }
+        if (item.contains("pivot")) {
+            text->SetPivot(ParseVector2(item["pivot"]));
+        }
     }
     void InitializeUIParts(UIDigit* text, const nlohmann::json& item)
     {

@@ -1,6 +1,7 @@
 {
     "animations": [
         {
+            "comment": "サウンドオプション背景の肉球",
             "key": "nikukyuu_fadein",
             "valueType": "Vector4",
             "startValue": { "x": 1.0, "y": 1.0, "z": 1.0, "w": 0.0 },
@@ -10,6 +11,7 @@
             "loop": "PingPong"
         },
         {
+            "comment": "サウンドオプション背景の肉球",
             "key": "nikukyuu_fadeout",
             "valueType": "Vector4",
             "startValue": { "x": 1.0, "y": 1.0, "z": 1.0, "w": 1.0 },
@@ -19,31 +21,74 @@
             "loop": "Once"
         },
         {
+            "comment": "Aボタン押してね",
             "key": "pushAbutton_fadeout",
             "valueType": "Vector4",
-            "startValue": { "x": 1.0, "y": 1.0, "z": 1.0, "w": 1.0 },
-            "endValue":   { "x": 1.0, "y": 1.0, "z": 1.0, "w": 0.3 },
-            "duration": 0.5,
+            "startValue": { "x": 1.0, "y": 1.0, "z": 1.0, "w": 0.3 },
+            "endValue":   { "x": 1.0, "y": 1.0, "z": 1.0, "w": 1.0 },
+            "duration": 0.8,
             "easing": "EaseIn",
             "loop": "PingPong"
         },
         {
-            "key": "ScaleUp",
+            "comment": "タイトル画のがぶっと",
+            "key": "gabu_fadeout",
+            "valueType": "Vector4",
+            "startValue": { "x": 1.0, "y": 1.0, "z": 1.0, "w": 0.0 },
+            "endValue":   { "x": 1.0, "y": 1.0, "z": 1.0, "w": 1.0 },
+            "duration": 0.5,
+            "easing": "EaseIn",
+            "loop": "Once"
+        },
+        {
+            "comment": "タイトル画のがぶっと",
+            "key": "gabu_scaleUp",
             "valueType": "Vector3",
-            "startValue": { "x": 1.0, "y": 0.0, "z": 1.0 },
-            "endValue":   { "x": 1.0, "y": 1.0, "z": 1.0 },
+            "startValue": { "x": 0.0, "y": 0.0, "z": 0.0 },
+            "endValue":   { "x": 2.0, "y": 2.0, "z": 2.0 },
             "duration": 0.5,
             "easing": "EaseOut",
             "loop": "Once"
         },
         {
-            "key": "ScaleDown",
+            "comment": "タイトル画のがぶっと",
+            "key": "gabu_scaleDown",
+            "valueType": "Vector3",
+            "startValue": { "x": 2.0, "y": 2.0, "z": 2.0 },
+            "endValue":   { "x": 1.0, "y": 1.0, "z": 1.0 },
+            "duration": 0.3,
+            "easing": "EaseIn",
+            "loop": "Once"
+        },
+        {
+            "comment": "タイトル画のバスター",
+            "key": "bustar_fadeout",
+            "valueType": "Vector4",
+            "startValue": { "x": 1.0, "y": 1.0, "z": 1.0, "w": 0.0 },
+            "endValue":   { "x": 1.0, "y": 1.0, "z": 1.0, "w": 1.0 },
+            "duration": 0.3,
+            "easing": "EaseIn",
+            "loop": "Once"
+        },
+        {
+            "comment": "タイトル画のきらきら(右上大)",
+            "key": "kira_right_scaleUp",
             "valueType": "Vector3",
             "startValue": { "x": 1.0, "y": 1.0, "z": 1.0 },
-            "endValue":   { "x": 1.0, "y": 0.0, "z": 1.0 },
-            "duration": 0.5,
+            "endValue":   { "x": 0.0, "y": 0.0, "z": 0.0 },
+            "duration": 0.8,
             "easing": "EaseOut",
-            "loop": "Once"
+            "loop": "PingPong"
+        },
+        {
+            "comment": "タイトル画のきらきら(左上大)",
+            "key": "kira_left_scaleUp",
+            "valueType": "Vector3",
+            "startValue": { "x": 1.0, "y": 1.0, "z": 1.0 },
+            "endValue":   { "x": 0.0, "y": 0.0, "z": 0.0 },
+            "duration": 0.8,
+            "easing": "EaseOut",
+            "loop": "PingPong"
         },
         {
             "key": "ScaleBounce",

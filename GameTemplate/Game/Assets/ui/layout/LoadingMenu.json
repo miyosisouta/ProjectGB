@@ -1,0 +1,96 @@
+{
+  "canvas": {
+    "elements": [
+      {
+        "coment": "背景",
+        "type": "UIIcon",
+        "name": "loading_back",
+        "asset": "Assets/ui/LoadingUI/white.DDS",
+        "width": 1920,
+        "height": 1080,
+        "position": [0, 0, 0],
+        "scale": [1, 1, 1],
+        "rotation": 0,
+        "color": [0, 0, 0, 1]
+      },  
+      {
+        "coment": "ローディングの犬1",
+        "type": "UIIcon",
+        "name": "loading_run1",
+        "asset": "Assets/ui/LoadingUI/run1.DDS",
+        "width": 100,
+        "height": 73,
+        "position": [800,-450, 0],
+        "scale": [1, 1, 1],
+        "rotation": 0,
+        "color": [1, 1, 1, 1],
+        "isDraw": false
+      },
+      {
+        "coment": "ローディングの犬2",
+        "type": "UIIcon",
+        "name": "loading_run2",
+        "asset": "Assets/ui/LoadingUI/run2.DDS",
+        "width": 100,
+        "height": 73,
+        "position": [800, -450, 0],
+        "scale": [1, 1, 1],
+        "rotation": 0,
+        "color": [1, 1, 1, 1],
+        "isDraw": false
+      },
+      {
+        "coment": "ローディングの犬3",
+        "type": "UIIcon",
+        "name": "loading_run3",
+        "asset": "Assets/ui/LoadingUI/run3.DDS",
+        "width": 100,
+        "height": 73,
+        "position": [800, -450, 0],
+        "scale": [1, 1, 1],
+        "rotation": 0,
+        "color": [1, 1, 1, 1],
+        "isDraw": false
+      },
+      {
+        "coment": "ローディングの犬4",
+        "type": "UIIcon",
+        "name": "loading_run4",
+        "asset": "Assets/ui/LoadingUI/run4.DDS",
+        "width": 100,
+        "height": 73,
+        "position": [800, -450, 0],
+        "scale": [1, 1, 1],
+        "rotation": 0,
+        "color": [1, 1, 1, 1],
+        "isDraw": false
+      },
+      {
+        "coment": "ローディングの文字",
+        "type": "UIIcon",
+        "name": "loading_word",
+        "asset": "Assets/ui/LoadingUI/loading.DDS",
+        "width": 200,
+        "height": 45,
+        "position": [610, -458, 0],
+        "scale": [1, 1, 1],
+        "rotation": 0,
+        "color": [1, 1, 1, 1],
+        "isDraw": true
+      },
+      {
+        "coment": "ローディングの下線",
+        "type": "UIIcon",
+        "name": "loading_underbar",
+        "asset": "Assets/ui/LoadingUI/white.DDS",
+        "width": 1920,
+        "height": 5,
+        "position": [0, -487, 0],
+        "scale": [1, 1, 1],
+        "rotation": 0,
+        "color": [1, 1, 1, 1],
+        "isDraw": true
+      }
+    ]
+  }
+}
