@@ -12,6 +12,8 @@
 #include "src/Effect/EffectManager.h"
 #include "src/Sound/SoundManager.h"
 
+#include "src/UI/UIAnimationParameter.h"
+
 
 
 void ReportLiveObjects()
@@ -43,6 +45,8 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 	GhostBodyManager::Initialize();
 	CharacterDataBase::CreateInstance();
 
+	// UIAnimationクラスの生成
+	UIAnimationParameter::Get().Load("Assets/ui/uiAnimation/UIAnimation.json");
 	//Gameクラスのオブジェクトを作成。
 	NewGO<Game>(0, "game");
 	// SceneManagerクラスのオブジェクトを生成

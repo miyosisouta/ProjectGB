@@ -45,7 +45,6 @@
     <ClCompile Include="system\system.cpp" />
     <ClCompile Include="src\Camera\GameCamera.cpp" />
     <ClCompile Include="src\Core\BattleManager.cpp" />
-    <ClCompile Include="src\UI\InGameUIManager.cpp" />
     <ClCompile Include="src\Skill\NormalAttack\NormalAtatck.cpp" />
     <ClCompile Include="src\Skill\SpecialAbility\AbilityBase.cpp" />
     <ClCompile Include="src\Skill\SpecialAbility\DefaultAttack.cpp" />
@@ -54,6 +53,9 @@
     <ClCompile Include="src\Scene\TitleScene.cpp" />
     <ClCompile Include="src\Scene\OutGameScreen.cpp" />
     <ClCompile Include="src\Scene\TitleScreen.cpp" />
+    <ClCompile Include="src\UI\InGameMenu.cpp" />
+    <ClCompile Include="src\UI\TitleMenu.cpp" />
+    <ClCompile Include="src\Util\Selector.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Game.h" />
@@ -109,11 +111,13 @@
     <ClInclude Include="src\Skill\SpecialAbility\DefaultAttack.h" />
     <ClInclude Include="src\Camera\GameCamera.h" />
     <ClInclude Include="src\Core\BattleManager.h" />
-    <ClInclude Include="src\UI\InGameUIManager.h" />
     <ClInclude Include="src\CharacterDataBase.h" />
     <ClInclude Include="src\Actor\ActorStatus.h" />
     <ClInclude Include="src\Scene\TitleScene.h" />
     <ClInclude Include="src\Scene\OutGameScreen.h" />
     <ClInclude Include="src\Scene\TitleScreen.h" />
+    <ClInclude Include="src\UI\InGameMenu.h" />
+    <ClInclude Include="src\UI\TitleMenu.h" />
+    <ClInclude Include="src\Util\Selector.h" />
   </ItemGroup>
 </Project>

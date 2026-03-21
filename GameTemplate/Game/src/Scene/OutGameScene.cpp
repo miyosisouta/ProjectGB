@@ -33,6 +33,11 @@ void OutGameScene::Update()
 }
 
 
+void OutGameScene::Render(RenderContext& rc)
+{
+}
+
+
 bool OutGameScene::RequestScene(uint32_t& id)
 {
 	//Aボタンが押されたら次のシーンへ（仮）

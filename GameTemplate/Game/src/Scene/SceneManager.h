@@ -42,6 +42,7 @@ private:
 
 public:
 	void Update();
+	void Render(RenderContext& rc);
 
 
 private:
@@ -111,4 +112,5 @@ public:
 private:
 	bool Start() override;
 	void Update() override;
+	void Render(RenderContext& rc) override;
 };

@@ -8,7 +8,8 @@
 #include "src/Scene/IScene.h"
 
 
-class TitleScreen;
+//class TitleScreen;
+class Layout;
 
 
 class TitleScene : public IScene
@@ -19,7 +20,8 @@ public:
 
 private:
 	/** タイトル画面を表示するクラスのポインタ */
-	TitleScreen* titleScreen_ = nullptr;
+	//TitleScreen* titleScreen_ = nullptr;
+	Layout* layout_ = nullptr;
 
 
 public:
@@ -30,6 +32,7 @@ public:
 public:
 	bool Start() override;
 	void Update() override;
+	void Render(RenderContext &rc)override;
 	bool RequestScene(uint32_t& id) override;
 };
 

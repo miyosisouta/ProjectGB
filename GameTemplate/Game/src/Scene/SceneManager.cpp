@@ -57,6 +57,14 @@ void SceneManager::Update()
 	if (taskScheduler_) taskScheduler_->Update(g_gameTime->GetFrameDeltaTime());
 }
 
+void SceneManager::Render(RenderContext& rc)
+{
+	//現行シーンの更新
+	if (currentScene_) {
+		currentScene_->Render(rc);
+	}
+}
+
 void SceneManager::GnangeNextScene(const uint32_t id)
 {
 	// タスクシステムの生成
@@ -124,4 +132,10 @@ bool SceneMangerObject::Start()
 void SceneMangerObject::Update()
 {
 	SceneManager::GetInstance()->Update();
+}
+
+
+void SceneMangerObject::Render(RenderContext& rc)
+{
+	SceneManager::GetInstance()->Render(rc);
 }

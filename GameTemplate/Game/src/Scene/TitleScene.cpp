@@ -10,6 +10,11 @@
 #include "src/Scene/InGameScene.h"
 #include "src/Scene/TitleScreen.h"
 
+#include "src/UI/Layout.h"
+#include "src/UI/TitleMenu.h"
+#include "src/UI/SoundOptionMenu.h"
+#include "src/UI/UIScreenManager.h"
+
 
 TitleScene::TitleScene()
 {
@@ -18,13 +23,21 @@ TitleScene::TitleScene()
 
 TitleScene::~TitleScene()
 {
-	DeleteGO(titleScreen_);
+	//DeleteGO(titleScreen_);
+	//delete layout_;
+	UIScreenManager::Get().Pop();
 }
 
 
 bool TitleScene::Start()
 {
-	titleScreen_ = NewGO<TitleScreen>(0, "titleScreen");
+	//titleScreen_ = NewGO<TitleScreen>(0, "titleScreen");
+	// 
+	// レイアウト生成
+	//layout_ = new Layout();
+	//layout_->Initialize<TitleMenu>("Assets/ui/layout/TitleMenu.json");
+
+	UIScreenManager::Get().Boot<TitleMenu>("Assets/ui/layout/TitleMenu.json");
 
 
 	return true;
@@ -33,6 +46,27 @@ bool TitleScene::Start()
 
 void TitleScene::Update()
 {
+	//layout_->Update();
+
+	// @todo for test
+	static bool isOpenSound = false;
+	if (!isOpenSound && g_pad[0]->IsTrigger(enButtonY)) {
+		UIScreenManager::Get().Push<SoundOptionMenu>("Assets/ui/layout/SoundOptionMenu.json", UITransitionMode::Push, UIScreenTransitionPreset::FadeInOut());
+		isOpenSound = true;
+	}
+	if (isOpenSound && g_pad[0]->IsTrigger(enButtonB)) {
+		UIScreenManager::Get().Pop();
+		isOpenSound = false;
+	}
+
+	UIScreenManager::Get().Update();
+}
+
+
+void TitleScene::Render(RenderContext& rc)
+{
+	//layout_->Render(rc);
+	UIScreenManager::Get().Render(rc);
 }
 
 

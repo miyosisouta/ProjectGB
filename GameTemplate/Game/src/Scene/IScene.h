@@ -24,6 +24,7 @@ public:
 public:
 	virtual bool Start() = 0;
 	virtual void Update() = 0;
+	virtual void Render(RenderContext& rc) = 0;;
 	/** 次のシーンへの切り替え */
 	virtual bool RequestScene(uint32_t& id) = 0;
 };

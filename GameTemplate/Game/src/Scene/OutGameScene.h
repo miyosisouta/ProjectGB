@@ -22,6 +22,7 @@ public:
 public:
 	bool Start() override;
 	void Update() override;
+	void Render(RenderContext& rc) override;
 	bool RequestScene(uint32_t& id) override;
 };
 
