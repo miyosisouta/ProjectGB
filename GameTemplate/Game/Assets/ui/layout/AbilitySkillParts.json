@@ -8,7 +8,7 @@
         "asset": "Assets/ui/inGameUI/skillIcon/back.DDS",
         "width": 80,
         "height": 80,
-        "position": [80, -75, 0],
+        "position": [97, -70, 0],
         "scale": [1, 1, 1],
         "rotation": 0,
         "color": [1, 1, 1, 1]
@@ -20,7 +20,7 @@
         "asset": "Assets/ui/inGameUI/skillIcon/y_button.DDS",
         "width": 50,
         "height": 50,
-        "position": [82, -75, 0],
+        "position": [98, -70, 0],
         "scale": [1, 1, 1],
         "rotation": 0,
         "color": [1, 1, 1, 1]

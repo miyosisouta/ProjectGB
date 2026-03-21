@@ -13,6 +13,7 @@ using namespace nsK2Engine;
 #include "src/Memory/Array.h"	//!< 配列
 #include "src/Util/Curve.h"     //!< カーブ
 #include "src/Util/TaskSchedulerSystem.h"
+#include "src/Util/Selector.h"
 #include "src/collision/GhostBody.h"
 #include "src/collision/PhysicalBody.h"
 #include "src/Effect/EffectManager.h"

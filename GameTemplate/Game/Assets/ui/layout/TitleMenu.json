@@ -1,0 +1,170 @@
+{
+  "canvas": {
+    "elements": [
+      {
+        "coment": "タイトルの背景",
+        "type": "UIIcon",
+        "name": "title_back",
+        "asset": "Assets/ui/soundOption/haikei/back.DDS",
+        "width": 1920,
+        "height": 1080,
+        "position": [0, 0, 0],
+        "scale": [1, 1, 1],
+        "rotation": 0,
+        "color": [1, 1, 1, 1]
+      },
+      {
+        "coment": "タイトルロゴ:がぶっと",
+        "type": "UIIcon",
+        "name": "Title_gabu",
+        "asset": "Assets/ui/titleUI/gabu.DDS",
+        "width": 400,
+        "height": 176,
+        "position": [-230, 290, 0],
+        "scale": [1, 1, 1],
+        "rotation": 0,
+        "color": [1, 1, 1, 1]
+      },
+      {
+        "coment": "タイトルロゴ:バスター",
+        "type": "UIIcon",
+        "name": "Title_bustar",
+        "asset": "Assets/ui/titleUI/bustar.DDS",
+        "width": 600,
+        "height": 200,
+        "position": [80, 150, 0],
+        "scale": [1, 1, 1],
+        "rotation": 0,
+        "color": [1, 1, 1, 1]
+      },
+      {
+        "coment": "タイトルロゴ:Aボタン押してね",
+        "type": "UIIcon",
+        "name": "Title_push_Abutton",
+        "asset": "Assets/ui/titleUI/pushAbutton.DDS",
+        "width": 400,
+        "height": 46,
+        "position": [0, -300, 0],
+        "scale": [1, 1, 1],
+        "rotation": 0,
+        "color": [1, 1, 1, 1]
+      },
+      {
+        "coment": "タイトルロゴ:星(右上)",
+        "type": "UIIcon",
+        "name": "Title_star_right1",
+        "asset": "Assets/ui/titleUI/kira.DDS",
+        "width": 120,
+        "height": 120,
+        "position": [370, 290, 0],
+        "scale": [1, 1, 1],
+        "rotation": -20,
+        "color": [1, 1, 1, 1]
+      },
+      {
+        "coment": "タイトルロゴ:星(右上小)",
+        "type": "UIIcon",
+        "name": "Title_star_right2",
+        "asset": "Assets/ui/titleUI/kira.DDS",
+        "width": 70,
+        "height": 70,
+        "position": [430, 220, 0],
+        "scale": [1, 1, 1],
+        "rotation": -20,
+        "color": [1, 1, 1, 1]
+      },
+      {
+        "coment": "タイトルロゴ:星(左上)",
+        "type": "UIIcon",
+        "name": "Title_star_left1",
+        "asset": "Assets/ui/titleUI/kira.DDS",
+        "width": 100,
+        "height": 100,
+        "position": [-320, 150, 0],
+        "scale": [1, 1, 1],
+        "rotation": 20,
+        "color": [1, 1, 1, 1]
+      },
+      {
+        "coment": "タイトルロゴ:星(左上小)",
+        "type": "UIIcon",
+        "name": "Title_star_left2",
+        "asset": "Assets/ui/titleUI/kira.DDS",
+        "width": 70,
+        "height": 70,
+        "position": [-390, 95, 0],
+        "scale": [1, 1, 1],
+        "rotation": 20,
+        "color": [1, 1, 1, 1]
+      },
+      {
+        "coment": "タイトルロゴ:肉球のボタン",
+        "type": "UIIcon",
+        "name": "Title_nikukyu_button",
+        "asset": "Assets/ui/titleUI/nikukyu.DDS",
+        "width": 100,
+        "height": 100,
+        "position": [-200, -180, 0],
+        "scale": [1, 1, 1],
+        "rotation": 20,
+        "color": [1, 1, 1, 1]
+      },
+      {
+        "coment": "タイトルメニュー:はじめる",
+        "type": "UIIcon",
+        "name": "Title_start",
+        "asset": "Assets/ui/titleUI/start.DDS",
+        "width": 300,
+        "height": 50,
+        "position": [0, -180, 0],
+        "scale": [1, 1, 1],
+        "rotation": 0,
+        "color": [1, 1, 1, 1]
+      },
+      {
+        "coment": "タイトルメニュー:サウンド",
+        "type": "UIIcon",
+        "name": "Title_sound",
+        "asset": "Assets/ui/titleUI/sound.DDS",
+        "width": 300,
+        "height": 50,
+        "position": [0, -300, 0],
+        "scale": [1, 1, 1],
+        "rotation": 0,
+        "color": [1, 1, 1, 1]
+      },
+      {
+        "coment": "タイトルメニュー:おわる",
+        "type": "UIIcon",
+        "name": "Title_exit",
+        "asset": "Assets/ui/titleUI/exit.DDS",
+        "width": 220,
+        "height": 50,
+        "position": [0, -420, 0],
+        "scale": [1, 1, 1],
+        "rotation": 0,
+        "color": [1, 1, 1, 1]
+      },
+
+
+      {
+        "comment": "ダミー(はじめる座標取得用)",
+        "type": "UIDummy",
+        "name": "StartPositionDummy",
+        "position": [-210, -180, 0]
+      },
+      {
+        "comment": "ダミー(サウンド座標取得用)",
+        "type": "UIDummy",
+        "name": "SoundPositionDummy",
+        "position": [-210, -300, 0]
+      },
+      {
+        "comment": "ダミー(おわる座標取得用)",
+        "type": "UIDummy",
+        "name": "ExitPositionDummy",
+        "position": [-170, -420, 0]
+      }
+    ]
+}
+}

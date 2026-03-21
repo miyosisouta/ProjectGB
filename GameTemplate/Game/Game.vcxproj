@@ -266,14 +266,15 @@
     <ClCompile Include="src\Sound\SoundManager.cpp" />
     <ClCompile Include="src\Stage\Stage.cpp" />
     <ClCompile Include="src\UI\InGameMenu.cpp" />
-    <ClCompile Include="src\UI\InGameUIManager.cpp" />
     <ClCompile Include="src\UI\Layout.cpp" />
     <ClCompile Include="src\UI\Menu.cpp" />
     <ClCompile Include="src\UI\SoundOptionMenu.cpp" />
+    <ClCompile Include="src\UI\TitleMenu.cpp" />
     <ClCompile Include="src\UI\UIAnimation.cpp" />
     <ClCompile Include="src\UI\UIParts.cpp" />
     <ClCompile Include="src\UI\UIScreenManager.cpp" />
     <ClCompile Include="src\Util\Curve.cpp" />
+    <ClCompile Include="src\Util\Selector.cpp" />
     <ClCompile Include="src\Util\TaskSchedulerSystem.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
@@ -329,10 +330,10 @@
     <ClInclude Include="src\Stage\Stage.h" />
     <ClInclude Include="src\Types.h" />
     <ClInclude Include="src\UI\InGameMenu.h" />
-    <ClInclude Include="src\UI\InGameUIManager.h" />
     <ClInclude Include="src\UI\Layout.h" />
     <ClInclude Include="src\UI\Menu.h" />
     <ClInclude Include="src\UI\SoundOptionMenu.h" />
+    <ClInclude Include="src\UI\TitleMenu.h" />
     <ClInclude Include="src\UI\UIAnimation.h" />
     <ClInclude Include="src\UI\UIAnimationFactory.h" />
     <ClInclude Include="src\UI\UIAnimationParameter.h" />
@@ -340,6 +341,7 @@
     <ClInclude Include="src\UI\UIScreenManager.h" />
     <ClInclude Include="src\Util\Crc32.h" />
     <ClInclude Include="src\Util\Curve.h" />
+    <ClInclude Include="src\Util\Selector.h" />
     <ClInclude Include="src\Util\TaskSchedulerSystem.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="system\system.h" />
