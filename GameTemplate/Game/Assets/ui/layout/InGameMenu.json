@@ -61,6 +61,66 @@
         "rotation": 0,
         "color": [1, 1, 1, 1]
       },
+      {
+        "coment": "プレイヤーアイコンの背景",
+        "type": "UIIcon",
+        "name": "Player_icon_back",
+        "asset": "Assets/ui/inGameUI/dogIcon/back.DDS",
+        "width": 250,
+        "height": 250,
+        "position": [-770, -340, 0],
+        "scale": [1, 1, 1],
+        "rotation": 0,
+        "color": [1, 1, 1, 1]
+      },
+      {
+        "coment": "プレイヤーアイコン",
+        "type": "UIIcon",
+        "name": "Player_icon",
+        "asset": "Assets/ui/inGameUI/dogIcon/kao.DDS",
+        "width": 250,
+        "height": 250,
+        "position": [-770, -340, 0],
+        "scale": [1, 1, 1],
+        "rotation": 0,
+        "color": [1, 1, 1, 1]
+      },
+      {
+        "coment": "プレイヤーアイコンの目(通常)",
+        "type": "UIIcon",
+        "name": "Player_icon_normal",
+        "asset": "Assets/ui/inGameUI/dogIcon/eye.DDS",
+        "width": 40,
+        "height": 40,
+        "position": [-745, -335, 0],
+        "scale": [1, 1, 1],
+        "rotation": 0,
+        "color": [1, 1, 1, 1]
+      },
+      {
+        "coment": "プレイヤーアイコンの目(被ダメ)",
+        "type": "UIIcon",
+        "name": "Player_icon_damage",
+        "asset": "Assets/ui/inGameUI/dogIcon/eye_damage.DDS",
+        "width": 40,
+        "height": 40,
+        "position": [-745, -335, 0],
+        "scale": [1, 1, 1],
+        "rotation": 0,
+        "color": [1, 1, 1, 1]
+      },
+      {
+        "coment": "プレイヤーアイコンの枠",
+        "type": "UIIcon",
+        "name": "Player_icon_flame",
+        "asset": "Assets/ui/inGameUI/dogIcon/maru.DDS",
+        "width": 247,
+        "height": 247,
+        "position": [-770, -340, 0],
+        "scale": [1, 1, 1],
+        "rotation": 0,
+        "color": [0.53, 0.69, 0.75, 1]
+      },
 
 
 
@@ -260,6 +320,22 @@
         "position": [0, 0, 0],
         "scale": [0, 0, 0],
         "color": [0.92, 0.57, 0.31, 1.0]
+      },
+      {
+        "comment": "ダミー(ダメージカラー取得用)",
+        "type": "UIDummy",
+        "name": "FlameDamageColorDummy",
+        "position": [0, 0, 0],
+        "scale": [0, 0, 0],
+        "color": [0.94, 0.35, 0.35, 1.0]
+      },
+      {
+        "comment": "ダミー(ノーマルカラー取得用)",
+        "type": "UIDummy",
+        "name": "FlameNormalColorDummy",
+        "position": [0, 0, 0],
+        "scale": [0, 0, 0],
+        "color": [0.53, 0.69, 0.75, 1]
       }
     ]
   }

@@ -56,6 +56,9 @@ void TitleMenu::Update()
 		isAbuttonEnabled = true;
 	}
 
+	effectRender->Update(g_gameTime->GetFrameDeltaTime());
+	effectRenderB->Update(g_gameTime->GetFrameDeltaTime());
+
 	MenuBase::Update();
 }
 
@@ -63,6 +66,9 @@ void TitleMenu::Update()
 void TitleMenu::Render(RenderContext& rc)
 {
 	MenuBase::Render(rc);
+	
+	effectRender->Draw(rc);
+	effectRenderB->Draw(rc);
 }
 
 
@@ -129,71 +135,25 @@ void TitleMenu::InitializeLogic()
 				animation->Play();
 			});
 	}
-	{
-		// きらきら 右上大
-		auto* kiraRightA = GetUI<UIIcon>(Hash32("Title_star_right1"));
-		kiraRightA->color.w = 0.0;
-		UIAnimationFactory::Attach<UIScaleAnimation>(kiraRightA, Hash32("kira_right_scaleUp"));
-		taskScheduler->AddTimer(2.15f, [&]()
-			{
-				auto* kiraRightA = GetUI<UIIcon>(Hash32("Title_star_right1"));
-				kiraRightA->color.w = 1.0f;
-				taskScheduler->AddTimer(0.0f, [&]() {
-					auto* kiraRightA = GetUI<UIIcon>(Hash32("Title_star_right1"));
-					auto* animation = kiraRightA->FindAnimation(Hash32("kira_right_scaleUp"));
-					animation->Play();
-					},true);
-			});
-	}
-	{
-		// きらきら 左上小
-		auto* kiraLeftA = GetUI<UIIcon>(Hash32("Title_star_left2"));
-		kiraLeftA->color.w = 0.0;
-		UIAnimationFactory::Attach<UIScaleAnimation>(kiraLeftA, Hash32("kira_left_scaleUp"));
-		taskScheduler->AddTimer(2.0f, [&]()
-			{
-				auto* kiraLeftA = GetUI<UIIcon>(Hash32("Title_star_left2"));
-				kiraLeftA->color.w = 1.0f;
-				taskScheduler->AddTimer(0.0f, [&]() {
-					auto* kiraLeftA = GetUI<UIIcon>(Hash32("Title_star_left2"));
-					auto* animation = kiraLeftA->FindAnimation(Hash32("kira_left_scaleUp"));
-					animation->Play();
-					}, true);
-			});
-	}
-	{
-		// きらきら 右上小
-		auto* kiraRightB = GetUI<UIIcon>(Hash32("Title_star_right2"));
-		kiraRightB->color.w = 0.0;
-		UIAnimationFactory::Attach<UIScaleAnimation>(kiraRightB, Hash32("kira_right_scaleUp"));
-		taskScheduler->AddTimer(2.9f, [&]()
-			{
-				auto* kiraRightB = GetUI<UIIcon>(Hash32("Title_star_right2"));
-				kiraRightB->color.w = 1.0f;
-				taskScheduler->AddTimer(0.0f, [&]() {
-					auto* kiraRightB = GetUI<UIIcon>(Hash32("Title_star_right2"));
-					auto* animation = kiraRightB->FindAnimation(Hash32("kira_right_scaleUp"));
-					animation->Play();
-					}, true);
-			});
-	}
-	{
-		// きらきら 左上大
-		auto* kiraLeftB = GetUI<UIIcon>(Hash32("Title_star_left1"));
-		kiraLeftB->color.w = 0.0;
-		UIAnimationFactory::Attach<UIScaleAnimation>(kiraLeftB, Hash32("kira_left_scaleUp"));
-		taskScheduler->AddTimer(2.9f, [&]()
-			{
-				auto* kiraLeftB = GetUI<UIIcon>(Hash32("Title_star_left1"));
-				kiraLeftB->color.w = 1.0f;
-				taskScheduler->AddTimer(0.0f, [&]() {
-					auto* kiraLeftB = GetUI<UIIcon>(Hash32("Title_star_left1"));
-					auto* animation = kiraLeftB->FindAnimation(Hash32("kira_left_scaleUp"));
-					animation->Play();
-					}, true);
-			});
-	}
 
+	// 星のエフェクト
+	if(effectRender){
+		delete effectRender;
+	}
+	effectRender = new ParticleEffectRender();
+	effectRender->Init("Assets/ui/vfx/effect_sparkle.json", "Assets/ui/titleUI/kira.dds", 128.0f, 128.0f);
+	effectRender->SetPosition(Vector3(370.0f, 290, 0.0f));
+	effectRender->Play();
+	effectRender->EnableHotReload();
+
+	if (effectRenderB) {
+		delete effectRenderB;
+	}
+	effectRenderB = new ParticleEffectRender();
+	effectRenderB->Init("Assets/ui/vfx/effect_sparkle.json", "Assets/ui/titleUI/kira.dds", 128.0f, 128.0f);
+	effectRenderB->SetPosition(Vector3(-320.0f, 150, 0.0f));
+	effectRenderB->Play();
+	effectRenderB->EnableHotReload();
 	
 	
 	// 非表示 はじめる

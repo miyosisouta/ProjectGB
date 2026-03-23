@@ -223,6 +223,12 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\..\..\Users\下岡南\Desktop\Vfx\Vfx\Particle.cpp" />
+    <ClCompile Include="..\..\..\..\Users\下岡南\Desktop\Vfx\Vfx\ParticleEffectLoader.cpp" />
+    <ClCompile Include="..\..\..\..\Users\下岡南\Desktop\Vfx\Vfx\ParticleEffectRender.cpp" />
+    <ClCompile Include="..\..\..\..\Users\下岡南\Desktop\Vfx\Vfx\ParticleEmitter.cpp" />
+    <ClCompile Include="..\..\..\..\Users\下岡南\Desktop\Vfx\Vfx\ParticleModule.cpp" />
+    <ClCompile Include="..\..\..\..\Users\下岡南\Desktop\Vfx\Vfx\ParticleValueProvider.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="src\Actor\Actor.cpp" />
@@ -281,6 +287,12 @@
     <ClCompile Include="src\Util\Curve.cpp" />
     <ClCompile Include="src\Util\Selector.cpp" />
     <ClCompile Include="src\Util\TaskSchedulerSystem.cpp" />
+    <ClCompile Include="src\Vfx\Particle.cpp" />
+    <ClCompile Include="src\Vfx\ParticleEffectLoader.cpp" />
+    <ClCompile Include="src\Vfx\ParticleEffectRender.cpp" />
+    <ClCompile Include="src\Vfx\ParticleEmitter.cpp" />
+    <ClCompile Include="src\Vfx\ParticleModule.cpp" />
+    <ClCompile Include="src\Vfx\ParticleValueProvider.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
@@ -289,6 +301,12 @@
     <ClCompile Include="system\system.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\..\..\Users\下岡南\Desktop\Vfx\Vfx\Particle.h" />
+    <ClInclude Include="..\..\..\..\Users\下岡南\Desktop\Vfx\Vfx\ParticleEffectLoader.h" />
+    <ClInclude Include="..\..\..\..\Users\下岡南\Desktop\Vfx\Vfx\ParticleEffectRender.h" />
+    <ClInclude Include="..\..\..\..\Users\下岡南\Desktop\Vfx\Vfx\ParticleEmitter.h" />
+    <ClInclude Include="..\..\..\..\Users\下岡南\Desktop\Vfx\Vfx\ParticleModule.h" />
+    <ClInclude Include="..\..\..\..\Users\下岡南\Desktop\Vfx\Vfx\ParticleValueProvider.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="src\Actor\Actor.h" />
     <ClInclude Include="src\Actor\ActorStatus.h" />
@@ -353,6 +371,12 @@
     <ClInclude Include="src\Util\Curve.h" />
     <ClInclude Include="src\Util\Selector.h" />
     <ClInclude Include="src\Util\TaskSchedulerSystem.h" />
+    <ClInclude Include="src\Vfx\Particle.h" />
+    <ClInclude Include="src\Vfx\ParticleEffectLoader.h" />
+    <ClInclude Include="src\Vfx\ParticleEffectRender.h" />
+    <ClInclude Include="src\Vfx\ParticleEmitter.h" />
+    <ClInclude Include="src\Vfx\ParticleModule.h" />
+    <ClInclude Include="src\Vfx\ParticleValueProvider.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="system\system.h" />
   </ItemGroup>
