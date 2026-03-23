@@ -60,6 +60,7 @@
     <ClCompile Include="src\UI\TitleMenu.cpp" />
     <ClCompile Include="src\Util\Selector.cpp" />
     <ClCompile Include="src\UI\LoadingMenu.cpp" />
+    <ClCompile Include="src\Actor\BossState.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Game.h" />
@@ -127,5 +128,6 @@
     <ClInclude Include="src\UI\TitleMenu.h" />
     <ClInclude Include="src\Util\Selector.h" />
     <ClInclude Include="src\UI\LoadingMenu.h" />
+    <ClInclude Include="src\Actor\BossState.h" />
   </ItemGroup>
 </Project>

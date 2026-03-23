@@ -4,7 +4,7 @@
 #include "src/Actor/Player.h"
 #include "src/Actor/BossCharacter.h"
 
-// ボスの攻撃ルール
+
 // ボスの攻撃ルール
 namespace bossRuleData
 {
@@ -53,6 +53,7 @@ namespace bossRuleData
 namespace
 {
     constexpr int ATTACK_LOTTERY_MAX = 10;  //!< 抽選合計確率
+
     /** 距離ごとの定数 */
     constexpr float SHORT_DISTANCE = 500.0f;        //!< 近距離
     constexpr float MID_DISTANCE = 1000.0f;          //!< 中距離
@@ -110,7 +111,24 @@ void NPCController::Update()
     // 動作対象と攻撃対象がいない場合は処理を返す
     if (!boss_ || !targerPlayer_) return;
 
-    SelectActionNode();
+    // プレイヤーの座標をボス本体に設定
+    boss_->SetTargetPos(targerPlayer_->GetTransformPosition());
+
+    // 行動ノードを選択
+    if (boss_->IsCurrentStateFinished()) 
+    {
+        // 終わったのがIdle以外なら、強制的にIdleを挟む
+        if (boss_->GetCurrentStateID() != BossStateID::Idle)
+        {
+            boss_->ChangeState(BossStateID::Idle);
+        }
+        // 今終わったのがIdleなら、次の行動を決める！
+        else
+        {
+            SelectActionNode();
+        }
+    }
+
 }
 
 
@@ -143,7 +161,7 @@ void NPCController::SelectActionNode()
     // 決定した攻撃を入れる変数（初期値は安全のためIdleにしておく）
     BossStateID selectedAttack = BossStateID::Idle;
 
-    // ▼ ここから抽選処理 ▼
+    // ここから抽選処理
     int currentWeightSum = 0; // 重みの合計値
 
     for (const auto& pattern : currentRule.attackList)
@@ -158,37 +176,8 @@ void NPCController::SelectActionNode()
         }
     }
 
-    // ▼ 抽選結果に基づくアクションの実行 ▼
-    // 実際にはここでボスのステートマシン（状態）を切り替えたり、アニメーションを再生したりします
-    switch (selectedAttack)
-    {
-    case BossStateID::Attack:
-        // 通常攻撃の処理
-        selectedAttack = BossStateID::Idle;
-        break;
-    case BossStateID::Spin:
-        // 回転攻撃の処理
-        selectedAttack = BossStateID::Idle;
-        break;
-    case BossStateID::Jump:
-        // ヒットスタンプ（ジャンプ）の処理
-        selectedAttack = BossStateID::Idle;
-        break;
-    case BossStateID::Run:
-        // 走る（追跡）の処理
-        selectedAttack = BossStateID::Idle;
-        break;
-    case BossStateID::Clicked:
-        // 岩を投げる処理
-        selectedAttack = BossStateID::Idle;
-        break;
-    case BossStateID::Idle:
-        selectedAttack = BossStateID::Idle;
-        break;
-    default:
-        // 待機
-        break;
-    }
+    // 抽選結果に基づくアクションの実行
+    boss_->ChangeState(selectedAttack);
 }
 
 DistancePhase NPCController::ChackDistancePhase(float distance)

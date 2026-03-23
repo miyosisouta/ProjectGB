@@ -89,7 +89,7 @@ void Player::SetUpTranslateRulu()
 		stateMachine_.AddState(PlayerStateID::NormalAttack, new NormalAttackState(this));
 		stateMachine_.AddState(PlayerStateID::SpecialAbility, new SpecialAbilityState(this));
 		stateMachine_.AddState(PlayerStateID::Utility, new UtilityState(this));
-		stateMachine_.AddState(PlayerStateID::Dead, new DeadState(this));
+		stateMachine_.AddState(PlayerStateID::Dead, new DeathState(this));
 	}
 
 
