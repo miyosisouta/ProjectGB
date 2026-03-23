@@ -38,10 +38,11 @@ enum class UtilityType {
 /* ボスの種類 */
 enum class BossType 
 {
-    enNone,     //!< 何もない
+    enNone = 0xFFFFFFFF, //!< 何もない
     enGorilla,  //!< ゴリラ
     enKangaroo, //!< カンガルー
-    enTurtle    //!< カメ
+    enTurtle,   //!< カメ
+    enBossType_Max
 };
 
 /* ステージのモード */
@@ -63,6 +64,7 @@ enum BossAnimID {
     enAnimHit,
     enAnimDeath,
     enAnimSpin,
+    enAnimClicked,
     enAnimNum  //!< アニメーションの総数（自動的に7になる）
 };
 

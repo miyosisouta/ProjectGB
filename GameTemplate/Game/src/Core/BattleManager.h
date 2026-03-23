@@ -30,6 +30,7 @@ private:
     Stage* stage_ = nullptr;
     GameCamera* gameCamera_ = nullptr;
 
+
 private:
     BattleManager();
     ~BattleManager();
