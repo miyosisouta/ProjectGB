@@ -18,3 +18,4 @@ using namespace nsK2Engine;
 #include "src/collision/PhysicalBody.h"
 #include "src/Effect/EffectManager.h"
 #include "src/Sound/SoundManager.h"
+#include "src/Core/BattleManager.h"

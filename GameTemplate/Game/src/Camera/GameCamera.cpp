@@ -102,13 +102,13 @@ void GameCamera::OperateFreeMode()
 	if (cameraAngle_ < 0.0f)  cameraAngle_ += PI_X2;
 
 	// カメラ位置を計算
-	cameraPosition_.x = player_->GetGlobalPosition().x + std::cos(cameraAngle_) * CAMERA_DISTANCE;
-	cameraPosition_.y = player_->GetGlobalPosition().y + CAMERA_HEIGHT;
-	cameraPosition_.z = player_->GetGlobalPosition().z + std::sin(cameraAngle_) * CAMERA_DISTANCE;
+	cameraPosition_.x = player_->GetTransformPosition().x + std::cos(cameraAngle_) * CAMERA_DISTANCE;
+	cameraPosition_.y = player_->GetTransformPosition().y + CAMERA_HEIGHT;
+	cameraPosition_.z = player_->GetTransformPosition().z + std::sin(cameraAngle_) * CAMERA_DISTANCE;
 
 
 	//注視点を更新
-	targetPosition_ = player_->GetGlobalPosition();
+	targetPosition_ = player_->GetTransformPosition();
 }
 
 
@@ -120,13 +120,13 @@ void GameCamera::OperateLockOnMode()
 
 	// カメラの位置はプレイヤーの後ろに
 	// プレイヤーからボスへのベクトル
-	const Vector3 playerToBoss = targetPosition_ - player_->GetGlobalPosition();
+	const Vector3 playerToBoss = targetPosition_ - player_->GetTransformPosition();
 	// 反転して正規化
 	Vector3 toCamera = playerToBoss * -1;
 	toCamera.Normalize();
 
 	// カメラの位置を算出
-	cameraPosition_ = player_->GetGlobalPosition() + (toCamera * LOCKON_CAMERA_DISTANCE);
+	cameraPosition_ = player_->GetTransformPosition() + (toCamera * LOCKON_CAMERA_DISTANCE);
 	// カメラの高さを調整
 	cameraPosition_.y += LOCKON_CAMERA_HEIGHT;
 }

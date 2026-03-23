@@ -13,7 +13,7 @@ public:
 protected:
 	ModelRender modelRender_; //!< モデルレンダー
 
-	ActorStatus* status_ = nullptr;
+	ActorStatus* status_ = nullptr; //!< ステータス
 
 
 public:
@@ -31,9 +31,13 @@ public:
 
 
 public:
-	/** グローバル位置を取得 */
-	inline const Vector3 GetGlobalPosition() const { return transform_.position; }
+	/** グローバルな座標を取得 */
+	inline const Vector3 GetTransformPosition() const { return transform_.position; }
+	/** グローバルな回転を取得 */
+	inline const Quaternion GetTransformRotation() const { return transform_.rotation; }
+	/** グローバルな大きさを取得 */
+	inline const Vector3 GetTransformScale() const { return transform_.scale; }
 
-
+	/* ステータスを取得 */
 	ActorStatus* GetStatus() { return status_; }
 };

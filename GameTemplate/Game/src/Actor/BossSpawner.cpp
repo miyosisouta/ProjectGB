@@ -80,6 +80,7 @@ BossParam BossSpawner::CreateBossData(BossType type, GameModeType mode)
 		AddAnim(enAnimHit,"Hit.tka",false);
 		AddAnim(enAnimDeath,"Death.tka",false);
 		AddAnim(enAnimSpin, "Spin.tka", true);
+		AddAnim(enAnimClicked, "Clicked.tka", false);
 		break;
 	}
 	default:
@@ -106,7 +107,7 @@ BossParam BossSpawner::CreateBossData(BossType type, GameModeType mode)
 	return param;
 }
 
-void BossSpawner::SpawnBoss(Character* chara)
+void BossSpawner::SpawnBoss(bool isPlayerControl)
 {
 	// データベースからはステージ選択で選ばれたタイプを取得
 	//BossType stageType = CharacterDataBase::Get().GetStageType();
@@ -132,18 +133,25 @@ void BossSpawner::SpawnBoss(Character* chara)
 	status_ = status;
 
 
-	// コントローラーの設定
+	// ボスキャラクターがある場合
+	if (boss_) 
 	{
-		// Charaがプレイヤーで存在するなら
-		if (dynamic_cast<Player*>(chara) != nullptr)
+		// コントローラーの設定
 		{
-			//playerController_ = NewGO<PlayerController>(0, "playerController");
-		}
+			// プレイヤーに
+			if (isPlayerControl)
+			{
+				playerController_ = NewGO<PlayerController>(0, "playerController");
+			}
 
-		// Charaがボスで存在するなら
-		else if (dynamic_cast<BossCharacter*>(chara) != nullptr)
-		{
-			//bossController_ = NewGO<NPCController>(0, "bossController");
+			// ボス
+			else
+			{
+				bossController_ = NewGO<NPCController>(0, "bossController");
+				bossController_->SetBossType(stageType); // 対戦するボスをセット
+				bossController_->SetBossCharacter(boss_); // ボスの情報をセット
+				bossController_->SetAttackTarget(attackTarget_); // 攻撃対象をセット
+			}
 		}
 	}
 }
