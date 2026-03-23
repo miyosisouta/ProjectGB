@@ -13,10 +13,10 @@ class PlayerStateBase: public IState
 protected:
 	Player* player_ = nullptr; //!< プレイヤー
 
-protected:
-	/** 移動速度を計算する共通処理 */ 
-	Vector3 CalcMovementVelocity(float speed);
 
+protected:
+	/** 移動速度を計算する共通処理 */
+	Vector3 CalcMovementVelocity(float speed);
 
 public:
 	/*
@@ -156,10 +156,10 @@ public:
 // 死亡の状態
 /*==========================================*/
 
-class DeadState : public PlayerStateBase
+class DeathState : public PlayerStateBase
 {
 public:
-	DeadState(Player* p) : PlayerStateBase(p) {}
+	DeathState(Player* p) : PlayerStateBase(p) {}
 
 	void Enter()override;
 	void Update()override;

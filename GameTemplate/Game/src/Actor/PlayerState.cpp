@@ -242,7 +242,7 @@ bool UtilityState::IsCancelable() const
 /* 死亡状態 */
 /*==================================================*/
 
-void DeadState::Enter()
+void DeathState::Enter()
 {
 	// 死亡アニメーション
 	player_->PlayAnimation(static_cast<int>(PlayerStateID::Dead));
@@ -250,12 +250,12 @@ void DeadState::Enter()
 	player_->SetMoveVelocity(Vector3::Zero);
 }
 
-void DeadState::Update()
+void DeathState::Update()
 {
 	
 }
 
-void DeadState::Exit()
+void DeathState::Exit()
 {
 }
 
