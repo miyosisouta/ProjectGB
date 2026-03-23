@@ -53,6 +53,11 @@ public:
 /*==========================================*/
 class WalkState : public PlayerStateBase
 {
+private:
+	/** •à‚«‚ÌSE‚ğÄ¶‚µ‚½Œo‰ßŠÔ */
+	float walkSEElapsedTime_ = 0.0f;
+
+
 public:
 	WalkState(Player* p) : PlayerStateBase(p) {}
 
@@ -66,6 +71,11 @@ public:
 /*==========================================*/
 class RunState : public PlayerStateBase
 {
+private:
+	/** ‘–‚è‚ÌSE‚ğÄ¶‚µ‚½Œo‰ßŠÔ */
+	float runSEElapsedTime_ = 0.0f;
+
+
 public:
 	RunState(Player* p) : PlayerStateBase(p) {}
 
