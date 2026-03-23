@@ -9,6 +9,7 @@
 
 #include "src/Scene/InGameScene.h"
 #include "src/Scene/TitleScreen.h"
+#include "src/Sound/SoundManager.h"
 
 #include "src/UI/Layout.h"
 #include "src/UI/TitleMenu.h"
@@ -30,6 +31,9 @@ TitleScene::~TitleScene()
 bool TitleScene::Start()
 {
 	UIScreenManager::Get().Boot<TitleMenu>("Assets/ui/layout/TitleMenu.json");
+
+	// タイトルBGM再生
+	SoundManager::Get().PlayBGM(enSoundKind_Title);
 
 	return true;
 }
@@ -82,6 +86,10 @@ bool TitleScene::RequestScene(uint32_t& id)
 	//Aボタンが押されたら次のシーンへ（仮）
 	if(isRequestScene) {
 		id = InGameScene::ID();
+
+		// タイトルBGMストップ
+		SoundManager::Get().StopBGM();
+
 		return true;
 	}
 

@@ -107,6 +107,7 @@ void SoundManager::StopSE(const SoundHandle handle)
 
 SoundManagerObject::SoundManagerObject()
 {
+	SoundManager::CreateInstance();
 }
 
 
@@ -118,8 +119,6 @@ SoundManagerObject::~SoundManagerObject()
 
 bool SoundManagerObject::Start()
 {
-	SoundManager::CreateInstance();
-
 	return true;
 }
 

@@ -9,6 +9,7 @@
 
 #include "src/Core/BattleManager.h"
 #include "src/Scene/OutGameScene.h"
+#include "src/Sound/SoundManager.h"
 
 #include "src/UI/Layout.h"
 #include "src/UI/InGameMenu.h"
@@ -34,6 +35,9 @@ bool InGameScene::Start()
 	layout_ = new Layout();
 	layout_->Initialize<InGameMenu>("Assets/ui/layout/InGameMenu.json");
 
+	// インゲームBGM再生
+	SoundManager::Get().PlayBGM(enSoundKind_InGame);
+
 	return true;
 }
 
@@ -44,6 +48,7 @@ void InGameScene::Update()
 	
 	layout_->Update(); // 更新の呼び出し
 }
+
 
 void InGameScene::Render(RenderContext& rc)
 {
@@ -56,6 +61,10 @@ bool InGameScene::RequestScene(uint32_t& id)
 	////Aボタンが押されたら次のシーンへ（仮）
 	//if (g_pad[0]->IsTrigger(enButtonA)) {
 	//	id = OutGameScene::ID();
+	// 
+	// // タイトルBGM停止
+	// SoudManager::Get().StopBGM();
+	// 
 	//	return true;
 	//}
 
