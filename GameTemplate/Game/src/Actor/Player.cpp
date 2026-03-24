@@ -246,6 +246,9 @@ bool Player::Start()
 
 		// モデルの座標を更新・初期化
 		{
+			// TODO::Boss都の初期の距離を離すため
+			transform_.localPosition = Vector3(300.0f, 0.0f, 0.0f);
+
 			transform_.UpdateTransform();
 			modelRender_.SetPosition(transform_.position);
 			modelRender_.SetRotation(transform_.rotation);

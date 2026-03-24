@@ -29,7 +29,7 @@ void BossIdleState::Enter()
 		taskScheduler_ = std::make_unique<TaskSchedulerSystem>();
 
 		// 時間設定
-		taskScheduler_->AddTimer(5.0f, [&]() {
+		taskScheduler_->AddTimer(10.0f, [&]() {
 			isFinished = true;
 			});
 	}
@@ -105,6 +105,79 @@ void BossRunState::Update()
 void BossRunState::Exit()
 {
 }
+
+/*==========================================*/
+// 通常攻撃状態
+/*==========================================*/
+
+void BossAttackState::Enter()
+{
+	isFinished = false; // 初期化
+	Quaternion targetRot = RotateToTarget(BOSS_ROTATE_SPEED);// 攻撃の前にプレイヤーがいる方向へ向く
+	boss_->SetTargetRot(targetRot);
+
+	// タスクシステムを作成
+	taskScheduler_ = std::make_unique<TaskSchedulerSystem>();
+
+	// 攻撃までの時間設定
+	{
+		// 攻撃の範囲を表すものを出す
+		taskScheduler_->AddTimer(0.1f, [&]() {
+			
+			});
+
+		// アニメーションの再生とコリジョンの生成
+		taskScheduler_->AddTimer(2.0f, [&]() {
+			boss_->PlayAnimation(BossAnimID::enAnimAttack); // 通常攻撃アニメーションを設定
+			
+			// ゴーストコリジョンを生成
+			attackHitbox_ = std::make_unique<GhostBody>();
+			attackHitbox_->CreateSphere(boss_, Hash32("Boss"), 100.0f, ghost::CollisionAttribute::Boss, ghost::CollisionAttributeMask::Player);
+
+			// 座標計算
+			Vector3 bossPos = boss_->transform_.position;				// プレイヤーの現在の座標を取得
+
+			const Matrix& mat = boss_->transform_.GetWorldMatrix(); // ボスのワールド座標を取得
+			Vector3 forward(mat.m[2][0], mat.m[2][1], mat.m[2][2]); // Z軸
+			forward.Normalize(); // ベクトルの長さを1にしておく
+
+			Quaternion bossRot = boss_->GetTargetRot();
+			float forwardOffset = 200.0f;									// 目の前にどれくらいズラすか
+			float heightOffset = 50.0f;										// 高さの調整
+			Vector3 targetPos = bossPos + (forward * forwardOffset);	// 前方向の座標を決定
+			targetPos.y += heightOffset;									// 高さを決定
+
+			// コリジョンの座標を設定
+			attackHitbox_->SetPosition(targetPos);
+			});
+
+		// コリジョンを破棄
+		taskScheduler_->AddTimer(2.0f, [&]()
+			{
+				attackHitbox_.reset(nullptr);
+			},
+			true);
+
+		// 処理を終わる
+		taskScheduler_->AddTimer(3.0f, [&]()
+			{
+				isFinished = true;
+			});
+	}
+}
+
+void BossAttackState::Update()
+{
+	boss_->SetMoveVelocity(Vector3::Zero); // 移動速度を0に
+
+	if (taskScheduler_) { taskScheduler_->Update(g_gameTime->GetFrameDeltaTime()); }
+}
+
+void BossAttackState::Exit()
+{
+	taskScheduler_.reset();
+}
+
 
 
 /*==========================================*/
