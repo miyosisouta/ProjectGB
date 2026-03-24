@@ -52,7 +52,7 @@ namespace nsK2EngineLow {
 			EffectEngine::CreateInstance();
 		}
 #ifdef K2_DEBUG
-		if (m_graphicsEngine) {
+	if (m_graphicsEngine) {
 			m_fpsFont = std::make_unique<Font>();
 			m_fpsFontShadow = std::make_unique<Font>();
 		}
@@ -117,6 +117,8 @@ namespace nsK2EngineLow {
 	{
 		auto& renderContext = g_graphicsEngine->GetRenderContext();
 		//“–‚½‚è”»’è•`‰æˆ—‚ğÀsB
+#ifdef K2_DEBUG
 		PhysicsWorld::Get().DebubDrawWorld(renderContext);
+#endif
 	}
 }

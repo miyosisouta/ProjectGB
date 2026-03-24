@@ -6,8 +6,9 @@
 bool Game::Start()
 {
 	// @todo for test
+#ifdef K2_DEBUG
 	PhysicsWorld::Get().EnableDrawDebugWireFrame();
-	
+#endif
 	return true;
 }
 
