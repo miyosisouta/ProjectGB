@@ -59,7 +59,7 @@ class ActorStatus
 protected:
 	int hp_ = 0;
 	int maxHp_ = 0;
-	bool isTakeDamage = false;	//!< ダメージを受けたフレーム
+	bool isTakeDamage_ = false;	//!< ダメージを受けたフレーム
 
 	int attack_ = 0;
 	int defence_ = 0;
@@ -73,7 +73,7 @@ public:
 
 	virtual void Update()
 	{
-		isTakeDamage = false;
+		isTakeDamage_ = false;
 	}
 
 
@@ -94,7 +94,7 @@ public:
 		if (hp_ < 0) {
 			hp_ = 0;
 		}
-		isTakeDamage = true;
+		isTakeDamage_ = true;
 	}
 	void Heal(const int value)
 	{
@@ -104,7 +104,7 @@ public:
 		}
 	}
 
-	bool IsTakeDamage() const { return isTakeDamage; }
+	bool IsTakeDamage() const { return isTakeDamage_; }
 
 
 

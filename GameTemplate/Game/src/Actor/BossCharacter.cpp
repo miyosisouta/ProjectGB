@@ -76,6 +76,9 @@ BossCharacter::BossCharacter()
 
 BossCharacter::~BossCharacter()
 {
+	// statusを破棄
+	delete status_;
+	status_ = nullptr;
 }
 
 bool BossCharacter::Start()

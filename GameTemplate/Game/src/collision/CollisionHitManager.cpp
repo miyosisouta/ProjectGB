@@ -200,7 +200,6 @@ bool CollisionHitManager::ContainsPlayerAttackPair(const Pair& hitPair)
 
 void CollisionHitManager::UpdatePlayerAttackPair(Pair& hitPair)
 {
-	auto* player = GetHitObject<Player>(hitPair, CharacterID::PlayerAtkID());
 	auto* bossCharacter = GetHitObject<BossCharacter>(hitPair, CharacterID::BossID());
 
 	if (bossCharacter->GetStatus()) {
@@ -222,7 +221,6 @@ bool CollisionHitManager::ContainsBossAttackPair(const Pair& hitPair)
 void CollisionHitManager::UpdateBossAttackPair(Pair& hitPair)
 {
 	auto* player = GetHitObject<Player>(hitPair, CharacterID::PlayerID());
-	auto* bossCharacter = GetHitObject<BossCharacter>(hitPair, CharacterID::BossAtkID());
 
 	player->GetStatus()->Damage(1);
 }

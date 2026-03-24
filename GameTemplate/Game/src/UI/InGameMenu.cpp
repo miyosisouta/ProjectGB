@@ -33,7 +33,8 @@ void InGameMenu::Update()
 	bool isUseDodgeRoll = false;
 	bool isCoolDownAbility = false;
 	bool isReadyAbilityFrame = false;
-	bool isTakeDamage = false;
+	bool isTakeDamagePlayer = false;
+	bool isTakeDamageBoss = false;
 	int playerHP = 0;
 	int playerMaxHP = 0;
 	int bossHP = 0;
@@ -54,7 +55,7 @@ void InGameMenu::Update()
 		playerHP = playerStatus->GetHP();
 		playerMaxHP = playerStatus->GetMaxHP();
 
-		isTakeDamage = playerStatus->IsTakeDamage();
+		isTakeDamagePlayer = playerStatus->IsTakeDamage();
 	}
 
 	if (boss){
@@ -63,7 +64,7 @@ void InGameMenu::Update()
 			bossHP = bossStatus->GetHP();
 			bossMaxHP = bossStatus->GetMaxHP();
 
-			isTakeDamage = bossStatus->IsTakeDamage();
+			isTakeDamageBoss = bossStatus->IsTakeDamage();
 		}
 	}
 
@@ -154,7 +155,7 @@ void InGameMenu::Update()
 		auto* playerNormal = GetUI<UIIcon>(Hash32("Player_icon_normal"));
 		if (playerNormal)
 		{
-			if (isTakeDamage)
+			if (isTakeDamagePlayer)
 			{
 				// 普通のアイコンが消える
 				playerNormal->isDraw = false;
@@ -180,7 +181,7 @@ void InGameMenu::Update()
 		{
 			auto* damageColorDummy = GetUI<UIDummy>(Hash32("FlameDamageColorDummy"));
 			auto* normalColorDummy = GetUI<UIDummy>(Hash32("FlameNormalColorDummy"));
-			if (isTakeDamage)
+			if (isTakeDamagePlayer)
 			{
 				normalFlame->color = damageColorDummy->color;
 			}

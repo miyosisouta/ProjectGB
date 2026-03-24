@@ -21,10 +21,6 @@ BossSpawner::~BossSpawner()
 {
 	// ボスを破棄
 	DeleteGO(boss_);
-
-	// statusを破棄
-	delete status_;
-	status_ = nullptr;
 }
 
 void BossSpawner::Update()
