@@ -10,7 +10,6 @@ class BossCharacter : public Character
 private:
 	IState* currentState_ = nullptr;          //!< 現在のステート（状態）の実体
 	BossStateID currentStateID_ = BossStateID::Idle; //!< 現在のステートID
-	BossStatus* status_ = nullptr;
 	BossParam param_;
 
 	/** あらかじめ生成したステートを保管するマップ */
@@ -93,6 +92,6 @@ public:
 	virtual void Render(RenderContext& rc)override;
 
 	/* ステータス設定 */
-	inline void SetupStatus(BossStatus* status) { status_ = status; }	//!< ボスのステータス設定
+	//inline void SetupStatus(BossStatus* status) { status_ = status; }	//!< ボスのステータス設定
 	inline void SetupParam(BossParam& param) { param_ = param; }		//!< ボスのパラメータ設定
 };

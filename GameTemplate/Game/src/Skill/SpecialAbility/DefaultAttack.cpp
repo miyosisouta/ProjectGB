@@ -29,9 +29,10 @@ void DefaultAttack::Enter(Character* p)
 				{
 					// ゴーストコリジョンを生成
 					attackHitbox_ = std::make_unique<GhostBody>();
-					attackHitbox_->CreateSphere(p, CharacterID::PlayerAtkID(), 50.0f, ghost::CollisionAttribute::PlayerDef, ghost::CollisionAttributeMask::Boss);
+					attackHitbox_->CreateSphere(p, CharacterID::PlayerAtkID(), 50.0f, ghost::CollisionAttribute::PlayerAtk, ghost::CollisionAttributeMask::PlayerAtk);
 
 					// 座標計算
+					p->transform_.UpdateTransform();
 					Vector3 playerPos = p->transform_.position;				// プレイヤーの現在の座標を取得
 					Quaternion playerRot = p->GetStateMachine()->GetRotation();
 					Vector3 forwardDir = p->GetStateMachine()->GetDirection();// プレイヤーが最後に向いていた方向を取得

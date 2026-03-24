@@ -2,8 +2,7 @@
 #include "BossCharacter.h"
 #include "NPCController.h"
 #include "BossState.h"
-
-
+#include "src/Actor/ActorStatus.h"
 
 
 /** ===================================================== */
@@ -71,6 +70,8 @@ void BossCharacter::ChangeState(BossStateID nextStateId)
 
 BossCharacter::BossCharacter()
 {
+	auto* bossStatus = new BossStatus();
+	status_ = bossStatus;
 }
 
 BossCharacter::~BossCharacter()
@@ -113,6 +114,11 @@ bool BossCharacter::Start()
 		damageBody_->SetPosition(transform_.position);
 	}
 
+	// ボスのステータスを作って、確定した数値を流し込む！
+	BossParam param;
+	BossStatus* status = new BossStatus();
+	status->InitStatus(param.maxHp_, param.attack_);
+
 	return true;
 }
 
@@ -144,6 +150,10 @@ void BossCharacter::Update()
 	}
 	// 更新
 	{
+		// ボスのステータス更新
+		BossStatus* status = status_->As<BossStatus>();
+		status->Update();
+
 		modelRender_.Update();// モデルの更新
 		if (currentState_) { currentState_->Update(); } // 現在のステートがある場合、現在のステートの更新
 	}

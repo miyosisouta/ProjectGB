@@ -229,7 +229,11 @@ public:
 	}
 
 public:
-	BossStatus() {}
+	BossStatus() 
+	{
+		hp_ = 5;
+		maxHp_ = 5;
+	}
 	virtual ~BossStatus() {}
 
 public:

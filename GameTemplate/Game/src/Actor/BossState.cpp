@@ -179,6 +179,22 @@ void BossAttackState::Exit()
 }
 
 
+/*==========================================*/
+// ヒットスタンプ
+/*==========================================*/
+
+void HitStampState::Enter()
+{
+}
+
+void HitStampState::Update()
+{
+}
+
+void HitStampState::Exit()
+{
+}
+
 
 /*==========================================*/
 // 死亡状態
@@ -242,3 +258,5 @@ Quaternion BossStateBase::RotateToTarget(float rotateSpeed)
 
 	return currentRot;
 }
+
+

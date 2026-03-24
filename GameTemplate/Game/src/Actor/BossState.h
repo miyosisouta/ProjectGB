@@ -88,6 +88,23 @@ public:
 };
 
 
+
+/*==========================================*/
+// ヒットスタンプ攻撃
+/*==========================================*/
+class HitStampState : public BossStateBase
+{
+public:
+	bool IsFinished() const override { return isFinished; }
+
+public:
+	HitStampState(BossCharacter* b) : BossStateBase(b) {}
+
+	void Enter()override;
+	void Update()override;
+	void Exit()override;
+};
+
 /************************************************************/
 // ここからは強制的な状態のものを書く
 

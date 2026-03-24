@@ -9,6 +9,7 @@
 #include "src/Util/TaskSchedulerSystem.h"
 
 #include "src/Actor/Player.h"
+#include "src/Actor/BossCharacter.h"
 #include "src/Actor/ActorStatus.h"
 
  
@@ -35,7 +36,11 @@ void InGameMenu::Update()
 	bool isTakeDamage = false;
 	int playerHP = 0;
 	int playerMaxHP = 0;
+	int bossHP = 0;
+	int bossMaxHP = 0;
 	auto* player = FindGO<Player>("player");
+	auto* boss = FindGO<BossCharacter>("boss");
+
 	if (player) {
 		auto* stateMachine = player->GetStateMachine();
 		isUseNormalAttack = stateMachine->IsActionButtonB();
@@ -52,6 +57,17 @@ void InGameMenu::Update()
 		isTakeDamage = playerStatus->IsTakeDamage();
 	}
 
+	if (boss){
+		auto* bossStatus = boss->GetStatus()->As<BossStatus>();
+		if (bossStatus) {
+			bossHP = bossStatus->GetHP();
+			bossMaxHP = bossStatus->GetMaxHP();
+
+			isTakeDamage = bossStatus->IsTakeDamage();
+		}
+	}
+
+
 	Vector4 frameIconColor = Vector4::White;
 	auto* dummy = GetUI<UIDummy>(Hash32("FrameColorDummy"));
 	if (dummy) {
@@ -66,24 +82,13 @@ void InGameMenu::Update()
 	}
 	
 
-	// プレイヤーHPの増減
+	// ボスHPの増減
 	auto* bossGauge = GetUI<UIIcon>(Hash32("Boss_HP_gauge"));
 	if (bossGauge)
 	{
-		if (g_pad[0]->IsTrigger(enButtonDown)) {
-			bossHP -= 1.0f;
-			if (bossHP < 0.0f) {
-				bossHP = 0.0f;
-			}
-		}
-		else if (g_pad[0]->IsTrigger(enButtonUp)) {
-			bossHP += 1.0f;
-			if (bossHP > 10.0f) {
-				bossHP = 10.0f;
-			}
-		}
+		bossGauge->transform.localScale.x = bossHP / static_cast<float>(bossMaxHP);
 	}
-	bossGauge->transform.localScale.x = bossHP / 10.0f;
+	
 	
 
 	// 攻撃ボタン枠の色変化
