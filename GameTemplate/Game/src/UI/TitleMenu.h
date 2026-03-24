@@ -10,8 +10,8 @@
 class TitleMenu : public MenuBase
 {
 private:
-	ParticleEffectRender* effectRender = nullptr;
-	ParticleEffectRender* effectRenderB = nullptr;
+	std::unique_ptr<ParticleEffectRender> effectRender = nullptr;
+	std::unique_ptr<ParticleEffectRender> effectRenderB = nullptr;
 
 	TaskSchedulerSystem* taskScheduler = nullptr;
 	std::unique_ptr<IntSelector> selector_ = nullptr;

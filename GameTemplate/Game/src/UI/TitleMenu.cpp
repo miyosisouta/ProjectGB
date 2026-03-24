@@ -137,19 +137,13 @@ void TitleMenu::InitializeLogic()
 	}
 
 	// 星のエフェクト
-	if(effectRender){
-		delete effectRender;
-	}
-	effectRender = new ParticleEffectRender();
+	effectRender = std::make_unique<ParticleEffectRender>();
 	effectRender->Init("Assets/ui/vfx/effect_sparkle.json", "Assets/ui/titleUI/kira.dds", 128.0f, 128.0f);
 	effectRender->SetPosition(Vector3(370.0f, 290, 0.0f));
 	effectRender->Play();
 	effectRender->EnableHotReload();
 
-	if (effectRenderB) {
-		delete effectRenderB;
-	}
-	effectRenderB = new ParticleEffectRender();
+	effectRenderB = std::make_unique<ParticleEffectRender>();
 	effectRenderB->Init("Assets/ui/vfx/effect_sparkle.json", "Assets/ui/titleUI/kira.dds", 128.0f, 128.0f);
 	effectRenderB->SetPosition(Vector3(-320.0f, 150, 0.0f));
 	effectRenderB->Play();
