@@ -223,12 +223,6 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\..\..\Users\下岡南\Desktop\Vfx\Vfx\Particle.cpp" />
-    <ClCompile Include="..\..\..\..\Users\下岡南\Desktop\Vfx\Vfx\ParticleEffectLoader.cpp" />
-    <ClCompile Include="..\..\..\..\Users\下岡南\Desktop\Vfx\Vfx\ParticleEffectRender.cpp" />
-    <ClCompile Include="..\..\..\..\Users\下岡南\Desktop\Vfx\Vfx\ParticleEmitter.cpp" />
-    <ClCompile Include="..\..\..\..\Users\下岡南\Desktop\Vfx\Vfx\ParticleModule.cpp" />
-    <ClCompile Include="..\..\..\..\Users\下岡南\Desktop\Vfx\Vfx\ParticleValueProvider.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="src\Actor\Actor.cpp" />
@@ -301,12 +295,6 @@
     <ClCompile Include="system\system.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\..\..\Users\下岡南\Desktop\Vfx\Vfx\Particle.h" />
-    <ClInclude Include="..\..\..\..\Users\下岡南\Desktop\Vfx\Vfx\ParticleEffectLoader.h" />
-    <ClInclude Include="..\..\..\..\Users\下岡南\Desktop\Vfx\Vfx\ParticleEffectRender.h" />
-    <ClInclude Include="..\..\..\..\Users\下岡南\Desktop\Vfx\Vfx\ParticleEmitter.h" />
-    <ClInclude Include="..\..\..\..\Users\下岡南\Desktop\Vfx\Vfx\ParticleModule.h" />
-    <ClInclude Include="..\..\..\..\Users\下岡南\Desktop\Vfx\Vfx\ParticleValueProvider.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="src\Actor\Actor.h" />
     <ClInclude Include="src\Actor\ActorStatus.h" />
