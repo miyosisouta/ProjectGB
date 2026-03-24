@@ -141,6 +141,48 @@ void InGameMenu::Update()
 	
 
 
+	// @todo for test 表情が変わる
+	auto* playerNormal = GetUI<UIIcon>(Hash32("Player_icon_normal"));
+	if(playerNormal)
+	{
+		if (g_pad[0]->IsTrigger(enButtonDown))
+		{
+			// 普通のアイコンが消える
+			playerNormal->isDraw = false;
+
+			// ダメージ受けた時の顔に切り替え
+			auto* playerDamage = GetUI<UIIcon>(Hash32("Player_icon_damage"));
+			playerDamage->isDraw = true;
+		}
+		else if(g_pad[0]->IsTrigger(enButtonUp))
+		{
+			// ダメージ受けた時のアイコンが消える
+			playerNormal->isDraw = true;
+
+			// 普通のアイコンに切り替わる
+			auto* playerDamage = GetUI<UIIcon>(Hash32("Player_icon_damage"));
+			playerDamage->isDraw = false;
+		}
+	}
+
+	// @todo for test 枠が変わる
+	auto* normalFlame = GetUI<UIIcon>(Hash32("Player_icon_flame"));
+	if (normalFlame)
+	{
+		auto* damageColorDummy = GetUI<UIDummy>(Hash32("FlameDamageColorDummy"));
+		auto* normalColorDummy = GetUI<UIDummy>(Hash32("FlameNormalColorDummy"));
+		if (g_pad[0]->IsTrigger(enButtonDown))
+		{
+			normalFlame->color = damageColorDummy->color;
+		}
+		else if (g_pad[0]->IsTrigger(enButtonUp))
+		{
+			normalFlame->color = normalColorDummy->color;
+		}
+	}
+	
+
+
 	MenuBase::Update();
 }
 

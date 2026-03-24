@@ -1,0 +1,75 @@
+{
+    "comment": "爆発エフェクト（バースト生成）",
+    "duration": 3.0,
+    "spawn": {
+        "rate": 0,
+        "burstCount": 50,
+        "burstInterval": 0,
+        "maxParticles": 50,
+        "looping": false
+    },
+    "modules": [
+        {
+            "type": "InitLifetime",
+            "lifetime": {
+                "mode": "random",
+                "min": 0.5,
+                "max": 2.0
+            }
+        },
+        {
+            "type": "InitVelocity",
+            "velocity": {
+                "mode": "random",
+                "min": { "x": -300.0, "y": -300.0, "z": 0.0 },
+                "max": { "x":  300.0, "y":  300.0, "z": 0.0 }
+            }
+        },
+        {
+            "type": "InitScale",
+            "scale": {
+                "mode": "random",
+                "min": { "x": 0.3, "y": 0.3, "z": 1.0 },
+                "max": { "x": 1.0, "y": 1.0, "z": 1.0 }
+            }
+        },
+        {
+            "type": "InitRotation",
+            "angle": {
+                "mode": "random",
+                "min": 0.0,
+                "max": 360.0
+            },
+            "angularVelocity": {
+                "mode": "random",
+                "min": -180.0,
+                "max": 180.0
+            }
+        },
+        {
+            "type": "InitColor",
+            "r": 1.0,
+            "g": { "mode": "random", "min": 0.5, "max": 1.0 },
+            "b": 0.0,
+            "a": 1.0
+        },
+        {
+            "type": "ScaleOverLife",
+            "startScaleX": { "mode": "random", "min": 0.5, "max": 1.2 },
+            "endScaleX": 0.0,
+            "startScaleY": { "mode": "random", "min": 0.5, "max": 1.2 },
+            "endScaleY": 0.0,
+            "easing": "EaseOut"
+        },
+        {
+            "type": "AlphaOverLife",
+            "startAlpha": 1.0,
+            "endAlpha": 0.0,
+            "easing": "EaseIn"
+        },
+        {
+            "type": "VelocityDamping",
+            "damping": 2.0
+        }
+    ]
+}

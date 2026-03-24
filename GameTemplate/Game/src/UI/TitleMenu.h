@@ -4,11 +4,15 @@
  */
 #pragma once
 #include "Menu.h"
+#include "src/Vfx/ParticleEffectRender.h"
 
 
 class TitleMenu : public MenuBase
 {
 private:
+	ParticleEffectRender* effectRender = nullptr;
+	ParticleEffectRender* effectRenderB = nullptr;
+
 	TaskSchedulerSystem* taskScheduler = nullptr;
 	std::unique_ptr<IntSelector> selector_ = nullptr;
 	/** Aボタンを押したかがされているか */
