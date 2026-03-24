@@ -5,10 +5,20 @@
 #include "src/Skill/SpecialAbility/AbilityBase.h"
 #include "src/Skill/Utility/Utility.h"
 
+namespace CharacterID
+{
+	inline uint32_t PlayerID() { return Hash32("Player"); }
+	inline uint32_t BossID() { return Hash32("Boss"); }
+	inline uint32_t PlayerAtkID() { return Hash32("PlayerAttack"); }
+	inline uint32_t BossAtkID() { return Hash32("BossAttack"); }
+}
+
+
 class Character : public Actor
 {
 protected:
 	AllocatedArray<AnimationClip> animationClipList_; //!< アニメーションクリップのリスト
+	std::unique_ptr<GhostBody> damageBody_; //!< ダメージ用コリジョン
 	StateMachine stateMachine_;
 
 	/* スキルの実態を持つ */

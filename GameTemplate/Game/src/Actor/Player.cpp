@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "Player.h"
+#include "Character.h"
 #include "ActorStatus.h"
 #include "StateMachine.h"
 #include "PlayerState.h"
@@ -257,6 +258,14 @@ bool Player::Start()
 		}
 	}
 
+	// ゴーストコリジョンを生成
+	{
+		damageBody_ = std::make_unique<GhostBody>();
+		damageBody_->CreateCapsule(this, CharacterID::PlayerID(), 30.0f, 100.0f, ghost::CollisionAttribute::PlayerDef, ghost::CollisionAttributeMask::Player);
+	
+		damageBody_->SetPosition(transform_.position);
+	}
+
 	// ステート遷移のルール設定
 	SetUpTranslateRulu();
 
@@ -288,6 +297,9 @@ void Player::Update()
 
 	PlayerStatus* status = GetStatus()->As<PlayerStatus>();
 	status->Update();
+
+	Vector3 collisionPos = transform_.position + Vector3(0.0f, 40.0f, 0.0f);
+	damageBody_->SetPosition(collisionPos);
 }
 
 void Player::Render(RenderContext& rc)

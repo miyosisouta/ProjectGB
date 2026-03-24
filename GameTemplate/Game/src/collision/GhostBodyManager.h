@@ -1,4 +1,4 @@
-/**
+﻿/**
  * GhostBodyManager.h
  * ゴーストボディ管理関連
  */
@@ -37,7 +37,7 @@ public:
 	void AddBody(GhostBody* body);
 	void RemoveBody(GhostBody* body);
 
-	void RegisterCallback(const RegisterPairCallback& callback) { registerPairCallback_ = std::move(callback); }
+	void RegisterCallback(const RegisterPairCallback& callback) { registerPairCallback_ = callback; }
 	void ClearCallback() { registerPairCallback_ = nullptr; }
 
 private:
@@ -62,3 +62,5 @@ public:
 	static GhostBodyManager& Get() { return *m_instance; }
 	static bool IsAvailable() { return m_instance != nullptr; }
 };
+
+

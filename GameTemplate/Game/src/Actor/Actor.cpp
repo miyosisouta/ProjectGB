@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "Actor.h"
+#include "ActorStatus.h"
 
 
 bool Actor::Start()
@@ -18,6 +19,10 @@ void Actor::Update()
 	modelRender_.SetScale(transform_.scale);
 	modelRender_.SetRotation(transform_.rotation);
 	modelRender_.Update();
+
+	if (status_) {
+		status_->Update();
+	}
 }
 
 

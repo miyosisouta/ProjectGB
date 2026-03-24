@@ -17,6 +17,9 @@
 #include "src/Stage/Stage.h"
 #include "src/Camera/GameCamera.h"
 
+#include "src/collision/GhostBodyManager.h"
+#include "src/collision/CollisionHitManager.h"
+
 
 BattleManager* BattleManager::myInstance_ = nullptr; //初期化
 
@@ -57,4 +60,7 @@ void BattleManager::Update()
 {
 	boss_->Update();
 	gameCamera_->Update();		//GameCameraの更新
+
+	GhostBodyManager::Get().Update();
+	CollisionHitManager::Get().Update();
 }

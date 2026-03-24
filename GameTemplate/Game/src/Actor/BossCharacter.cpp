@@ -4,6 +4,8 @@
 #include "BossState.h"
 
 
+
+
 /** ===================================================== */
 /** アニメーション関連 */
 /** ===================================================== */
@@ -103,6 +105,14 @@ bool BossCharacter::Start()
 
 	// 現在のステートをIdleに設定
 	ChangeState(BossStateID::Idle);
+
+	// コリジョン作成
+	{
+		damageBody_ = std::make_unique<GhostBody>();
+		damageBody_->CreateCapsule(this, CharacterID::BossID(), 110.0f, 150.0f, ghost::CollisionAttribute::BossDef, ghost::CollisionAttributeMask::Boss);
+		damageBody_->SetPosition(transform_.position);
+	}
+
 	return true;
 }
 
@@ -126,7 +136,12 @@ void BossCharacter::Update()
 		modelRender_.Update();
 	}
 
+	// コリジョン更新
+	{
+		Vector3 collisionPos = transform_.position + Vector3(0.0f, 120.0f, 0.0f);
+		damageBody_->SetPosition(collisionPos);
 
+	}
 	// 更新
 	{
 		modelRender_.Update();// モデルの更新

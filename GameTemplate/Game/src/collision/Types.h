@@ -37,8 +37,10 @@ namespace ghost
 		enum Enum : uint32_t
 		{
 			None = 0,
-			Player = 1 << 0,
-			Boss = 1 << 1,
+			PlayerDef = 1 << 0,
+			BossDef = 1 << 1,
+			PlayerAtk = 1 << 2,
+			BossAtk = 1 << 3,
 		};
 	};
 
@@ -47,8 +49,10 @@ namespace ghost
 	{
 		enum Enum : uint32_t
 		{
-			Player			= CollisionAttribute::Boss,
-			Boss			= 1 << 1,
+			Player = CollisionAttribute::BossAtk,   // ボスの攻撃だけ受ける
+			Boss = CollisionAttribute::PlayerAtk, // プレイヤーの攻撃だけ受ける
+			PlayerAtk = CollisionAttribute::BossDef,      // ボスのダメージ体にだけ当たる
+			BossAtk = CollisionAttribute::PlayerDef,    // プレイヤーのダメージ体にだけ当たる
 			All				= 0xFFFFFFFF,
 		};
 	};

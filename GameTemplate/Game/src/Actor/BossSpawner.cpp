@@ -73,7 +73,7 @@ BossParam BossSpawner::CreateBossData(BossType type, GameModeType mode)
 			};
 
 		// アニメーションの追加
-		AddAnim(enAnimIdle,"IdleA.tka",true);
+		AddAnim(enAnimIdle,"IdleA.tka",false);
 		AddAnim(enAnimRun,"Run.tka",true);
 		AddAnim(enAnimJump,"Jump.tka",false);
 		AddAnim(enAnimAttack,"Attack.tka",false);

@@ -132,7 +132,7 @@ void BossAttackState::Enter()
 			
 			// ゴーストコリジョンを生成
 			attackHitbox_ = std::make_unique<GhostBody>();
-			attackHitbox_->CreateSphere(boss_, Hash32("Boss"), 100.0f, ghost::CollisionAttribute::Boss, ghost::CollisionAttributeMask::Player);
+			attackHitbox_->CreateSphere(boss_, CharacterID::BossAtkID(), 150.0f, ghost::CollisionAttribute::BossAtk, ghost::CollisionAttributeMask::BossAtk);
 
 			// 座標計算
 			Vector3 bossPos = boss_->transform_.position;				// プレイヤーの現在の座標を取得
@@ -152,7 +152,7 @@ void BossAttackState::Enter()
 			});
 
 		// コリジョンを破棄
-		taskScheduler_->AddTimer(2.0f, [&]()
+		taskScheduler_->AddTimer(2.5f, [&]()
 			{
 				attackHitbox_.reset(nullptr);
 			},
@@ -222,6 +222,7 @@ Quaternion BossStateBase::RotateToTarget(float rotateSpeed)
 	// 1. 目的地(Target) － 現在地(Boss) で方向ベクトルを取得
 	Vector3 diff = boss_->GetTargetPos() - boss_->GetTransformPosition();
 	diff.y = 0.0f;
+	Quaternion currentRot = boss_->GetTargetRot();
 
 	if (diff.LengthSq() > 0.001f)
 	{
@@ -234,9 +235,10 @@ Quaternion BossStateBase::RotateToTarget(float rotateSpeed)
 		targetRot.SetRotationY(angle);
 
 		// 現在の角度から目標の角度へ、指定スピードで滑らかに回転（Slerp）
-		Quaternion currentRot = boss_->GetTargetRot();
 		resultRot.Slerp(rotateSpeed, targetRot, currentRot);
 
 		return resultRot;
 	}
+
+	return currentRot;
 }
