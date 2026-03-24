@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "NormalAtatck.h"
 #include "src/Actor/Character.h"
+#include "src/Actor/Player.h"
 
 void Bite::Enter(Character* p)
 {
@@ -25,11 +26,11 @@ void Bite::Enter(Character* p)
 		// スケジュール
 		{
 			// 1. ゴースト当たり判定を0.1秒後に1フレームのみ作成
-			taskScheduler_->AddTimer(0.1f, [&]()
+			taskScheduler_->AddTimer(0.1f, [&, p]()
 				{
 					// ゴーストコリジョンを生成
 					attackHitbox_ = std::make_unique<GhostBody>();
-					attackHitbox_->CreateSphere(p, Hash32("Player"), 50.0f, ghost::CollisionAttribute::Player, ghost::CollisionAttributeMask::Boss);
+					attackHitbox_->CreateSphere(p, CharacterID::PlayerAtkID(), 50.0f, ghost::CollisionAttribute::PlayerAtk, ghost::CollisionAttributeMask::PlayerAtk);
 
 					// 座標計算
 					Vector3 playerPos = p->transform_.position;				// プレイヤーの現在の座標を取得

@@ -9,6 +9,7 @@
 #include "src/Util/TaskSchedulerSystem.h"
 
 #include "src/Actor/Player.h"
+#include "src/Actor/BossCharacter.h"
 #include "src/Actor/ActorStatus.h"
 
  
@@ -32,9 +33,15 @@ void InGameMenu::Update()
 	bool isUseDodgeRoll = false;
 	bool isCoolDownAbility = false;
 	bool isReadyAbilityFrame = false;
+	bool isTakeDamagePlayer = false;
+	bool isTakeDamageBoss = false;
 	int playerHP = 0;
 	int playerMaxHP = 0;
+	int bossHP = 0;
+	int bossMaxHP = 0;
 	auto* player = FindGO<Player>("player");
+	auto* boss = FindGO<BossCharacter>("boss");
+
 	if (player) {
 		auto* stateMachine = player->GetStateMachine();
 		isUseNormalAttack = stateMachine->IsActionButtonB();
@@ -45,9 +52,22 @@ void InGameMenu::Update()
 		isCoolDownAbility = !playerStatus->CanExecuteSpecialAbility();
 		isReadyAbilityFrame = playerStatus->IsReadyFrameSpecialAbility();
 
-		playerHP = player->GetStatus()->GetHP();
-		playerMaxHP = player->GetStatus()->GetMaxHP();
+		playerHP = playerStatus->GetHP();
+		playerMaxHP = playerStatus->GetMaxHP();
+
+		isTakeDamagePlayer = playerStatus->IsTakeDamage();
 	}
+
+	if (boss){
+		auto* bossStatus = boss->GetStatus()->As<BossStatus>();
+		if (bossStatus) {
+			bossHP = bossStatus->GetHP();
+			bossMaxHP = bossStatus->GetMaxHP();
+
+			isTakeDamageBoss = bossStatus->IsTakeDamage();
+		}
+	}
+
 
 	Vector4 frameIconColor = Vector4::White;
 	auto* dummy = GetUI<UIDummy>(Hash32("FrameColorDummy"));
@@ -63,24 +83,13 @@ void InGameMenu::Update()
 	}
 	
 
-	// プレイヤーHPの増減
+	// ボスHPの増減
 	auto* bossGauge = GetUI<UIIcon>(Hash32("Boss_HP_gauge"));
 	if (bossGauge)
 	{
-		if (g_pad[0]->IsTrigger(enButtonDown)) {
-			bossHP -= 1.0f;
-			if (bossHP < 0.0f) {
-				bossHP = 0.0f;
-			}
-		}
-		else if (g_pad[0]->IsTrigger(enButtonUp)) {
-			bossHP += 1.0f;
-			if (bossHP > 10.0f) {
-				bossHP = 10.0f;
-			}
-		}
+		bossGauge->transform.localScale.x = bossHP / static_cast<float>(bossMaxHP);
 	}
-	bossGauge->transform.localScale.x = bossHP / 10.0f;
+	
 	
 
 	// 攻撃ボタン枠の色変化
@@ -140,48 +149,48 @@ void InGameMenu::Update()
 	}
 	
 
-
-	// @todo for test 表情が変わる
-	auto* playerNormal = GetUI<UIIcon>(Hash32("Player_icon_normal"));
-	if(playerNormal)
+	// プレイヤーがダメージを受けたとき
 	{
-		if (g_pad[0]->IsTrigger(enButtonDown))
+		// 表情が変わる
+		auto* playerNormal = GetUI<UIIcon>(Hash32("Player_icon_normal"));
+		if (playerNormal)
 		{
-			// 普通のアイコンが消える
-			playerNormal->isDraw = false;
+			if (isTakeDamagePlayer)
+			{
+				// 普通のアイコンが消える
+				playerNormal->isDraw = false;
 
-			// ダメージ受けた時の顔に切り替え
-			auto* playerDamage = GetUI<UIIcon>(Hash32("Player_icon_damage"));
-			playerDamage->isDraw = true;
+				// ダメージ受けた時の顔に切り替え
+				auto* playerDamage = GetUI<UIIcon>(Hash32("Player_icon_damage"));
+				playerDamage->isDraw = true;
+			}
+			else
+			{
+				// ダメージ受けた時のアイコンが消える
+				playerNormal->isDraw = true;
+
+				// 普通のアイコンに切り替わる
+				auto* playerDamage = GetUI<UIIcon>(Hash32("Player_icon_damage"));
+				playerDamage->isDraw = false;
+			}
 		}
-		else if(g_pad[0]->IsTrigger(enButtonUp))
-		{
-			// ダメージ受けた時のアイコンが消える
-			playerNormal->isDraw = true;
 
-			// 普通のアイコンに切り替わる
-			auto* playerDamage = GetUI<UIIcon>(Hash32("Player_icon_damage"));
-			playerDamage->isDraw = false;
+		// 枠が変わる
+		auto* normalFlame = GetUI<UIIcon>(Hash32("Player_icon_flame"));
+		if (normalFlame)
+		{
+			auto* damageColorDummy = GetUI<UIDummy>(Hash32("FlameDamageColorDummy"));
+			auto* normalColorDummy = GetUI<UIDummy>(Hash32("FlameNormalColorDummy"));
+			if (isTakeDamagePlayer)
+			{
+				normalFlame->color = damageColorDummy->color;
+			}
+			else
+			{
+				normalFlame->color = normalColorDummy->color;
+			}
 		}
 	}
-
-	// @todo for test 枠が変わる
-	auto* normalFlame = GetUI<UIIcon>(Hash32("Player_icon_flame"));
-	if (normalFlame)
-	{
-		auto* damageColorDummy = GetUI<UIDummy>(Hash32("FlameDamageColorDummy"));
-		auto* normalColorDummy = GetUI<UIDummy>(Hash32("FlameNormalColorDummy"));
-		if (g_pad[0]->IsTrigger(enButtonDown))
-		{
-			normalFlame->color = damageColorDummy->color;
-		}
-		else if (g_pad[0]->IsTrigger(enButtonUp))
-		{
-			normalFlame->color = normalColorDummy->color;
-		}
-	}
-	
-
 
 	MenuBase::Update();
 }

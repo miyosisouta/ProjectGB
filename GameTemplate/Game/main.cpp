@@ -7,6 +7,7 @@
 #include "Game.h"
 #include "src/CharacterDataBase.h"
 #include "src/collision/GhostBodyManager.h"
+#include "src/collision/CollisionHitManager.h"
 
 #include "src/Scene/SceneManager.h"
 #include "src/Effect/EffectManager.h"
@@ -41,8 +42,12 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 	// ここから初期化を行うコードを記述する。
 	//////////////////////////////////////
 
-
+	CollisionHitManager::Initialize();
 	GhostBodyManager::Initialize();
+	GhostBodyManager::Get().RegisterCallback([](GhostBody* a, GhostBody* b)
+		{
+			CollisionHitManager::Get().RegisterHitPair(a, b);
+		});
 	CharacterDataBase::CreateInstance();
 
 	// UIAnimationクラスの生成
@@ -71,6 +76,7 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 
 	CharacterDataBase::DestroyInstance();
 	GhostBodyManager::Finalize();
+	CollisionHitManager::Finalize();
 
 	K2Engine::DeleteInstance();
 

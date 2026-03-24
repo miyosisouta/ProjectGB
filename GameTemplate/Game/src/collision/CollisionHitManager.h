@@ -1,6 +1,9 @@
-/**
+﻿/**
  * CollisionHitManager.h
  * 衝突ヒット管理
+ *
+ * ペアの状態遷移:
+ *   無衝突 → Enter(触れた瞬間) → Stay(継続中) → Exit(離れた瞬間) → 無衝突
  */
 #pragma once
 
@@ -9,11 +12,25 @@ class GhostBody;
 
 
 /**
+ * ペアの衝突状態
+ */
+enum class CollisionPairState
+{
+	Enter,	// 今フレームで初めて接触
+	Stay,	// 前フレームから継続して接触中
+	Exit,	// 今フレームで離れた
+};
+
+
+/**
  * 衝突ヒット管理クラス
+ *
+ * Enter/Stay/Exit の3状態を管理し、
+ * 「一度だけの処理」「継続的な処理」「離脱時の処理」を区別する。
  */
 class CollisionHitManager
 {
-private:
+public:
 	struct Pair
 	{
 		GhostBody* a = nullptr;
@@ -27,7 +44,62 @@ private:
 
 
 private:
+	/**
+	 * ペアキー
+	 * ポインタを正規化して (a,b) と (b,a) を同一視する
+	 */
+	struct PairKey
+	{
+		GhostBody* a;
+		GhostBody* b;
+
+		PairKey(GhostBody* bodyA, GhostBody* bodyB)
+			: a(bodyA < bodyB ? bodyA : bodyB)
+			, b(bodyA < bodyB ? bodyB : bodyA)
+		{
+		}
+
+		bool operator==(const PairKey& other) const
+		{
+			return a == other.a && b == other.b;
+		}
+	};
+
+	struct PairKeyHash
+	{
+		size_t operator()(const PairKey& key) const
+		{
+			size_t h1 = std::hash<GhostBody*>()(key.a);
+			size_t h2 = std::hash<GhostBody*>()(key.b);
+			return h1 ^ (h2 * 2654435761u);
+		}
+	};
+
+	/**
+	 * ペアの状態情報
+	 */
+	struct PairInfo
+	{
+		CollisionPairState state;
+		int frameCount;
+		bool flaggedThisFrame;
+
+		PairInfo()
+			: state(CollisionPairState::Enter)
+			, frameCount(0)
+			, flaggedThisFrame(false)
+		{
+		}
+	};
+
+
+private:
+	/** 今フレームのヒットペアリスト（RegisterHitPairで蓄積） */
 	std::vector<Pair> hitPairList_;
+
+	/** アクティブペアの状態マップ */
+	std::unordered_map<PairKey, PairInfo, PairKeyHash> activePairs_;
+
 
 private:
 	CollisionHitManager();
@@ -35,11 +107,44 @@ private:
 
 
 public:
-	/** 更新 */
+	/** 更新（毎フレーム呼ぶ） */
 	void Update();
 
-	/** 衝突ペア登録 */
+	/** 衝突ペア登録（Narrowphase判定後に呼ばれる） */
 	void RegisterHitPair(GhostBody* a, GhostBody* b);
+
+	/**
+	 * ボディ削除通知
+	 * GhostBody破棄時にダングリングポインタを防ぐため、
+	 * 関連するペアを全て除去する。
+	 */
+	void OnBodyRemoved(GhostBody* body);
+
+
+private:
+	/** Enter: 衝突した瞬間の処理 : 一度だけ実行したい処理 */
+	void OnCollisionEnter(GhostBody* a, GhostBody* b);
+	/** Stay: 継続衝突の処理 : 継続的に実行したい処理 */
+	void OnCollisionStay(GhostBody* a, GhostBody* b, int frameCount);
+	/** Exit: 離脱した瞬間の処理 : 離脱時に一度だけ実行したい処理 */
+	void OnCollisionExit(GhostBody* a, GhostBody* b);
+
+	/* プレイヤーの攻撃 */
+	bool ContainsPlayerAttackPair(const Pair& hitPair);
+	void UpdatePlayerAttackPair(Pair& hitPair);
+
+	/* ボスの攻撃 */
+	bool ContainsBossAttackPair(const Pair& hitPair);
+	void UpdateBossAttackPair(Pair& hitPair);
+
+
+	///** 土管を含むペアか */
+	//bool ContainsPipeGimmickPair(const Pair& hitPair);
+	//void UpdatePipeGimmickPair(Pair& hitPair);
+	///** イベントキャラクターを含むペアか */
+	//bool ContainsEventCharacterPair(const Pair& hitPair);
+	//void UpdateEventCharacterPair(Pair& hitPair);
+
 
 
 	/**
@@ -57,6 +162,7 @@ public:
 		}
 	}
 	static CollisionHitManager& Get() { return *instance_; }
+	static bool IsAvailable() { return instance_ != nullptr; }
 	static void Finalize()
 	{
 		if (instance_) {
@@ -65,3 +171,5 @@ public:
 		}
 	}
 };
+
+

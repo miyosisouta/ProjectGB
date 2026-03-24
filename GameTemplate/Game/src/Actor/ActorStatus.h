@@ -59,6 +59,7 @@ class ActorStatus
 protected:
 	int hp_ = 0;
 	int maxHp_ = 0;
+	bool isTakeDamage_ = false;	//!< ダメージを受けたフレーム
 
 	int attack_ = 0;
 	int defence_ = 0;
@@ -69,6 +70,11 @@ protected:
 public:
 	ActorStatus() {}
 	virtual ~ActorStatus() {}
+
+	virtual void Update()
+	{
+		isTakeDamage_ = false;
+	}
 
 
 public:
@@ -88,6 +94,7 @@ public:
 		if (hp_ < 0) {
 			hp_ = 0;
 		}
+		isTakeDamage_ = true;
 	}
 	void Heal(const int value)
 	{
@@ -96,6 +103,9 @@ public:
 			hp_ = maxHp_;
 		}
 	}
+
+	bool IsTakeDamage() const { return isTakeDamage_; }
+
 
 
 public:
@@ -129,11 +139,13 @@ public:
 	virtual ~CharacterStatus() {}
 
 
-	virtual void Update()
+	virtual void Update() override
 	{
 		skillNormalAttack.Update();
 		skillSpecialAbility.Update();
 		skillUtility.Update();
+
+		ActorStatus::Update();
 	}
 
 
@@ -217,13 +229,19 @@ public:
 	}
 
 public:
-	BossStatus() {}
+	BossStatus() 
+	{
+		hp_ = 5;
+		maxHp_ = 5;
+	}
 	virtual ~BossStatus() {}
 
 public:
 	void Update() override 
 	{
 		skillBossAttack_.Update();
+
+		CharacterStatus::Update();
 	}
 
 	void SetupSkillBossAttackCoolDown(const int bossAttackCD)

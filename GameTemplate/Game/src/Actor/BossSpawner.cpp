@@ -1,5 +1,4 @@
 ﻿#include "stdafx.h"
-#include "src/Actor/ActorStatus.h"
 #include "src/Actor/BossSpawner.h"
 #include "src/Actor/BossCharacter.h"
 #include "src/Actor/NPCController.h"
@@ -15,18 +14,13 @@ namespace
 
 BossSpawner::BossSpawner()
 {
-	auto* bossStatus = new BossStatus();
-	status_ = bossStatus;
+
 }
 
 BossSpawner::~BossSpawner()
 {
 	// ボスを破棄
 	DeleteGO(boss_);
-
-	// statusを破棄
-	delete status_;
-	status_ = nullptr;
 }
 
 void BossSpawner::Update()
@@ -37,9 +31,6 @@ void BossSpawner::Update()
 		if (bossController_) { bossController_->Update(); } // ボスのコントローラーの更新
 	}
 
-	// ボスのステータス更新
-	BossStatus* status = status_->As<BossStatus>();
-	status->Update();
 
 	if (boss_) { boss_->Update(); }
 }
@@ -99,6 +90,9 @@ BossParam BossSpawner::CreateBossData(BossType type, GameModeType mode)
 	case GameModeType::enTimeAttack:
 	{
 		param.maxHp_ = static_cast<int>(param.maxHp_ * MODE_HP_MULTIPLIER);
+
+		// TODO : 仮で最大体力を設定
+		param.maxHp_ = 5.0f;
 		break;
 	}
 	default:
@@ -124,21 +118,13 @@ void BossSpawner::SpawnBoss(bool isPlayerControl)
 	boss_ = NewGO<BossCharacter>(0, "boss");
 	boss_->SetupParam(param);
 
-	// ボスのステータスを作って、確定した数値を流し込む！
-	BossStatus* status = new BossStatus();
-	status->InitStatus(param.maxHp_, param.attack_);
-
-	// 体にステータスを持たせる
-	boss_->SetupStatus(status);
-	status_ = status;
-
 
 	// ボスキャラクターがある場合
 	if (boss_) 
 	{
 		// コントローラーの設定
 		{
-			// プレイヤーに
+			// プレイヤー
 			if (isPlayerControl)
 			{
 				playerController_ = NewGO<PlayerController>(0, "playerController");

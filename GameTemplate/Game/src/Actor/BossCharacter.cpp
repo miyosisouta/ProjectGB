@@ -2,6 +2,7 @@
 #include "BossCharacter.h"
 #include "NPCController.h"
 #include "BossState.h"
+#include "src/Actor/ActorStatus.h"
 
 
 /** ===================================================== */
@@ -69,10 +70,15 @@ void BossCharacter::ChangeState(BossStateID nextStateId)
 
 BossCharacter::BossCharacter()
 {
+	auto* bossStatus = new BossStatus();
+	status_ = bossStatus;
 }
 
 BossCharacter::~BossCharacter()
 {
+	// statusを破棄
+	delete status_;
+	status_ = nullptr;
 }
 
 bool BossCharacter::Start()
@@ -103,6 +109,19 @@ bool BossCharacter::Start()
 
 	// 現在のステートをIdleに設定
 	ChangeState(BossStateID::Idle);
+
+	// コリジョン作成
+	{
+		damageBody_ = std::make_unique<GhostBody>();
+		damageBody_->CreateCapsule(this, CharacterID::BossID(), 110.0f, 150.0f, ghost::CollisionAttribute::BossDef, ghost::CollisionAttributeMask::Boss);
+		damageBody_->SetPosition(transform_.position);
+	}
+
+	// ボスのステータスを作って、確定した数値を流し込む！
+	BossParam param;
+	BossStatus* status = new BossStatus();
+	status->InitStatus(param.maxHp_, param.attack_);
+
 	return true;
 }
 
@@ -126,9 +145,18 @@ void BossCharacter::Update()
 		modelRender_.Update();
 	}
 
+	// コリジョン更新
+	{
+		Vector3 collisionPos = transform_.position + Vector3(0.0f, 120.0f, 0.0f);
+		damageBody_->SetPosition(collisionPos);
 
+	}
 	// 更新
 	{
+		// ボスのステータス更新
+		BossStatus* status = status_->As<BossStatus>();
+		status->Update();
+
 		modelRender_.Update();// モデルの更新
 		if (currentState_) { currentState_->Update(); } // 現在のステートがある場合、現在のステートの更新
 	}

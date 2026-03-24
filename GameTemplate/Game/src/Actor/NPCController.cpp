@@ -198,4 +198,6 @@ DistancePhase NPCController::ChackDistancePhase(float distance)
     { 
         return DistancePhase::enOutRange; 
     }    // 射程範囲外
+
+    return DistancePhase::enLongAttackType;
 }

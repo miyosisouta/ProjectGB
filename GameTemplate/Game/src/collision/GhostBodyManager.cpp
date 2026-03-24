@@ -1,9 +1,9 @@
-#include "stdafx.h"
+ï»¿#include "stdafx.h"
 #include "GhostBodyManager.h"
 #include "BroadphaseImpl.h"
-//#include "CollisionManager.h" // ƒqƒbƒg’Ê’m—p
+#include "CollisionHitManager.h"
 
-// Bullet‚ÌÚ×”»’è—p
+// Bulletã®è©³ç´°åˆ¤å®šç”¨
 #include "BulletCollision/NarrowPhaseCollision/btGjkPairDetector.h"
 #include "BulletCollision/NarrowPhaseCollision/btPointCollector.h"
 
@@ -13,7 +13,7 @@ GhostBodyManager* GhostBodyManager::m_instance = nullptr;
 
 GhostBodyManager::GhostBodyManager()
 {
-	// ‚±‚±‚ÅƒAƒ‹ƒSƒŠƒYƒ€‚ðŒˆ’èiGrid‚È‚Ç‚Ö‚Ì·‚µ‘Ö‚¦‚Í‚±‚±‚ð•ÏX‚·‚é‚¾‚¯j
+	// ã“ã“ã§ã‚¢ãƒ«ã‚´ãƒªã‚ºãƒ ã‚’æ±ºå®šï¼ˆGridãªã©ã¸ã®å·®ã—æ›¿ãˆã¯ã“ã“ã‚’å¤‰æ›´ã™ã‚‹ã ã‘ï¼‰
 	broadphase_.reset(new BulletDbvtBroadphase());
 }
 
@@ -39,11 +39,16 @@ void GhostBodyManager::RemoveBody(GhostBody* body)
 	if (it != bodyList_.end()) bodyList_.erase(it);
 	broadphase_->Remove(body);
 	PhysicsWorld::Get().RemoveCollisionObject(*body->GetBulletObject());
+
+	// â˜… CollisionHitManagerã‹ã‚‰ãƒ€ãƒ³ã‚°ãƒªãƒ³ã‚°ãƒã‚¤ãƒ³ã‚¿ã‚’é™¤åŽ»
+	if (CollisionHitManager::IsAvailable()) {
+		CollisionHitManager::Get().OnBodyRemoved(body);
+	}
 }
 
 void GhostBodyManager::Update()
 {
-	// 1. ˆÚ“®‚µ‚½ƒIƒuƒWƒFƒNƒg‚ÌBroadphase\‘¢XV
+	// 1. ç§»å‹•ã—ãŸã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã®Broadphaseæ§‹é€ æ›´æ–°
 	for (auto* body : bodyList_) {
 		if (body->IsDirty()) {
 			broadphase_->Update(body);
@@ -51,7 +56,7 @@ void GhostBodyManager::Update()
 		}
 	}
 
-	// 2. BroadphaseŽÀs -> Õ“ËŒó•â‚ª‚ ‚ê‚ÎƒR[ƒ‹ƒoƒbƒN
+	// 2. Broadphaseå®Ÿè¡Œ -> è¡çªå€™è£œãŒã‚ã‚Œã°ã‚³ãƒ¼ãƒ«ãƒãƒƒã‚¯
 	broadphase_->Perform([this](GhostBody* a, GhostBody* b)
 		{
 			this->ProcessCollisionPair(a, b);
@@ -60,45 +65,45 @@ void GhostBodyManager::Update()
 
 void GhostBodyManager::ProcessCollisionPair(GhostBody* a, GhostBody* b)
 {
-	// Šî–{ƒ`ƒFƒbƒN
+	// åŸºæœ¬ãƒã‚§ãƒƒã‚¯
 	if (a == b) return;
 	if (!a->IsActive() || !b->IsActive()) return;
 
-	// ‘®«ƒtƒBƒ‹ƒ^ƒŠƒ“ƒO
+	// å±žæ€§ãƒ•ã‚£ãƒ«ã‚¿ãƒªãƒ³ã‚°
 	if (!((a->GetMask() & b->GetAttribute()) && (b->GetMask() & a->GetAttribute()))) {
 		return;
 	}
 
-	// šÅ“K‰»: Œ`óƒ^ƒCƒvID‡‚É•À‚×‘Ö‚¦‚é (Sphere:0, Capsule:1, Box:2)
-	// ‚±‚ê‚É‚æ‚è (Sphere vs Box) ‚Æ (Box vs Sphere) ‚Ìd•¡ŽÀ‘•‚ð–h‚®
+	// â˜…æœ€é©åŒ–: å½¢çŠ¶ã‚¿ã‚¤ãƒ—IDé †ã«ä¸¦ã¹æ›¿ãˆã‚‹ (Sphere:0, Capsule:1, Box:2)
+	// ã“ã‚Œã«ã‚ˆã‚Š (Sphere vs Box) ã¨ (Box vs Sphere) ã®é‡è¤‡å®Ÿè£…ã‚’é˜²ã
 	if (a->GetShapeType() > b->GetShapeType()) {
 		std::swap(a, b);
 	}
 
-	// šÅ“K‰»: •ïŠÜ‹… (Bounding Sphere) ƒ`ƒFƒbƒN
-	// •¡ŽG‚È”»’è‚ð‚·‚é‘O‚É‹——£‚Å’e‚­
+	// â˜…æœ€é©åŒ–: åŒ…å«çƒ (Bounding Sphere) ãƒã‚§ãƒƒã‚¯
+	// è¤‡é›‘ãªåˆ¤å®šã‚’ã™ã‚‹å‰ã«è·é›¢ã§å¼¾ã
 	float rA = a->GetBoundingRadius();
 	float rB = b->GetBoundingRadius();
 	float distSq = (a->GetPosition() - b->GetPosition()).LengthSq();
 	float sumR = rA + rB;
 
 	if (distSq > sumR * sumR) {
-		return; // “Í‚©‚È‚¢
+		return; // å±Šã‹ãªã„
 	}
 
-	// --- Ú×”»’è (Narrowphase) ---
+	// --- è©³ç´°åˆ¤å®š (Narrowphase) ---
 	bool isHit = false;
 	GhostShapeType typeA = a->GetShapeType();
 	GhostShapeType typeB = b->GetShapeType();
 
-	// Case: Sphere vs Sphere (Å‘¬)
+	// Case: Sphere vs Sphere (æœ€å°)
 	if (typeA == GhostShapeType::Sphere && typeB == GhostShapeType::Sphere) {
-		// Bounding Sphere”»’è‚ÅŠù‚É“–‚½‚Á‚Ä‚¢‚é‚±‚Æ‚ªŠm’è‚µ‚Ä‚¢‚é
+		// Bounding Sphereåˆ¤å®šã§æ—¢ã«å½“ãŸã£ã¦ã„ã‚‹ã“ã¨ãŒç¢ºå®šã—ã¦ã„ã‚‹
 		isHit = true;
 	}
-	// Case: ‚»‚Ì‘¼ (Box“¯Žm, Capsule—‚Ý‚È‚Ç)
+	// Case: ãã®ä»– (BoxåŒå£«, Capsuleçµ¡ã¿ãªã©)
 	else {
-		// •¡ŽG‚ÈŒ`ó‚ÍBullet‚ÌDispatcher‚É”C‚¹‚é
+		// è¤‡é›‘ãªå½¢çŠ¶ã¯Bulletã®Dispatcherã«ä»»ã›ã‚‹
 		isHit = CheckCollisionBullet(a, b);
 	}
 
@@ -106,8 +111,6 @@ void GhostBodyManager::ProcessCollisionPair(GhostBody* a, GhostBody* b)
 		if (registerPairCallback_) {
 			registerPairCallback_(a, b);
 		}
-		// Šù‘¶‚Ìƒ}ƒl[ƒWƒƒ[‚Ö’Ê’mA‚ ‚é‚¢‚ÍƒCƒxƒ“ƒg”­‰Î
-		// CollisionHitManager::Get().RegisterHitPair(a->GetOwner(), b->GetOwner());
 	}
 }
 
@@ -118,11 +121,11 @@ bool GhostBodyManager::CheckCollisionBullet(GhostBody* a, GhostBody* b)
 
 	if (!objA || !objB) return false;
 
-	// Bullet‚ÌAlgorithm’Tõ (GJK/EPA‚È‚Ç“KØ‚È‚à‚Ì‚ð’T‚·)
+	// Bulletã®AlgorithmæŽ¢ç´¢ (GJK/EPAãªã©é©åˆ‡ãªã‚‚ã®ã‚’æŽ¢ã™)
 	auto* dispatcher = PhysicsWorld::Get().GetCollisionDispatcher();
 	auto& dispatchInfo = PhysicsWorld::Get().GetDispatchInfo();
 
-	// btCollisionObjectWrapper‚ðì¬
+	// btCollisionObjectWrapperã‚’ä½œæˆ
 	const btCollisionShape* shapeA = objA->getCollisionShape();
 	const btCollisionShape* shapeB = objB->getCollisionShape();
 	const btTransform& transA = objA->getWorldTransform();
@@ -131,7 +134,7 @@ bool GhostBodyManager::CheckCollisionBullet(GhostBody* a, GhostBody* b)
 	btCollisionObjectWrapper objWrapA(nullptr, shapeA, objA, transA, -1, -1);
 	btCollisionObjectWrapper objWrapB(nullptr, shapeB, objB, transB, -1, -1);
 
-	// ƒAƒ‹ƒSƒŠƒYƒ€¶¬
+	// ã‚¢ãƒ«ã‚´ãƒªã‚ºãƒ ç”Ÿæˆ
 	btCollisionAlgorithm* algorithm = dispatcher->findAlgorithm(
 		&objWrapA, &objWrapB,
 		nullptr
@@ -142,7 +145,7 @@ bool GhostBodyManager::CheckCollisionBullet(GhostBody* a, GhostBody* b)
 		btManifoldResult contactPointResult(&objWrapA, &objWrapB);
 		algorithm->processCollision(&objWrapA, &objWrapB, dispatchInfo, &contactPointResult);
 
-		// ƒ}ƒjƒtƒH[ƒ‹ƒh‚ÉÚG“_‚ª1‚ÂˆÈã‚ ‚ê‚Îƒqƒbƒg
+		// ãƒžãƒ‹ãƒ•ã‚©ãƒ¼ãƒ«ãƒ‰ã«æŽ¥è§¦ç‚¹ãŒ1ã¤ä»¥ä¸Šã‚ã‚Œã°ãƒ’ãƒƒãƒˆ
 		if (contactPointResult.getPersistentManifold() && contactPointResult.getPersistentManifold()->getNumContacts() > 0) {
 			hasContact = true;
 		}
@@ -153,3 +156,5 @@ bool GhostBodyManager::CheckCollisionBullet(GhostBody* a, GhostBody* b)
 
 	return hasContact;
 }
+
+
