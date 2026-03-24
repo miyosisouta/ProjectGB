@@ -2,12 +2,13 @@
 /*
  * Stateの基底クラス
  */
+class Character;
 class IState : public Noncopyable
 {	
 protected:
 	bool isFinished = false; //!< 現在のステート処理が終わったか
 	std::unique_ptr<TaskSchedulerSystem> taskScheduler_;
-
+	std::unique_ptr<GhostBody> attackHitbox_;
 
 public:
 	/** 次の処理に行ってもよいか */

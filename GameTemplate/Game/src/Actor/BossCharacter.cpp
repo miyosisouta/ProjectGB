@@ -26,9 +26,10 @@ void BossCharacter::SetupAnimation()
 	}
 }
 
-void BossCharacter::PlayAnimation(const int id)
+void BossCharacter::PlayAnimation(const int id,const int animSpeed)
 {
 	modelRender_.PlayAnimation(id); // Idをもとにそのアニメーションの再生
+	modelRender_.SetAnimationSpeed(animSpeed);
 }
 
 /** ===================================================== */
@@ -39,6 +40,7 @@ void BossCharacter::SetupTranslate()
 {
 	AddState(BossStateID::Idle, new BossIdleState(this));
 	AddState(BossStateID::Run, new BossRunState(this));
+	AddState(BossStateID::Attack, new BossAttackState(this));
 	AddState(BossStateID::Death, new BossDeathState(this));
 }
 
@@ -89,6 +91,8 @@ bool BossCharacter::Start()
 		enModelUpAxisZ
 	);
 
+	// TODO : プレイヤーとの距離を話すため
+	transform_.localPosition = Vector3(-300.0f, 0.0f, 0.0f);
 
 	// モデルの設定
 	transform_.localScale = Vector3(2.5f, 2.5f, 2.5f);

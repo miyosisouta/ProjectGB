@@ -40,7 +40,7 @@ public:
 	/** アニメーションの読み込み */
 	void SetupAnimation();
 	/** アニメーションの再生 */
-	void PlayAnimation(const int id);
+	void PlayAnimation(const int id, const int animSpeed = 1.0f);
 
 
 /** =================================================================== */

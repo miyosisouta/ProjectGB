@@ -1,6 +1,6 @@
 #pragma once
 #include "IState.h"
-
+#include "src/Actor/Character.h"
 class BossCharacter;
 /*
  * Stateの基底クラス
@@ -8,7 +8,7 @@ class BossCharacter;
 class BossStateBase: public IState
 {	
 protected:
-	BossCharacter* boss_ = nullptr; //!< プレイヤー
+	BossCharacter* boss_; //!< プレイヤー
 
 
 	/** 移動速度を計算する共通処理 */
@@ -20,9 +20,9 @@ protected:
 public:
 	/*
 	 * コンストラクタ
-	 * p : プレイヤーの情報を渡すため
+	 * chara : キャラクターの情報を渡すため
 	 */
-	BossStateBase(BossCharacter* b) : boss_(b) {}
+	BossStateBase(BossCharacter* chara) : boss_(chara) {}
 	virtual ~BossStateBase() {}
 
 	virtual void Enter() override= 0;
@@ -71,6 +71,21 @@ public:
 };
 
 
+/*==========================================*/
+// 通常攻撃状態
+/*==========================================*/
+class BossAttackState : public BossStateBase
+{
+public:
+	bool IsFinished() const override { return isFinished; }
+
+public:
+	BossAttackState(BossCharacter* b) : BossStateBase(b) {}
+
+	void Enter()override;
+	void Update()override;
+	void Exit()override;
+};
 
 /************************************************************/
 // ここからは強制的な状態のものを書く
