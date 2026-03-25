@@ -29,7 +29,7 @@ void DefaultAttack::Enter(Character* p)
 				{
 					// ゴーストコリジョンを生成
 					attackHitbox_ = std::make_unique<GhostBody>();
-					attackHitbox_->CreateSphere(p, CharacterID::PlayerNormalAtkID(), 50.0f, ghost::CollisionAttribute::PlayerAtk, ghost::CollisionAttributeMask::PlayerAtk);
+					attackHitbox_->CreateSphere(p, CharacterID::PlayerSkillAtkID(), 50.0f, ghost::CollisionAttribute::PlayerAtk, ghost::CollisionAttributeMask::PlayerAtk);
 
 					// 座標計算
 					p->transform_.UpdateTransform();

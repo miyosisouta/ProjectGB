@@ -6,9 +6,10 @@ namespace
 {
 	// 動きのスピード
 	constexpr float BOSS_RUN_MOVE_SPEED = 100.0f;		// 走るときのベース速度
-	constexpr float BOSS_HITSTAMP_UP_SPEED = 600.0f;		// ヒットスタンプ時飛び上がる際のベース速度
+	constexpr float BOSS_HITSTAMP_UP_SPEED = 600.0f;	// ヒットスタンプ時飛び上がる際のベース速度
 	constexpr float BOSS_HITSTAMP_DOWN_SPEED = 800.0f;	// ヒットスタンプ時着地する際のベース速度
-	constexpr float BOSS_ROTATE_SPEED = 0.01f;			// 回転速度
+	constexpr float BOSS_SPIN_ATTACK_SPEED = 300.0f;	// 回転攻撃のベース速度
+	constexpr float BOSS_ROTATE_SPEED = 0.01f;			// ボスの回転速度
 
 	// NPCControllerで定義している距離と同じ値を設定
 	constexpr float SHORT_DISTANCE = 500.0f;	// 近距離
@@ -21,6 +22,9 @@ namespace
 
 	// ヒットスタンプ
 	static Vector3 ATTACK_HEIGHT = Vector3(0.0f,800.0f,0.0f); // 高さ
+
+	// 回転攻撃
+	constexpr float OVER_MOVE_DISTANCE = 300.0f;
 }
 
 
@@ -196,12 +200,13 @@ void BossAttackState::Exit()
 void HitStampState::Enter()
 {
 	isFinished = false; // 初期化
+	createAttackCollision_ = false; // コリジョンの生成を可能にする
 	phase_ = Phase::Ready; // 準備をする
 
 	Quaternion targetRot = RotateToTarget(BOSS_ROTATE_SPEED);// 攻撃の前にプレイヤーがいる方向へ向く
 	boss_->SetTargetRot(targetRot);
 
-	boss_->PlayAnimation(BossAnimID::enAnimJump); // 通常攻撃アニメーションを設定
+	boss_->PlayAnimation(BossAnimID::enAnimJump); // ジャンプアニメーションを設定
 
 	// タスクシステムを作成
 	taskScheduler_ = std::make_unique<TaskSchedulerSystem>();
@@ -236,10 +241,10 @@ void HitStampState::Enter()
 		});
 
 	// 地面に着地後
-	taskScheduler_->AddTimer(7.0f, [&]() {
+	taskScheduler_->AddTimer(6.1f, [&]() {
 		boss_->SetMoveVelocity(Vector3::Zero);
 		phase_ = Phase::Finished;
-		});
+		}, true);
 
 }
 
@@ -286,11 +291,15 @@ void HitStampState::Update()
 
 	case Phase::ShokingStamp:
 	{
-		// ゴーストコリジョンを生成
-		attackHitbox_ = std::make_unique<GhostBody>();
-		attackHitbox_->CreateSphere(boss_, CharacterID::BossNormalAtkID(), 250.0f, ghost::CollisionAttribute::BossAtk, ghost::CollisionAttributeMask::BossAtk);
-		attackHitbox_->SetPosition(targetPos_);
-		boss_->SetMoveVelocity(Vector3::Zero);
+		// 作られてないならゴーストコリジョンを生成
+		if (!createAttackCollision_) {
+			attackHitbox_ = std::make_unique<GhostBody>();
+			attackHitbox_->CreateSphere(boss_, CharacterID::BossHitStampAtkID(), 250.0f, ghost::CollisionAttribute::BossAtk, ghost::CollisionAttributeMask::BossAtk);
+			attackHitbox_->SetPosition(targetPos_);
+			boss_->SetMoveVelocity(Vector3::Zero);
+			createAttackCollision_ = true;
+		}
+
 		break;
 	}
 
@@ -304,6 +313,94 @@ void HitStampState::Update()
 }
 
 void HitStampState::Exit()
+{
+	taskScheduler_.reset(nullptr);
+}
+
+
+/*==========================================*/
+// 回転攻撃
+/*==========================================*/
+
+void SpinState::Enter()
+{
+	isFinished = false; // 初期化
+	isAttackStart_ = false; // 攻撃範囲表示の間は攻撃を開始しない
+
+	// 攻撃の前にプレイヤーがいる方向へ向く
+	Quaternion targetRot = RotateToTarget(BOSS_ROTATE_SPEED);
+	boss_->SetTargetRot(targetRot);
+
+	// 回転アニメーションを設定
+	boss_->PlayAnimation(BossAnimID::enAnimSpin); 
+
+	// プレイヤーの方向と進む距離を設定
+	{
+		Vector3 playerPos = boss_->GetTargetPos();			// プレイヤーの座標
+		Vector3 bossPos = boss_->GetTransformPosition();	// ボスの座標
+
+		Vector3 diff = playerPos - bossPos; // 方向を算出
+		if (diff.LengthSq() >= 0.001f)
+		{
+			diff.Normalize(); // 方向を正規化
+			targetPos_ = playerPos + (diff * OVER_MOVE_DISTANCE); // プレイヤーのいる位置とボスから見た方向から少し先まで進む
+		}
+		else {
+			targetPos_ = playerPos;
+		}
+	}
+
+	// タスクシステムの構築
+	{
+		// タスクシステムを作成
+		taskScheduler_ = std::make_unique<TaskSchedulerSystem>();
+
+		// 攻撃範囲を描画
+		taskScheduler_->AddTimer(0.5f, [&]() {
+			
+			});
+
+		// 移動開始
+		taskScheduler_->AddTimer(1.5f, [&]() {
+			attackHitbox_ = std::make_unique<GhostBody>();
+			attackHitbox_->CreateSphere(boss_, CharacterID::BossSpinAtkID(), 110.0f, ghost::CollisionAttribute::BossAtk, ghost::CollisionAttributeMask::BossAtk);
+			isAttackStart_ = true;
+			});
+
+		// 5秒たったら強制終了
+		taskScheduler_->AddTimer(5.0f, [&]() {
+			boss_->SetMoveVelocity(Vector3::Zero);
+			attackHitbox_.reset();
+			isFinished = true;
+			});
+	}
+	
+}
+
+void SpinState::Update()
+{
+	if (taskScheduler_) { taskScheduler_->Update(g_gameTime->GetFrameDeltaTime()); }
+
+	if (isAttackStart_) 
+	{
+		// 移動先を計算・設定
+		Vector3 moveVelocity = CalcVelocityTowards(targetPos_, BOSS_SPIN_ATTACK_SPEED);
+		boss_->SetMoveVelocity(moveVelocity);
+
+		// ボスの現在の座標を取得、攻撃コリジョンの座標を更新
+		Vector3 bossPos = boss_->GetTransformPosition();
+		if (attackHitbox_) { attackHitbox_->SetPosition(bossPos); }
+
+		if (moveVelocity.LengthSq() < 0.001f)
+		{
+			boss_->SetMoveVelocity(Vector3::Zero); // ピタッと止める
+			attackHitbox_.reset();
+			isFinished = true;                     // ステート終了！
+		}
+	}
+}
+
+void SpinState::Exit()
 {
 	taskScheduler_.reset(nullptr);
 }
@@ -366,11 +463,6 @@ Vector3 BossStateBase::CalcVelocityTowards(Vector3 targetPos, float speed)
 }
 
 
-
-
-
-
-
 Quaternion BossStateBase::RotateToTarget(float rotateSpeed)
 {
 	// 1. 目的地(Target) － 現在地(Boss) で方向ベクトルを取得
@@ -396,5 +488,3 @@ Quaternion BossStateBase::RotateToTarget(float rotateSpeed)
 
 	return currentRot;
 }
-
-

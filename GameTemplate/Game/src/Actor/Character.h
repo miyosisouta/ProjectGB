@@ -18,6 +18,7 @@ namespace CharacterID
 	/* É{ÉXÇÃçUåÇópID */
 	inline uint32_t BossNormalAtkID() { return Hash32("BossNormalAttack"); }
 	inline uint32_t BossHitStampAtkID() { return Hash32("BossHitStamp"); }
+	inline uint32_t BossSpinAtkID() { return Hash32("BossSpin"); }
 }
 
 

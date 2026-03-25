@@ -130,22 +130,19 @@ private:
 	void OnCollisionExit(GhostBody* a, GhostBody* b);
 
 	/* プレイヤーの攻撃 */
-	bool ContainsPlayerAttackPair(const Pair& hitPair);	//!< 通常攻撃のフラグ取得
-	void UpdatePlayerAttackPair(Pair& hitPair);			//!< 通常攻撃の更新
+	bool ContainsPlayerNormalAttackPair(const Pair& hitPair);	//!< 通常攻撃のフラグ取得
+	void UpdatePlayerNormalAttackPair(Pair& hitPair);			//!< 通常攻撃の更新
+	bool ContainsPlayerSkillAttackPair(const Pair& hitPair);	//!< スキル攻撃のフラグ取得
+	void UpdatePlayerSkillAttackPair(Pair& hitPair);			//!< スキル攻撃の更新
+
 
 	/* ボスの攻撃 */
 	bool ContainsBossAttackPair(const Pair& hitPair);	//!< 通常攻撃のフラグ取得
 	void UpdateBossAttackPair(Pair& hitPair);			//!< 通常攻撃の更新
 	bool ContainsBossHitStampPair(const Pair& hitPair);	//!< ヒットスタンプ攻撃のフラグ取得
 	void UpdateBossHitStampPair(Pair& hitPair);			//!< ヒットスタンプ攻撃の更新
-
-	///** 土管を含むペアか */
-	//bool ContainsPipeGimmickPair(const Pair& hitPair);
-	//void UpdatePipeGimmickPair(Pair& hitPair);
-	///** イベントキャラクターを含むペアか */
-	//bool ContainsEventCharacterPair(const Pair& hitPair);
-	//void UpdateEventCharacterPair(Pair& hitPair);
-
+	bool ContainsBossSpinPair(const Pair& hitPair);	//!< 通常攻撃のフラグ取得
+	void UpdateBossSpinPair(Pair& hitPair);			//!< 通常攻撃の更新
 
 
 	/**

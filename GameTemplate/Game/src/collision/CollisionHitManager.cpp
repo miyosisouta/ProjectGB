@@ -12,8 +12,10 @@
 //#include "src/util/ParallelFor.h"
 
 
+
 namespace
 {
+	/* テンプレート */
 	template <typename T>
 	bool IsHitObject(const CollisionHitManager::Pair& pair, const uint32_t id)
 	{
@@ -37,6 +39,11 @@ namespace
 		}
 		return nullptr;
 	}
+
+	/* 定数 */
+	constexpr uint8_t NORMAL_ATTACK_DAMAGE = 1;
+	constexpr uint8_t SKILL_ATTACK_DAMAGE = 2;
+	constexpr float SPIN_KNOCK_BACK = 300.0f;
 }
 
 
@@ -139,25 +146,33 @@ void CollisionHitManager::OnCollisionEnter(GhostBody* a, GhostBody* b)
 	// --- 一度だけ実行したい処理をここに書く ---
 	Pair pair(a, b);
 
-	if (ContainsPlayerAttackPair(pair)) {
-		UpdatePlayerAttackPair(pair);
+	// プレイヤーの攻撃
+	{
+		// 通常攻撃
+		if (ContainsPlayerNormalAttackPair(pair)) {
+			UpdatePlayerNormalAttackPair(pair);
+		}
+		// スキル攻撃
+		if (ContainsPlayerSkillAttackPair(pair)) {
+			UpdatePlayerSkillAttackPair(pair);
+		}
 	}
-	if (ContainsBossAttackPair(pair)) {
-		UpdateBossAttackPair(pair);
+
+	// ボスの攻撃
+	{
+		// 通常攻撃
+		if (ContainsBossAttackPair(pair)) {
+			UpdateBossAttackPair(pair);
+		}
+		// ヒットスタンプ
+		if (ContainsBossHitStampPair(pair)) {
+			UpdateBossHitStampPair(pair);
+		}
+		// 回転攻撃
+		if (ContainsBossSpinPair(pair)) {
+			UpdateBossSpinPair(pair);
+		}
 	}
-
-	//// 土管ギミック（Enter時のみ判定）
-	//if (ContainsPipeGimmickPair(pair)) {
-	//	UpdatePipeGimmickPair(pair);
-	//}
-
-	//// イベントキャラクター（Enter時のみ判定）
-	//if (ContainsEventCharacterPair(pair)) {
-	//	UpdateEventCharacterPair(pair);
-	//}
-
-	// TODO: その他のワンショット処理
-	// 例: コイン取得、SE再生、ヒットエフェクト生成 など
 }
 
 
@@ -187,11 +202,12 @@ void CollisionHitManager::OnCollisionExit(GhostBody* a, GhostBody* b)
 //// 既存のペア判定ロジック（変更なし）
 //// =====================================================================
 
+
 /* ============================================ */
 /* プレイヤーが攻撃 */
 /* ============================================ */
 
-bool CollisionHitManager::ContainsPlayerAttackPair(const Pair& hitPair)
+bool CollisionHitManager::ContainsPlayerNormalAttackPair(const Pair& hitPair)
 {
 	if (!IsHitObject<Player>(hitPair, CharacterID::PlayerNormalAtkID())) {
 		return false;
@@ -201,14 +217,36 @@ bool CollisionHitManager::ContainsPlayerAttackPair(const Pair& hitPair)
 	}
 	return true;
 }
-void CollisionHitManager::UpdatePlayerAttackPair(Pair& hitPair)
+void CollisionHitManager::UpdatePlayerNormalAttackPair(Pair& hitPair)
 {
 	auto* bossCharacter = GetHitObject<BossCharacter>(hitPair, CharacterID::BossID());
 
 	if (bossCharacter->GetStatus()) {
-		bossCharacter->GetStatus()->Damage(1);
+		bossCharacter->GetStatus()->Damage(NORMAL_ATTACK_DAMAGE);
 	}
 }
+
+
+
+bool CollisionHitManager::ContainsPlayerSkillAttackPair(const Pair& hitPair)
+{
+	if (!IsHitObject<Player>(hitPair, CharacterID::PlayerSkillAtkID())) {
+		return false;
+	}
+	if (!IsHitObject<BossCharacter>(hitPair, CharacterID::BossID())) {
+		return false;
+	}
+	return true;
+}
+void CollisionHitManager::UpdatePlayerSkillAttackPair(Pair& hitPair)
+{
+	auto* bossCharacter = GetHitObject<BossCharacter>(hitPair, CharacterID::BossID());
+
+	if (bossCharacter->GetStatus()) {
+		bossCharacter->GetStatus()->Damage(SKILL_ATTACK_DAMAGE);
+	}
+}
+
 
 
 /* ============================================ */
@@ -229,8 +267,9 @@ void CollisionHitManager::UpdateBossAttackPair(Pair& hitPair)
 {
 	auto* player = GetHitObject<Player>(hitPair, CharacterID::PlayerID());
 
-	player->GetStatus()->Damage(1);
+	player->GetStatus()->Damage(NORMAL_ATTACK_DAMAGE);
 }
+
 
 
 bool CollisionHitManager::ContainsBossHitStampPair(const Pair& hitPair)
@@ -243,109 +282,46 @@ bool CollisionHitManager::ContainsBossHitStampPair(const Pair& hitPair)
 	}
 	return true;
 }
-
 void CollisionHitManager::UpdateBossHitStampPair(Pair& hitPair)
 {
 	auto* player = GetHitObject<Player>(hitPair, CharacterID::PlayerID());
 
-	player->GetStatus()->Damage(2);
+	player->GetStatus()->Damage(SKILL_ATTACK_DAMAGE);
 }
 
 
 
-
-//bool CollisionHitManager::ContainsPipeGimmickPair(const Pair& hitPair)
-//{
-//	if (!IsHitObject<PipeGimmick>(hitPair)) {
-//		return false;
-//	}
-//	if (!IsHitObject<app::actor::BattleCharacter>(hitPair)) {
-//		return false;
-//	}
-//	return true;
-//}
-
-
-//void CollisionHitManager::UpdatePipeGimmickPair(Pair& hitPair)
-//{
-//	auto* pipeGimmick = GetHitObject<app::actor::PipeGimmick>(hitPair);
-//	auto* battleCharacter = GetHitObject<app::actor::BattleCharacter>(hitPair);
-
-//	app::gimmick::EndpointId targetEndpointId;
-//	if (!app::gimmick::WarpSystem::Get().TryResolve(pipeGimmick->GetEndpointId(), targetEndpointId)) {
-//		return;
-//	}
-
-//	if (battleCharacter->GetStateMachine()->IsActionDown()) {
-//		const Vector3 startPosition = pipeGimmick->GetMouthPosition();
-//		const Vector3 endPosition = app::gimmick::WarpSystem::Get().FindPipe(targetEndpointId)->GetMouthPosition();
-//		battleCharacter->GetStateMachine()->SetWarpPosition(startPosition, endPosition);
-//	}
-//}
+bool CollisionHitManager::ContainsBossSpinPair(const Pair& hitPair)
+{
+	if (!IsHitObject<BossCharacter>(hitPair, CharacterID::BossSpinAtkID())) {
+		return false;
+	}
+	if (!IsHitObject<Player>(hitPair, CharacterID::PlayerID())) {
+		return false;
+	}
+	return true;
+}
+void CollisionHitManager::UpdateBossSpinPair(Pair& hitPair)
+{
+	// Pairの二人のクラスを取得
+	auto* player = GetHitObject<Player>(hitPair, CharacterID::PlayerID());
+	auto* bossCharacter = GetHitObject<BossCharacter>(hitPair, CharacterID::BossSpinAtkID());
 
 
-//bool CollisionHitManager::ContainsEventCharacterPair(const Pair& hitPair)
-//{
-//	if (!IsHitObject<app::actor::EventCharacter>(hitPair)) {
-//		return false;
-//	}
-//	if (!IsHitObject<app::actor::BattleCharacter>(hitPair)) {
-//		return false;
-//	}
-//	return true;
-//}
+	// ダメージを与える
+	player->GetStatus()->Damage(SKILL_ATTACK_DAMAGE);
 
 
-//void CollisionHitManager::UpdateEventCharacterPair(Pair& hitPair)
-//{
-//	auto* battleCharacter = GetHitObject<app::actor::BattleCharacter>(hitPair);
-//	auto* eventCharacter = GetHitObject<app::actor::EventCharacter>(hitPair);
+	// 当たった二人の座標を取得
+	Vector3 playerPos = player->GetTransformPosition();
+	Vector3 bossPos = bossCharacter->GetTransformPosition();
 
-//	Vector3 playerPos = battleCharacter->transform.position;
-//	Vector3 slimePos = eventCharacter->transform.position;
+	// 方向を取得
+	Vector3 dir= playerPos - bossPos;
+	dir.Normalize();
 
-//	// パンチされたかのチェック
-//	app::collision::GhostBody* colliedPlayerBody = nullptr;
-//	if (hitPair.a->GetOwnerId() == app::actor::BattleCharacter::ID())
-//	{
-//		colliedPlayerBody = hitPair.a;
-//	}
-//	else if (hitPair.b->GetOwnerId() == app::actor::BattleCharacter::ID())
-//	{
-//		colliedPlayerBody = hitPair.b;
-//	}
-
-//	// パンチの当たり判定の時
-//	if (colliedPlayerBody != nullptr
-//		&& colliedPlayerBody != battleCharacter->GetGhostBody())
-//	{
-//		// プレイヤーからスライムへのベクトルを計算
-//		Vector3 knockBackDirection = slimePos - playerPos;
-//		knockBackDirection.y = 0.0f;
-//		knockBackDirection.Normalize();
-//		// スライムがノックバックした
-//		eventCharacter->GetStateMachine()->OnKnockBack(knockBackDirection);
-//	}
-//	/** プレイヤー本体のゴーストと衝突した時 */
-//	else
-//	{
-//		/** スライムからプレイヤーに向かうベクトル */
-//		Vector3 toPlayer = playerPos - slimePos;
-//		toPlayer.Normalize();
-//		float dot = toPlayer.y;
-
-//		bool isAbove = (dot > 0.1f);
-
-//		// Playerが上空にいるなら
-//		if (isAbove)
-//		{
-//			eventCharacter->GetStateMachine()->OnSquashed();
-//		}
-//		else
-//		{
-//			battleCharacter->GetStateMachine()->OnKnockBack();
-//		}
-//	}
-//}
+	// ノックバック
+	Vector3 knockBackVelocity = dir * SPIN_KNOCK_BACK;
+}
 
 

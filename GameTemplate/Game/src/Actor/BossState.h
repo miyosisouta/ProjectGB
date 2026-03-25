@@ -108,9 +108,10 @@ private:
 	};
 
 private:
-	Phase phase_;
+	Phase phase_ = Phase::Ready;
 	Vector3 targetPos_ = Vector3::Zero;
 	Vector3 nextTargetPos_ = Vector3::Zero;
+	bool createAttackCollision_ = false;
 	
 public:
 	bool IsFinished() const override { return isFinished; }
@@ -123,6 +124,26 @@ public:
 	void Exit()override;
 };
 
+
+/*==========================================*/
+// ‰ñ“]UŒ‚
+/*==========================================*/
+class SpinState : public BossStateBase
+{
+private:
+	Vector3 targetPos_ = Vector3::Zero;
+	bool isAttackStart_ = false;
+
+public:
+	bool IsFinished() const override { return isFinished; }
+
+public:
+	SpinState(BossCharacter* b) : BossStateBase(b) {}
+
+	void Enter()override;
+	void Update()override;
+	void Exit()override;
+};
 /************************************************************/
 // ‚±‚±‚©‚ç‚Í‹­§“I‚Èó‘Ô‚Ì‚à‚Ì‚ğ‘‚­
 
