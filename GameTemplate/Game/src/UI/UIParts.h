@@ -120,6 +120,7 @@ public:
 	void AddAnimation(const uint32_t key, std::unique_ptr<UIAnimationBase> animation)
 	{
 		animation->SetUI(this);
+		animation->Initialize();
 		uiAnimationMap_.emplace(key, std::move(animation));
 	}
 

@@ -84,7 +84,7 @@ void InGameMenu::Update()
 	
 
 	// ボスHPの増減
-	auto* bossGauge = GetUI<UIIcon>(Hash32("Boss_HP_gauge"));
+	auto* bossGauge = GetUI<UIIcon>(Hash32("BossHPBar/Boss_HP_gauge"));
 	if (bossGauge)
 	{
 		bossGauge->transform.localScale.x = bossHP / static_cast<float>(bossMaxHP);
@@ -142,10 +142,10 @@ void InGameMenu::Update()
 		auto* abilitySkillIconCanvas = GetUI<UICanvas>(Hash32("AbilitySkillIcon"));
 		if (abilitySkillIconCanvas) {
 			if (isReadyAbilityFrame) {
-				abilitySkillIconScaleSequence->Play(abilitySkillIconCanvas);
+				abilitySkillIconScaleSequence_->Play(abilitySkillIconCanvas);
 			}
 		}
-		abilitySkillIconScaleSequence->Update(g_gameTime->GetFrameDeltaTime());
+		abilitySkillIconScaleSequence_->Update(g_gameTime->GetFrameDeltaTime());
 	}
 	
 
@@ -192,6 +192,17 @@ void InGameMenu::Update()
 		}
 	}
 
+	// ボスが被ダメをしたらHPバーが動く
+	auto* bossHPCanvas = GetUI<UICanvas>(Hash32("BossHPBar"));
+	if (bossHPCanvas) {
+		if (isTakeDamageBoss)
+		{
+			bossHitHPPositionSequence_->Play(bossHPCanvas);
+		}
+	}
+	bossHitHPPositionSequence_->Update(g_gameTime->GetFrameDeltaTime());
+	
+
 	MenuBase::Update();
 }
 
@@ -206,7 +217,7 @@ void InGameMenu::InitializeLogic()
 {
 	auto* playerHPGauge = GetUI<UIIcon>(Hash32("Player_HP_gauge"));
 	playerHPGauge->SetPivot(Vector2(0.0f, 0.5f));
-	auto* bossHPGauge = GetUI<UIIcon>(Hash32("Boss_HP_gauge"));
+	auto* bossHPGauge = GetUI<UIIcon>(Hash32("BossHPBar/Boss_HP_gauge"));
 	bossHPGauge->SetPivot(Vector2(0.0f, 0.5f));
 
 
@@ -214,6 +225,15 @@ void InGameMenu::InitializeLogic()
 	auto* abilitySkillIconCanvas = GetUI<UICanvas>(Hash32("AbilitySkillIcon"));
 	UIAnimationFactory::Attach<UIScaleAnimation>(abilitySkillIconCanvas, Hash32("SkillReadyScaleUp"));
 	UIAnimationFactory::Attach<UIScaleAnimation>(abilitySkillIconCanvas, Hash32("SkillReadyScaleDown"));
-	abilitySkillIconScaleSequence = std::make_unique<UIAnimationSequence>();
-	abilitySkillIconScaleSequence->Add(Hash32("SkillReadyScaleUp")).Add(Hash32("SkillReadyScaleDown"));
+	abilitySkillIconScaleSequence_ = std::make_unique<UIAnimationSequence>();
+	abilitySkillIconScaleSequence_->Add(Hash32("SkillReadyScaleUp")).Add(Hash32("SkillReadyScaleDown"));
+
+
+	// ボスHPのキャンバス
+	auto* bossHPCanvas = GetUI<UICanvas>(Hash32("BossHPBar"));
+	UIAnimationFactory::Attach<UITranslateOffsetAnimation>(bossHPCanvas, Hash32("HitBossPositionUp"));
+	UIAnimationFactory::Attach<UITranslateOffsetAnimation>(bossHPCanvas, Hash32("HitBossPositionDown"));
+	UIAnimationFactory::Attach<UITranslateOffsetAnimation>(bossHPCanvas, Hash32("HitBossPositionUp2"));
+	bossHitHPPositionSequence_ = std::make_unique<UIAnimationSequence>();
+	bossHitHPPositionSequence_->Add(Hash32("HitBossPositionUp")).Add(Hash32("HitBossPositionDown"));
 }
