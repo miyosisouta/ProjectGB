@@ -130,13 +130,14 @@ private:
 	void OnCollisionExit(GhostBody* a, GhostBody* b);
 
 	/* プレイヤーの攻撃 */
-	bool ContainsPlayerAttackPair(const Pair& hitPair);
-	void UpdatePlayerAttackPair(Pair& hitPair);
+	bool ContainsPlayerAttackPair(const Pair& hitPair);	//!< 通常攻撃のフラグ取得
+	void UpdatePlayerAttackPair(Pair& hitPair);			//!< 通常攻撃の更新
 
 	/* ボスの攻撃 */
-	bool ContainsBossAttackPair(const Pair& hitPair);
-	void UpdateBossAttackPair(Pair& hitPair);
-
+	bool ContainsBossAttackPair(const Pair& hitPair);	//!< 通常攻撃のフラグ取得
+	void UpdateBossAttackPair(Pair& hitPair);			//!< 通常攻撃の更新
+	bool ContainsBossHitStampPair(const Pair& hitPair);	//!< ヒットスタンプ攻撃のフラグ取得
+	void UpdateBossHitStampPair(Pair& hitPair);			//!< ヒットスタンプ攻撃の更新
 
 	///** 土管を含むペアか */
 	//bool ContainsPipeGimmickPair(const Pair& hitPair);

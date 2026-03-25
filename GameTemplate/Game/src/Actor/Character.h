@@ -7,10 +7,17 @@
 
 namespace CharacterID
 {
+	/* キャラクターの体のID */
 	inline uint32_t PlayerID() { return Hash32("Player"); }
 	inline uint32_t BossID() { return Hash32("Boss"); }
-	inline uint32_t PlayerAtkID() { return Hash32("PlayerAttack"); }
-	inline uint32_t BossAtkID() { return Hash32("BossAttack"); }
+
+	/* プレイヤーの攻撃用ID */
+	inline uint32_t PlayerNormalAtkID() { return Hash32("PlayerNormalAttack"); }
+	inline uint32_t PlayerSkillAtkID() { return Hash32("PlayerSkillAttack"); }
+	
+	/* ボスの攻撃用ID */
+	inline uint32_t BossNormalAtkID() { return Hash32("BossNormalAttack"); }
+	inline uint32_t BossHitStampAtkID() { return Hash32("BossHitStamp"); }
 }
 
 

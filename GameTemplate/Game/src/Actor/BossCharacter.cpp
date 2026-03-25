@@ -42,6 +42,7 @@ void BossCharacter::SetupTranslate()
 	AddState(BossStateID::Idle, new BossIdleState(this));
 	AddState(BossStateID::Run, new BossRunState(this));
 	AddState(BossStateID::Attack, new BossAttackState(this));
+	AddState(BossStateID::Jump, new HitStampState(this));
 	AddState(BossStateID::Death, new BossDeathState(this));
 }
 

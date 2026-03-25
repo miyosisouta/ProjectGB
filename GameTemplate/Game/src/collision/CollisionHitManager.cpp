@@ -187,9 +187,13 @@ void CollisionHitManager::OnCollisionExit(GhostBody* a, GhostBody* b)
 //// 既存のペア判定ロジック（変更なし）
 //// =====================================================================
 
+/* ============================================ */
+/* プレイヤーが攻撃 */
+/* ============================================ */
+
 bool CollisionHitManager::ContainsPlayerAttackPair(const Pair& hitPair)
 {
-	if (!IsHitObject<Player>(hitPair, CharacterID::PlayerAtkID())) {
+	if (!IsHitObject<Player>(hitPair, CharacterID::PlayerNormalAtkID())) {
 		return false;
 	}
 	if (!IsHitObject<BossCharacter>(hitPair, CharacterID::BossID())) {
@@ -197,7 +201,6 @@ bool CollisionHitManager::ContainsPlayerAttackPair(const Pair& hitPair)
 	}
 	return true;
 }
-
 void CollisionHitManager::UpdatePlayerAttackPair(Pair& hitPair)
 {
 	auto* bossCharacter = GetHitObject<BossCharacter>(hitPair, CharacterID::BossID());
@@ -207,9 +210,32 @@ void CollisionHitManager::UpdatePlayerAttackPair(Pair& hitPair)
 	}
 }
 
+
+/* ============================================ */
+/* ボスが攻撃 */
+/* ============================================ */
+
 bool CollisionHitManager::ContainsBossAttackPair(const Pair& hitPair)
 {
-	if (!IsHitObject<BossCharacter>(hitPair, CharacterID::BossAtkID())) {
+	if (!IsHitObject<BossCharacter>(hitPair, CharacterID::BossNormalAtkID())) {
+		return false;
+	}
+	if (!IsHitObject<Player>(hitPair, CharacterID::PlayerID())) {
+		return false;
+	}
+	return true;
+}
+void CollisionHitManager::UpdateBossAttackPair(Pair& hitPair)
+{
+	auto* player = GetHitObject<Player>(hitPair, CharacterID::PlayerID());
+
+	player->GetStatus()->Damage(1);
+}
+
+
+bool CollisionHitManager::ContainsBossHitStampPair(const Pair& hitPair)
+{
+	if (!IsHitObject<BossCharacter>(hitPair, CharacterID::BossHitStampAtkID())) {
 		return false;
 	}
 	if (!IsHitObject<Player>(hitPair, CharacterID::PlayerID())) {
@@ -218,11 +244,11 @@ bool CollisionHitManager::ContainsBossAttackPair(const Pair& hitPair)
 	return true;
 }
 
-void CollisionHitManager::UpdateBossAttackPair(Pair& hitPair)
+void CollisionHitManager::UpdateBossHitStampPair(Pair& hitPair)
 {
 	auto* player = GetHitObject<Player>(hitPair, CharacterID::PlayerID());
 
-	player->GetStatus()->Damage(1);
+	player->GetStatus()->Damage(2);
 }
 
 
