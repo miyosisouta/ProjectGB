@@ -11,8 +11,10 @@ protected:
 	BossCharacter* boss_; //!< プレイヤー
 
 
-	/** 移動速度を計算する共通処理 */
-	Vector3 CalcMovementVelocity(float speed);
+	/** プレイヤーに向けて移動速度を計算する共通処理 */
+	Vector3 CalcMovePlayerVelocity(float speed);
+	/** 指定した場所に向けて移動速度を計算する共通処理 */
+	Vector3 CalcVelocityTowards(Vector3 targetPos, float speed);
 	/** ターゲットに向かう回転の共通処理 */
 	Quaternion RotateToTarget(float rotateSpeed);
 
@@ -94,6 +96,23 @@ public:
 /*==========================================*/
 class HitStampState : public BossStateBase
 {
+private:
+	enum Phase
+	{
+		Ready,			// 準備中
+		JumpUp,			// 上昇中
+		Hover,			// 空中待機中
+		FallDown,		// 急降下中
+		ShokingStamp,	// 着地時
+		Finished		// 着地後
+	};
+
+private:
+	Phase phase_ = Phase::Ready;
+	Vector3 targetPos_ = Vector3::Zero;
+	Vector3 nextTargetPos_ = Vector3::Zero;
+	bool createAttackCollision_ = false;
+	
 public:
 	bool IsFinished() const override { return isFinished; }
 
@@ -105,6 +124,26 @@ public:
 	void Exit()override;
 };
 
+
+/*==========================================*/
+// 回転攻撃
+/*==========================================*/
+class SpinState : public BossStateBase
+{
+private:
+	Vector3 targetPos_ = Vector3::Zero;
+	bool isAttackStart_ = false;
+
+public:
+	bool IsFinished() const override { return isFinished; }
+
+public:
+	SpinState(BossCharacter* b) : BossStateBase(b) {}
+
+	void Enter()override;
+	void Update()override;
+	void Exit()override;
+};
 /************************************************************/
 // ここからは強制的な状態のものを書く
 

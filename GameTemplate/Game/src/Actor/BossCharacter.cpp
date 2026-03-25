@@ -4,6 +4,13 @@
 #include "BossState.h"
 #include "src/Actor/ActorStatus.h"
 
+namespace 
+{
+	static Vector3 BOSS_INIT_POS = Vector3(-300.0f, 0.0f, 0.0f);
+	static Vector3 BOSS_SCALE = Vector3(2.5f, 2.5f, 2.5f);
+	static Vector3 BOSS_COLLISION_POS = Vector3(0.0f, 120.0f, 0.0f);
+	constexpr float COLLISION_SIZE = 110.0f;
+}
 
 /** ===================================================== */
 /** アニメーション関連 */
@@ -42,6 +49,8 @@ void BossCharacter::SetupTranslate()
 	AddState(BossStateID::Idle, new BossIdleState(this));
 	AddState(BossStateID::Run, new BossRunState(this));
 	AddState(BossStateID::Attack, new BossAttackState(this));
+	AddState(BossStateID::Jump, new HitStampState(this));
+	AddState(BossStateID::Spin, new SpinState(this));
 	AddState(BossStateID::Death, new BossDeathState(this));
 }
 
@@ -98,10 +107,10 @@ bool BossCharacter::Start()
 	);
 
 	// TODO : プレイヤーとの距離を話すため
-	transform_.localPosition = Vector3(-300.0f, 0.0f, 0.0f);
+	transform_.localPosition = Vector3(BOSS_INIT_POS);
 
 	// モデルの設定
-	transform_.localScale = Vector3(2.5f, 2.5f, 2.5f);
+	transform_.localScale = Vector3(BOSS_SCALE);
 	transform_.UpdateTransform();
 	modelRender_.SetPosition(transform_.position);
 	modelRender_.SetRotation(transform_.rotation);
@@ -113,7 +122,7 @@ bool BossCharacter::Start()
 	// コリジョン作成
 	{
 		damageBody_ = std::make_unique<GhostBody>();
-		damageBody_->CreateCapsule(this, CharacterID::BossID(), 110.0f, 150.0f, ghost::CollisionAttribute::BossDef, ghost::CollisionAttributeMask::Boss);
+		damageBody_->CreateSphere(this, CharacterID::BossID(), COLLISION_SIZE, ghost::CollisionAttribute::BossDef, ghost::CollisionAttributeMask::Boss);
 		damageBody_->SetPosition(transform_.position);
 	}
 
@@ -147,7 +156,7 @@ void BossCharacter::Update()
 
 	// コリジョン更新
 	{
-		Vector3 collisionPos = transform_.position + Vector3(0.0f, 120.0f, 0.0f);
+		Vector3 collisionPos = transform_.position + Vector3(BOSS_COLLISION_POS);
 		damageBody_->SetPosition(collisionPos);
 
 	}
