@@ -131,20 +131,7 @@
         "color": [1, 1, 1, 1]
       },
 
-
-      {
-        "type": "UIIcon",
-        "name": "Button_Default",
-        "asset": "Assets/ui/SoundOption/tab/default_back.DDS",
-        "width": 500,
-        "height": 150,
-        "position": [0, -410, 0],
-        "scale": [1, 1, 1],
-        "rotation": 0,
-        "color": [1, 1, 1, 1]
-      },
-
-
+      
       {
         "type": "UIIcon",
         "name": ",word1",
@@ -185,17 +172,6 @@
         "width": 250,
         "height": 40,
         "position": [-750, -200, 0],
-        "scale": [1, 1, 1],
-        "rotation": 0,
-        "color": [1, 1, 1, 1]
-      },
-      {
-        "type": "UIIcon",
-        "name": ",word5",
-        "asset": "Assets/ui/SoundOption/moji/default.DDS",
-        "width": 250,
-        "height": 40,
-        "position": [0, -410, 0],
         "scale": [1, 1, 1],
         "rotation": 0,
         "color": [1, 1, 1, 1]
@@ -592,6 +568,15 @@
         "scale": [1, 1, 1],
         "rotation": 0,
         "color": [1, 1, 1, 1]
+      },
+
+      {
+        "comment": "デフォルトサウンドアイコン",
+        "type": "UIPrefab",
+        "name": "DefaultSoundIcon",
+        "source": "Assets/ui/layout/SoundDefaultButton.json",
+        "position": [0, -410, 0],
+        "scale": [1, 1, 1]
       }
     ]
   }
