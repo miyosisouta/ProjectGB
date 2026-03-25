@@ -6,20 +6,11 @@
 #include "SoundOptionMenu.h"
 #include "UIAnimationFactory.h"
 
-#include "src/Util/TaskSchedulerSystem.h"
+#include "src/sound/SoundManager.h"
 
 
 namespace
 {
-	// @todo for test
-	static UIIcon* nikukyu[4];
-	static TaskSchedulerSystem* taskScheduler = nullptr;
-
-
-	static float masterVolume = 10.0f;
-	static float bgmVolume = 10.0f;
-	static float seVolume = 10.0f;
-
 	static int selectVolumetType = 0;
 	static constexpr int MASTER_VOLUME_TYPE = 0;
 	static constexpr int BGM_VOLUME_TYPE = 1;
@@ -33,18 +24,22 @@ void SoundOptionMenu::Update()
 {
 	taskScheduler->Update(g_gameTime->GetFrameDeltaTime());
 
+	float masterVolume = static_cast<float>(SoundManager::Get().GetVolume(SoundVolumeType::Master));
+	float bgmVolume = static_cast<float>(SoundManager::Get().GetVolume(SoundVolumeType::BGM));
+	float seVolume = static_cast<float>(SoundManager::Get().GetVolume(SoundVolumeType::SE));
+
 	// ボリューム種類選択
 	{
 		if (g_pad[0]->IsTrigger(enButtonUp)) {
 			selectVolumetType--;
-			if (selectVolumetType < 0) {
-				selectVolumetType = 0;
+			if (selectVolumetType < MASTER_VOLUME_TYPE) {
+				selectVolumetType = MASTER_VOLUME_TYPE;
 			}
 		}
 		else if (g_pad[0]->IsTrigger(enButtonDown)) {
 			selectVolumetType++;
-			if (selectVolumetType > 3) {
-				selectVolumetType = 3;
+			if (selectVolumetType > DEFAULT_VOLUME_TYPE) {
+				selectVolumetType = DEFAULT_VOLUME_TYPE;
 			}
 		}
 	}
@@ -222,9 +217,9 @@ void SoundOptionMenu::Update()
 	// デフォルト
 	if (selectVolumetType == DEFAULT_VOLUME_TYPE) {
 		if (g_pad[0]->IsTrigger(enButtonA)) {
-			masterVolume = 10.0f;
-			bgmVolume = 10.0f;
-			seVolume = 10.0f;
+			masterVolume = DEFAULT_VOLUME;
+			bgmVolume = DEFAULT_VOLUME;
+			seVolume = DEFAULT_VOLUME;
 		}
 	}
 
@@ -263,8 +258,12 @@ void SoundOptionMenu::Update()
 
 		selectFrame->transform.localPosition.y = posY;
 	}
-	
 
+
+	// ボリュームの反映
+	SoundManager::Get().SetVolume(SoundVolumeType::Master, static_cast<int>(masterVolume));
+	SoundManager::Get().SetVolume(SoundVolumeType::BGM, static_cast<int>(bgmVolume));
+	SoundManager::Get().SetVolume(SoundVolumeType::SE, static_cast<int>(seVolume));
 
 	MenuBase::Update();
 }
@@ -278,68 +277,62 @@ void SoundOptionMenu::Render(RenderContext& rc)
 
 void SoundOptionMenu::InitializeLogic()
 {
-	if (taskScheduler) {
-		delete taskScheduler;
-	}
-	taskScheduler = new TaskSchedulerSystem();
+	taskScheduler = std::make_unique<TaskSchedulerSystem>();
 
-
-	// @todo for test
 	const int id = taskScheduler->CreateLoopSequence(20.0f);
-
 	{
-		nikukyu[0] = GetUI<UIIcon>(Hash32("nikukyu1"));
-		UIAnimationFactory::Attach<UIColorAnimation>(nikukyu[0], Hash32("nikukyuu_fadein"));
+		nikukyuList[0] = GetUI<UIIcon>(Hash32("nikukyu1"));
+		UIAnimationFactory::Attach<UIColorAnimation>(nikukyuList[0], Hash32("nikukyuu_fadein"));
 		taskScheduler->AddLoopTimer(id, 0.0f, [&]()
 			{
-				auto* animation = nikukyu[0]->FindAnimation(Hash32("nikukyuu_fadein"));
+				auto* animation = nikukyuList[0]->FindAnimation(Hash32("nikukyuu_fadein"));
 				animation->Play();
 			});
 		taskScheduler->AddLoopTimer(id, 6.0f, [&]()
 			{
-				auto* animation = nikukyu[0]->FindAnimation(Hash32("nikukyuu_fadein"));
+				auto* animation = nikukyuList[0]->FindAnimation(Hash32("nikukyuu_fadein"));
 				animation->Stop();
 			},true);
 	}
 	{
-		nikukyu[1] = GetUI<UIIcon>(Hash32("nikukyu2"));
-		UIAnimationFactory::Attach<UIColorAnimation>(nikukyu[1], Hash32("nikukyuu_fadein"));
+		nikukyuList[1] = GetUI<UIIcon>(Hash32("nikukyu2"));
+		UIAnimationFactory::Attach<UIColorAnimation>(nikukyuList[1], Hash32("nikukyuu_fadein"));
 		taskScheduler->AddLoopTimer(id, 4.0f, [&]()
 			{
-				auto* animation = nikukyu[1]->FindAnimation(Hash32("nikukyuu_fadein"));
+				auto* animation = nikukyuList[1]->FindAnimation(Hash32("nikukyuu_fadein"));
 				animation->Play();
 			});
 		taskScheduler->AddLoopTimer(id, 10.0f, [&]()
 			{
-				auto* animation = nikukyu[1]->FindAnimation(Hash32("nikukyuu_fadein"));
+				auto* animation = nikukyuList[1]->FindAnimation(Hash32("nikukyuu_fadein"));
 				animation->Stop();
 			}, true);
 	}
 	{
-		nikukyu[2] = GetUI<UIIcon>(Hash32("nikukyu3"));
-		UIAnimationFactory::Attach<UIColorAnimation>(nikukyu[2], Hash32("nikukyuu_fadein"));
+		nikukyuList[2] = GetUI<UIIcon>(Hash32("nikukyu3"));
+		UIAnimationFactory::Attach<UIColorAnimation>(nikukyuList[2], Hash32("nikukyuu_fadein"));
 		taskScheduler->AddLoopTimer(id, 8.0f, [&]()
 			{
-				auto* animation = nikukyu[2]->FindAnimation(Hash32("nikukyuu_fadein"));
+				auto* animation = nikukyuList[2]->FindAnimation(Hash32("nikukyuu_fadein"));
 				animation->Play();
 			});
 		taskScheduler->AddLoopTimer(id, 14.0f, [&]()
 			{
-				auto* animation = nikukyu[2]->FindAnimation(Hash32("nikukyuu_fadein"));
+				auto* animation = nikukyuList[2]->FindAnimation(Hash32("nikukyuu_fadein"));
 				animation->Stop();
 			},true);
 	}
 	{
-		nikukyu[3] = GetUI<UIIcon>(Hash32("nikukyu4"));
-		UIAnimationFactory::Attach<UIColorAnimation>(nikukyu[3], Hash32("nikukyuu_fadein"));
+		nikukyuList[3] = GetUI<UIIcon>(Hash32("nikukyu4"));
+		UIAnimationFactory::Attach<UIColorAnimation>(nikukyuList[3], Hash32("nikukyuu_fadein"));
 		taskScheduler->AddLoopTimer(id, 12.0f, [&]()
 			{
-				auto* animation = nikukyu[3]->FindAnimation(Hash32("nikukyuu_fadein"));
+				auto* animation = nikukyuList[3]->FindAnimation(Hash32("nikukyuu_fadein"));
 				animation->Play();
 			});
 		taskScheduler->AddLoopTimer(id, 18.0f, [&]()
 			{
-				auto* animation = nikukyu[3]->FindAnimation(Hash32("nikukyuu_fadein"));
+				auto* animation = nikukyuList[3]->FindAnimation(Hash32("nikukyuu_fadein"));
 				animation->Stop();
 			},true);
 	}
