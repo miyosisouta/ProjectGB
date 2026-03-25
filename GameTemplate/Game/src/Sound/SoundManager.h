@@ -16,6 +16,20 @@ using SoundHandle = uint32_t;
 static constexpr SoundHandle INVALID_SOUND_HANDLE = 0xffffffff;
 
 
+enum class SoundVolumeType : uint8_t
+{
+    Master,
+    BGM,
+    SE,
+    Max,
+};
+
+
+static constexpr uint8_t DEFAULT_VOLUME = 3;
+static constexpr uint8_t MAX_VOLUME = 10;
+
+
+
 /**
  * サウンド管理クラス
  */
@@ -31,6 +45,10 @@ private:
      * NOTE: 各サウンドソースを参照するための数値はユニークな数値になる
      */
     SoundHandle soundHandleCount_ = 0;
+
+	uint8_t volumes_[static_cast<size_t>(SoundVolumeType::Max)] = { DEFAULT_VOLUME, DEFAULT_VOLUME, DEFAULT_VOLUME };
+	bool isChangeVolume_ = false;
+
 
 
 private:
@@ -67,6 +85,34 @@ public:
         K2_ASSERT(false, "削除済みか追加されていないSEにアクセスしようとしています。\n");
         return nullptr;
     }
+
+
+    void SetVolume(const SoundVolumeType type, const uint8_t volume)
+    {
+        if (volume > MAX_VOLUME) {
+            K2_ASSERT(false, "音量は0～10の範囲で指定してください。\n");
+            return;
+        }
+        volumes_[static_cast<size_t>(type)] = volume;
+
+        isChangeVolume_ = true;
+	}
+
+
+    uint8_t GetVolume(const SoundVolumeType type) const
+    {
+        return volumes_[static_cast<size_t>(type)];
+	}
+
+
+    float ComputeVolume(const SoundVolumeType type) const
+    {
+        // マスターボリュームを基準に、BGMとSEのボリュームを掛け合わせる
+		const float masterVolume = static_cast<float>(volumes_[static_cast<size_t>(SoundVolumeType::Master)]) / static_cast<float>(MAX_VOLUME);
+		const float typeVolume = static_cast<float>(volumes_[static_cast<size_t>(type)]) / static_cast<float>(MAX_VOLUME);
+		return masterVolume * typeVolume;
+	}
+
 
 
 

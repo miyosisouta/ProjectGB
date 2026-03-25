@@ -32,7 +32,6 @@ SoundManager::~SoundManager()
 
 void SoundManager::Update()
 {
-	// SEリストから再生していないものがあれば削除する
 	std::vector<SoundHandle> eraseList;
 	for (auto& it : seList_) {
 		const auto key = it.first;
@@ -40,10 +39,23 @@ void SoundManager::Update()
 		// 再生が終わっているなら削除
 		if (!se->IsPlaying()) {
 			eraseList.push_back(key);
+		} else {
+			// SEのボリュームを変更する必要があるなら変更
+			if (isChangeVolume_) {
+				se->SetVolume(ComputeVolume(SoundVolumeType::SE));
+			}
 		}
 	}
 	for (const auto& key : eraseList) {
 		seList_.erase(key);
+	}
+
+	if (isChangeVolume_) {
+		// BGMのボリュームを変更する必要があるなら変更
+		if (bgm_ != nullptr) {
+			bgm_->SetVolume(ComputeVolume(SoundVolumeType::BGM));
+		}
+		isChangeVolume_ = false;
 	}
 }
 
@@ -61,6 +73,7 @@ void SoundManager::PlayBGM(const int kind)
 	}
 	// 初期化
 	bgm_->Init(kind);
+	bgm_->SetVolume(ComputeVolume(SoundVolumeType::BGM));
 	bgm_->Play(true);	// BGMなのでループ再生する
 }
 
@@ -84,6 +97,7 @@ SoundHandle SoundManager::PlaySE(const int kind, const bool isLood, const bool i
 	}
 	auto* se = NewGO<SoundSource>(0, "se");
 	se->Init(kind, is3D);
+	se->SetVolume(ComputeVolume(SoundVolumeType::SE));
 	se->Play(isLood);
 
 	seList_.emplace(soundHandleCount_++, se);
