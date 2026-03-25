@@ -221,6 +221,22 @@ void SoundOptionMenu::Update()
 			bgmVolume = DEFAULT_VOLUME;
 			seVolume = DEFAULT_VOLUME;
 		}
+
+		// 枠が変わる
+		auto* buttonCanvs = GetUI<UICanvas>(Hash32("DefaultSoundIcon"));
+		buttonCanvs->transform.localScale = Vector3(1.2f);
+		auto* normalBack = GetUI<UIIcon>(Hash32("DefaultSoundIcon/Button_Default_back"));
+		auto* selectColorDummy = GetUI<UIDummy>(Hash32("DefaultSoundIcon/BackSelectColorDummy"));
+		if (normalBack){
+			normalBack->color = selectColorDummy->color;
+		}
+	}
+	else {
+		auto* buttonCanvs = GetUI<UICanvas>(Hash32("DefaultSoundIcon"));
+		buttonCanvs->transform.localScale = Vector3(1.0f);
+		auto* normalBack = GetUI<UIIcon>(Hash32("DefaultSoundIcon/Button_Default_back"));
+		auto* normalColorDummy = GetUI<UIDummy>(Hash32("DefaultSoundIcon/BackNormalColorDummy"));
+		normalBack->color = normalColorDummy->color;
 	}
 
 	// 選択中
@@ -251,6 +267,7 @@ void SoundOptionMenu::Update()
 			default:
 			{
 				selectFrame->isDraw = false;
+
 				break;
 			}
 		}

@@ -33,27 +33,35 @@ void TitleMenu::Update()
 
 	if (g_pad[0]->IsTrigger(enButtonA))
 	{
+		bool canDo = false;
+
 		// Aボタンの透明度
 		auto* AbuttonColor = GetUI<UIIcon>(Hash32("Title_push_Abutton"));
-		AbuttonColor->isDraw = false;
-		
-		// 非表示 はじめる
-		auto* start = GetUI<UIIcon>(Hash32("Title_start"));
-		start->isDraw = true;
+		if (AbuttonColor->color.w > 0.0f) {
+			canDo = true;
+		}
+		if(canDo)
+		{
+			AbuttonColor->isDraw = false;
 
-		// 非表示 サウンド
-		auto* sound = GetUI<UIIcon>(Hash32("Title_sound"));
-		sound->isDraw = true;
+			// 非表示 はじめる
+			auto* start = GetUI<UIIcon>(Hash32("Title_start"));
+			start->isDraw = true;
 
-		// 非表示 おわる
-		auto* exit = GetUI<UIIcon>(Hash32("Title_exit"));
-		exit->isDraw = true;
+			// 非表示 サウンド
+			auto* sound = GetUI<UIIcon>(Hash32("Title_sound"));
+			sound->isDraw = true;
 
-		// 非表示 にくきゅう
-		auto* select = GetUI<UIIcon>(Hash32("Title_nikukyu_button"));
-		select->isDraw = true;
+			// 非表示 おわる
+			auto* exit = GetUI<UIIcon>(Hash32("Title_exit"));
+			exit->isDraw = true;
 
-		isAbuttonEnabled = true;
+			// 非表示 にくきゅう
+			auto* select = GetUI<UIIcon>(Hash32("Title_nikukyu_button"));
+			select->isDraw = true;
+
+			isAbuttonEnabled = true;
+		}
 	}
 
 	effectRender->Update(g_gameTime->GetFrameDeltaTime());
