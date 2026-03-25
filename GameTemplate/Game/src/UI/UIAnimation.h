@@ -34,6 +34,8 @@ public:
 	virtual void Clear() = 0;
 	virtual bool IsPlay() = 0;
 
+	virtual void Initialize() {}
+
 	void SetUI(UIBase* ui) { ui_ = ui; }
 };
 
@@ -386,10 +388,17 @@ public:
 /** 差分アニメーション */
 class UITranslateOffsetAnimation : public UIVector3Animation
 {
+private:
+	Vector3 startPosition = Vector3::Zero;
+
+
 public:
 	UITranslateOffsetAnimation();
 	~UITranslateOffsetAnimation() {}
 	void Update() override;
+
+
+	virtual void Initialize();
 };
 
 

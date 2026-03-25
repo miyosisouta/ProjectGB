@@ -9,7 +9,8 @@
 class InGameMenu : public MenuBase
 {
 private:
-	std::unique_ptr<UIAnimationSequence> abilitySkillIconScaleSequence = nullptr;
+	std::unique_ptr<UIAnimationSequence> abilitySkillIconScaleSequence_ = nullptr;
+	std::unique_ptr<UIAnimationSequence> bossHitHPPositionSequence_ = nullptr;
 
 public:
 	void Update() override;

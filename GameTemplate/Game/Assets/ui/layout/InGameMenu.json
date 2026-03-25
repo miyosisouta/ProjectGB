@@ -124,59 +124,6 @@
 
 
 
-
-      {
-        "coment": "ボスのHPの文字",
-        "type": "UIIcon",
-        "name": "Boss_HP_word",
-        "asset": "Assets/ui/inGameUI/word/gollira.DDS",
-        "width": 200,
-        "height": 100,
-        "position": [0, 460, 0],
-        "scale": [1, 1, 1],
-        "rotation": 0,
-        "color": [1, 1, 1, 1]
-      },
-      {
-        "coment": "ボスのHPゲージの背面",
-        "type": "UIIcon",
-        "name": "Boss_HP_gauge_back",
-        "asset": "Assets/ui/inGameUI/gauge/gauge_back.DDS",
-        "width": 1000,
-        "height": 30,
-        "position": [0, 370, 0],
-        "scale": [1, 1, 1],
-        "rotation": 0,
-        "color": [1, 1, 1, 1]
-      },
-      {
-        "coment": "ボスのHPゲージ",
-        "type": "UIIcon",
-        "name": "Boss_HP_gauge",
-        "asset": "Assets/ui/inGameUI/gauge/gauge_boss.DDS",
-        "width": 960,
-        "height": 30,
-        "position": [-488, 370, 0],
-        "scale": [1, 1, 1],
-        "rotation": 0,
-        "color": [1, 1, 1, 1]
-      },
-      {
-        "coment": "ボスのHPゲージの枠",
-        "type": "UIIcon",
-        "name": "Boss_HP_gauge_flame",
-        "asset": "Assets/ui/inGameUI/gauge/boss_hp_gauge_flame.DDS",
-        "width": 1000,
-        "height": 70,
-        "position": [0, 370, 0],
-        "scale": [1, 1, 1],
-        "rotation": 0,
-        "color": [1, 1, 1, 1]
-      },
-
-
-
-
       {
         "coment": "攻撃アイコンのボタン表示の背景",
         "type": "UIIcon",
@@ -336,6 +283,18 @@
         "position": [0, 0, 0],
         "scale": [0, 0, 0],
         "color": [0.53, 0.69, 0.75, 1]
+      },
+
+
+      
+
+      {
+        "comment": "ボスHPバー",
+        "type": "UIPrefab",
+        "name": "BossHPBar",
+        "source": "Assets/ui/layout/BossHP.json",
+        "position": [0, 410, 0],
+        "scale": [1, 1, 1]
       }
     ]
   }

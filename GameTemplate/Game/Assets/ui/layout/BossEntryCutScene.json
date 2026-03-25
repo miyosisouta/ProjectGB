@@ -1,0 +1,30 @@
+{
+  "canvas": {
+    "elements": [
+      {
+        "coment": "ボス表示の帯:ゴリラ",
+        "type": "UIIcon",
+        "name": "gollira",
+        "asset": "Assets/ui/soundOption/haikei/back.DDS",
+        "width": 1920,
+        "height": 1080,
+        "position": [0, 0, 0],
+        "scale": [1, 1, 1],
+        "rotation": 0,
+        "color": [1, 1, 1, 1]
+      },
+      {
+        "coment": "ゴリラ",
+        "type": "UIIcon",
+        "name": "gollira",
+        "asset": "Assets/ui/soundOption/haikei/back.DDS",
+        "width": 1920,
+        "height": 1080,
+        "position": [0, 0, 0],
+        "scale": [1, 1, 1],
+        "rotation": 0,
+        "color": [1, 1, 1, 1]
+      }
+    ]
+}
+}

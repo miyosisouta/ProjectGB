@@ -72,9 +72,17 @@ void UITranslateOffsetAnimation::Update()
 	curve_.Update(g_gameTime->GetFrameDeltaTime());
 	if ((curve_.IsPlaying() || wasPlaying) && ui_)
 	{
-		ui_->transform.localPosition.Add(curve_.GetCurrentValue());
+		ui_->transform.localPosition = startPosition + curve_.GetCurrentValue();
 	}
 }
+
+
+void UITranslateOffsetAnimation::Initialize()
+{
+	startPosition = ui_->transform.localPosition;
+}
+
+
 
 
 /*******************************************************/
