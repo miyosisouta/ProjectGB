@@ -52,6 +52,10 @@ void InGameScene::Update()
 
 void InGameScene::Render(RenderContext& rc)
 {
+	if (BattleManager::Get().IsEndEntryBoss()) {
+		BattleManager::Get().Render(rc);
+		return;
+	}
 	layout_->Render(rc);
 }
 

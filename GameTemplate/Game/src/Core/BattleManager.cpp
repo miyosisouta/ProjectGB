@@ -21,6 +21,9 @@
 #include "src/collision/GhostBodyManager.h"
 #include "src/collision/CollisionHitManager.h"
 
+#include "src/UI/Layout.h"
+#include "src/UI/Menu.h"
+
 
 namespace
 {
@@ -88,6 +91,10 @@ BattleManager::BattleManager()
 		CharacterDataBase::Get().GetPlayerParam().utility
 	);
 
+	// レイアウト生成
+	layout_ = new Layout();
+	layout_->Initialize<MenuBase>("Assets/ui/layout/BossEntryCutScene.json");
+
 	// ボス登場演出
 	{
 		// 演出カメラ
@@ -112,6 +119,11 @@ BattleManager::BattleManager()
 					cameraData.target = Vector3(-300.0f, 100.0f, 0.0f);
 					bossEntryCameraController_->As<GameCamera>()->SetState(cameraData);
 
+					auto* menu = layout_->GetMenu();
+					auto* icon = menu->GetUI<UIIcon>(Hash32("gollira"));
+					icon->isDraw = true;
+					icon = menu->GetUI<UIIcon>(Hash32("gollira_nameA"));
+					icon->isDraw = true;
 				});
 			entryBossScheduler_->AddTimer(2.0f, [this]()
 				{
@@ -120,6 +132,9 @@ BattleManager::BattleManager()
 					cameraData.target = Vector3(-300.0f, 100.0f, 0.0f);
 					bossEntryCameraController_->As<GameCamera>()->SetState(cameraData);
 
+					auto* menu = layout_->GetMenu();
+					auto* icon = menu->GetUI<UIIcon>(Hash32("gollira_nameC"));
+					icon->isDraw = true;
 				});
 			entryBossScheduler_->AddTimer(3.0f, [this]()
 				{
@@ -127,6 +142,10 @@ BattleManager::BattleManager()
 					cameraData.position = Vector3(-300, 100.0f, 400.0f);
 					cameraData.target = Vector3(-300.0f, 100.0f, 0.0f);
 					bossEntryCameraController_->As<GameCamera>()->SetState(cameraData);
+
+					auto* menu = layout_->GetMenu();
+					auto* icon = menu->GetUI<UIIcon>(Hash32("gollira_nameB"));
+					icon->isDraw = true;
 
 				});
 			// 終了
@@ -136,6 +155,12 @@ BattleManager::BattleManager()
 					CameraManager::Get().Unregister(GameCamera::ID());
 					CameraManager::Get().Register(GameCamera::ID(), gameCameraController_);
 					CameraManager::Get().SwitchCamera(gameCameraController_);
+
+					auto* menu = layout_->GetMenu();
+					auto* icon = menu->GetUI<UIIcon>(Hash32("gollira_nameB"));
+					icon->isDraw = false;
+					icon = menu->GetUI<UIIcon>(Hash32("gollira"));
+					icon->isDraw = false;
 				});
 		}
 	}
@@ -145,14 +170,23 @@ BattleManager::BattleManager()
 
 BattleManager::~BattleManager()
 {
+	if (layout_) {
+		delete layout_;
+		layout_ = nullptr;
+	}
 }
 
 
 void BattleManager::Update()
 {
 	if (UpdateEntryBoss()) {
-
+		layout_->Update();
 		return;
+	}
+
+	if (layout_) {
+		delete layout_;
+		layout_ = nullptr;
 	}
 
 	boss_->Update();
@@ -165,6 +199,14 @@ void BattleManager::Update()
 
 	GhostBodyManager::Get().Update();
 	CollisionHitManager::Get().Update();
+}
+
+
+void BattleManager::Render(RenderContext& rc)
+{
+	if (layout_) {
+		layout_->Render(rc);
+	}
 }
 
 

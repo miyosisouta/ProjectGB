@@ -5,25 +5,53 @@
         "coment": "ボス表示の帯:ゴリラ",
         "type": "UIIcon",
         "name": "gollira",
-        "asset": "Assets/ui/soundOption/haikei/back.DDS",
-        "width": 1920,
-        "height": 1080,
-        "position": [0, 0, 0],
+        "asset": "Assets/ui/inGameUI/boss/gollira_obi.DDS",
+        "width": 1500,
+        "height": 173,
+        "position": [0, -250, 0],
         "scale": [1, 1, 1],
         "rotation": 0,
-        "color": [1, 1, 1, 1]
+        "color": [1, 1, 1, 1],
+        "isDraw": false
       },
       {
         "coment": "ゴリラ",
         "type": "UIIcon",
-        "name": "gollira",
-        "asset": "Assets/ui/soundOption/haikei/back.DDS",
-        "width": 1920,
-        "height": 1080,
-        "position": [0, 0, 0],
+        "name": "gollira_nameA",
+        "asset": "Assets/ui/inGameUI/boss/gollira_boss.DDS",
+        "width": 350,
+        "height": 141,
+        "position": [-400, -250, 0],
         "scale": [1, 1, 1],
         "rotation": 0,
-        "color": [1, 1, 1, 1]
+        "color": [1, 1, 1, 1],
+        "isDraw": false
+      },
+      {
+        "coment": "ゴリラ",
+        "type": "UIIcon",
+        "name": "gollira_nameB",
+        "asset": "Assets/ui/inGameUI/boss/gollira_boss.DDS",
+        "width": 350,
+        "height": 141,
+        "position": [0, -250, 0],
+        "scale": [1, 1, 1],
+        "rotation": 0,
+        "color": [1, 1, 1, 1],
+        "isDraw": false
+      },
+      {
+        "coment": "ゴリラ",
+        "type": "UIIcon",
+        "name": "gollira_nameC",
+        "asset": "Assets/ui/inGameUI/boss/gollira_boss.DDS",
+        "width": 350,
+        "height": 141,
+        "position": [400, -250, 0],
+        "scale": [1, 1, 1],
+        "rotation": 0,
+        "color": [1, 1, 1, 1],
+        "isDraw": false
       }
     ]
 }
