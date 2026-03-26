@@ -13,7 +13,7 @@ private:
 	std::unique_ptr<ParticleEffectRender> effectRender = nullptr;
 	std::unique_ptr<ParticleEffectRender> effectRenderB = nullptr;
 
-	TaskSchedulerSystem* taskScheduler = nullptr;
+	std::unique_ptr<TaskSchedulerSystem> taskScheduler = nullptr;
 	std::unique_ptr<IntSelector> selector_ = nullptr;
 	/** Aボタンを押したかがされているか */
 	bool isAbuttonEnabled = false;
