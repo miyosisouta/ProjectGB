@@ -37,6 +37,9 @@ void Avoid::Enter(Character* p)
 			// プレイヤーステータスの取得、無敵を設定
 			PlayerStatus* status = p->GetStatus()->As<PlayerStatus>();
 			status->AddInvincible(PlayerStatus::InvincibleFlags::enAvoid);
+
+			// SEの再生
+			SoundManager::Get().PlaySE(enSoundKind_Player_Utility);
 		});
 
 	taskScheduler_->AddTimer(0.8f, [&, p]()

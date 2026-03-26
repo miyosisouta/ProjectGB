@@ -120,6 +120,9 @@ public:
 	 */
 	void OnBodyRemoved(GhostBody* body);
 
+	/* コリジョンがヒットしたときに流すSE */
+	void UpdateTakeHitSound() { SoundManager::Get().PlaySE(enSoundKind_Player_TakeHit); }
+	void UpdateAttackHitSound() { SoundManager::Get().PlaySE(enSoundKind_Player_AttackHit); }
 
 private:
 	/** Enter: 衝突した瞬間の処理 : 一度だけ実行したい処理 */

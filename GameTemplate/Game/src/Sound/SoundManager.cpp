@@ -100,9 +100,14 @@ SoundHandle SoundManager::PlaySE(const int kind, const bool isLood, const bool i
 	se->SetVolume(ComputeVolume(SoundVolumeType::SE));
 	se->Play(isLood);
 
-	seList_.emplace(soundHandleCount_++, se);
+	const auto handle = soundHandleCount_++;
+	if (isLood) {
+		seList_.emplace(handle, se);
+		return handle;
+	}
 
-	return soundHandleCount_;
+	// ワンショットSEはSoundSource側で自動破棄されるため、追跡しない。
+	return INVALID_SOUND_HANDLE;
 }
 
 
