@@ -16,6 +16,7 @@ class Player;
 class PlayerController;
 class BossSpawner;
 class Stage;
+class Layout;
 
 
 /**
@@ -29,6 +30,7 @@ private:
     PlayerController* playerController_ = nullptr;
     BossSpawner* boss_ = nullptr;
     Stage* stage_ = nullptr;
+    Layout* layout_ = nullptr;
     
     std::unique_ptr<CameraSteering> cameraSteering_ = nullptr;
     RefCameraController gameCameraController_ = nullptr;
@@ -54,6 +56,11 @@ private:
 
 public:
     void Update();
+    void Render(RenderContext& rc);
+
+
+public:
+    bool IsEndEntryBoss() const { return isEndEntryBoss_; }
 
 
 private:

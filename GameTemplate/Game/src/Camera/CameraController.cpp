@@ -3,6 +3,8 @@
 #include "CameraManager.h"
 
 
+#ifdef _DEBUG
+
 void DebugCamera::OnEnter()
 {
 	cameraData_ = CameraManager::Get().GetCurrentCameraData();
@@ -61,3 +63,4 @@ void DebugCamera::Update()
 		cameraData_.position = cameraData_.target + toVector;
 	}
 }
+#endif
