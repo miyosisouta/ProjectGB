@@ -8,13 +8,14 @@
 
 
 #pragma once
+#include "src/Camera/CameraController.h"
+#include "src/Camera/CameraSteering.h"
 
 
 class Player;
 class PlayerController;
 class BossSpawner;
 class Stage;
-class GameCamera;
 
 
 /**
@@ -28,7 +29,13 @@ private:
     PlayerController* playerController_ = nullptr;
     BossSpawner* boss_ = nullptr;
     Stage* stage_ = nullptr;
-    GameCamera* gameCamera_ = nullptr;
+    
+    std::unique_ptr<CameraSteering> cameraSteering_ = nullptr;
+    RefCameraController gameCameraController_ = nullptr;
+    RefCameraController bossEntryCameraController_ = nullptr;
+
+	std::unique_ptr<TaskSchedulerSystem> entryBossScheduler_ = nullptr;
+    bool isEndEntryBoss_ = true;
 
 
 private:
@@ -38,6 +45,10 @@ private:
 
 public:
     void Update();
+
+
+private:
+	bool UpdateEntryBoss();
 
 
 private:

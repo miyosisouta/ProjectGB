@@ -43,7 +43,6 @@
     <ClCompile Include="src\Util\TaskSchedulerSystem.cpp" />
     <ClCompile Include="stdafx.cpp" />
     <ClCompile Include="system\system.cpp" />
-    <ClCompile Include="src\Camera\GameCamera.cpp" />
     <ClCompile Include="src\Core\BattleManager.cpp" />
     <ClCompile Include="src\Skill\NormalAttack\NormalAtatck.cpp" />
     <ClCompile Include="src\Skill\SpecialAbility\AbilityBase.cpp" />
@@ -67,6 +66,10 @@
     <ClCompile Include="src\Vfx\ParticleModule.cpp" />
     <ClCompile Include="src\Vfx\ParticleValueProvider.cpp" />
     <ClCompile Include="src\Vfx\Particle.cpp" />
+    <ClCompile Include="src\Camera\CameraManager.cpp" />
+    <ClCompile Include="src\Camera\CameraCommon.cpp" />
+    <ClCompile Include="src\Camera\CameraController.cpp" />
+    <ClCompile Include="src\Camera\CameraSteering.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Game.h" />
@@ -120,7 +123,6 @@
     <ClInclude Include="src\Skill\NormalAttack\NormalAtatck.h" />
     <ClInclude Include="src\Skill\SpecialAbility\AbilityBase.h" />
     <ClInclude Include="src\Skill\SpecialAbility\DefaultAttack.h" />
-    <ClInclude Include="src\Camera\GameCamera.h" />
     <ClInclude Include="src\Core\BattleManager.h" />
     <ClInclude Include="src\CharacterDataBase.h" />
     <ClInclude Include="src\Actor\ActorStatus.h" />
@@ -141,5 +143,9 @@
     <ClInclude Include="src\Vfx\ParticleModule.h" />
     <ClInclude Include="src\Vfx\ParticleValueProvider.h" />
     <ClInclude Include="src\Vfx\Particle.h" />
+    <ClInclude Include="src\Camera\CameraManager.h" />
+    <ClInclude Include="src\Camera\CameraCommon.h" />
+    <ClInclude Include="src\Camera\CameraController.h" />
+    <ClInclude Include="src\Camera\CameraSteering.h" />
   </ItemGroup>
 </Project>

@@ -237,7 +237,10 @@
     <ClCompile Include="src\Actor\PlayerController.cpp" />
     <ClCompile Include="src\Actor\PlayerState.cpp" />
     <ClCompile Include="src\Actor\StateMachine.cpp" />
-    <ClCompile Include="src\Camera\GameCamera.cpp" />
+    <ClCompile Include="src\Camera\CameraCommon.cpp" />
+    <ClCompile Include="src\Camera\CameraController.cpp" />
+    <ClCompile Include="src\Camera\CameraManager.cpp" />
+    <ClCompile Include="src\Camera\CameraSteering.cpp" />
     <ClCompile Include="src\CharacterDataBase.cpp" />
     <ClCompile Include="src\collision\BoundingVolume.cpp" />
     <ClCompile Include="src\collision\BroadphaseImpl.cpp" />
@@ -308,7 +311,10 @@
     <ClInclude Include="src\Actor\PlayerController.h" />
     <ClInclude Include="src\Actor\PlayerState.h" />
     <ClInclude Include="src\Actor\StateMachine.h" />
-    <ClInclude Include="src\Camera\GameCamera.h" />
+    <ClInclude Include="src\Camera\CameraCommon.h" />
+    <ClInclude Include="src\Camera\CameraController.h" />
+    <ClInclude Include="src\Camera\CameraManager.h" />
+    <ClInclude Include="src\Camera\CameraSteering.h" />
     <ClInclude Include="src\CharacterDataBase.h" />
     <ClInclude Include="src\collision\BoundingVolume.h" />
     <ClInclude Include="src\collision\BroadphaseImpl.h" />
