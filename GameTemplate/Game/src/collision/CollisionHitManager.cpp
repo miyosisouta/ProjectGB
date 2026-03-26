@@ -3,14 +3,6 @@
 #include "src/Actor/ActorStatus.h"
 #include "src/Actor/BossCharacter.h"
 #include "src/Actor/Player.h"
-//#include "src/Actor/ActorState.h"
-//#include "src/Actor/BattleCharacter.h"
-//#include "src/Actor/EventCharacter.h"
-//#include "src/Actor/Gimmick.h"
-//#include "src/battle/BattleManager.h"
-//#include "src/gimmick/WarpSystem.h"
-//#include "src/util/ParallelFor.h"
-
 
 
 namespace
@@ -266,6 +258,17 @@ bool CollisionHitManager::ContainsBossAttackPair(const Pair& hitPair)
 void CollisionHitManager::UpdateBossAttackPair(Pair& hitPair)
 {
 	auto* player = GetHitObject<Player>(hitPair, CharacterID::PlayerID());
+	if (player == nullptr || player->GetStatus() == nullptr) {
+		return;
+	}
+
+	// プレイヤーが無敵フラグを持っているか
+	PlayerStatus* status = player->GetStatus()->As<PlayerStatus>();
+	if (status && status->IsInvincible())
+	{
+		// 回避時の処理はここへ
+		return;
+	}
 
 	player->GetStatus()->Damage(NORMAL_ATTACK_DAMAGE);
 }
@@ -285,6 +288,17 @@ bool CollisionHitManager::ContainsBossHitStampPair(const Pair& hitPair)
 void CollisionHitManager::UpdateBossHitStampPair(Pair& hitPair)
 {
 	auto* player = GetHitObject<Player>(hitPair, CharacterID::PlayerID());
+	if (player == nullptr || player->GetStatus() == nullptr) {
+		return;
+	}
+
+	// プレイヤーが無敵フラグを持っているか
+	PlayerStatus* status = player->GetStatus()->As<PlayerStatus>();
+	if (status && status->IsInvincible())
+	{
+		// 回避時の処理はここへ
+		return;
+	}
 
 	player->GetStatus()->Damage(SKILL_ATTACK_DAMAGE);
 }
@@ -306,7 +320,17 @@ void CollisionHitManager::UpdateBossSpinPair(Pair& hitPair)
 	// Pairの二人のクラスを取得
 	auto* player = GetHitObject<Player>(hitPair, CharacterID::PlayerID());
 	auto* bossCharacter = GetHitObject<BossCharacter>(hitPair, CharacterID::BossSpinAtkID());
+	if (player == nullptr || player->GetStatus() == nullptr || bossCharacter == nullptr) {
+		return;
+	}
 
+	// プレイヤーが無敵フラグを持っているか
+	PlayerStatus* status = player->GetStatus()->As<PlayerStatus>();
+	if (status && status->IsInvincible())
+	{
+		// 回避時の処理はここへ
+		return;
+	}
 
 	// ダメージを与える
 	player->GetStatus()->Damage(SKILL_ATTACK_DAMAGE);

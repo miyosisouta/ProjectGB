@@ -41,6 +41,8 @@ namespace ghost
 			BossDef = 1 << 1,
 			PlayerAtk = 1 << 2,
 			BossAtk = 1 << 3,
+			PlayerAvoid = 1 << 4,
+			BossAvoid = 1 << 5,
 		};
 	};
 

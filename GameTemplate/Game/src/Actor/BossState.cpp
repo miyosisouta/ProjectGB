@@ -21,7 +21,7 @@ namespace
 	constexpr float ATTACK_COLLISION_HEIGHT = 50.0f;   // 高さ
 
 	// ヒットスタンプ
-	static Vector3 ATTACK_HEIGHT = Vector3(0.0f,800.0f,0.0f); // 高さ
+	static Vector3 ATTACK_HEIGHT = Vector3(0.0f,600.0f,0.0f); // 高さ
 
 	// 回転攻撃
 	constexpr float OVER_MOVE_DISTANCE = 300.0f;
@@ -34,7 +34,7 @@ namespace
 
 void BossIdleState::Enter() 
 {
-	isFinished = false;
+	isFinished_ = false;
 	boss_->PlayAnimation(BossAnimID::enAnimIdle);
 
 	// 待機時間の生成
@@ -44,7 +44,7 @@ void BossIdleState::Enter()
 
 		// 時間設定
 		taskScheduler_->AddTimer(10.0f, [&]() {
-			isFinished = true;
+			isFinished_ = true;
 			});
 	}
 }
@@ -68,7 +68,7 @@ void BossIdleState::Exit()
 
 void BossRunState::Enter()
 {
-	isFinished = false; // 初期化
+	isFinished_ = false; // 初期化
 	boss_->PlayAnimation(BossAnimID::enAnimRun); // 走るアニメーションを設定
 
 	// プレイヤーとの距離を求める
@@ -99,7 +99,7 @@ void BossRunState::Update()
 
 		if (diff.LengthSq() <= goalPos_)
 		{
-			isFinished = true;
+			isFinished_ = true;
 			boss_->SetMoveVelocity(Vector3::Zero); // ピタッと止まる
 			boss_->PlayAnimation(BossAnimID::enAnimIdle); // 待機アニメーション開始
 			return;
@@ -126,7 +126,7 @@ void BossRunState::Exit()
 
 void BossAttackState::Enter()
 {
-	isFinished = false; // 初期化
+	isFinished_ = false; // 初期化
 	Quaternion targetRot = RotateToTarget(BOSS_ROTATE_SPEED);// 攻撃の前にプレイヤーがいる方向へ向く
 	boss_->SetTargetRot(targetRot);
 
@@ -175,7 +175,7 @@ void BossAttackState::Enter()
 		// 処理を終わる
 		taskScheduler_->AddTimer(3.0f, [&]()
 			{
-				isFinished = true;
+				isFinished_ = true;
 			});
 	}
 }
@@ -199,7 +199,7 @@ void BossAttackState::Exit()
 
 void HitStampState::Enter()
 {
-	isFinished = false; // 初期化
+	isFinished_ = false; // 初期化
 	createAttackCollision_ = false; // コリジョンの生成を可能にする
 	phase_ = Phase::Ready; // 準備をする
 
@@ -235,13 +235,13 @@ void HitStampState::Enter()
 		});
 
 	// 地面に着地時
-	taskScheduler_->AddTimer(6.0f, [&]() {
+	taskScheduler_->AddTimer(4.8f, [&]() {
 		boss_->SetMoveVelocity(Vector3::Zero);
 		phase_ = Phase::ShokingStamp;
 		});
 
 	// 地面に着地後
-	taskScheduler_->AddTimer(6.1f, [&]() {
+	taskScheduler_->AddTimer(5.0f, [&]() {
 		boss_->SetMoveVelocity(Vector3::Zero);
 		phase_ = Phase::Finished;
 		}, true);
@@ -294,8 +294,8 @@ void HitStampState::Update()
 		// 作られてないならゴーストコリジョンを生成
 		if (!createAttackCollision_) {
 			attackHitbox_ = std::make_unique<GhostBody>();
-			attackHitbox_->CreateSphere(boss_, CharacterID::BossHitStampAtkID(), 250.0f, ghost::CollisionAttribute::BossAtk, ghost::CollisionAttributeMask::BossAtk);
-			attackHitbox_->SetPosition(targetPos_);
+			attackHitbox_->CreateSphere(boss_, CharacterID::BossHitStampAtkID(), 350.0f, ghost::CollisionAttribute::BossAtk, ghost::CollisionAttributeMask::BossAtk);
+			attackHitbox_->SetPosition(boss_->GetTransformPosition());
 			boss_->SetMoveVelocity(Vector3::Zero);
 			createAttackCollision_ = true;
 		}
@@ -306,7 +306,7 @@ void HitStampState::Update()
 	case Phase::Finished:
 	{
 		attackHitbox_.reset();
-		isFinished = true;
+		isFinished_ = true;
 		break;
 	}
 	}
@@ -324,7 +324,7 @@ void HitStampState::Exit()
 
 void SpinState::Enter()
 {
-	isFinished = false; // 初期化
+	isFinished_ = false; // 初期化
 	isAttackStart_ = false; // 攻撃範囲表示の間は攻撃を開始しない
 
 	// 攻撃の前にプレイヤーがいる方向へ向く
@@ -371,7 +371,7 @@ void SpinState::Enter()
 		taskScheduler_->AddTimer(5.0f, [&]() {
 			boss_->SetMoveVelocity(Vector3::Zero);
 			attackHitbox_.reset();
-			isFinished = true;
+			isFinished_ = true;
 			});
 	}
 	
@@ -393,9 +393,9 @@ void SpinState::Update()
 
 		if (moveVelocity.LengthSq() < 0.001f)
 		{
-			boss_->SetMoveVelocity(Vector3::Zero); // ピタッと止める
-			attackHitbox_.reset();
-			isFinished = true;                     // ステート終了！
+			boss_->SetMoveVelocity(Vector3::Zero);	// ピタッと止める
+			attackHitbox_.reset();					// 当たり判定の破棄
+			isFinished_ = true;						// ステート終了！
 		}
 	}
 }

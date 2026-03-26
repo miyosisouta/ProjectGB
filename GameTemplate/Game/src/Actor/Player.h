@@ -8,11 +8,6 @@ class AbilityBase;
 class UtilityBase;
 class Player : public Character
 {
-private:
-	/* 特殊能力が使えるか */
-	bool CanSpecialAbility();
-
-
 public:
 	/** 遷移ルールのセットアップ */
 	void SetUpTranslateRulu();
@@ -34,6 +29,8 @@ private:
 	void EquipAbility(AbilityType type);
 	void EquipUtility(UtilityType type);
 
+	/* 特殊能力が使えるか */
+	bool CanSpecialAbility();
 
 public:
 	/* コンストラクタ */

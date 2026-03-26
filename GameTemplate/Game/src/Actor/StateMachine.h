@@ -4,13 +4,26 @@
 /* プレイヤーの状態 */
 enum class PlayerStateID
 {
+	/* 基本ステート */
 	None,
-	Idle,
-	Walk,
-	Run,
-	NormalAttack,
-	SpecialAbility,
-	Utility,
+	Idle,	//!< 待機
+	Walk,	//!< 歩く
+	Run,	//!< 走る
+
+
+	/* 通常攻撃 */
+	Bite,	//!< 通常攻撃
+
+
+	/* スキル攻撃 */
+	defaultAttack,	//!< スキル攻撃
+
+
+	/* 汎用スキル */
+	Avoid, //!< 回避
+
+
+	/* 強制ステート */
 	Dead
 };
 
@@ -47,10 +60,12 @@ private:
 	Quaternion rotation_ = Quaternion::Identity; //!< 回転：モデルをどちらに向けるか
 	Vector3 direction_ = Vector3::Zero; //!< 方向：カメラ基準でどちらを向くか
 	float stickLAmount_ = 0.0f; //!< 左スティックの入力量：キャラクターが移動しているかわかる
-	bool dash_ = false; //!< ダッシュするか
+	bool actionButtonA_ = false; //!< 長押しでダッシュするか、短押しで回避するか
 	bool actionButtonB_ = false; //!< Bボタンを押したか
 	bool actionButtonX_ = false; //!< Xボタンを押したか
 	bool actionButtonY_ = false; //!< Yボタンを押したか
+	bool avoidRequested_ = false; //!< 回避をするか
+
 
 
 public:
@@ -60,8 +75,8 @@ public:
 	inline void SetDirection(const Vector3& dir) { direction_ = dir; }	//!< 方向の設定
 	inline float GetStickLAmount() { return stickLAmount_; }			//!< 入力されているか
 	inline void SetStickLAmount(const float stickLAmount) { stickLAmount_ = stickLAmount; } //!< 入力量を設定
-	inline bool IsDash() { return dash_; }								//!< Aボタンされているか
-	inline void SetDash(const bool flg) { dash_ = flg; }				//!< Aボタンの設定
+	inline bool IsDash() { return actionButtonA_; }								//!< Aボタンされているか
+	inline void ActionButtonA(const bool flg) { actionButtonA_ = flg; }			//!< Aボタンの設定
 	inline bool IsActionButtonB() { return actionButtonB_; }			//!< Bボタンされているか
 	inline void ActionButtonB(const bool flg) { actionButtonB_ = flg; }	//!< Bボタンの設定
 	inline bool IsActionButtonY() { return actionButtonY_; }			//!< Yボタンされているか
@@ -71,6 +86,15 @@ public:
 
 
 	inline IState* GetCurrentState() const{ return currentState_; }
+
+	/** 回避ステート実行中は新たな回避入力を受け付けない */
+	inline void SetAvoidRequested(bool flg) {
+		if (flg && currentStateId_ == PlayerStateID::Avoid) { return; }
+		avoidRequested_ = flg;
+	}
+	inline bool IsAvoidRequested() { return avoidRequested_; }
+	inline void ClearAvoidRequest() { avoidRequested_ = false; }
+
 public:
 	/* コンストラクタ */
 	StateMachine() {}

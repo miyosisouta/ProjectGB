@@ -80,7 +80,7 @@ BattleManager::BattleManager()
 	// TODO : スキルの設定のテスト
 	CharacterDataBase::Get().SetPlayerNormalAttack(NormalAttackType::enBite);
 	CharacterDataBase::Get().SetPlayerAbility(AbilityType::enDefault);
-	CharacterDataBase::Get().SetPlayerUtility(UtilityType::enNone);
+	CharacterDataBase::Get().SetPlayerUtility(UtilityType::enAvoid);
 
 	player_->CreateSkill(
 		CharacterDataBase::Get().GetPlayerParam().nAttack,
