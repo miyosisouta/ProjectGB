@@ -15,6 +15,8 @@
 
 #include "src/UI/UIAnimationParameter.h"
 
+#include "src/Camera/CameraManager.h"
+#include "src/Camera/CameraController.h"
 
 
 void ReportLiveObjects()
@@ -50,6 +52,9 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 		});
 	CharacterDataBase::CreateInstance();
 
+	CameraManager::Initialize();
+	CameraManager::Get().Setup(g_camera3D);
+
 	// UIAnimationクラスの生成
 	UIAnimationParameter::Get().Load("Assets/ui/uiAnimation/UIAnimation.json");
 	//Gameクラスのオブジェクトを作成。
@@ -71,8 +76,36 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 		if (g_pad[0]->IsTrigger(enButtonA) ){
 			g_pad[0]->SetVibration(/*durationSec=*/0.5f, /*normalizedPower=*/1.0f);
 		}
+
 		K2Engine::GetInstance()->Execute();
+
+		CameraManager::Get().Update(g_gameTime->GetFrameDeltaTime());
+
+
+		// デバッグ用カメラの切り替え
+#if defined(_DEBUG)
+		static bool isTriggerDebugCameraKey = false;
+		if (GetAsyncKeyState(VK_F2)) {
+			if (!isTriggerDebugCameraKey) {
+				static bool isUseDebugCamera = false;
+				if (!isUseDebugCamera) {
+					RefCameraController debugCamera = std::make_shared<DebugCamera>();
+					CameraManager::Get().SwitchCamera(debugCamera);
+				}
+				else {
+					CameraManager::Get().SwitchPrevCamera();
+				}
+				isUseDebugCamera = !isUseDebugCamera;
+				isTriggerDebugCameraKey = true;
+			}
+		}
+		else {
+			isTriggerDebugCameraKey = false;
+		}
+#endif// APP_DEBUG
 	}
+
+	CameraManager::Finalize();
 
 	CharacterDataBase::DestroyInstance();
 	GhostBodyManager::Finalize();
