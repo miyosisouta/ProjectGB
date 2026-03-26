@@ -16,7 +16,6 @@ namespace
 	static constexpr int BGM_VOLUME_TYPE = 1;
 	static constexpr int SE_VOLUME_TYPE = 2;
 	static constexpr int DEFAULT_VOLUME_TYPE = 3;
-
 }
 
 
@@ -34,184 +33,37 @@ void SoundOptionMenu::Update()
 			selectVolumetType--;
 			if (selectVolumetType < MASTER_VOLUME_TYPE) {
 				selectVolumetType = MASTER_VOLUME_TYPE;
+			} else {
+				SoundManager::Get().PlaySE(enSoundKind_Menu_Move);
 			}
 		}
 		else if (g_pad[0]->IsTrigger(enButtonDown)) {
 			selectVolumetType++;
 			if (selectVolumetType > DEFAULT_VOLUME_TYPE) {
 				selectVolumetType = DEFAULT_VOLUME_TYPE;
+			} else {
+				SoundManager::Get().PlaySE(enSoundKind_Menu_Move);
 			}
 		}
 	}
 
-
 	// Master
-	
 	{
-		auto* gauge = GetUI<UIIcon>(Hash32("Ber_greenback1"));
-		if (gauge) {
-			if (selectVolumetType == MASTER_VOLUME_TYPE) {
-				if (g_pad[0]->IsTrigger(enButtonLeft)) {
-					masterVolume -= 1.0f;
-					if (masterVolume < 0.0f) {
-						masterVolume = 0.0f;
-					}
-				}
-				else if (g_pad[0]->IsTrigger(enButtonRight)) {
-					masterVolume += 1.0f;
-					if (masterVolume > 10.0f) {
-						masterVolume = 10.0f;
-					}
-				}
-			}
-
-			gauge->transform.localScale.x = (12.0f * (masterVolume / 10.0f));
-		}
-
-		// まる
-		{
-			float maxPos = 600.0f;
-			float minPos = -380.0f;
-			float length = minPos - maxPos;
-
-			float pos = maxPos + (length * (1.0f - (masterVolume / 10.0f)));
-
-			auto* maru = GetUI<UIIcon>(Hash32("bar_maru1"));
-			maru->transform.localPosition.x = pos;
-			auto* waku = GetUI<UIIcon>(Hash32("bar_waku1"));
-			waku->transform.localPosition.x = pos;
-		}
-
-
-		// スピーカー
-		{
-			auto* speaker = GetUI<UIIcon>(Hash32("speaker0"));
-			speaker->isDraw = masterVolume <= 0.0f;
-		}
-		{
-			auto* speaker = GetUI<UIIcon>(Hash32("speaker1"));
-			speaker->isDraw = masterVolume > 0.0f && masterVolume < 3.0f;
-		}
-		{
-			auto* speaker = GetUI<UIIcon>(Hash32("speaker2"));
-			speaker->isDraw = masterVolume >= 3.0f && masterVolume < 6.0f;
-		}
-		{
-			auto* speaker = GetUI<UIIcon>(Hash32("speaker3"));
-			speaker->isDraw = masterVolume >= 6.0f;
-		}
+		UpdateBar(Hash32("Ber_greenback1"), masterVolume, MASTER_VOLUME_TYPE);
+		UpdateMaru(Hash32("bar_maru1"), Hash32("bar_waku1"), masterVolume);
+		UpdateSpeaker(Hash32("speaker0"), Hash32("speaker1"), Hash32("speaker2"), Hash32("speaker3"), masterVolume);
 	}
 	// BGM
 	{
-		auto* gauge = GetUI<UIIcon>(Hash32("Ber_greenback2"));
-		if (gauge) {
-			if (selectVolumetType == BGM_VOLUME_TYPE)
-			{
-				if (g_pad[0]->IsTrigger(enButtonLeft)) {
-					bgmVolume -= 1.0f;
-					if (bgmVolume < 0.0f) {
-						bgmVolume = 0.0f;
-					}
-				}
-				else if (g_pad[0]->IsTrigger(enButtonRight)) {
-					bgmVolume += 1.0f;
-					if (bgmVolume > 10.0f) {
-						bgmVolume = 10.0f;
-					}
-				}
-			}
-
-			gauge->transform.localScale.x = (12.0f * (bgmVolume / 10.0f));
-		}
-
-		// まる
-		{
-			float maxPos = 600.0f;
-			float minPos = -380.0f;
-			float length = minPos - maxPos;
-
-			float pos = maxPos + (length * (1.0f - (bgmVolume / 10.0f)));
-
-			auto* maru = GetUI<UIIcon>(Hash32("bar_maru2"));
-			maru->transform.localPosition.x = pos;
-			auto* waku = GetUI<UIIcon>(Hash32("bar_waku2"));
-			waku->transform.localPosition.x = pos;
-		}
-
-
-		// スピーカー
-		{
-			auto* speaker = GetUI<UIIcon>(Hash32("speaker00"));
-			speaker->isDraw = bgmVolume <= 0.0f;
-		}
-		{
-			auto* speaker = GetUI<UIIcon>(Hash32("speaker01"));
-			speaker->isDraw = bgmVolume > 0.0f && bgmVolume < 3.0f;
-		}
-		{
-			auto* speaker = GetUI<UIIcon>(Hash32("speaker02"));
-			speaker->isDraw = bgmVolume >= 3.0f && bgmVolume < 6.0f;
-		}
-		{
-			auto* speaker = GetUI<UIIcon>(Hash32("speaker03"));
-			speaker->isDraw = bgmVolume >= 6.0f;
-		}
+		UpdateBar(Hash32("Ber_greenback2"), bgmVolume, BGM_VOLUME_TYPE);
+		UpdateMaru(Hash32("bar_maru2"), Hash32("bar_waku2"), bgmVolume);
+		UpdateSpeaker(Hash32("speaker00"), Hash32("speaker01"), Hash32("speaker02"), Hash32("speaker03"), bgmVolume);
 	}
 	// SE
 	{
-		auto* gauge = GetUI<UIIcon>(Hash32("Ber_greenback3"));
-		if (gauge) {
-			if (selectVolumetType == SE_VOLUME_TYPE) {
-				if (g_pad[0]->IsTrigger(enButtonLeft)) {
-					seVolume -= 1.0f;
-					if (seVolume < 0.0f) {
-						seVolume = 0.0f;
-					}
-				}
-				else if (g_pad[0]->IsTrigger(enButtonRight)) {
-					seVolume += 1.0f;
-					if (seVolume > 10.0f) {
-						seVolume = 10.0f;
-					}
-				}
-			}
-
-			gauge->transform.localScale.x = (12.0f * (seVolume / 10.0f));
-		}
-
-
-		// まる
-		{
-			float maxPos = 600.0f;
-			float minPos = -380.0f;
-			float length = minPos - maxPos;
-
-			float pos = maxPos + (length * (1.0f - (seVolume / 10.0f)));
-
-			auto* maru = GetUI<UIIcon>(Hash32("bar_maru3"));
-			maru->transform.localPosition.x = pos;
-			auto* waku = GetUI<UIIcon>(Hash32("bar_waku3"));
-			waku->transform.localPosition.x = pos;
-		}
-
-
-		// スピーカー
-		{
-			auto* speaker = GetUI<UIIcon>(Hash32("speaker000"));
-			speaker->isDraw = seVolume <= 0.0f;
-		}
-		{
-			auto* speaker = GetUI<UIIcon>(Hash32("speaker001"));
-			speaker->isDraw = seVolume > 0.0f && seVolume < 3.0f;
-		}
-		{
-			auto* speaker = GetUI<UIIcon>(Hash32("speaker002"));
-			speaker->isDraw = seVolume >= 3.0f && seVolume < 6.0f;
-		}
-		{
-			auto* speaker = GetUI<UIIcon>(Hash32("speaker003"));
-			speaker->isDraw = seVolume >= 6.0f;
-		}
+		UpdateBar(Hash32("Ber_greenback3"), seVolume, SE_VOLUME_TYPE);
+		UpdateMaru(Hash32("bar_maru3"), Hash32("bar_waku3"), seVolume);
+		UpdateSpeaker(Hash32("speaker000"), Hash32("speaker001"), Hash32("speaker002"), Hash32("speaker003"), seVolume);
 	}
 
 	// デフォルト
@@ -220,6 +72,8 @@ void SoundOptionMenu::Update()
 			masterVolume = DEFAULT_VOLUME;
 			bgmVolume = DEFAULT_VOLUME;
 			seVolume = DEFAULT_VOLUME;
+
+			SoundManager::Get().PlaySE(enSoundKind_Menu_Decide);
 		}
 
 		// 枠が変わる
@@ -267,12 +121,9 @@ void SoundOptionMenu::Update()
 			default:
 			{
 				selectFrame->isDraw = false;
-
 				break;
 			}
 		}
-
-
 		selectFrame->transform.localPosition.y = posY;
 	}
 
@@ -369,4 +220,70 @@ void SoundOptionMenu::InitializeLogic()
 	gauge2->SetPivot(Vector2(0.0f, 0.5f));
 	auto* gauge3 = GetUI<UIIcon>(Hash32("Ber_greenback3"));
 	gauge3->SetPivot(Vector2(0.0f, 0.5f));
+}
+
+
+void SoundOptionMenu::UpdateBar(const uint32_t gaugeId, float& volume, const uint32_t volumeType)
+{
+	auto* gauge = GetUI<UIIcon>(gaugeId);
+	if (gauge == nullptr) {
+		return;
+	}
+	if (selectVolumetType == volumeType) {
+		if (g_pad[0]->IsTrigger(enButtonLeft)) {
+			volume -= 1.0f;
+			if (volume < 0.0f) {
+				volume = 0.0f;
+			} else {
+				SoundManager::Get().PlaySE(enSoundKind_Menu_Move);
+			}
+
+		} else if (g_pad[0]->IsTrigger(enButtonRight)) {
+			volume += 1.0f;
+			if (volume > static_cast<float>(MAX_VOLUME)) {
+				volume = static_cast<float>(MAX_VOLUME);
+			} else {
+				SoundManager::Get().PlaySE(enSoundKind_Menu_Move);
+			}
+		}
+	}
+	// ゲージはデフォルトに戻すがあるので、選択中限らず更新する
+	gauge->transform.localScale.x = (12.0f * (volume / 10.0f));
+}
+
+
+void SoundOptionMenu::UpdateMaru(const uint32_t maruId, const uint32_t wakuId, const float volume)
+{
+	float maxPos = 600.0f;
+	float minPos = -380.0f;
+	float length = minPos - maxPos;
+
+	float pos = maxPos + (length * (1.0f - (volume / 10.0f)));
+
+	auto* maru = GetUI<UIIcon>(maruId);
+	maru->transform.localPosition.x = pos;
+	auto* waku = GetUI<UIIcon>(wakuId);
+	waku->transform.localPosition.x = pos;
+}
+
+
+void SoundOptionMenu::UpdateSpeaker(const uint32_t idA, const uint32_t idB, const uint32_t idC, const uint32_t idD, const float volume)
+{
+	// スピーカー
+	{
+		auto* speaker = GetUI<UIIcon>(idA);
+		speaker->isDraw = volume <= 0.0f;
+	}
+	{
+		auto* speaker = GetUI<UIIcon>(idB);
+		speaker->isDraw = volume > 0.0f && volume < 3.0f;
+	}
+	{
+		auto* speaker = GetUI<UIIcon>(idC);
+		speaker->isDraw = volume >= 3.0f && volume < 6.0f;
+	}
+	{
+		auto* speaker = GetUI<UIIcon>(idD);
+		speaker->isDraw = volume >= 6.0f;
+	}
 }

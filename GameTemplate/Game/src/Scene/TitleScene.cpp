@@ -47,16 +47,19 @@ void TitleScene::Update()
 		if (titleMenu->IsAbuttonEnabled()) {
 			if (titleMenu->IsSelectStat()) {
 				if (g_pad[0]->IsTrigger(enButtonA)) {
+					SoundManager::Get().PlaySE(enSoundKind_Menu_Decide);
 					isRequestScene = true;
 				}
 			}
 			if (titleMenu->IsSelectSound()) {
 				if (g_pad[0]->IsTrigger(enButtonA)) {
+					SoundManager::Get().PlaySE(enSoundKind_Menu_Decide);
 					UIScreenManager::Get().Push<SoundOptionMenu>("Assets/ui/layout/SoundOptionMenu.json", UITransitionMode::Push, UIScreenTransitionPreset::FadeInOut());
 				}
 			}
 			if (titleMenu->IsSelectExit()) {
 				if (g_pad[0]->IsTrigger(enButtonA)) {
+					SoundManager::Get().PlaySE(enSoundKind_Menu_Decide);
 					exit(0);
 				}
 			}
@@ -65,6 +68,7 @@ void TitleScene::Update()
 	auto* soundMenu = dynamic_cast<SoundOptionMenu*>(menu);
 	if (soundMenu) {
 		if (!UIScreenManager::Get().IsTransitioning() && g_pad[0]->IsTrigger(enButtonB)) {
+			SoundManager::Get().PlaySE(enSoundKind_Menu_Return);
 			UIScreenManager::Get().Pop();
 		}
 	}

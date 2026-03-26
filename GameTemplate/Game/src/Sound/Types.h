@@ -28,6 +28,11 @@ enum enSoundKind
 	enSoundKind_Gorilla_SlowAttack,						//!< 岩を投げる攻撃
 	enSoundKind_Max = enSoundKind_Gorilla_SlowAttack, //!< SEの最大数
 
+	/** UI */
+	enSoundKind_Menu_Decide,
+	enSoundKind_Menu_Move,
+	enSoundKind_Menu_Return,
+
 	/* BGM */
 	enSoundKind_BGM,
 	enSoundKind_Title = enSoundKind_BGM,
@@ -69,6 +74,10 @@ static SoundInformation soundInformation[enSoundKind_SE_Max] =
 	SoundInformation("Assets/Audio/SE/Gorilla/SpinAttack.wav"),		// 回転攻撃
 	SoundInformation("Assets/Audio/SE/Gorilla/SlowAttack.wav"),		// 岩投げる
 
+	/** UI */
+	SoundInformation("Assets/Audio/SE/Menu/Decide.wav"),
+	SoundInformation("Assets/Audio/SE/Menu/Move.wav"),
+	SoundInformation("Assets/Audio/SE/Menu/Return.wav"),
 
 	/** BGM **************************/
 	SoundInformation("Assets/Audio/BGM/Title.wav"),			//!< タイトル

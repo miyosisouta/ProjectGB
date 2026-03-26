@@ -6,12 +6,16 @@
 #include "TitleMenu.h"
 #include "UIAnimationFactory.h"
 
-#include "src/Util/TaskSchedulerSystem.h" 
-
 
 void TitleMenu::Update()
 {
-	selector_->Update();
+	if (isAbuttonEnabled)
+	{
+		selector_->Update();
+		if (selector_->IsChanged()) {
+			SoundManager::Get().PlaySE(enSoundKind_Menu_Move);
+		}
+	}
 
 	taskScheduler->Update(g_gameTime->GetFrameDeltaTime());
 	
@@ -42,6 +46,8 @@ void TitleMenu::Update()
 		}
 		if(canDo)
 		{
+			SoundManager::Get().PlaySE(enSoundKind_Menu_Decide);
+
 			AbuttonColor->isDraw = false;
 
 			// 非表示 はじめる
@@ -84,12 +90,8 @@ void TitleMenu::InitializeLogic()
 {
 	selector_ = std::make_unique<IntSelector>(0, 2, 1, 0);
 
-	if (taskScheduler) {
-		delete taskScheduler;
-	}
-	taskScheduler = new TaskSchedulerSystem();
+	taskScheduler = std::make_unique<TaskSchedulerSystem>();
 
-	// @todo for test
 	{
 		// がぶっとの文字アニメーション 大きくなる
 		auto* gabu = GetUI<UIIcon>(Hash32("Title_gabu"));
