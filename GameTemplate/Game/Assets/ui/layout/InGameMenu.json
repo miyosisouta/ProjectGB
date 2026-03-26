@@ -295,6 +295,22 @@
         "source": "Assets/ui/layout/BossHP.json",
         "position": [0, 410, 0],
         "scale": [1, 1, 1]
+      },
+     {
+        "comment": "ゲームクリア",
+        "type": "UIPrefab",
+        "name": "GameClear",
+        "source": "Assets/ui/layout/GameClearMenu.json",
+        "position": [0, 0, 0],
+        "scale": [1, 1, 1]
+      },
+      {
+        "comment": "ゲームオーバー",
+        "type": "UIPrefab",
+        "name": "GameOver",
+        "source": "Assets/ui/layout/GameOverMenu.json",
+        "position": [0, 0, 0],
+        "scale": [1, 1, 1]
       }
     ]
   }

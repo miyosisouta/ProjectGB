@@ -14,6 +14,7 @@ PouseMenu::PouseMenu()
 
 PouseMenu::~PouseMenu()
 {
+	UIScreenManager::Get().Pop();
 }
 
 
