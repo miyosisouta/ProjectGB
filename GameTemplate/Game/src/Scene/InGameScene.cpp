@@ -47,6 +47,36 @@ void InGameScene::Update()
 	BattleManager::Get().Update();		//BattleManagerの更新
 	
 	layout_->Update(); // 更新の呼び出し
+
+
+	// ポーズメニューの呼び出し
+	{
+		if (g_pad[0]->IsTrigger(enButtonStart)) {			
+
+			// ポーズメニューの開閉状態を切り替える
+			isOpenPauseMenu_ = !isOpenPauseMenu_;
+
+			if (isOpenPauseMenu_) {
+
+				// 更新対象をUIのみに切り替える
+				activeTarget_ = UpdateGroup::UI;
+				BattleManager::Get().SetActiveTarget(activeTarget_);
+
+				// todo
+				// ポーズメニューを開く
+
+			}
+			else {
+				// 更新対象を全てに切り替える
+				activeTarget_ = UpdateGroup::All;
+				BattleManager::Get().SetActiveTarget(activeTarget_);
+
+				// todo
+				// ポーズメニューを閉じる
+
+			}
+		}
+	}
 }
 
 

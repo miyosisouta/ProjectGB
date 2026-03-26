@@ -37,6 +37,8 @@ protected:
 
 	Vector3 moveVelocity_ = Vector3::Zero; //!< 毎フレームの移動速度を保持する変数
 
+	bool isUpdate_ = true; //!< 更新するかどうかのフラグ
+
 public:
 	/* 通常攻撃枠のスキルを取得 */
 	NormalAttackBase* GetNormalAttackSkill() const { return activeNormalAttack_.get(); }
@@ -52,6 +54,9 @@ public:
 	inline void SetMoveVelocity(const Vector3& velocity) { moveVelocity_ = velocity; }
 	/* 移動速度を取得 */
 	inline Vector3 GetMoveVelocity() { return moveVelocity_; }
+
+	/** 更新の可否状態を設定 */
+	inline void SetUpdate(const bool flg) { isUpdate_ = flg; }
 
 public:
 	/* コンストラクタ */

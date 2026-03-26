@@ -329,6 +329,8 @@ bool Player::Start()
 
 void Player::Update()
 {
+	if (!isUpdate_) return;
+
 	// 共通処理を呼び出す : ステートマシンのアップデートを呼んでます
 	Character::Update();
 
