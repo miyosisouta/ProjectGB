@@ -13,10 +13,10 @@
 namespace
 {
 	const float WALK_BASE_SPEED = 100.0f;
-	constexpr float WALK_SE_INTERVAL = 0.5f;		// 歩きのSEを鳴らす間隔
+	constexpr float WALK_SE_INTERVAL = 0.3f;		// 歩きのSEを鳴らす間隔
 
 	const float RUN_BASE_SPEED = 300.0f;
-	constexpr float RUN_SE_INTERVAL = 0.2f;		// 走りのSEを鳴らす間隔
+	constexpr float RUN_SE_INTERVAL = 0.1f;		// 走りのSEを鳴らす間隔
 }
 
 
@@ -49,6 +49,12 @@ void WalkState::Enter()
 {
 	// 歩きアニメーショ
 	player_->PlayAnimation(static_cast<int>(PlayerStateID::Walk));
+
+	taskScheduler_ = std::make_unique<TaskSchedulerSystem>();
+	const int id = taskScheduler_->CreateLoopSequence(WALK_SE_INTERVAL);
+	taskScheduler_->AddLoopTimer(id, 0.0f, [&](void) {
+		SoundManager::Get().PlaySE(enSoundKind_Player_Walk);
+		});
 }
 
 void WalkState::Update()
@@ -61,16 +67,13 @@ void WalkState::Update()
 
 	// 歩きのSEを鳴らす
 	{
-		walkSEElapsedTime_ += g_gameTime->GetFrameDeltaTime();
-		if (walkSEElapsedTime_ >= WALK_SE_INTERVAL) {
-			SoundManager::Get().PlaySE(enSoundKind_Player_Walk);
-			walkSEElapsedTime_ = 0.0f;
-		}
+		taskScheduler_->Update(g_gameTime->GetFrameDeltaTime());
 	}
 }
 
 void WalkState::Exit()
 {
+	taskScheduler_.reset();
 }
 
 
@@ -82,6 +85,12 @@ void RunState::Enter()
 {
 	// 走るアニメーション
 	player_->PlayAnimation(static_cast<int>(PlayerStateID::Run));
+
+	taskScheduler_ = std::make_unique<TaskSchedulerSystem>();
+	const int id = taskScheduler_->CreateLoopSequence(RUN_SE_INTERVAL);
+	taskScheduler_->AddLoopTimer(id, 0.0f, [&](void) {
+		SoundManager::Get().PlaySE(enSoundKind_Player_Walk);
+		});
 }
 
 void RunState::Update()
@@ -92,18 +101,15 @@ void RunState::Update()
 	// 移動先をPlayerに渡す
 	player_->SetMoveVelocity(velocity);
 
-	// 走りのSEを鳴らす
+	// タスクスケジュールの時間を進める
 	{
-		runSEElapsedTime_ += g_gameTime->GetFrameDeltaTime();
-		if (runSEElapsedTime_ >= RUN_SE_INTERVAL) {
-			SoundManager::Get().PlaySE(enSoundKind_Player_Walk);
-			runSEElapsedTime_ = 0.0f;
-		}
+		taskScheduler_->Update(g_gameTime->GetFrameDeltaTime());
 	}
 }
 
 void RunState::Exit()
 {
+	taskScheduler_.reset();
 }
 
 

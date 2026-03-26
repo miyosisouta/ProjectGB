@@ -4,18 +4,22 @@
 
 namespace
 {
-	// 動きのスピード
-	constexpr float BOSS_RUN_MOVE_SPEED = 100.0f;		// 走るときのベース速度
-	constexpr float BOSS_HITSTAMP_UP_SPEED = 600.0f;	// ヒットスタンプ時飛び上がる際のベース速度
-	constexpr float BOSS_HITSTAMP_DOWN_SPEED = 800.0f;	// ヒットスタンプ時着地する際のベース速度
-	constexpr float BOSS_SPIN_ATTACK_SPEED = 300.0f;	// 回転攻撃のベース速度
-	constexpr float BOSS_ROTATE_SPEED = 0.01f;			// ボスの回転速度
-
 	// NPCControllerで定義している距離と同じ値を設定
 	constexpr float SHORT_DISTANCE = 500.0f;	// 近距離
 	constexpr float MID_DISTANCE = 1000.0f;		// 中距離
 	constexpr float LONG_DISTANCE = 1500.0f;	// 遠距離
 
+
+	// 動きのスピード
+	constexpr float BOSS_RUN_MOVE_SPEED = 100.0f;		// 走るときのベース速度
+	constexpr float BOSS_RUN_SE_LOOP_SEQUENCE = 0.2f;	// SEのループシーケンス
+	constexpr float BOSS_HITSTAMP_UP_SPEED = 600.0f;	// ヒットスタンプ時飛び上がる際のベース速度
+	constexpr float BOSS_HITSTAMP_DOWN_SPEED = 800.0f;	// ヒットスタンプ時着地する際のベース速度
+	constexpr float BOSS_SPIN_ATTACK_SPEED = 300.0f;	// 回転攻撃のベース速度
+	constexpr float BOSS_SPIN_SE_LOOP_SEQUENCE = 0.3f;	// SEのループシーケンス
+	constexpr float BOSS_ROTATE_SPEED = 0.01f;			// ボスの回転速度
+
+	
 	// 通常攻撃
 	constexpr float ATTACK_COLLISION_FORWARD = 200.0f; // 前方向
 	constexpr float ATTACK_COLLISION_HEIGHT = 50.0f;   // 高さ
@@ -88,6 +92,15 @@ void BossRunState::Enter()
 	else if (currentDistSq > SHORT_DISTANCE * SHORT_DISTANCE) {
 		goalPos_ = SHORT_DISTANCE * SHORT_DISTANCE;
 	}
+
+	// 音の再生
+	{
+		taskScheduler_ = std::make_unique<TaskSchedulerSystem>();
+		const int id = taskScheduler_->CreateLoopSequence(BOSS_RUN_SE_LOOP_SEQUENCE);
+		taskScheduler_->AddLoopTimer(id, 0.0f, [&](void) {
+			SoundManager::Get().PlaySE(enSoundKind_Gorilla_Run);
+			});
+	}
 }
 
 void BossRunState::Update()
@@ -114,10 +127,13 @@ void BossRunState::Update()
 		boss_->SetMoveVelocity(moveVelocity);
 		boss_->SetTargetRot(moveRotate);
 	}
+
+	if (taskScheduler_) { taskScheduler_->Update(g_gameTime->GetFrameDeltaTime()); }
 }
 
 void BossRunState::Exit()
 {
+	taskScheduler_.reset();
 }
 
 /*==========================================*/
@@ -143,7 +159,8 @@ void BossAttackState::Enter()
 		// アニメーションの再生とコリジョンの生成
 		taskScheduler_->AddTimer(2.0f, [&]() {
 			boss_->PlayAnimation(BossAnimID::enAnimAttack); // 通常攻撃アニメーションを設定
-			
+			SoundManager::Get().PlaySE(enSoundKind_Gorilla_NormalAttack); // 音の再生
+
 			// ゴーストコリジョンを生成
 			attackHitbox_ = std::make_unique<GhostBody>();
 			attackHitbox_->CreateSphere(boss_, CharacterID::BossNormalAtkID(), 150.0f, ghost::CollisionAttribute::BossAtk, ghost::CollisionAttributeMask::BossAtk);
@@ -237,6 +254,7 @@ void HitStampState::Enter()
 	// 地面に着地時
 	taskScheduler_->AddTimer(4.8f, [&]() {
 		boss_->SetMoveVelocity(Vector3::Zero);
+		SoundManager::Get().PlaySE(enSoundKind_Gorilla_HitStamp);
 		phase_ = Phase::ShokingStamp;
 		});
 
@@ -285,7 +303,6 @@ void HitStampState::Update()
 		// プレイヤーのいた場所へ落下
 		Vector3 moveDown = CalcVelocityTowards(targetPos_, BOSS_HITSTAMP_DOWN_SPEED);
 		boss_->SetMoveVelocity(moveDown);
-
 		break;
 	}
 
@@ -334,6 +351,7 @@ void SpinState::Enter()
 	// 回転アニメーションを設定
 	boss_->PlayAnimation(BossAnimID::enAnimSpin); 
 
+
 	// プレイヤーの方向と進む距離を設定
 	{
 		Vector3 playerPos = boss_->GetTargetPos();			// プレイヤーの座標
@@ -362,9 +380,16 @@ void SpinState::Enter()
 
 		// 移動開始
 		taskScheduler_->AddTimer(1.5f, [&]() {
+			// コリジョンの生成
 			attackHitbox_ = std::make_unique<GhostBody>();
 			attackHitbox_->CreateSphere(boss_, CharacterID::BossSpinAtkID(), 110.0f, ghost::CollisionAttribute::BossAtk, ghost::CollisionAttributeMask::BossAtk);
 			isAttackStart_ = true;
+
+			// SEの再生
+			const int id = taskScheduler_->CreateLoopSequence(BOSS_SPIN_SE_LOOP_SEQUENCE);
+			taskScheduler_->AddLoopTimer(id, 0.0f, [&](void) {
+				SoundManager::Get().PlaySE(enSoundKind_Gorilla_Spin);
+				});
 			});
 
 		// 5秒たったら強制終了

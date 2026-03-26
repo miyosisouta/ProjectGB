@@ -128,6 +128,16 @@ void CollisionHitManager::OnBodyRemoved(GhostBody* body)
 	hitPairList_.erase(newEnd, hitPairList_.end());
 }
 
+void CollisionHitManager::UpdateTakeHitSound()
+{
+	SoundManager::Get().PlaySE(enSoundKind_Player_TakeHit);
+}
+
+void CollisionHitManager::UpdateAttackHitSound()
+{
+	SoundManager::Get().PlaySE(enSoundKind_Player_AttackHit);
+}
+
 
 // =====================================================================
 // Enter / Stay / Exit コールバック
@@ -215,6 +225,7 @@ void CollisionHitManager::UpdatePlayerNormalAttackPair(Pair& hitPair)
 
 	if (bossCharacter->GetStatus()) {
 		bossCharacter->GetStatus()->Damage(NORMAL_ATTACK_DAMAGE);
+		UpdateAttackHitSound(); // 攻撃が当たったSEを流す
 	}
 }
 
@@ -236,6 +247,7 @@ void CollisionHitManager::UpdatePlayerSkillAttackPair(Pair& hitPair)
 
 	if (bossCharacter->GetStatus()) {
 		bossCharacter->GetStatus()->Damage(SKILL_ATTACK_DAMAGE);
+		UpdateAttackHitSound(); // 攻撃が当たったSEを流す
 	}
 }
 
@@ -271,6 +283,7 @@ void CollisionHitManager::UpdateBossAttackPair(Pair& hitPair)
 	}
 
 	player->GetStatus()->Damage(NORMAL_ATTACK_DAMAGE);
+	UpdateTakeHitSound(); // 攻撃が当たったSEを流す
 }
 
 
@@ -292,6 +305,7 @@ void CollisionHitManager::UpdateBossHitStampPair(Pair& hitPair)
 		return;
 	}
 
+
 	// プレイヤーが無敵フラグを持っているか
 	PlayerStatus* status = player->GetStatus()->As<PlayerStatus>();
 	if (status && status->IsInvincible())
@@ -300,7 +314,8 @@ void CollisionHitManager::UpdateBossHitStampPair(Pair& hitPair)
 		return;
 	}
 
-	player->GetStatus()->Damage(SKILL_ATTACK_DAMAGE);
+	player->GetStatus()->Damage(SKILL_ATTACK_DAMAGE); // ダメージを与える
+	UpdateTakeHitSound(); // 攻撃が当たったSEを流す
 }
 
 
@@ -334,7 +349,7 @@ void CollisionHitManager::UpdateBossSpinPair(Pair& hitPair)
 
 	// ダメージを与える
 	player->GetStatus()->Damage(SKILL_ATTACK_DAMAGE);
-
+	UpdateTakeHitSound(); // 攻撃が当たったSEを流す
 
 	// 当たった二人の座標を取得
 	Vector3 playerPos = player->GetTransformPosition();
