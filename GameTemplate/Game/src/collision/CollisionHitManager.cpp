@@ -128,6 +128,16 @@ void CollisionHitManager::OnBodyRemoved(GhostBody* body)
 	hitPairList_.erase(newEnd, hitPairList_.end());
 }
 
+void CollisionHitManager::UpdateTakeHitSound()
+{
+	SoundManager::Get().PlaySE(enSoundKind_Player_TakeHit);
+}
+
+void CollisionHitManager::UpdateAttackHitSound()
+{
+	SoundManager::Get().PlaySE(enSoundKind_Player_AttackHit);
+}
+
 
 // =====================================================================
 // Enter / Stay / Exit コールバック

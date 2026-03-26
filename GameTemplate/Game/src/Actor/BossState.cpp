@@ -127,10 +127,13 @@ void BossRunState::Update()
 		boss_->SetMoveVelocity(moveVelocity);
 		boss_->SetTargetRot(moveRotate);
 	}
+
+	if (taskScheduler_) { taskScheduler_->Update(g_gameTime->GetFrameDeltaTime()); }
 }
 
 void BossRunState::Exit()
 {
+	taskScheduler_.reset();
 }
 
 /*==========================================*/
@@ -385,7 +388,7 @@ void SpinState::Enter()
 			// SEの再生
 			const int id = taskScheduler_->CreateLoopSequence(BOSS_SPIN_SE_LOOP_SEQUENCE);
 			taskScheduler_->AddLoopTimer(id, 0.0f, [&](void) {
-s				SoundManager::Get().PlaySE(enSoundKind_Gorilla_Spin);
+				SoundManager::Get().PlaySE(enSoundKind_Gorilla_Spin);
 				});
 			});
 
