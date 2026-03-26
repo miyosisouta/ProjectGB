@@ -17,6 +17,7 @@
 #include "src/Stage/Stage.h"
 
 #include "src/Camera/CameraManager.h"
+#include "src/Camera/CameraSteering.h"
 
 #include "src/collision/GhostBodyManager.h"
 #include "src/collision/CollisionHitManager.h"
@@ -181,11 +182,13 @@ void BattleManager::SetActiveTarget(const uint32_t target)
 	if (target == UpdateGroup::UI) {
 		player_->SetUpdate(false);
 		boss_->SetUpdate(false);
+		cameraSteering_.get()->SetUpdate(false);
 	}
 
 	// すべて
 	else if (target == UpdateGroup::All) {
 		player_->SetUpdate(true);
 		boss_->SetUpdate(true);
+		cameraSteering_.get()->SetUpdate(true);
 	}
 }
