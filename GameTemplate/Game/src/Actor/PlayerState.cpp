@@ -200,6 +200,7 @@ bool SpecialAbilityState::IsCancelable() const
 /*==================================================*/
 /* 特殊行動状態 */
 /*==================================================*/
+
 void UtilityState::Enter()
 {
 	// playerの通常攻撃タイプを取得
@@ -238,6 +239,8 @@ bool UtilityState::IsCancelable() const
 	if (currentSkill_ && currentSkill_->IsCancelable()) { return true; }
 	return false;
 }
+
+
 /*==================================================*/
 /* 死亡状態 */
 /*==================================================*/
@@ -264,8 +267,6 @@ void DeathState::Exit()
 /*=========================================*/
 /** ここからは共通処理 */
 /*=========================================*/
-
-
 
 Vector3 PlayerStateBase::CalcMovementVelocity(float speed)
 {

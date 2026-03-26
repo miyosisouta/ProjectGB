@@ -14,6 +14,7 @@ namespace CharacterID
 	/* プレイヤーの攻撃用ID */
 	inline uint32_t PlayerNormalAtkID() { return Hash32("PlayerNormalAttack"); }
 	inline uint32_t PlayerSkillAtkID() { return Hash32("PlayerSkillAttack"); }
+	inline uint32_t PlayerSkillAvoidID() { return Hash32("PlayerSkillAvoid"); }
 	
 	/* ボスの攻撃用ID */
 	inline uint32_t BossNormalAtkID() { return Hash32("BossNormalAttack"); }

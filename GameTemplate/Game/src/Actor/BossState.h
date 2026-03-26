@@ -42,7 +42,7 @@ public:
 class BossIdleState : public BossStateBase
 {
 public:
-	bool IsFinished() const override { return isFinished; }
+	bool IsFinished() const override { return isFinished_; }
 
 public:
 	BossIdleState(BossCharacter* b) : BossStateBase(b) {}
@@ -62,7 +62,7 @@ private:
 	float goalPos_ = 0.0f;
 
 public:
-	bool IsFinished() const override{ return isFinished; }
+	bool IsFinished() const override{ return isFinished_; }
 
 public:
 	BossRunState(BossCharacter* b) : BossStateBase(b) {}
@@ -79,7 +79,7 @@ public:
 class BossAttackState : public BossStateBase
 {
 public:
-	bool IsFinished() const override { return isFinished; }
+	bool IsFinished() const override { return isFinished_; }
 
 public:
 	BossAttackState(BossCharacter* b) : BossStateBase(b) {}
@@ -114,7 +114,7 @@ private:
 	bool createAttackCollision_ = false;
 	
 public:
-	bool IsFinished() const override { return isFinished; }
+	bool IsFinished() const override { return isFinished_; }
 
 public:
 	HitStampState(BossCharacter* b) : BossStateBase(b) {}
@@ -135,7 +135,7 @@ private:
 	bool isAttackStart_ = false;
 
 public:
-	bool IsFinished() const override { return isFinished; }
+	bool IsFinished() const override { return isFinished_; }
 
 public:
 	SpinState(BossCharacter* b) : BossStateBase(b) {}

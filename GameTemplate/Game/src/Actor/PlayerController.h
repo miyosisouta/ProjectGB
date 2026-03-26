@@ -1,12 +1,16 @@
 #pragma once
 
 class Player;
+class StateMachine;
 
 class PlayerController : public IGameObject
 {
 private:
-	Player* m_target = nullptr;
+	Player* target_ = nullptr; //!< 操作対象
 
+	bool aButtonHeld_ = false; //!< Aボタンを入力し続けているか
+	bool avoidInputConsumed_ = false;
+	float aButtonHeldTime_ = 0.0f; //!< 入力し続けている時間
 
 public:
 	PlayerController() {};
@@ -19,7 +23,7 @@ public:
 	/** 操作対象の設定 */
 	void SetTarget(Player* target)
 	{
-		m_target = target;
+		target_= target;
 	}
 
 private:
@@ -27,4 +31,6 @@ private:
 	Vector3 GetStickL();
 	/** 左スティックによる方向を使って回転を計算 */
 	Quaternion ComputeRotation();
+	/** Aボタンの入力量 */
+	void UpdateAButton(StateMachine* sm);
 };

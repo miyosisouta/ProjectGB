@@ -3,6 +3,14 @@
 #include "src/Actor/Character.h"
 #include "src/Actor/Player.h"
 
+namespace
+{
+	/* Bite */
+	constexpr float COLLISION_FORWARD = 100.0f; // コリジョンを前方向に出す
+	constexpr float COLLISION_HEIGHT = 50.0f; // コリジョンを上に上げる
+}
+
+
 void Bite::Enter(Character* p)
 {
 	// 初期化
@@ -13,7 +21,7 @@ void Bite::Enter(Character* p)
 
 
 	// 通常攻撃アニメーション
-	p->PlayAnimation(static_cast<int>(PlayerStateID::NormalAttack));
+	p->PlayAnimation(static_cast<int>(PlayerStateID::Bite));
 	// 移動速度はゼロに
 	p->SetMoveVelocity(Vector3::Zero);
 
@@ -36,8 +44,8 @@ void Bite::Enter(Character* p)
 					Vector3 playerPos = p->transform_.position;				// プレイヤーの現在の座標を取得
 					Quaternion playerRot = p->GetStateMachine()->GetRotation();
 					Vector3 forwardDir = p->GetStateMachine()->GetDirection();// プレイヤーが最後に向いていた方向を取得
-					float forwardOffset = 100.0f;									// 目の前にどれくらいズラすか
-					float heightOffset = 50.0f;										// 高さの調整
+					float forwardOffset = COLLISION_FORWARD;									// 目の前にどれくらいズラすか
+					float heightOffset = COLLISION_HEIGHT;										// 高さの調整
 					Vector3 targetPos = playerPos + (forwardDir * forwardOffset);	// 前方向の座標を決定
 					targetPos.y += heightOffset;									// 高さを決定
 

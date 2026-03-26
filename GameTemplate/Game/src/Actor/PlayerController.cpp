@@ -4,14 +4,23 @@
 #include "src/Actor/StateMachine.h"
 
 
+namespace
+{
+	constexpr float DASH_HOLD_THRESHOLD = 0.15f; // 回避とダッシュの切り替え閾値
+}
+
+
 void PlayerController::Update()
 {
 	// プレイヤーがないなら処理を返す
-	if (!m_target) { return; }
+	if (!target_) { return; }
 
-	auto* targetStateMachine = m_target->GetStateMachine();
-	// Aボタンでダッシュ
-	targetStateMachine->SetDash(g_pad[0]->IsPress(enButtonA));
+	// ステートマシーンを取得
+	auto* targetStateMachine = target_->GetStateMachine();
+
+	// Aボタン、長押しでダッシュ、短押しで回避
+	UpdateAButton(targetStateMachine);
+
 	// Bボタンで通常攻撃
 	targetStateMachine->ActionButtonB(g_pad[0]->IsPress(enButtonB));
 	// Yボタンで特殊能力
@@ -35,6 +44,45 @@ void PlayerController::Update()
 	// スティックの入力量を設定する
 	// 0～1の範囲
 	targetStateMachine->SetStickLAmount(GetStickL().Length());
+}
+
+
+void PlayerController::UpdateAButton(StateMachine* sm)
+{
+	const bool isPressed = g_pad[0]->IsPress(enButtonA);
+	const float deltaTime = g_gameTime->GetFrameDeltaTime();
+
+	if (isPressed)
+	{
+		if (!aButtonHeld_)
+		{
+			avoidInputConsumed_ = false; // ✅ 押し始めにリセット
+		}
+
+		aButtonHeld_ = true;
+		aButtonHeldTime_ += deltaTime;
+
+		if (aButtonHeldTime_ >= DASH_HOLD_THRESHOLD)
+		{
+			sm->ActionButtonA(true);
+		}
+	}
+	else
+	{
+		if (aButtonHeld_)
+		{
+			// 短押し かつ まだ消費していない場合だけリクエスト
+			if (aButtonHeldTime_ < DASH_HOLD_THRESHOLD && !avoidInputConsumed_)
+			{
+				sm->SetAvoidRequested(true);
+				avoidInputConsumed_ = true;
+			}
+
+			sm->ActionButtonA(false);
+			aButtonHeld_ = false;
+			aButtonHeldTime_ = 0.0f;
+		}
+	}
 }
 
 

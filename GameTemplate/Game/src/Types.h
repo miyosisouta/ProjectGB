@@ -28,7 +28,7 @@ enum class AbilityType {
 /* 汎用スキルタイプ */
 enum class UtilityType {
     enNone,       //!< 何もない
-    enDodgeRoll   //!< 回避
+    enAvoid   //!< 回避
 };
 
 /*========================================*/
@@ -94,6 +94,7 @@ struct BossParam
     int maxHp_ = 0;
     int attack_ = 0;
 };
+
 
 //// 動かすものを指定する 1なら動く
 //namespace UpdateGroup 

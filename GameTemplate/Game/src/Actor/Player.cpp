@@ -30,11 +30,12 @@ namespace anim
 	// 読み込みたいアニメーションのファイルパスを並べる
 	// ここにパスを追加・削除するだけで、スタート処理にてm_animationClipListに自動で追加される
 	static AnimationData sAnimPaths[] = {
-		AnimationData{"Assets/Objects/Player/Animation/IdleA.tka",false},
-		AnimationData{"Assets/Objects/Player/Animation/Walk.tka",true},
-		AnimationData{"Assets/Objects/Player/Animation/Run.tka",true},
-		AnimationData{"Assets/Objects/Player/Animation/Attack.tka",false},
-		AnimationData{"Assets/Objects/Player/Animation/Death.tka",false}
+		AnimationData{"Assets/Objects/Player/Animation/IdleA.tka",false},	// 待機
+		AnimationData{"Assets/Objects/Player/Animation/Walk.tka",true},		// 歩き
+		AnimationData{"Assets/Objects/Player/Animation/Run.tka",true},		// 走る
+		AnimationData{"Assets/Objects/Player/Animation/Attack.tka",false},	// 攻撃
+		AnimationData{"Assets/Objects/Player/Animation/Roll.tka",false},	// 回転
+		AnimationData{"Assets/Objects/Player/Animation/Death.tka",false}	// 死亡
 		// アニメーションを増やすときはここから
 	};
 
@@ -43,6 +44,7 @@ namespace anim
 	constexpr uint8_t ANIMATION_RUN = 2;  // 走る
 	constexpr uint8_t ANIMATION_NORMAL_ATTACK = 3;  // 通常攻撃
 	constexpr uint8_t ANIMATION_SPECIAL_ABILITY = 3; // 特殊能力
+	constexpr uint8_t ANIMATION_AVOID = 4; // 汎用スキル
 }
 
 void Player::PlayAnimation(const int id)
@@ -53,8 +55,9 @@ void Player::PlayAnimation(const int id)
 	case PlayerStateID::Idle: animIndex = anim::ANIMATION_IDLE; break;	// 待機。
 	case PlayerStateID::Walk: animIndex = anim::ANIMATION_WALK; break;	// 歩き。
 	case PlayerStateID::Run:  animIndex = anim::ANIMATION_RUN; break;		// 走る。
-	case PlayerStateID::NormalAttack:  animIndex = anim::ANIMATION_NORMAL_ATTACK; break;		// 通常攻撃。
-	case PlayerStateID::SpecialAbility:  animIndex = anim::ANIMATION_SPECIAL_ABILITY; break;	// 特殊能力。
+	case PlayerStateID::Bite:  animIndex = anim::ANIMATION_NORMAL_ATTACK; break;		// 通常攻撃。
+	case PlayerStateID::defaultAttack:  animIndex = anim::ANIMATION_SPECIAL_ABILITY; break;	// 特殊能力。
+	case PlayerStateID::Avoid: animIndex = anim::ANIMATION_AVOID; break;
 
 	default: return; // ないなら処理を返す
 	}
@@ -68,18 +71,6 @@ void Player::PlayAnimation(const int id)
 /* セットアップ */
 /* ==================================== */
 
-bool Player::CanSpecialAbility()
-{
-	if (stateMachine_.IsActionButtonY()) {
-		PlayerStatus* status = GetStatus()->As<PlayerStatus>();
-		if (status->CanExecuteSpecialAbility()) {
-			return true;
-		}
-	}
-	
-	return false;
-}
-
 void Player::SetUpTranslateRulu()
 {
 	// ステート（状態）を登録
@@ -87,9 +78,9 @@ void Player::SetUpTranslateRulu()
 		stateMachine_.AddState(PlayerStateID::Idle, new IdleState(this));
 		stateMachine_.AddState(PlayerStateID::Walk, new WalkState(this));
 		stateMachine_.AddState(PlayerStateID::Run, new RunState(this));
-		stateMachine_.AddState(PlayerStateID::NormalAttack, new NormalAttackState(this));
-		stateMachine_.AddState(PlayerStateID::SpecialAbility, new SpecialAbilityState(this));
-		stateMachine_.AddState(PlayerStateID::Utility, new UtilityState(this));
+		stateMachine_.AddState(PlayerStateID::Bite, new NormalAttackState(this));
+		stateMachine_.AddState(PlayerStateID::defaultAttack, new SpecialAbilityState(this));
+		stateMachine_.AddState(PlayerStateID::Avoid, new UtilityState(this));
 		stateMachine_.AddState(PlayerStateID::Dead, new DeathState(this));
 	}
 
@@ -115,12 +106,21 @@ void Player::SetUpTranslateRulu()
 					return stateMachine_.GetStickLAmount() > 0.01f && stateMachine_.IsDash();
 					});
 
+				// 待機 -> 回避
+				stateMachine_.AddTransition(PlayerStateID::Idle, PlayerStateID::Avoid, [this]() {
+					if (stateMachine_.IsAvoidRequested()) {
+						stateMachine_.ClearAvoidRequest();
+						return true;
+					}
+					return false;
+					});
+
 				// 待機 -> 通常攻撃
-				stateMachine_.AddTransition(PlayerStateID::Idle, PlayerStateID::NormalAttack, [this]() {
+				stateMachine_.AddTransition(PlayerStateID::Idle, PlayerStateID::Bite, [this]() {
 					return stateMachine_.IsActionButtonB();
 					});
 				// 待機 -> 特殊能力
-				stateMachine_.AddTransition(PlayerStateID::Idle, PlayerStateID::SpecialAbility, [this]() {
+				stateMachine_.AddTransition(PlayerStateID::Idle, PlayerStateID::defaultAttack, [this]() {
 					return CanSpecialAbility();
 					});
 			}
@@ -137,12 +137,21 @@ void Player::SetUpTranslateRulu()
 					return stateMachine_.IsDash();
 					});
 
+				// 歩き -> 回避
+				stateMachine_.AddTransition(PlayerStateID::Walk, PlayerStateID::Avoid, [this]() {
+					if (stateMachine_.IsAvoidRequested()) {
+						stateMachine_.ClearAvoidRequest();
+						return true;
+					}
+					return false;
+					});
+
 				// 歩き -> 通常攻撃
-				stateMachine_.AddTransition(PlayerStateID::Walk, PlayerStateID::NormalAttack, [this]() {
+				stateMachine_.AddTransition(PlayerStateID::Walk, PlayerStateID::Bite, [this]() {
 					return stateMachine_.IsActionButtonB();
 					});
 				// 歩き -> 特殊能力
-				stateMachine_.AddTransition(PlayerStateID::Walk, PlayerStateID::SpecialAbility, [this]() {
+				stateMachine_.AddTransition(PlayerStateID::Walk, PlayerStateID::defaultAttack, [this]() {
 					return CanSpecialAbility();
 					});
 			}
@@ -159,13 +168,22 @@ void Player::SetUpTranslateRulu()
 					return !stateMachine_.IsDash();
 					});
 
+				// 待機 -> 回避
+				stateMachine_.AddTransition(PlayerStateID::Run, PlayerStateID::Avoid, [this]() {
+					if (stateMachine_.IsAvoidRequested()) {
+						stateMachine_.ClearAvoidRequest();
+						return true;
+					}
+					return false;
+					});
+
 				// 走り -> 通常攻撃
-				stateMachine_.AddTransition(PlayerStateID::Run, PlayerStateID::NormalAttack, [this]() {
+				stateMachine_.AddTransition(PlayerStateID::Run, PlayerStateID::Bite, [this]() {
 					return stateMachine_.IsActionButtonB();
 					});
 
 				// 走り -> 特殊能力
-				stateMachine_.AddTransition(PlayerStateID::Run, PlayerStateID::SpecialAbility, [this]() {
+				stateMachine_.AddTransition(PlayerStateID::Run, PlayerStateID::defaultAttack, [this]() {
 					return CanSpecialAbility();
 					});
 			}
@@ -173,17 +191,43 @@ void Player::SetUpTranslateRulu()
 			/** 通常攻撃 */
 			{
 				// 通常攻撃 → 待機
-				stateMachine_.AddTransition(PlayerStateID::NormalAttack, PlayerStateID::Idle, [this]() {
+				stateMachine_.AddTransition(PlayerStateID::Bite, PlayerStateID::Idle, [this]() {
 					auto* currentState = static_cast<NormalAttackState*>(stateMachine_.GetCurrentState());
 					return currentState && currentState->IsFinished();
+					});
+				// 通常攻撃 -> 回避
+				stateMachine_.AddTransition(PlayerStateID::Bite, PlayerStateID::Avoid, [this]() {
+					if (stateMachine_.IsAvoidRequested()) {
+						stateMachine_.ClearAvoidRequest();
+						return true;
+					}
+					return false;
 					});
 			}
 
 			/* 特殊能力 */
 			{
 				// 特殊能力 → 待機
-				stateMachine_.AddTransition(PlayerStateID::SpecialAbility, PlayerStateID::Idle, [this]() {
-					auto* currentState = static_cast<NormalAttackState*>(stateMachine_.GetCurrentState());
+				stateMachine_.AddTransition(PlayerStateID::defaultAttack, PlayerStateID::Idle, [this]() {
+					auto* currentState = static_cast<SpecialAbilityState*>(stateMachine_.GetCurrentState());
+					return currentState && currentState->IsFinished();
+					});
+				// 特殊能力 -> 回避
+				stateMachine_.AddTransition(PlayerStateID::defaultAttack, PlayerStateID::Avoid, [this]() {
+					if (stateMachine_.IsAvoidRequested()) {
+						stateMachine_.ClearAvoidRequest();
+						return true;
+					}
+					return false;
+					});
+			}
+
+			/** 汎用スキル */
+			{
+				// 回避 → 待機
+				stateMachine_.AddTransition(PlayerStateID::Avoid, PlayerStateID::Idle, [this]() {
+					auto* currentState = static_cast<UtilityState*>(stateMachine_.GetCurrentState());
+					// 回避アクションが終了したら待機に戻る
 					return currentState && currentState->IsFinished();
 					});
 			}
@@ -199,6 +243,16 @@ void Player::CreateSkill(NormalAttackType nAttackType, AbilityType abilityType, 
 }
 
 
+bool Player::CanSpecialAbility()
+{
+	if (stateMachine_.IsActionButtonY()) {
+		PlayerStatus* status = GetStatus()->As<PlayerStatus>();
+		if (status->CanExecuteSpecialAbility()) {
+			return true;
+		}
+	}
+	return false;
+}
 /* ==================================== */
 /* 更新・描画処理 */
 /* ==================================== */
@@ -374,11 +428,11 @@ void Player::EquipAbility(AbilityType type)
 void Player::EquipUtility(UtilityType type) 
 {
 	switch (type) {
-	case UtilityType::enDodgeRoll:
-		// activeUtility_ = std::make_unique<SkillDodgeRoll>();
+	case UtilityType::enAvoid:
+		activeUtility_ = std::make_unique<Avoid>();
 		break;
 	default:
-		activeUtility_.reset();
+		activeUtility_ = std::make_unique<Avoid>();
 		break;
 	}
 }

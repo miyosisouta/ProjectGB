@@ -1,5 +1,8 @@
 #pragma once
 
+/*
+ * クールダウン構造体
+ */
 struct CoolDown
 {
 public:
@@ -39,20 +42,23 @@ public:
 		return coolTimer;
 	}
 
-	/*
-	 * 
-	 */
+	/** 実行できるか */
 	bool CanExecute() const
 	{
 		return coolTimer <= 0.0f;
 	}
 
-
+	/* フレーム準備ができているか */
 	bool IsReadyFrame() const
 	{
 		return isReadyFrame;
 	}
 };
+
+
+/* ===================================================== */
+/** 実体のあるオブジェクトのステータスクラス */
+/* ===================================================== */
 
 class ActorStatus
 {
@@ -124,79 +130,71 @@ public:
 };
 
 
-
-
+/* ===================================================== */
+/** キャラクターのステータス */
+/* ===================================================== */
 class CharacterStatus : public ActorStatus
 {
-protected:
-	CoolDown skillNormalAttack;
-	CoolDown skillSpecialAbility;
-	CoolDown skillUtility;
-
-
 public:
 	CharacterStatus() {}
 	virtual ~CharacterStatus() {}
 
 
-	virtual void Update() override
-	{
-		skillNormalAttack.Update();
-		skillSpecialAbility.Update();
-		skillUtility.Update();
-
-		ActorStatus::Update();
-	}
-
-
-public:
-	void ExecuteNormalAttack()
-	{
-		skillNormalAttack.Execute();
-	}
-	void ExecuteSpecialAbility()
-	{
-		skillSpecialAbility.Execute();
-	}
-	void ExecuteUtility()
-	{
-		skillUtility.Execute();
-	}
-
-
-	bool CanExecuteNormalAttack() const
-	{
-		return skillNormalAttack.CanExecute();
-	}
-	bool CanExecuteSpecialAbility() const
-	{
-		return skillSpecialAbility.CanExecute();
-	}
-	bool CanExecuteUtility() const
-	{
-		return skillUtility.CanExecute();
-	}
-
-
-	bool IsReadyFrameNormalAttack() const
-	{
-		return skillNormalAttack.IsReadyFrame();
-	}
-	bool IsReadyFrameSpecialAbility() const
-	{
-		return skillSpecialAbility.IsReadyFrame();
-	}
-	bool IsReadyFrameUtility() const
-	{
-		return skillUtility.IsReadyFrame();
-	}
+	virtual void Update() override{ ActorStatus::Update(); }
 };
 
 
-
+/* ===================================================== */
+/* プレイヤー用のステータス */
+/* ===================================================== */
 
 class PlayerStatus : public CharacterStatus
 {
+public:
+	enum class InvincibleFlags : uint32_t
+	{
+		enNone = 0,
+		enAvoid = 1 << 1,		//!< 回避中
+		enDamage = 1 << 2,	//!< ダメージを受けたとき
+		enSkill = 1 << 3,		//!< 攻撃中
+	};
+
+public:
+	// --- 無敵フラグ操作 ---
+
+	// 指定した無敵フラグをONにする
+	// 例: 回避開始時に Dodge ビットを立てる
+	void AddInvincible(InvincibleFlags flag)
+	{
+		invincibleFlag_ |= static_cast<uint32_t>(flag);
+	}
+
+	// 指定した無敵フラグをOFFにする
+	// 例: 無敵時間終了・Exit()の強制解除
+	void RemoveInvincible(InvincibleFlags flag)
+	{
+		invincibleFlag_ &= ~static_cast<uint32_t>(flag);
+	}
+
+	// 指定したフラグが今ONになっているか確認する
+	// 例: 回避無敵だけを個別に確認したいとき
+	bool HasInvincible(InvincibleFlags flag) const
+	{
+		return (invincibleFlag_ & static_cast<uint32_t>(flag)) != 0;
+	}
+
+	// いずれかの無敵フラグが1つでも立っているか確認する
+	// 例: 当たり判定でダメージを受けるか判断するとき
+	bool IsInvincible() const { return invincibleFlag_ != 0; }
+
+
+private:
+	uint8_t invincibleFlag_ = 0;
+
+	CoolDown skillNormalAttack;
+	CoolDown skillSpecialAbility;
+	CoolDown skillUtility;
+
 public:
 	PlayerStatus()
 	{
@@ -205,16 +203,81 @@ public:
 		maxHp_ = 5;
 	}
 
+	void Update() override
+	{
+		skillNormalAttack.Update();
+		skillSpecialAbility.Update();
+		skillUtility.Update();
+
+		CharacterStatus::Update();
+	}
+
 	void SetupSkillCoolDown(const int normalAttackCD, const int specialAbilityCD, const int utilityCD)
 	{
 		skillNormalAttack.coolDownTime = normalAttackCD;
 		skillSpecialAbility.coolDownTime = specialAbilityCD;
 		skillUtility.coolDownTime = utilityCD;
 	}
+
+public:
+	/** 通常攻撃を実行する */
+	void ExecuteNormalAttack()
+	{
+		skillNormalAttack.Execute();
+	}
+
+	/** スキルを実行する */
+	void ExecuteSpecialAbility()
+	{
+		skillSpecialAbility.Execute();
+	}
+
+	/** 汎用スキルを実行する */
+	void ExecuteUtility()
+	{
+		skillUtility.Execute();
+	}
+
+	/* 通常攻撃が使用可能か */
+	bool CanExecuteNormalAttack() const
+	{
+		return skillNormalAttack.CanExecute();
+	}
+	/** スキルが使用可能か */
+	bool CanExecuteSpecialAbility() const
+	{
+		return skillSpecialAbility.CanExecute();
+	}
+
+	/** 汎用スキルが使用可能か */
+	bool CanExecuteUtility() const
+	{
+		return skillUtility.CanExecute();
+	}
+
+	/** 通常攻撃が可能か */
+	bool IsReadyFrameNormalAttack() const
+	{
+		return skillNormalAttack.IsReadyFrame();
+	}
+
+	/** スキル攻撃が可能か */
+	bool IsReadyFrameSpecialAbility() const
+	{
+		return skillSpecialAbility.IsReadyFrame();
+	}
+
+	/** 汎用スキルが可能か */
+	bool IsReadyFrameUtility() const
+	{
+		return skillUtility.IsReadyFrame();
+	}
 };
 
 
-
+/* ===================================================== */
+/* ボス用のステータス */
+/* ===================================================== */
 
 class BossStatus : public CharacterStatus
 {
@@ -260,3 +323,9 @@ public:
 		return skillBossAttack_.CanExecute();
 	}
 };
+
+
+/* ===================================================== */
+/* スキル用のステータス */
+/* ===================================================== */
+
