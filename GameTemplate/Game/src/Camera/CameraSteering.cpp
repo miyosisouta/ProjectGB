@@ -10,6 +10,10 @@ namespace
 
 void CameraSteering::Update(CameraData& data, const float deltaTime)
 {
+	// カメラがアクティブでない場合は更新しない
+	if (!isUpdate_) return;
+
+
 	if (targetCharacter_ == nullptr) {
 		return;
 	}

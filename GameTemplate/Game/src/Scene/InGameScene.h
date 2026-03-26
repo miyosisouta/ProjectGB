@@ -8,11 +8,26 @@
 #include "src/Scene/IScene.h"
 
 class Layout;
+class PouseMenu;
+
 
 class InGameScene : public IScene
 {
 private:
 	Layout* layout_ = nullptr;
+	PouseMenu* pouseMenu_ = nullptr;
+
+
+	/** 現在動かす対象（player,UI,etc,,,) */
+	uint32_t activeTarget_ = 0;
+	/** ポーズメニューの開閉状態 */
+	bool isOpenPauseMenu_ = false;
+
+
+public:
+	/** 更新の対象物を取得 */
+	inline const uint32_t GetActiveTarget() const { return activeTarget_; }
+
 
 public:
 	Scene(InGameScene);

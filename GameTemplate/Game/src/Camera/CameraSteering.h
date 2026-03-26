@@ -12,6 +12,10 @@ class Character;
 class CameraSteering : public Noncopyable
 {
 public:
+	/** 更新のグループを取得 */
+	inline const uint32_t GetUpdateGroup() const { return UpdateGroup::CAMERA; }
+
+public:
 	struct Config
 	{
 		float distance = 50.0f;
@@ -25,6 +29,12 @@ private:
 	Config config_;
 	Character* targetCharacter_ = nullptr;
 	Vector3 toVector_ = Vector3::Zero;
+	bool isUpdate_ = true;
+
+
+public:
+	/** 更新の可否状態を設定 */
+	inline void SetUpdate(const bool flg) { isUpdate_ = flg; }
 
 
 public:

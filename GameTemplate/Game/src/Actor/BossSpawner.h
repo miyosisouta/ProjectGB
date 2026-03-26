@@ -7,6 +7,11 @@ class BossCharacter;
 class NPCController;
 class BossSpawner
 {
+public:
+	/** 更新のグループを取得 */
+	inline const uint32_t GetUpdateGroup() const { return UpdateGroup::Boss; }
+
+
 private:
 	ActorStatus* status_ = nullptr;					//!< ステータス
 	BossCharacter* boss_ = nullptr;					//!< ボス
@@ -28,6 +33,9 @@ public:
 
 	/** ボスの攻撃対象を設定するための中間管理 */
 	void SetAttackTarger(Player* target) { attackTarget_ = target; }
+
+	/** 更新の可否状態を設定 */
+	void SetUpdate(const bool flg);
 
 
 public:

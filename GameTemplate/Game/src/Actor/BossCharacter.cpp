@@ -136,6 +136,9 @@ bool BossCharacter::Start()
 
 void BossCharacter::Update()
 {
+	// アクティブでないなら更新しない
+	if (!isUpdate_) return; 
+
 	// ボスの移動処理
 	if(!isMoveStop_)
 	{

@@ -141,3 +141,9 @@ void BossSpawner::SpawnBoss(bool isPlayerControl)
 		}
 	}
 }
+
+
+void BossSpawner::SetUpdate(const bool flg)
+{
+	boss_->SetUpdate(flg);
+}

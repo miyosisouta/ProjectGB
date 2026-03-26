@@ -38,6 +38,15 @@ private:
     bool isEndEntryBoss_ = true;
 
 
+    /** 現在アクティブな対象 */
+	uint32_t activeTarget_ = 0;
+
+
+public:
+    /** アクティブ対象を設定 */
+    void SetActiveTarget(const uint32_t target);
+
+
 private:
     BattleManager();
     ~BattleManager();
