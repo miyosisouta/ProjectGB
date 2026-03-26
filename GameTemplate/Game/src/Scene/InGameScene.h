@@ -8,15 +8,19 @@
 #include "src/Scene/IScene.h"
 
 class Layout;
+class PouseMenu;
+
 
 class InGameScene : public IScene
 {
 private:
 	Layout* layout_ = nullptr;
+	PouseMenu* pouseMenu_ = nullptr;
+
 
 	/** 現在動かす対象（player,UI,etc,,,) */
 	uint32_t activeTarget_ = 0;
-	/** ポーズメニューのの開閉状態 */
+	/** ポーズメニューの開閉状態 */
 	bool isOpenPauseMenu_ = false;
 
 

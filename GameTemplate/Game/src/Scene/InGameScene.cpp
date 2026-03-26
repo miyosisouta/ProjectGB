@@ -8,7 +8,9 @@
 #include "InGameScene.h"
 
 #include "src/Core/BattleManager.h"
+#include "src/Core/PouseMenu.h"
 #include "src/Scene/OutGameScene.h"
+#include "src/Scene/TitleScene.h"
 #include "src/Sound/SoundManager.h"
 
 #include "src/UI/Layout.h"
@@ -19,6 +21,8 @@ InGameScene::InGameScene()
 {
 	BattleManager::CreateInstance();		//BattleManagerのインスタンスを作成
 	
+	pouseMenu_ = NewGO<PouseMenu>(0, "pouseMenu");	//PouseMenuの生成
+
 }
 
 
@@ -26,6 +30,7 @@ InGameScene::~InGameScene()
 {
 	BattleManager::Get().DestroyInstance();		//BattleManagerのインスタンスを破棄	
 	delete layout_;
+	DeleteGO(pouseMenu_);
 }
 
 
@@ -64,7 +69,7 @@ void InGameScene::Update()
 
 				// todo
 				// ポーズメニューを開く
-
+				pouseMenu_->SetActive(true);
 			}
 			else {
 				// 更新対象を全てに切り替える
@@ -73,10 +78,10 @@ void InGameScene::Update()
 
 				// todo
 				// ポーズメニューを閉じる
-
+				pouseMenu_->SetActive(false);
 			}
 		}
-	}
+	}	
 }
 
 
@@ -97,6 +102,14 @@ bool InGameScene::RequestScene(uint32_t& id)
 	// 
 	//	return true;
 	//}
+
+	// ポーズ画面からタイトルへ戻る
+	if (pouseMenu_->IsReturnTitle() == true) {
+		id = TitleScene::ID();
+		SoundManager::Get().StopBGM();
+	 
+		return true;
+	}
 
 	return false;
 }

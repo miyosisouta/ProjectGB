@@ -138,8 +138,7 @@ BattleManager::BattleManager()
 					CameraManager::Get().SwitchCamera(gameCameraController_);
 				});
 		}
-	}
-	
+	}	
 }
 
 
@@ -172,4 +171,21 @@ bool BattleManager::UpdateEntryBoss()
 {
 	entryBossScheduler_->Update(g_gameTime->GetFrameDeltaTime());
 	return isEndEntryBoss_;
+}
+
+
+void BattleManager::SetActiveTarget(const uint32_t target)
+{
+	// 更新対象の切り替え
+	// UIのみ
+	if (target == UpdateGroup::UI) {
+		player_->SetUpdate(false);
+		boss_->SetUpdate(false);
+	}
+
+	// すべて
+	else if (target == UpdateGroup::All) {
+		player_->SetUpdate(true);
+		boss_->SetUpdate(true);
+	}
 }

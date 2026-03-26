@@ -27,9 +27,7 @@ SceneManager::SceneManager()
 	loadingScreen_ = NewGO<LoadingScreen>(GameObjectPriority::enLoadScreen,"LoadingScreen");
 
 	// 最初のシーンを生成（タイトルシーン）
-	CreateScene(TitleScene::ID());
-
-	
+	CreateScene(TitleScene::ID());	
 }
 
 

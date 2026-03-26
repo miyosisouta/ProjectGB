@@ -35,7 +35,7 @@ public:
 	void SetAttackTarger(Player* target) { attackTarget_ = target; }
 
 	/** 更新の可否状態を設定 */
-	inline void SetUpdate(const bool flg);
+	void SetUpdate(const bool flg);
 
 
 public:

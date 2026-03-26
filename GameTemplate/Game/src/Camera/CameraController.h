@@ -17,6 +17,9 @@ class GameCamera : public ICameraController
 private:
     CameraData data_;
 
+    /** 更新の可否状態 */
+	bool isUpdate_ = true;
+
 
 public:
     /**
