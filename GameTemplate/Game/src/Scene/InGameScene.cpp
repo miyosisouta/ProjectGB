@@ -67,7 +67,6 @@ void InGameScene::Update()
 				activeTarget_ = UpdateGroup::UI;
 				BattleManager::Get().SetActiveTarget(activeTarget_);
 
-				// todo
 				// ポーズメニューを開く
 				pouseMenu_->SetActive(true);
 			}
@@ -76,7 +75,6 @@ void InGameScene::Update()
 				activeTarget_ = UpdateGroup::All;
 				BattleManager::Get().SetActiveTarget(activeTarget_);
 
-				// todo
 				// ポーズメニューを閉じる
 				pouseMenu_->SetActive(false);
 			}
@@ -87,8 +85,8 @@ void InGameScene::Update()
 
 void InGameScene::Render(RenderContext& rc)
 {
-	if (BattleManager::Get().IsEndEntryBoss()) {
-		BattleManager::Get().Render(rc);
+	BattleManager::Get().Render(rc);
+	if (BattleManager::Get().IsCutScene()) {
 		return;
 	}
 	layout_->Render(rc);
@@ -112,6 +110,13 @@ bool InGameScene::RequestScene(uint32_t& id)
 		id = TitleScene::ID();
 		SoundManager::Get().StopBGM();
 	 
+		return true;
+	}
+	// ゲーム演出終了からタイトルへもどる
+	if (BattleManager::Get().IsFinishedGame()) {
+		id = TitleScene::ID();
+		SoundManager::Get().StopBGM();
+
 		return true;
 	}
 

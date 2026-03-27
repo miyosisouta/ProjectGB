@@ -14,6 +14,7 @@
 #include "Src/Actor/PlayerController.h"
 #include "src/Actor/BossSpawner.h"
 #include "src/Actor/BossCharacter.h"
+#include "src/Actor/ActorStatus.h"
 #include "src/Stage/Stage.h"
 
 #include "src/Camera/CameraManager.h"
@@ -24,6 +25,8 @@
 
 #include "src/UI/Layout.h"
 #include "src/UI/Menu.h"
+#include "src/UI/GameClearMenu.h"
+#include "src/UI/GameOverMenu.h"
 
 
 namespace
@@ -62,10 +65,9 @@ BattleManager::BattleManager()
 
 	stage_ = NewGO<Stage>(0, "stage");		//Stageの生成
 
-	auto* skyCube = NewGO<SkyCube>(0,"skyCube");
-	skyCube->SetType(enSkyCubeType_Day);
-	skyCube->SetScale(SKYCUBE_SCALE);
-	skyCube_ = skyCube;
+	skyCube_ = NewGO<SkyCube>(0, "skyCube");
+	skyCube_->SetType(enSkyCubeType_Day);
+	skyCube_->SetScale(SKYCUBE_SCALE);
 
 	// カメラ初期化
 	{
@@ -100,119 +102,90 @@ BattleManager::BattleManager()
 		CharacterDataBase::Get().GetPlayerParam().utility
 	);
 
-	// レイアウト生成
-	layout_ = new Layout();
-	layout_->Initialize<MenuBase>("Assets/ui/layout/BossEntryCutScene.json");
-
+	// 演出用カットシーンスケジューラーの作成
+	cutSceneScheduler_ = std::make_unique<TaskSchedulerSystem>();
 	// ボス登場演出
-	{
-		// 演出カメラ
-		// NOTE: GameCameraを使い回しているが必要に応じて専用のカメラコントローラーを作りたい
-		CameraData initData;
-		initData.fov = Math::DegToRad(CAMERA_FOVY);
-		initData.farClip = CAMERA_FAR;
-		auto gameCamera = std::make_shared<GameCamera>();
-		gameCamera->SetState(initData);
-		bossEntryCameraController_ = gameCamera;
-
-		CameraManager::Get().Register(GameCamera::ID(), bossEntryCameraController_);
-		CameraManager::Get().SwitchCamera(bossEntryCameraController_);
-
-		// スケジューラーを作成
-		{
-			entryBossScheduler_ = std::make_unique<TaskSchedulerSystem>();
-			entryBossScheduler_->AddTimer(1.0f, [this]()
-				{
-					CameraData cameraData;
-					cameraData.position = Vector3(0, 100.0f, 0.0f);
-					cameraData.target = Vector3(-300.0f, 100.0f, 0.0f);
-					bossEntryCameraController_->As<GameCamera>()->SetState(cameraData);
-
-					auto* menu = layout_->GetMenu();
-					auto* icon = menu->GetUI<UIIcon>(Hash32("gollira"));
-					icon->isDraw = true;
-					icon = menu->GetUI<UIIcon>(Hash32("gollira_nameA"));
-					icon->isDraw = true;
-
-					SoundManager::Get().PlaySE(enSoundKind_Gorilla_SingleImpact);
-				});
-			entryBossScheduler_->AddTimer(2.0f, [this]()
-				{
-					CameraData cameraData;
-					cameraData.position = Vector3(-600, 100.0f, 0.0f);
-					cameraData.target = Vector3(-300.0f, 100.0f, 0.0f);
-					bossEntryCameraController_->As<GameCamera>()->SetState(cameraData);
-
-					auto* menu = layout_->GetMenu();
-					auto* icon = menu->GetUI<UIIcon>(Hash32("gollira_nameC"));
-					icon->isDraw = true;
-
-					SoundManager::Get().PlaySE(enSoundKind_Gorilla_SingleImpact);
-				});
-			entryBossScheduler_->AddTimer(3.0f, [this]()
-				{
-					CameraData cameraData;
-					cameraData.position = Vector3(-300, 100.0f, 400.0f);
-					cameraData.target = Vector3(-300.0f, 100.0f, 0.0f);
-					bossEntryCameraController_->As<GameCamera>()->SetState(cameraData);
-
-					auto* menu = layout_->GetMenu();
-					auto* icon = menu->GetUI<UIIcon>(Hash32("gollira_nameB"));
-					icon->isDraw = true;
-
-					SoundManager::Get().PlaySE(enSoundKind_Gorilla_DoubleImpact);
-				});
-			// 終了
-			entryBossScheduler_->AddTimer(7.0f, [this]()
-				{
-					isEndEntryBoss_ = false;
-					CameraManager::Get().Unregister(GameCamera::ID());
-					CameraManager::Get().Register(GameCamera::ID(), gameCameraController_);
-					CameraManager::Get().SwitchCamera(gameCameraController_);
-
-					auto* menu = layout_->GetMenu();
-					auto* icon = menu->GetUI<UIIcon>(Hash32("gollira_nameB"));
-					icon->isDraw = false;
-					icon = menu->GetUI<UIIcon>(Hash32("gollira"));
-					icon->isDraw = false;
-				});
-		}
-	}	
+	SetupEntryBossCutScene();
 }
 
 
 BattleManager::~BattleManager()
 {
-	if (layout_) {
-		delete layout_;
-		layout_ = nullptr;
+	ReleaseCutSceneLayout();
+
+	DeleteGO(player_);
+	DeleteGO(playerController_);
+	DeleteGO(stage_);
+	DeleteGO(skyCube_);
+	if (boss_) {
+		delete boss_;
+		boss_ = nullptr;
 	}
 }
 
 
 void BattleManager::Update()
 {
-	if (UpdateEntryBoss()) {
-		layout_->Update();
-		return;
+	// 状態によって処理を変更
+	switch (gameState_)
+	{
+		case GameState::Entry:
+		{
+			if (UpdateEntryBoss()) {
+				break;
+			}
+			ReleaseCutSceneLayout();
+			gameState_ = GameState::Playing;
+			/** FALL THROUGH */
+		}
+		case GameState::Playing:
+		{
+			boss_->Update();
+
+			// カメラの更新
+			auto gameCamera = gameCameraController_->As<GameCamera>();
+			auto cameraData = gameCamera->GetCameraData();
+			cameraSteering_->Update(cameraData, g_gameTime->GetFrameDeltaTime());
+			gameCamera->SetState(cameraData);
+
+			// BossのHPが0になったらクリア演出へ
+			auto* boss = FindGO<BossCharacter>("boss");
+			if (boss && boss->GetStatus()->IsDead()) {
+				SetupClearCutScene();
+				gameState_ = GameState::ResultClear;
+			}
+
+			if (player_->GetStatus()->IsDead())
+			{
+				SetupOverCutScene();
+				gameState_ = GameState::ResultOver;
+			}
+			break;
+		}
+		case GameState::ResultClear:
+		{
+			if (!UpdateResultClear()) {
+				gameState_ = GameState::Shutdown;
+			}
+			break;
+		}
+		case GameState::ResultOver:
+		{
+			if (!UpdateResultOver()) {
+				gameState_ = GameState::Shutdown;
+			}
+			break;
+			
+		}
+		case GameState::Shutdown:
+		{
+
+			break;
+		}
 	}
 
 	if (layout_) {
-		delete layout_;
-		layout_ = nullptr;
-	}
-
-	boss_->Update();
-	//gameCamera_->Update();		//GameCameraの更新
-
-	auto gameCamera = gameCameraController_->As<GameCamera>();
-	auto cameraData = gameCamera->GetCameraData();
-	cameraSteering_->Update(cameraData, g_gameTime->GetFrameDeltaTime());
-	gameCamera->SetState(cameraData);
-
-	if (skyCube_) {
-		Vector3 cameraPos = cameraData.position;
-		skyCube_->SetPosition(cameraPos);
+		layout_->Update();
 	}
 
 	GhostBodyManager::Get().Update();
@@ -225,16 +198,161 @@ void BattleManager::Render(RenderContext& rc)
 	if (layout_) {
 		layout_->Render(rc);
 	}
-	if (skyCube_) {
-		skyCube_->Render(rc);
-	}
 }
 
 
 bool BattleManager::UpdateEntryBoss()
 {
-	entryBossScheduler_->Update(g_gameTime->GetFrameDeltaTime());
-	return isEndEntryBoss_;
+	cutSceneScheduler_->Update(g_gameTime->GetFrameDeltaTime());
+	return isPlayingEntryBoss_;
+}
+
+
+bool BattleManager::UpdateResultClear()
+{
+	cutSceneScheduler_->Update(g_gameTime->GetFrameDeltaTime());
+
+	auto* menu = dynamic_cast<GameClearMenu*>(layout_->GetMenu());
+	if (menu) {
+		// 演出終了したか
+		if (menu->IsEnd()) {
+			isPlayingResult_ = false;
+		}
+	}
+
+	return isPlayingResult_;
+}
+
+
+bool BattleManager::UpdateResultOver()
+{
+	cutSceneScheduler_->Update(g_gameTime->GetFrameDeltaTime());
+	auto* menu = dynamic_cast<GameOverMenu*>(layout_->GetMenu());
+	if (menu) {
+		// 演出終了したか
+		if (menu->IsEnd()) {
+			isPlayingResult_ = false;
+		}
+	}
+	return isPlayingResult_;
+}
+
+
+void BattleManager::SetupEntryBossCutScene()
+{
+	isPlayingEntryBoss_ = true;
+
+	// レイアウト生成
+	layout_ = new Layout();
+	layout_->Initialize<MenuBase>("Assets/ui/layout/BossEntryCutScene.json");
+
+	// 演出カメラ
+	// NOTE: GameCameraを使い回しているが必要に応じて専用のカメラコントローラーを作りたい
+	CameraData initData;
+	initData.fov = Math::DegToRad(CAMERA_FOVY);
+	initData.farClip = CAMERA_FAR;
+	auto gameCamera = std::make_shared<GameCamera>();
+	gameCamera->SetState(initData);
+	bossEntryCameraController_ = gameCamera;
+
+	CameraManager::Get().Register(GameCamera::ID(), bossEntryCameraController_);
+	CameraManager::Get().SwitchCamera(bossEntryCameraController_);
+
+	// スケジューラーを作成
+	{
+		cutSceneScheduler_->AddTimer(1.0f, [this]()
+			{
+				CameraData cameraData;
+				cameraData.position = Vector3(0, 100.0f, 0.0f);
+				cameraData.target = Vector3(-300.0f, 100.0f, 0.0f);
+				bossEntryCameraController_->As<GameCamera>()->SetState(cameraData);
+
+				auto* menu = layout_->GetMenu();
+				auto* icon = menu->GetUI<UIIcon>(Hash32("gollira"));
+				icon->isDraw = true;
+				icon = menu->GetUI<UIIcon>(Hash32("gollira_nameA"));
+				icon->isDraw = true;
+			});
+		cutSceneScheduler_->AddTimer(2.0f, [this]()
+			{
+				CameraData cameraData;
+				cameraData.position = Vector3(-600, 100.0f, 0.0f);
+				cameraData.target = Vector3(-300.0f, 100.0f, 0.0f);
+				bossEntryCameraController_->As<GameCamera>()->SetState(cameraData);
+
+				auto* menu = layout_->GetMenu();
+				auto* icon = menu->GetUI<UIIcon>(Hash32("gollira_nameC"));
+				icon->isDraw = true;
+			});
+		cutSceneScheduler_->AddTimer(3.0f, [this]()
+			{
+				CameraData cameraData;
+				cameraData.position = Vector3(-300, 100.0f, 400.0f);
+				cameraData.target = Vector3(-300.0f, 100.0f, 0.0f);
+				bossEntryCameraController_->As<GameCamera>()->SetState(cameraData);
+
+				auto* menu = layout_->GetMenu();
+				auto* icon = menu->GetUI<UIIcon>(Hash32("gollira_nameB"));
+				icon->isDraw = true;
+
+			});
+		// 終了
+		cutSceneScheduler_->AddTimer(7.0f, [this]()
+			{
+				isPlayingEntryBoss_ = false;
+				CameraManager::Get().Unregister(GameCamera::ID());
+				CameraManager::Get().Register(GameCamera::ID(), gameCameraController_);
+				CameraManager::Get().SwitchCamera(gameCameraController_);
+
+				auto* menu = layout_->GetMenu();
+				auto* icon = menu->GetUI<UIIcon>(Hash32("gollira_nameB"));
+				icon->isDraw = false;
+				icon = menu->GetUI<UIIcon>(Hash32("gollira"));
+				icon->isDraw = false;
+			});
+	}
+}
+
+
+void BattleManager::SetupClearCutScene()
+{
+	isPlayingResult_ = true;
+
+	cutSceneScheduler_->Reset();
+
+	// レイアウト生成
+	layout_ = new Layout();
+	layout_->Initialize<GameClearMenu>("Assets/ui/layout/GameClearMenu.json");
+
+	// NOTE: GameClearは GameClearMenu 側でUI演出の処理を書いている
+}
+
+
+void BattleManager::SetupOverCutScene()
+{
+	isPlayingResult_ = true;
+
+	cutSceneScheduler_->Reset();
+
+	// レイアウト生成
+	layout_ = new Layout();
+	layout_->Initialize<GameOverMenu>("Assets/ui/layout/GameOverMenu.json");
+
+	// NOTE: 必要であればUIアニメーション等を追加する
+	//cutSceneScheduler_->AddTimer(3.0f, [this]()
+	//	{
+	//		// TODO : ゲームオーバー後の処理（タイトルに戻るなど）
+	//		isPlayingResult_ = false;
+	//	});
+}
+
+
+void BattleManager::ReleaseCutSceneLayout()
+{
+	if (layout_) {
+		delete layout_;
+		layout_ = nullptr;
+	}
 }
 
 

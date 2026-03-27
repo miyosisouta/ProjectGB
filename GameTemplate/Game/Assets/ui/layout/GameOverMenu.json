@@ -2,6 +2,19 @@
   "canvas": {
     "elements": [
       {
+            "comment": "ゲームオーバーの背景",
+            "type": "UIIcon",
+        "name": "gameOverFade",
+        "asset": "Assets/ui/inGameUI/gameOver/white.DDS",
+        "width": 1920,
+        "height": 1080,
+        "position": [0, 0, 0],
+        "scale": [1, 1, 1],
+        "rotation": 0,
+        "color": [0, 0, 0, 0.4],
+        "isDraw": false
+      },
+      {
         "coment": "ゲームオーバー",
         "type": "UIIcon",
         "name": "gameOver",

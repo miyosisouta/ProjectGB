@@ -1,6 +1,8 @@
 #pragma once
 
 
+class Layout;
+
 
 class PouseMenu : public IGameObject
 {
@@ -9,10 +11,8 @@ private:
 	bool isActive_ = false;
 	/** タイトルシーンへ戻るフラグ */
 	bool isReturnTitle_ = false;
-	/** 現在のメニューインデックス */
-	uint8_t currentMenuIndex_ = 0;
-	/** メニューの文字列 */
-	FontRender menuText_;
+
+	Layout* layout_ = nullptr;
 
 
 public:
@@ -22,23 +22,14 @@ public:
 	inline const bool IsReturnTitle() const { return isReturnTitle_; }
 
 
-
-	public:
-		PouseMenu();
-		~PouseMenu();
-
-
-
-	private:
-		bool Start() override;
-		void Update() override;
-		void Render(RenderContext& rc) override;
-
+public:
+	PouseMenu();
+	~PouseMenu();
 
 
 private:
-	void MoveMenu();
-	void SelectMenu();
-
+	bool Start() override;
+	void Update() override;
+	void Render(RenderContext& rc) override;
 };
 

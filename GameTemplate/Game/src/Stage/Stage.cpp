@@ -17,6 +17,8 @@ Stage::Stage()
 
 Stage::~Stage()
 {
+	delete stageCollision_;
+	stageCollision_ = nullptr;
 }
 
 
