@@ -17,8 +17,8 @@ namespace bossRuleData
                 // ▼ 近距離ルールの設定
                 { DistancePhase::enShortAttackType, {
                     { BossStateID::Attack, 5 }, // 通常攻撃
-                    { BossStateID::Spin,   2 }, // 回転攻撃
-                    { BossStateID::Jump,   3 }  // ヒットスタンプ
+                    { BossStateID::Spin,   3 }, // 回転攻撃
+                    { BossStateID::Jump,   2 }  // ヒットスタンプ
                 }},
 
                 // ▼ 中距離ルールの設定
