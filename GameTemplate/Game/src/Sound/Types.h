@@ -26,7 +26,9 @@ enum enSoundKind
 	enSoundKind_Gorilla_HitStamp,						//!< ヒットスタンプ
 	enSoundKind_Gorilla_Spin,							//!< 回転攻撃
 	enSoundKind_Gorilla_SlowAttack,						//!< 岩を投げる攻撃
-	enSoundKind_Max = enSoundKind_Gorilla_SlowAttack, //!< SEの最大数
+	enSoundKind_Gorilla_SingleImpact,					//!< ボス登場シーンで使うドンの音
+	enSoundKind_Gorilla_DoubleImpact,					//!< ボス登場シーンで使うドドンの音
+	enSoundKind_Max = enSoundKind_Gorilla_DoubleImpact, //!< SEの最大数
 
 	/** UI */
 	enSoundKind_Menu_Decide,
@@ -73,11 +75,14 @@ static SoundInformation soundInformation[enSoundKind_SE_Max] =
 	SoundInformation("Assets/Audio/SE/Gorilla/FallAttack.wav"),		// ヒットスタンプ
 	SoundInformation("Assets/Audio/SE/Gorilla/SpinAttack.wav"),		// 回転攻撃
 	SoundInformation("Assets/Audio/SE/Gorilla/SlowAttack.wav"),		// 岩投げる
+	SoundInformation("Assets/Audio/SE/Gorilla/uiTextImpactSingle.wav"),		// 登場シーンで使用するドンの音
+	SoundInformation("Assets/Audio/SE/Gorilla/uiTextImpactDouble.wav"),		// 登場シーンで使用するドドンの音
 
 	/** UI */
 	SoundInformation("Assets/Audio/SE/Menu/Decide.wav"),
 	SoundInformation("Assets/Audio/SE/Menu/Move.wav"),
 	SoundInformation("Assets/Audio/SE/Menu/Return.wav"),
+
 
 	/** BGM **************************/
 	SoundInformation("Assets/Audio/BGM/Title.wav"),			//!< タイトル
