@@ -20,16 +20,20 @@ void Avoid::Enter(Character* p)
 	// 前フレームの移動量をリセット
 	p->SetMoveVelocity(Vector3::Zero);
 
+
 	// タスクスケージュールを作成
 	taskScheduler_ = std::make_unique<TaskSchedulerSystem>();
 
 	taskScheduler_->AddTimer(0.1f, [&, p]()
 		{
-			p->PlayAnimation(static_cast<int> (PlayerStateID::Avoid));
-
+			
 			Vector3 playerPos = p->transform_.position; // プレイヤーの現在の座標を取得
-			// Quaternion playerRot = p->GetStateMachine()->GetRotation(); // プレイヤーの回転を取得
+			Quaternion playerRot = p->GetStateMachine()->GetRotation(); // プレイヤーの回転を取得
 			Vector3 forwardDir = p->GetStateMachine()->GetDirection();// プレイヤーが最後に向いていた方向を取得
+			
+			p->PlayAnimation(static_cast<int> (PlayerStateID::Avoid));
+			playerRot.AddRotationDegY(180.0f);
+			EffectManager::Get().PlayEffect(emEffectKind_Avoid, playerPos, playerRot, Vector3(3.0f, 3.0f, 3.0f));
 
 			// 移動先の設定
 			targetPos_ = playerPos + (forwardDir * TARGET_POS_FORWARD);

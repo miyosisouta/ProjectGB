@@ -47,14 +47,17 @@ void IdleState::Exit()
 
 void WalkState::Enter()
 {
-	// 歩きアニメーショ
+	// 歩きアニメーション
 	player_->PlayAnimation(static_cast<int>(PlayerStateID::Walk));
 
-	taskScheduler_ = std::make_unique<TaskSchedulerSystem>();
-	const int id = taskScheduler_->CreateLoopSequence(WALK_SE_INTERVAL);
-	taskScheduler_->AddLoopTimer(id, 0.0f, [&](void) {
-		SoundManager::Get().PlaySE(enSoundKind_Player_Walk);
-		});
+	// SE
+	{
+		taskScheduler_ = std::make_unique<TaskSchedulerSystem>();
+		const int id = taskScheduler_->CreateLoopSequence(WALK_SE_INTERVAL);
+		taskScheduler_->AddLoopTimer(id, 0.0f, [&](void) {
+			SoundManager::Get().PlaySE(enSoundKind_Player_Walk);
+			});
+	}
 }
 
 void WalkState::Update()
@@ -87,10 +90,23 @@ void RunState::Enter()
 	player_->PlayAnimation(static_cast<int>(PlayerStateID::Run));
 
 	taskScheduler_ = std::make_unique<TaskSchedulerSystem>();
-	const int id = taskScheduler_->CreateLoopSequence(RUN_SE_INTERVAL);
-	taskScheduler_->AddLoopTimer(id, 0.0f, [&](void) {
-		SoundManager::Get().PlaySE(enSoundKind_Player_Walk);
-		});
+	// SEの再生
+	{
+		const int id = taskScheduler_->CreateLoopSequence(RUN_SE_INTERVAL);
+		taskScheduler_->AddLoopTimer(id, 0.0f, [&](void) {
+			SoundManager::Get().PlaySE(enSoundKind_Player_Walk);
+			});
+	}
+	
+	// エフェクト
+	{
+		const int id = taskScheduler_->CreateLoopSequence(RUN_SE_INTERVAL);
+		taskScheduler_->AddLoopTimer(id, 0.0f, [&](void) {
+			const Vector3 playerPos = player_->GetTransformPosition();
+			const Quaternion playerRot = player_->GetStateMachine()->GetRotation();
+			EffectManager::Get().PlayEffect(enEffectKind_Dash_Wind, playerPos, playerRot, Vector3(10.0f, 10.0f, 10.0f));
+			});
+	}
 }
 
 void RunState::Update()

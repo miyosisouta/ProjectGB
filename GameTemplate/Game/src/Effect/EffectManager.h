@@ -54,6 +54,21 @@ public:
     /** エフェクト停止 */
     void StopEffect(const EffectHandle handle);
 
+    /**
+     * 追従エフェクトの位置を更新する
+     * NOTE: ループエフェクトをボスなどに追従させるために毎フレーム呼ぶ
+     */
+    void SetEffectPosition(const EffectHandle handle, const Vector3& pos);
+    /**
+     * 追従エフェクトの回転を更新する
+     */
+    void SetEffectRotation(const EffectHandle handle, const Quaternion& rot);
+    /**
+     * 追従エフェクトの大きさを更新する
+     * NOTE: ループエフェクトをボスなどに追従させるために毎フレーム呼ぶ
+     */
+    void SetEffectScale(const EffectHandle handle, const Vector3& pos);
+    
 
     EffectEmitter* FindEffect(const EffectHandle handle)
     {
@@ -64,7 +79,6 @@ public:
         K2_ASSERT(false, "削除済みか追加されていないエフェクトにアクセスしようとしています。\n");
         return nullptr;
     }
-
 
 
 

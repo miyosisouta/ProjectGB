@@ -111,7 +111,9 @@ private:
 	Phase phase_ = Phase::Ready;
 	Vector3 targetPos_ = Vector3::Zero;
 	Vector3 nextTargetPos_ = Vector3::Zero;
+	Vector3 fixedAttackPos_ = Vector3::Zero;
 	bool createAttackCollision_ = false;
+	EffectHandle predictionEffectHandle_ = INVALID_EFFECT_HANDLE; //!< 攻撃予測エフェクトのハンドル（追従管理用）
 	
 public:
 	bool IsFinished() const override { return isFinished_; }
@@ -133,6 +135,8 @@ class SpinState : public BossStateBase
 private:
 	Vector3 targetPos_ = Vector3::Zero;
 	bool isAttackStart_ = false;
+	EffectHandle spinEffectHandle_ = INVALID_EFFECT_HANDLE; //!< 回転エフェクトのハンドル（追従管理用）
+	EffectHandle predictionEffectHandle_ = INVALID_EFFECT_HANDLE;
 
 public:
 	bool IsFinished() const override { return isFinished_; }
