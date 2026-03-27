@@ -50,20 +50,43 @@ EffectHandle EffectManager::PlayEffect(const int kind, const Vector3& position, 
 	m_effect->SetScale(scale);
 	m_effect->Play();
 
-	return effectHandleCount_;
+	// ハンドルとエフェクトをmapに登録してから返す
+	EffectHandle handle = effectHandleCount_++;
+	effectList_[handle] = m_effect;
+
+	return handle;
 }
 
 
 void EffectManager::StopEffect(const EffectHandle handle)
 {
-	auto* effect = FindEffect(handle);
-	if (effect == nullptr) {
-		return;
-	}
-	effect->Stop();
+	auto it = effectList_.find(handle);
+	if (it == effectList_.end()) { return; }
+
+	it->second->Stop();
+	effectList_.erase(it); // ← 停止したらmapからも削除する
 }
 
-	
+void EffectManager::SetEffectPosition(const EffectHandle handle, const Vector3& pos)
+{
+	auto* effect = FindEffect(handle);
+	if (effect == nullptr) { return; }
+	effect->SetPosition(pos);
+}
+
+void EffectManager::SetEffectRotation(const EffectHandle handle, const Quaternion& rot)
+{
+	auto* effect = FindEffect(handle);
+	if (effect == nullptr) { return; }
+	effect->SetRotation(rot);
+}
+
+void EffectManager::SetEffectScale(const EffectHandle handle, const Vector3& pos)
+{
+	auto* effect = FindEffect(handle);
+	if (effect == nullptr) { return; }
+	effect->SetScale(pos);
+}
 
 
 /******************************************************************************/

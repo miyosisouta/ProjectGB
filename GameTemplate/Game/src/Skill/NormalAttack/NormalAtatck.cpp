@@ -52,7 +52,6 @@ void Bite::Enter(Character* p)
 					// コリジョンの座標を設定
 					attackHitbox_->SetPosition(targetPos);
 					// エフェクトのPRSを決める
-					Quaternion hoge = playerRot;
 					playerRot.AddRotationDegY(360.0f);
 					EffectManager::Get().PlayEffect(enEffectKind_Wind_Blast_Weak, targetPos, playerRot, Vector3(3.0f, 3.0f, 3.0f));
 					// 通常攻撃のSEを再生
