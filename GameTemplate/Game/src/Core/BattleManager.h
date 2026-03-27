@@ -31,6 +31,7 @@ private:
     BossSpawner* boss_ = nullptr;
     Stage* stage_ = nullptr;
     Layout* layout_ = nullptr;
+    SkyCube* skyCube_ = nullptr;
     
     std::unique_ptr<CameraSteering> cameraSteering_ = nullptr;
     RefCameraController gameCameraController_ = nullptr;

@@ -457,7 +457,7 @@ namespace nsK2Engine {
 		}
 		else {
 			// 通常描画
-			if (m_geometryDatas[0].IsInViewFrustum()) {
+			if (m_geometryDatas.empty() || m_geometryDatas[0].IsInViewFrustum()) {
 				// ビューフラスタムに含まれている。
 				g_renderingEngine->AddRenderObject(this);
 			}

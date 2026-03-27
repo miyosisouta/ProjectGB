@@ -30,9 +30,9 @@ namespace
 {
 	// TODO: あとでパラメータを外部から読み込むようにする
 	// カメラ近平面
-	constexpr float CAMERA_NEAR = 0.1f;
+	constexpr float CAMERA_NEAR = 1.0f;
 	// カメラ遠平面
-	constexpr float CAMERA_FAR = 10000.0f;
+	constexpr float CAMERA_FAR = 50000.0f;
 	// カメラの画角
 	constexpr float CAMERA_FOVY = 60.0f;
 	// カメラの高さ
@@ -41,6 +41,9 @@ namespace
 	constexpr float CAMERA_DISTANCE = 600.0f;
 	// カメラ回転速度
 	constexpr float CAMERA_ROT_SPEED = 0.05f;
+
+	// スカイキューブ
+	constexpr float SKYCUBE_SCALE = 400.0f;
 }
 
 
@@ -58,6 +61,11 @@ BattleManager::BattleManager()
 	boss_->SpawnBoss(); // ボスを作成
 
 	stage_ = NewGO<Stage>(0, "stage");		//Stageの生成
+
+	auto* skyCube = NewGO<SkyCube>(0,"skyCube");
+	skyCube->SetType(enSkyCubeType_Day);
+	skyCube->SetScale(SKYCUBE_SCALE);
+	skyCube_ = skyCube;
 
 	// カメラ初期化
 	{
@@ -197,6 +205,11 @@ void BattleManager::Update()
 	cameraSteering_->Update(cameraData, g_gameTime->GetFrameDeltaTime());
 	gameCamera->SetState(cameraData);
 
+	if (skyCube_) {
+		Vector3 cameraPos = cameraData.position;
+		skyCube_->SetPosition(cameraPos);
+	}
+
 	GhostBodyManager::Get().Update();
 	CollisionHitManager::Get().Update();
 }
@@ -206,6 +219,9 @@ void BattleManager::Render(RenderContext& rc)
 {
 	if (layout_) {
 		layout_->Render(rc);
+	}
+	if (skyCube_) {
+		skyCube_->Render(rc);
 	}
 }
 
