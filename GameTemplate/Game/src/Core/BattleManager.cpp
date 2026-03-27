@@ -133,6 +133,8 @@ BattleManager::BattleManager()
 					icon->isDraw = true;
 					icon = menu->GetUI<UIIcon>(Hash32("gollira_nameA"));
 					icon->isDraw = true;
+
+					SoundManager::Get().PlaySE(enSoundKind_Gorilla_SingleImpact);
 				});
 			entryBossScheduler_->AddTimer(2.0f, [this]()
 				{
@@ -144,6 +146,8 @@ BattleManager::BattleManager()
 					auto* menu = layout_->GetMenu();
 					auto* icon = menu->GetUI<UIIcon>(Hash32("gollira_nameC"));
 					icon->isDraw = true;
+
+					SoundManager::Get().PlaySE(enSoundKind_Gorilla_SingleImpact);
 				});
 			entryBossScheduler_->AddTimer(3.0f, [this]()
 				{
@@ -156,6 +160,7 @@ BattleManager::BattleManager()
 					auto* icon = menu->GetUI<UIIcon>(Hash32("gollira_nameB"));
 					icon->isDraw = true;
 
+					SoundManager::Get().PlaySE(enSoundKind_Gorilla_DoubleImpact);
 				});
 			// 終了
 			entryBossScheduler_->AddTimer(7.0f, [this]()
