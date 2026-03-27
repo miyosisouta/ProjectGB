@@ -1,0 +1,51 @@
+{
+  "canvas": {
+    "elements": [
+      {
+            "comment": "ゲームオーバーの背景",
+            "type": "UIIcon",
+        "name": "gameOverFade",
+        "asset": "Assets/ui/inGameUI/gameOver/white.DDS",
+        "width": 1920,
+        "height": 1080,
+        "position": [0, 0, 0],
+        "scale": [1, 1, 1],
+        "rotation": 0,
+        "color": [0, 0, 0, 0.4],
+        "isDraw": false
+      },
+      {
+        "coment": "ゲームオーバー",
+        "type": "UIIcon",
+        "name": "gameOver",
+        "asset": "Assets/ui/inGameUI/gameOver/gameover.DDS",
+        "width": 1000,
+        "height": 150,
+        "position": [0, 0, 0],
+        "scale": [1, 1, 1],
+        "rotation": 0,
+        "color": [1, 1, 1, 1]
+      },
+      {
+        "coment": "ゲームオーバー:落ち込む",
+        "type": "UIIcon",
+        "name": "gameOver_otikomu",
+        "asset": "Assets/ui/inGameUI/gameOver/otikomu.DDS",
+        "width": 300,
+        "height": 300,
+        "position": [450, 100, 0],
+        "scale": [1, 1, 1],
+        "rotation": 0,
+        "color": [1, 1, 1, 1]
+      },
+     
+
+      {
+        "comment": "ダミー(予備)",
+        "type": "UIDummy",
+        "name": "Dummy",
+        "position": [-210, -180, 0]
+      }
+    ]
+}
+}

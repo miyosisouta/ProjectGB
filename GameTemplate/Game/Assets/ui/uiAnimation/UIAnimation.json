@@ -71,16 +71,6 @@
             "loop": "Once"
         },
         {
-            "comment": "タイトル画のきらきら(右上大)",
-            "key": "kira_right_scaleUp",
-            "valueType": "Vector3",
-            "startValue": { "x": 1.0, "y": 1.0, "z": 1.0 },
-            "endValue":   { "x": 0.0, "y": 0.0, "z": 0.0 },
-            "duration": 0.8,
-            "easing": "EaseOut",
-            "loop": "PingPong"
-        },
-        {
             "comment": "タイトル画のきらきら(左上大)",
             "key": "kira_left_scaleUp",
             "valueType": "Vector3",
@@ -199,6 +189,113 @@
             "endValue":   { "x": 0.0, "y": 3.0, "z": 0.0 },
             "duration": 0.05,
             "easing": "Linear",
+            "loop": "Once"
+        },
+
+
+
+        {
+            "comment": "ゲームクリアの肉球縮小",
+            "key": "GameClearStampScale",
+            "valueType": "Vector3",
+            "startValue": { "x": 3.0, "y": 3.0, "z": 1.0 },
+            "endValue":   { "x": 1.0, "y": 1.0, "z": 1.0 },
+            "duration": 0.5,
+            "easing": "EaseOut",
+            "loop": "Once"
+        },
+        {
+            "comment": "ゲームクリアの肉球透明度",
+            "key": "GameClearStampFadeIn",
+            "valueType": "Vector4",
+            "startValue": { "x": 1.0, "y": 1.0, "z": 1.0, "w": 0.0 },
+            "endValue":   { "x": 1.0, "y": 1.0, "z": 1.0, "w": 1.0 },
+            "duration": 0.5,
+            "easing": "EaseOut",
+            "loop": "Once"
+        },
+        {
+            "comment": "ゲームクリアの肉球(上から下:バウンス)",
+            "key": "GameClearStampBounceA",
+            "valueType": "Vector3",
+            "startValue": { "x": 0.0, "y": 500.0, "z": 0.0},
+            "endValue":   { "x": 0.0, "y": 0.0, "z": 0.0},
+            "duration": 0.3,
+            "easing": "Linear",
+            "loop": "Once"
+        },
+        {
+            "comment": "ゲームクリアの肉球(下から上:バウンス)",
+            "key": "GameClearStampBounceB",
+            "valueType": "Vector3",
+            "startValue": { "x": 0.0, "y": 0.0, "z": 0.0},
+            "endValue":   { "x": 0.0, "y": 70.0, "z": 0.0},
+            "duration": 0.1,
+            "easing": "EaseIn",
+            "loop": "Once"
+        },
+        {
+            "comment": "ゲームクリアの肉球(上から下:バウンス)",
+            "key": "GameClearStampBounceC",
+            "valueType": "Vector3",
+            "startValue": { "x": 0.0, "y": 70.0, "z": 0.0},
+            "endValue":   { "x": 0.0, "y": 0.0, "z": 0.0},
+            "duration": 0.1,
+            "easing": "EaseOut",
+            "loop": "Once"
+        },
+
+
+
+
+        {
+            "comment": "ゲームオーバーの背景透明度",
+            "key": "GameOverFade",
+            "valueType": "Vector4",
+            "startValue": { "x": 0.0, "y": 0.0, "z": 0.0, "w": 0.0 },
+            "endValue":   { "x": 0.0, "y": 0.0, "z": 0.0, "w": 0.7 },
+            "duration": 0.4,
+            "easing": "EaseOut",
+            "loop": "Once"
+        },
+        {
+            "comment": "ゲームオーバーの文字透明度",
+            "key": "GameOverFadeIn",
+            "valueType": "Vector4",
+            "startValue": { "x": 1.0, "y": 1.0, "z": 1.0, "w": 0.0 },
+            "endValue":   { "x": 1.0, "y": 1.0, "z": 1.0, "w": 1.0 },
+            "duration": 0.8,
+            "easing": "EaseOut",
+            "loop": "Once"
+        },
+        {
+            "comment": "ゲームオーバーの文字移動(上から下)",
+            "key": "GameOverTranslateOffset",
+            "valueType": "Vector3",
+            "startValue": { "x": 0.0, "y": 100.0, "z": 0.0},
+            "endValue":   { "x": 0.0, "y": 0.0, "z": 0.0},
+            "duration": 0.8,
+            "easing": "EaseOut",
+            "loop": "Once"
+        },
+        {
+            "comment": "ゲームオーバーの落ち込む透明度",
+            "key": "GameOver_otikomu_FadeIn",
+            "valueType": "Vector4",
+            "startValue": { "x": 1.0, "y": 1.0, "z": 1.0, "w": 0.0 },
+            "endValue":   { "x": 1.0, "y": 1.0, "z": 1.0, "w": 1.0 },
+            "duration": 0.8,
+            "easing": "EaseOut",
+            "loop": "Once"
+        },
+        {
+            "comment": "ゲームオーバーの落ち込む移動(上から下)",
+            "key": "GameOver_otikomu_TranslateOffset",
+            "valueType": "Vector3",
+            "startValue": { "x": 0.0, "y": 100.0, "z": 0.0},
+            "endValue":   { "x": 0.0, "y": 0.0, "z": 0.0},
+            "duration": 0.8,
+            "easing": "EaseOut",
             "loop": "Once"
         }
     ]

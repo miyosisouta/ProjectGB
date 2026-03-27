@@ -25,6 +25,17 @@ class Layout;
 class BattleManager
 {
 private:
+    enum class GameState
+    {
+        Entry,          // 開始前の演出
+        Playing,        // メインのゲームプレイ中
+        ResultClear,    // スコア表示・リザルト演出
+        ResultOver,     // スコア表示・リザルト演出
+        Shutdown        // 終了処理
+    };
+
+
+private:
     /** 各オブジェクトのポインタ */
     Player* player_ = nullptr;
     PlayerController* playerController_ = nullptr;
@@ -37,8 +48,11 @@ private:
     RefCameraController gameCameraController_ = nullptr;
     RefCameraController bossEntryCameraController_ = nullptr;
 
-	std::unique_ptr<TaskSchedulerSystem> entryBossScheduler_ = nullptr;
-    bool isEndEntryBoss_ = true;
+	std::unique_ptr<TaskSchedulerSystem> cutSceneScheduler_ = nullptr;
+    bool isPlayingEntryBoss_ = true;
+    bool isPlayingResult_ = false;
+
+    GameState gameState_ = GameState::Entry;
 
 
     /** 現在アクティブな対象 */
@@ -61,11 +75,27 @@ public:
 
 
 public:
-    bool IsEndEntryBoss() const { return isEndEntryBoss_; }
+	bool IsCutScene() const
+    {
+        return gameState_ != GameState::Playing;
+    }
+
+    bool IsFinishedGame() const
+    {
+        return gameState_ == GameState::Shutdown;
+	}
 
 
 private:
 	bool UpdateEntryBoss();
+    bool UpdateResultClear();
+    bool UpdateResultOver();
+
+    void SetupEntryBossCutScene();
+    void SetupClearCutScene();
+    void SetupOverCutScene();
+
+    void ReleaseCutSceneLayout();
 
 
 private:

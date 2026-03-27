@@ -1,0 +1,39 @@
+{
+  "canvas": {
+    "elements": [
+      {
+        "coment": "ゲームクリア",
+        "type": "UIIcon",
+        "name": "gameClear",
+        "asset": "Assets/ui/inGameUI/gameClaer/gameclear.DDS",
+        "width": 1000,
+        "height": 150,
+        "position": [0, 0, 0],
+        "scale": [1, 1, 1],
+        "rotation": 0,
+        "color": [1, 1, 1, 1]
+      },
+      {
+        "coment": "ゲームクリア:はんこ",
+        "type": "UIIcon",
+        "name": "gameClear_hanko",
+        "asset": "Assets/ui/inGameUI/gameClaer/hanko.DDS",
+        "width": 300,
+        "height": 200,
+        "position": [600, 50, 0],
+        "scale": [1, 1, 1],
+        "rotation": 0,
+        "color": [1, 1, 1, 1],
+        "isDraw": false
+      },
+     
+
+      {
+        "comment": "ダミー(予備)",
+        "type": "UIDummy",
+        "name": "Dummy",
+        "position": [-210, -180, 0]
+      }
+    ]
+}
+}

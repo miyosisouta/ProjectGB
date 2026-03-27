@@ -92,6 +92,8 @@ public:
 	int GetCritical() const { return critical_; }
 	float GetMoveSpeed() const { return moveSpeed_; }
 
+	bool IsDead() const { return hp_ <= 0; }
+
 
 public:
 	void Damage(const int damage)

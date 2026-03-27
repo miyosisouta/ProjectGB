@@ -24,7 +24,6 @@ TitleScene::TitleScene()
 
 TitleScene::~TitleScene()
 {
-	UIScreenManager::Get().Pop();
 }
 
 
@@ -49,6 +48,8 @@ void TitleScene::Update()
 				if (g_pad[0]->IsTrigger(enButtonA)) {
 					SoundManager::Get().PlaySE(enSoundKind_Menu_Decide);
 					isRequestScene = true;
+
+					UIScreenManager::Get().Pop();
 				}
 			}
 			if (titleMenu->IsSelectSound()) {

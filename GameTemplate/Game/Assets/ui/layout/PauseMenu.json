@@ -1,0 +1,88 @@
+{
+  "canvas": {
+    "elements": [
+      {
+        "coment": "背景",
+        "type": "UIIcon",
+        "name": "Background",
+        "asset": "Assets/ui/inGameUI/pause/white.DDS",
+        "width": 1920,
+        "height": 1080,
+        "position": [0, 0, 0],
+        "scale": [1, 1, 1],
+        "rotation": 0,
+        "color": [0.0, 0.0, 0.0, 0.65]
+      },
+
+      {
+        "coment": "ストップアイコン",
+        "type": "UIIcon",
+        "name": "StopIcon",
+        "asset": "Assets/ui/inGameUI/pause/stop.DDS",
+        "width": 500,
+        "height": 120,
+        "position": [0, 110, 0],
+        "scale": [1, 1, 1],
+        "rotation": 0,
+        "color": [1.0, 1.0, 1.0, 1.0]
+      },
+
+      {
+        "coment": "スタートボタン",
+        "type": "UIIcon",
+        "name": "StartButtonIcon",
+        "asset": "Assets/ui/inGameUI/pause/startButton.DDS",
+        "width": 130,
+        "height": 60,
+        "position": [-150, -200, 0],
+        "scale": [1, 1, 1],
+        "rotation": 0,
+        "color": [1.0, 1.0, 1.0, 1.0]
+      },
+      {
+        "coment": "ゲームに戻る",
+        "type": "UIIcon",
+        "name": "GameBackTextIcon",
+        "asset": "Assets/ui/inGameUI/pause/game_back.DDS",
+        "width": 250,
+        "height": 40,
+        "position": [100, -200, 0],
+        "scale": [1, 1, 1],
+        "rotation": 0,
+        "color": [1.0, 1.0, 1.0, 1.0]
+      },
+
+      {
+        "coment": "Yボタン",
+        "type": "UIIcon",
+        "name": "YButtonIcon",
+        "asset": "Assets/ui/inGameUI/pause/yButton.DDS",
+        "width": 70,
+        "height": 70,
+        "position": [-150, -100, 0],
+        "scale": [1, 1, 1],
+        "rotation": 0,
+        "color": [1.0, 1.0, 1.0, 1.0]
+      },
+      {
+        "coment": "タイトルに戻る",
+        "type": "UIIcon",
+        "name": "TitleTextIcon",
+        "asset": "Assets/ui/inGameUI/pause/title_back.DDS",
+        "width": 270,
+        "height": 40,
+        "position": [100, -100, 0],
+        "scale": [1, 1, 1],
+        "rotation": 0,
+        "color": [1.0, 1.0, 1.0, 1.0]
+      },
+
+      {
+        "comment": "ダミー(予備)",
+        "type": "UIDummy",
+        "name": "Dummy",
+        "position": [-210, -180, 0]
+      }
+    ]
+}
+}
