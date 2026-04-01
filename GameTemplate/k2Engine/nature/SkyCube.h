@@ -3,23 +3,6 @@
 namespace nsK2Engine {
 	enum EnSkyCubeType {
 		enSkyCubeType_Day,		// 昼間
-		enSkyCubeType_Night,	// 夜間
-		enSkyCubeType_Snow,		// 雪山
-		enSkyCubeType_Snow_2,	// 雪山_2
-		enSkyCubeType_Wild,		// 荒野
-		enSkyCubeType_Wild_2,	// 荒野２
-		enSkyCubeType_Wild_Night,	// 荒野(夜間)
-		enSkyCubeType_Grass,	// 芝生
-		enSkyCubeType_Euro,		// 欧州
-		enSkyCubeType_DayToon,	// 昼間(トゥーン調)
-		enSkyCubeType_DayToon_2,// 昼間(トゥーン調)２
-		enSkyCubeType_DayToon_3,// 昼間(トゥーン調)３
-		enSkyCubeType_DayToon_4,// 昼間(トゥーン調)４
-		enSkyCubeType_NightToon, // 夜間(トゥーン調)
-		enSkyCubeType_NightToon_2, // 夜間(トゥーン調)２
-		enSkyCubeType_SunriseToon,	// 明け方(トゥーン調)
-		//enSkyCubeType_SpaceToon,	// 大気圏(トゥーン調) 正常にでないのでコメントアウト。
-		enSkyCubeType_SpaceToon_2,	// 大気圏(トゥーン調)２
 		enSkyCubeType_Num,
 	};
 	/// <summary>
