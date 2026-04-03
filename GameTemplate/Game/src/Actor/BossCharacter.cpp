@@ -79,8 +79,8 @@ void BossCharacter::ChangeState(BossStateID nextStateId)
 
 BossCharacter::BossCharacter()
 {
-	auto* bossStatus = new BossStatus();
-	status_ = bossStatus;
+	BossStatus* status = new BossStatus();
+	status_ = status;
 }
 
 BossCharacter::~BossCharacter()
@@ -92,6 +92,9 @@ BossCharacter::~BossCharacter()
 
 bool BossCharacter::Start()
 {
+	// ステータスの初期化
+	status_->As<BossStatus>()->Init(param_.characterKey_);
+
 	// セットアップ
 	{
 		SetupTranslate(); // ステートクラスのインスタンス作成
@@ -126,10 +129,6 @@ bool BossCharacter::Start()
 		damageBody_->SetPosition(transform_.position);
 	}
 
-	// ボスのステータスを作って、確定した数値を流し込む！
-	BossParam param;
-	BossStatus* status = new BossStatus();
-	status->InitStatus(param.maxHp_, param.attack_);
 
 	return true;
 }
@@ -167,7 +166,7 @@ void BossCharacter::Update()
 	{
 		// ボスのステータス更新
 		BossStatus* status = status_->As<BossStatus>();
-		status->Update();
+		if (status) { status->Update(); }
 
 		modelRender_.Update();// モデルの更新
 		if (currentState_) { currentState_->Update(); } // 現在のステートがある場合、現在のステートの更新

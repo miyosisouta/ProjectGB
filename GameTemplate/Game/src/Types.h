@@ -83,6 +83,7 @@ struct BossParam
     GameModeType mode_ = GameModeType::enNone;
     
     /* ƒ‚ƒfƒ‹ */
+    std::string characterKey_ = "Gorilla";
     std::string modelPath_ = "";
     AnimSetting anims[enAnimNum];
 

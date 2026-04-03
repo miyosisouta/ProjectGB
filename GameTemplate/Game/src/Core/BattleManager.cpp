@@ -150,9 +150,11 @@ void BattleManager::Update()
 
 			// BossのHPが0になったらクリア演出へ
 			auto* boss = FindGO<BossCharacter>("boss");
-			if (boss && boss->GetStatus()->IsDead()) {
-				SetupClearCutScene();
-				gameState_ = GameState::ResultClear;
+			if (boss && boss->GetStatus()) {
+				if (boss->GetStatus()->IsDead()) {
+					SetupClearCutScene();
+					gameState_ = GameState::ResultClear;
+				}
 			}
 
 			if (player_->GetStatus()->IsDead())
