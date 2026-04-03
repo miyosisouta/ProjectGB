@@ -7,10 +7,13 @@
 #include "stdafx.h"
 #include "SceneManager.h"
 #include "src/Scene/IScene.h"
+
+#include "src/Scene/BootScene.h"
+#include "src/Scene/TitleScene.h"
+#include "src/Scene/LoadingScreen.h"
 #include "src/Scene/InGameScene.h"
 #include "src/Scene/OutGameScene.h"
-#include "src/Scene/titleScene.h"
-#include "src/Scene/LoadingScreen.h"
+
 
 
 SceneManager* SceneManager::myInstance_ = nullptr;
@@ -19,15 +22,17 @@ SceneManager* SceneManager::myInstance_ = nullptr;
 SceneManager::SceneManager()
 {
 	// 各シーンを配列に追加
+	AddSceneMap <BootScene>();
+	AddSceneMap <TitleScene>();
 	AddSceneMap <InGameScene>();
 	AddSceneMap <OutGameScene>();
-	AddSceneMap <TitleScene>();
+	
 
 	// ロード画面クラスを生成
 	loadingScreen_ = NewGO<LoadingScreen>(GameObjectPriority::enLoadScreen,"LoadingScreen");
 
 	// 最初のシーンを生成（タイトルシーン）
-	CreateScene(TitleScene::ID());	
+	CreateScene(BootScene::ID());	
 }
 
 

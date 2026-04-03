@@ -256,6 +256,7 @@
     <ClCompile Include="src\Effect\EffectManager.cpp" />
     <ClCompile Include="src\Math\Transform.cpp" />
     <ClCompile Include="src\Memory\Array.cpp" />
+    <ClCompile Include="src\Scene\BootScene.cpp" />
     <ClCompile Include="src\Scene\InGameScene.cpp" />
     <ClCompile Include="src\Scene\IScene.cpp" />
     <ClCompile Include="src\Scene\LoadingScreen.cpp" />
@@ -274,6 +275,7 @@
     <ClCompile Include="src\Skill\Utility\Utility.cpp" />
     <ClCompile Include="src\Sound\SoundManager.cpp" />
     <ClCompile Include="src\Stage\Stage.cpp" />
+    <ClCompile Include="src\UI\BootMenu.cpp" />
     <ClCompile Include="src\UI\GameClearMenu.cpp" />
     <ClCompile Include="src\UI\GameOverMenu.cpp" />
     <ClCompile Include="src\UI\InGameMenu.cpp" />
@@ -337,6 +339,7 @@
     <ClInclude Include="src\Effect\Types.h" />
     <ClInclude Include="src\Math\Transform.h" />
     <ClInclude Include="src\Memory\Array.h" />
+    <ClInclude Include="src\Scene\BootScene.h" />
     <ClInclude Include="src\Scene\InGameScene.h" />
     <ClInclude Include="src\Scene\IScene.h" />
     <ClInclude Include="src\Scene\LoadingScreen.h" />
@@ -357,6 +360,7 @@
     <ClInclude Include="src\Sound\Types.h" />
     <ClInclude Include="src\Stage\Stage.h" />
     <ClInclude Include="src\Types.h" />
+    <ClInclude Include="src\UI\BootMenu.h" />
     <ClInclude Include="src\UI\GameClearMenu.h" />
     <ClInclude Include="src\UI\GameOverMenu.h" />
     <ClInclude Include="src\UI\InGameMenu.h" />
