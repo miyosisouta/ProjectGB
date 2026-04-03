@@ -74,6 +74,8 @@
     <ClCompile Include="src\UI\PauseMenu.cpp" />
     <ClCompile Include="src\UI\GameClearMenu.cpp" />
     <ClCompile Include="src\UI\GameOverMenu.cpp" />
+    <ClCompile Include="src\Scene\BootScene.cpp" />
+    <ClCompile Include="src\UI\BootMenu.cpp" />
     <ClCompile Include="src\Core\ParameterManager.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -156,6 +158,8 @@
     <ClInclude Include="src\UI\PauseMenu.h" />
     <ClInclude Include="src\UI\GameClearMenu.h" />
     <ClInclude Include="src\UI\GameOverMenu.h" />
+    <ClInclude Include="src\Scene\BootScene.h" />
+    <ClInclude Include="src\UI\BootMenu.h" />
     <ClInclude Include="src\Core\ParameterManager.h" />
   </ItemGroup>
 </Project>

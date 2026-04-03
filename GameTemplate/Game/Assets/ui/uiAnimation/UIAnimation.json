@@ -81,21 +81,23 @@
             "loop": "PingPong"
         },
         {
-            "key": "ScaleBounce",
-            "valueType": "Vector3",
-            "startValue": { "x": 1.0, "y": 1.0, "z": 1.0 },
-            "endValue":   { "x": 1.2, "y": 1.2, "z": 1.2 },
-            "duration": 0.15,
-            "easing": "EaseInOut",
-            "loop": "PingPong"
+            "comment": "ブートシーン:フェードイン",
+            "key": "boot_Fadein",
+            "valueType": "Vector4",
+            "startValue": { "x": 1.0, "y": 1.0, "z": 1.0, "w": 0.0 },
+            "endValue":   { "x": 1.0, "y": 1.0, "z": 1.0, "w": 1.0 },
+            "duration": 2.0,
+            "easing": "EaseIn",
+            "loop": "Once"
         },
         {
-            "key": "SlideInFromLeft",
-            "valueType": "Vector3",
-            "startValue": { "x": -500.0, "y": 0.0, "z": 0.0 },
-            "endValue":   { "x": 0.0,    "y": 0.0, "z": 0.0 },
-            "duration": 0.4,
-            "easing": "EaseOut",
+            "comment": "ブートシーン:フェードアウト",
+            "key": "boot_fadeout",
+            "valueType": "Vector4",
+            "startValue": { "x": 1.0, "y": 1.0, "z": 1.0, "w": 1.0 },
+            "endValue":   { "x": 1.0, "y": 1.0, "z": 1.0, "w": 0.0 },
+            "duration": 2.0,
+            "easing": "EaseIn",
             "loop": "Once"
         },
         {

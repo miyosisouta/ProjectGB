@@ -1,6 +1,6 @@
 ﻿/**
  * InGameMenu.cpp
- * サウンドオプションメニュー
+ * インゲームメニュー
  */
 #include "stdafx.h"
 #include "InGameMenu.h"

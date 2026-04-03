@@ -95,16 +95,18 @@ void TitleMenu::InitializeLogic()
 	{
 		// がぶっとの文字アニメーション 大きくなる
 		auto* gabu = GetUI<UIIcon>(Hash32("Title_gabu"));
+		gabu->isDraw = false;
 		UIAnimationFactory::Attach<UIScaleAnimation>(gabu, Hash32("gabu_scaleUp"));
-		taskScheduler->AddTimer(0.0f, [&]()
+		taskScheduler->AddTimer(2.0f, [&]()
 			{
 				auto* gabu = GetUI<UIIcon>(Hash32("Title_gabu"));
+				gabu->isDraw = true;
 				auto* animation = gabu->FindAnimation(Hash32("gabu_scaleUp"));
 				animation->Play();
 			});
 		// がぶっとの文字アニメーション フェード
 		UIAnimationFactory::Attach<UIColorAnimation>(gabu, Hash32("gabu_fadeout"));
-		taskScheduler->AddTimer(0.0f, [&]()
+		taskScheduler->AddTimer(2.0f, [&]()
 			{
 				auto* gabu = GetUI<UIIcon>(Hash32("Title_gabu"));
 				auto* animation = gabu->FindAnimation(Hash32("gabu_fadeout"));
@@ -112,7 +114,7 @@ void TitleMenu::InitializeLogic()
 			});
 		// がぶっとの文字アニメーション 通常サイズに戻る
 		UIAnimationFactory::Attach<UIScaleAnimation>(gabu, Hash32("gabu_scaleDown"));
-		taskScheduler->AddTimer(0.5f, [&]()
+		taskScheduler->AddTimer(2.5f, [&]()
 			{
 				auto* gabu = GetUI<UIIcon>(Hash32("Title_gabu"));
 				auto* animation = gabu->FindAnimation(Hash32("gabu_scaleDown"));
@@ -122,7 +124,7 @@ void TitleMenu::InitializeLogic()
 		auto* bustar = GetUI<UIIcon>(Hash32("Title_bustar"));
 		bustar->color.w = 0.0f;
 		UIAnimationFactory::Attach<UIColorAnimation>(bustar, Hash32("bustar_fadeout"));
-		taskScheduler->AddTimer(1.0f, [&]()
+		taskScheduler->AddTimer(3.0f, [&]()
 			{
 				auto* bustar = GetUI<UIIcon>(Hash32("Title_bustar"));
 				auto* animation = bustar->FindAnimation(Hash32("bustar_fadeout"));
@@ -136,7 +138,7 @@ void TitleMenu::InitializeLogic()
 		AbuttonColor->isDraw = false;
 		AbuttonColor->color.w = 0.0f;
 		UIAnimationFactory::Attach<UIColorAnimation>(AbuttonColor, Hash32("pushAbutton_fadeout"));
-		taskScheduler->AddTimer(2.0f, [&]()
+		taskScheduler->AddTimer(4.0f, [&]()
 			{
 				auto* AbuttonColor = GetUI<UIIcon>(Hash32("Title_push_Abutton"));
 				AbuttonColor->isDraw = true;
@@ -145,20 +147,24 @@ void TitleMenu::InitializeLogic()
 				animation->Play();
 			});
 	}
+	{
+		// 星のエフェクト
+		effectRender = std::make_unique<ParticleEffectRender>();
+		effectRender->Init("Assets/ui/vfx/effect_sparkle.json", "Assets/ui/titleUI/kira.dds", 128.0f, 128.0f);
+		effectRender->SetPosition(Vector3(370.0f, 290, 0.0f));
+		effectRender->EnableHotReload();
 
-	// 星のエフェクト
-	effectRender = std::make_unique<ParticleEffectRender>();
-	effectRender->Init("Assets/ui/vfx/effect_sparkle.json", "Assets/ui/titleUI/kira.dds", 128.0f, 128.0f);
-	effectRender->SetPosition(Vector3(370.0f, 290, 0.0f));
-	effectRender->Play();
-	effectRender->EnableHotReload();
+		effectRenderB = std::make_unique<ParticleEffectRender>();
+		effectRenderB->Init("Assets/ui/vfx/effect_sparkle.json", "Assets/ui/titleUI/kira.dds", 128.0f, 128.0f);
+		effectRenderB->SetPosition(Vector3(-320.0f, 150, 0.0f));
+		effectRenderB->EnableHotReload();
 
-	effectRenderB = std::make_unique<ParticleEffectRender>();
-	effectRenderB->Init("Assets/ui/vfx/effect_sparkle.json", "Assets/ui/titleUI/kira.dds", 128.0f, 128.0f);
-	effectRenderB->SetPosition(Vector3(-320.0f, 150, 0.0f));
-	effectRenderB->Play();
-	effectRenderB->EnableHotReload();
-	
+		taskScheduler->AddTimer(4.0f, [&]()
+			{
+				effectRender->Play();
+				effectRenderB->Play();
+			});
+	}
 	
 	// 非表示 はじめる
 	auto* start = GetUI<UIIcon>(Hash32("Title_start"));

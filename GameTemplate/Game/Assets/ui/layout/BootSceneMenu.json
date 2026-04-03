@@ -1,0 +1,49 @@
+{
+  "canvas": {
+    "elements": [
+      {
+        "coment": "一枚絵",
+        "type": "UIIcon",
+        "name": "startUpTitle",
+        "asset": "Assets/ui/soundOption/haikei/back.DDS",
+        "width": 1920,
+        "height": 1080,
+        "position": [0, 0, 0],
+        "scale": [1, 1, 1],
+        "rotation": 0,
+        "color": [1, 1, 1, 0]
+      },
+      {
+        "coment": "kbc",
+        "type": "UIIcon",
+        "name": "kbcTitle",
+        "asset": "Assets/ui/bootUI/kbc.DDS",
+        "width": 1920,
+        "height": 1080,
+        "position": [0, 0, 0],
+        "scale": [1, 1, 1],
+        "rotation": 0,
+        "color": [1, 1, 1, 0]
+      },
+      {
+        "coment": "チームの名前",
+        "type": "UIIcon",
+        "name": "teamNameTitle",
+        "asset": "Assets/ui/bootUI/teamname.DDS",
+        "width": 1920,
+        "height": 1080,
+        "position": [0, 0, 0],
+        "scale": [1, 1, 1],
+        "rotation": 0,
+        "color": [1, 1, 1, 0]
+      },
+      
+      {
+        "comment": "ダミー(はじめる座標取得用)",
+        "type": "UIDummy",
+        "name": "StartPositionDummy",
+        "position": [-210, -180, 0]
+      }
+    ]
+}
+}
