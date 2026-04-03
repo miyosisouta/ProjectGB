@@ -44,14 +44,25 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 	// ここから初期化を行うコードを記述する。
 	//////////////////////////////////////
 
+	// コリジョン
 	CollisionHitManager::Initialize();
 	GhostBodyManager::Initialize();
 	GhostBodyManager::Get().RegisterCallback([](GhostBody* a, GhostBody* b)
 		{
 			CollisionHitManager::Get().RegisterHitPair(a, b);
 		});
+
+	// キャラクターデータ
 	CharacterDataBase::CreateInstance();
 
+	// パラメータ
+	ParameterManager::CreateInstance();
+	ParameterManager::Get().LoadCharacterStatusData("Assets/Objects/CharacterData/CharacterStatusData.json");
+	ParameterManager::Get().LoadPlayerSkillStatusData("Assets/Objects/CharacterData/PlayerSkillStatus.json");
+	ParameterManager::Get().LoadBossSkillStatusData("Assets/Objects/CharacterData/BossSkillStatus.json");
+
+
+	// カメラ
 	CameraManager::Initialize();
 	CameraManager::Get().Setup(g_camera3D);
 

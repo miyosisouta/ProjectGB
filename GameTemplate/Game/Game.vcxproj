@@ -251,6 +251,7 @@
     <ClCompile Include="src\collision\GhostPrimitive.cpp" />
     <ClCompile Include="src\collision\PhysicalBody.cpp" />
     <ClCompile Include="src\Core\BattleManager.cpp" />
+    <ClCompile Include="src\Core\ParameterManager.cpp" />
     <ClCompile Include="src\Core\PouseMenu.cpp" />
     <ClCompile Include="src\Effect\EffectManager.cpp" />
     <ClCompile Include="src\Math\Transform.cpp" />
@@ -330,6 +331,7 @@
     <ClInclude Include="src\collision\PhysicalBody.h" />
     <ClInclude Include="src\collision\Types.h" />
     <ClInclude Include="src\Core\BattleManager.h" />
+    <ClInclude Include="src\Core\ParameterManager.h" />
     <ClInclude Include="src\Core\PouseMenu.h" />
     <ClInclude Include="src\Effect\EffectManager.h" />
     <ClInclude Include="src\Effect\Types.h" />

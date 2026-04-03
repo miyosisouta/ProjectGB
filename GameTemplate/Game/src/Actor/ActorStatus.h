@@ -1,4 +1,5 @@
-#pragma once
+﻿#pragma once
+#include "src/Core/ParameterManager.h"
 
 /*
  * クールダウン構造体
@@ -37,7 +38,7 @@ public:
 	 * 残り時間を取得 
 	 * UIにて使う
 	 */
-	float GetCoolDownTimer() 
+	float GetCoolDownTimer() const
 	{ 
 		return coolTimer;
 	}
@@ -141,8 +142,7 @@ public:
 	CharacterStatus() {}
 	virtual ~CharacterStatus() {}
 
-
-	virtual void Update() override{ ActorStatus::Update(); }
+	virtual void Update() override { ActorStatus::Update(); }
 };
 
 
@@ -155,125 +155,133 @@ class PlayerStatus : public CharacterStatus
 public:
 	enum class InvincibleFlags : uint32_t
 	{
-		enNone = 0,
-		enAvoid = 1 << 1,		//!< 回避中
+		enNone   = 0,
+		enAvoid  = 1 << 1,	//!< 回避中
 		enDamage = 1 << 2,	//!< ダメージを受けたとき
-		enSkill = 1 << 3,		//!< 攻撃中
+		enSkill  = 1 << 3,	//!< 攻撃中
 	};
 
 public:
 	// --- 無敵フラグ操作 ---
 
 	// 指定した無敵フラグをONにする
-	// 例: 回避開始時に Dodge ビットを立てる
 	void AddInvincible(InvincibleFlags flag)
 	{
 		invincibleFlag_ |= static_cast<uint32_t>(flag);
 	}
 
 	// 指定した無敵フラグをOFFにする
-	// 例: 無敵時間終了・Exit()の強制解除
 	void RemoveInvincible(InvincibleFlags flag)
 	{
 		invincibleFlag_ &= ~static_cast<uint32_t>(flag);
 	}
 
 	// 指定したフラグが今ONになっているか確認する
-	// 例: 回避無敵だけを個別に確認したいとき
 	bool HasInvincible(InvincibleFlags flag) const
 	{
 		return (invincibleFlag_ & static_cast<uint32_t>(flag)) != 0;
 	}
 
 	// いずれかの無敵フラグが1つでも立っているか確認する
-	// 例: 当たり判定でダメージを受けるか判断するとき
 	bool IsInvincible() const { return invincibleFlag_ != 0; }
 
 
 private:
 	uint8_t invincibleFlag_ = 0;
 
-	CoolDown skillNormalAttack;
-	CoolDown skillSpecialAbility;
-	CoolDown skillUtility;
+	CoolDown skillNormalAttack_;
+	CoolDown skillSpecialAbility_;
+	CoolDown skillUtility_;
 
 public:
-	PlayerStatus()
+	PlayerStatus() {}
+
+	/// <summary>
+	/// ParameterManager からプレイヤーのステータスとスキルCDを取得して初期化する
+	/// ParameterManager::CreateInstance() と各Load関数を呼んだ後に使うこと
+	/// </summary>
+	/// <param name="characterKey">CharacterStatusData.json の key (例: "Player")</param>
+	/// <param name="normalAttackKey">PlayerSkillStatus.json NormalAttack の key (例: "Bite")</param>
+	/// <param name="specialAbilityKey">PlayerSkillStatus.json SpecialAttack の key (例: "DefaultAttack")</param>
+	/// <param name="utilityKey">PlayerSkillStatus.json Utility の key (例: "Dodge")</param>
+	void Init(
+		const std::string& characterKey    = "Player",
+		const std::string& normalAttackKey = "Bite",
+		const std::string& specialAbilityKey = "DefaultAttack",
+		const std::string& utilityKey      = "Dodge")
 	{
-		// TODO: 仮
-		hp_ = 5;
-		maxHp_ = 5;
+		auto& pm = ParameterManager::Get();
+
+		// --- キャラクターのベースステータスを取得 ---
+		const auto* chara = pm.GetCharacterStatus(characterKey);
+		if (chara)
+		{
+			hp_       = chara->hp;
+			maxHp_    = chara->hp;
+			attack_   = chara->attack;
+			critical_ = chara->criticalRate;
+		}
+
+		// --- スキルのクールダウンを取得 ---
+		// NormalAttack カテゴリの先頭スキル
+		const auto* normalSkill = pm.GetPlayerSkill("NormalAttack", normalAttackKey);
+		if (normalSkill)
+		{
+			skillNormalAttack_.coolDownTime = normalSkill->cooldown;
+		}
+
+		// SpecialAttack カテゴリの先頭スキル
+		const auto* specialSkill = pm.GetPlayerSkill("SpecialAttack", specialAbilityKey);
+		if (specialSkill)
+		{
+			skillSpecialAbility_.coolDownTime = specialSkill->cooldown;
+		}
+
+		// Utility カテゴリの先頭スキル
+		const auto* utilitySkill = pm.GetPlayerSkill("Utility", utilityKey);
+		if (utilitySkill)
+		{
+			skillUtility_.coolDownTime = utilitySkill->cooldown;
+		}
 	}
 
 	void Update() override
 	{
-		skillNormalAttack.Update();
-		skillSpecialAbility.Update();
-		skillUtility.Update();
+		skillNormalAttack_.Update();
+		skillSpecialAbility_.Update();
+		skillUtility_.Update();
 
 		CharacterStatus::Update();
 	}
 
-	void SetupSkillCoolDown(const int normalAttackCD, const int specialAbilityCD, const int utilityCD)
-	{
-		skillNormalAttack.coolDownTime = normalAttackCD;
-		skillSpecialAbility.coolDownTime = specialAbilityCD;
-		skillUtility.coolDownTime = utilityCD;
-	}
-
 public:
 	/** 通常攻撃を実行する */
-	void ExecuteNormalAttack()
-	{
-		skillNormalAttack.Execute();
-	}
+	void ExecuteNormalAttack()    { skillNormalAttack_.Execute(); }
+	/** スペシャルアビリティを実行する */
+	void ExecuteSpecialAbility()  { skillSpecialAbility_.Execute(); }
+	/** ユーティリティスキルを実行する */
+	void ExecuteUtility()         { skillUtility_.Execute(); }
 
-	/** スキルを実行する */
-	void ExecuteSpecialAbility()
-	{
-		skillSpecialAbility.Execute();
-	}
+	/** 通常攻撃が使用可能か */
+	bool CanExecuteNormalAttack()    const { return skillNormalAttack_.CanExecute(); }
+	/** スペシャルアビリティが使用可能か */
+	bool CanExecuteSpecialAbility()  const { return skillSpecialAbility_.CanExecute(); }
+	/** ユーティリティスキルが使用可能か */
+	bool CanExecuteUtility()         const { return skillUtility_.CanExecute(); }
 
-	/** 汎用スキルを実行する */
-	void ExecuteUtility()
-	{
-		skillUtility.Execute();
-	}
+	/** 通常攻撃のクールダウンが明けた1フレーム */
+	bool IsReadyFrameNormalAttack()   const { return skillNormalAttack_.IsReadyFrame(); }
+	/** スペシャルアビリティのクールダウンが明けた1フレーム */
+	bool IsReadyFrameSpecialAbility() const { return skillSpecialAbility_.IsReadyFrame(); }
+	/** ユーティリティスキルのクールダウンが明けた1フレーム */
+	bool IsReadyFrameUtility()        const { return skillUtility_.IsReadyFrame(); }
 
-	/* 通常攻撃が使用可能か */
-	bool CanExecuteNormalAttack() const
-	{
-		return skillNormalAttack.CanExecute();
-	}
-	/** スキルが使用可能か */
-	bool CanExecuteSpecialAbility() const
-	{
-		return skillSpecialAbility.CanExecute();
-	}
-
-	/** 汎用スキルが使用可能か */
-	bool CanExecuteUtility() const
-	{
-		return skillUtility.CanExecute();
-	}
-
-	/** 通常攻撃が可能か */
-	bool IsReadyFrameNormalAttack() const
-	{
-		return skillNormalAttack.IsReadyFrame();
-	}
-
-	/** スキル攻撃が可能か */
-	bool IsReadyFrameSpecialAbility() const
-	{
-		return skillSpecialAbility.IsReadyFrame();
-	}
-
-	/** 汎用スキルが可能か */
-	bool IsReadyFrameUtility() const
-	{
-		return skillUtility.IsReadyFrame();
-	}
+	/** 通常攻撃の残りクールダウン時間 (UI用) */
+	float GetNormalAttackCoolTimer()   const { return skillNormalAttack_.GetCoolDownTimer(); }
+	/** スペシャルアビリティの残りクールダウン時間 (UI用) */
+	float GetSpecialAbilityCoolTimer() const { return skillSpecialAbility_.GetCoolDownTimer(); }
+	/** ユーティリティスキルの残りクールダウン時間 (UI用) */
+	float GetUtilityCoolTimer()        const { return skillUtility_.GetCoolDownTimer(); }
 };
 
 
@@ -285,49 +293,59 @@ class BossStatus : public CharacterStatus
 {
 protected:
 	CoolDown skillBossAttack_;
-	
-public:
-	void InitStatus(int maxHp, int attack) 
-	{
-		maxHp_ = maxHp;
-		attack_ = attack;
-	}
 
 public:
-	BossStatus() 
-	{
-		hp_ = 5;
-		maxHp_ = 5;
-	}
+	BossStatus() {}
 	virtual ~BossStatus() {}
 
+	/// <summary>
+	/// ParameterManager からボスのステータスとスキルCDを取得して初期化する
+	/// ParameterManager::CreateInstance() と各Load関数を呼んだ後に使うこと
+	/// </summary>
+	/// <param name="characterKey">CharacterStatusData.json の key (例: "Gorilla")</param>
+	/// <param name="skillKey">BossSkillStatus.json のスキルkey (例: "NormalAttack")</param>
+	void Init(
+		const std::string& characterKey,
+		const std::string& skillKey = "NormalAttack")
+	{
+		auto& pm = ParameterManager::Get();
+
+		// --- キャラクターのベースステータスを取得 ---
+		const auto* chara = pm.GetCharacterStatus(characterKey);
+		if (chara)
+		{
+			hp_     = chara->hp;
+			maxHp_  = chara->hp;
+			attack_ = chara->attack;
+		}
+
+		// --- スキルのクールダウンを取得 ---
+		// BossSkillStatus.json では category=ボス名、key=スキル名
+		const auto* skill = pm.GetBossSkill(characterKey, skillKey);
+		if (skill)
+		{
+			skillBossAttack_.coolDownTime = static_cast<float>(skill->attack); 
+			// NOTE: BossSkillStatus.json に cooldown フィールドを追加した場合は
+			//       skill->cooldown に差し替えてください
+		}
+	}
+
 public:
-	void Update() override 
+	void Update() override
 	{
 		skillBossAttack_.Update();
-
 		CharacterStatus::Update();
 	}
 
-	void SetupSkillBossAttackCoolDown(const int bossAttackCD)
-	{
-		skillBossAttack_.coolDownTime = bossAttackCD;
-	}
-
-
-	void ExecuteBossAttack()
-	{
-		skillBossAttack_.Execute();
-	}
-
-	bool CanExecuteBossAttack_() const
-	{
-		return skillBossAttack_.CanExecute();
-	}
+	/** ボス攻撃を実行する */
+	void ExecuteBossAttack()           { skillBossAttack_.Execute(); }
+	/** ボス攻撃が使用可能か */
+	bool CanExecuteBossAttack()  const { return skillBossAttack_.CanExecute(); }
+	/** ボス攻撃CDが明けた1フレーム */
+	bool IsReadyFrameBossAttack() const { return skillBossAttack_.IsReadyFrame(); }
 };
 
 
 /* ===================================================== */
 /* スキル用のステータス */
 /* ===================================================== */
-

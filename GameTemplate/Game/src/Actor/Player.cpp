@@ -258,11 +258,8 @@ bool Player::CanSpecialAbility()
 /* ==================================== */
 Player::Player()
 {
-	auto* playerStatus = new PlayerStatus();
-	status_ = playerStatus;
-
-	playerStatus->SetupSkillCoolDown(0.0f, 5.0f, 1.0f);
-	
+	PlayerStatus* status = new PlayerStatus();
+	status_ = status;
 }
 Player::~Player()
 {
@@ -271,8 +268,8 @@ Player::~Player()
 }
 bool Player::Start()
 {
-	// 自分はPlayerグループであることを宣言する
-	// SetUpdateGroup(UpdateGroup::Player);
+	// ステータスの初期化
+	status_->As<PlayerStatus>()->Init(); 
 
 	// アニメーション
 	{

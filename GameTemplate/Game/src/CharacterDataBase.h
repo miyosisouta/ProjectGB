@@ -1,7 +1,17 @@
 #pragma once
 
+/** キャラクターパラメータ用の構造体 */
+struct CharacterStatusDef
+{
+    uint32_t key = 0; // 検索用のCRC32ハッシュキー
+
+    uint16_t hp = 0;
+    uint8_t attack = 0;
+    float speed = 0.0f;
+};
+
 // キャラクター1体分の設定情報をまとめる構造体
-struct CharacterParam 
+struct PlayerParam
 {
     NormalAttackType nAttack = NormalAttackType::enNone;
     AbilityType      ability = AbilityType::enNone;
@@ -9,13 +19,12 @@ struct CharacterParam
 };
 
 
-
 /* キャラクター用データベース */
 class CharacterDataBase
 {
 private:
-    CharacterParam playerData_; //!< プレイヤー用データ保管庫
-    CharacterParam bossData_;   //!< ボス用データ保管庫
+    PlayerParam playerData_; //!< プレイヤー用データ保管庫
+    PlayerParam bossData_;   //!< ボス用データ保管庫
 
     BossParam bossParam_; //!< ボスに必要なパラメータ
 
@@ -26,8 +35,8 @@ public:
     /* ============================================================================ */
 
     /* プレイヤー用ゲッター・セッター */
-    void SetPlayerParam(const CharacterParam& param) { playerData_ = param; }
-    const CharacterParam& GetPlayerParam() const { return playerData_; }
+    void SetPlayerParam(const PlayerParam& param) { playerData_ = param; }
+    const PlayerParam& GetPlayerParam() const { return playerData_; }
 
     // 特定のスキルだけを書き換える用
     void SetPlayerNormalAttack(NormalAttackType type) { playerData_.nAttack = type; }
@@ -40,8 +49,8 @@ public:
     /* ============================================================================ */
 
     /* ボス用ゲッター・セッター */
-    void SetBossParam(const CharacterParam& param) { bossData_ = param; }
-    const CharacterParam& GetBossParam() const { return bossData_; }
+    void SetBossParam(const PlayerParam& param) { bossData_ = param; }
+    const PlayerParam& GetBossParam() const { return bossData_; }
 
 
     /* ============================================================================ */
