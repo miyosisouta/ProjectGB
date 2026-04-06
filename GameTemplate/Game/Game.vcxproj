@@ -278,6 +278,7 @@
     <ClCompile Include="src\UI\BootMenu.cpp" />
     <ClCompile Include="src\UI\GameClearMenu.cpp" />
     <ClCompile Include="src\UI\GameOverMenu.cpp" />
+    <ClCompile Include="src\UI\GameStartMenu.cpp" />
     <ClCompile Include="src\UI\InGameMenu.cpp" />
     <ClCompile Include="src\UI\Layout.cpp" />
     <ClCompile Include="src\UI\LoadingMenu.cpp" />
@@ -363,6 +364,7 @@
     <ClInclude Include="src\UI\BootMenu.h" />
     <ClInclude Include="src\UI\GameClearMenu.h" />
     <ClInclude Include="src\UI\GameOverMenu.h" />
+    <ClInclude Include="src\UI\GameStartMenu.h" />
     <ClInclude Include="src\UI\InGameMenu.h" />
     <ClInclude Include="src\UI\Layout.h" />
     <ClInclude Include="src\UI\LoadingMenu.h" />

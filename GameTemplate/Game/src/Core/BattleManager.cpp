@@ -27,6 +27,7 @@
 #include "src/UI/Menu.h"
 #include "src/UI/GameClearMenu.h"
 #include "src/UI/GameOverMenu.h"
+#include "src/UI/GameStartMenu.h"
 
 
 namespace
@@ -135,8 +136,22 @@ void BattleManager::Update()
 				break;
 			}
 			ReleaseCutSceneLayout();
-			gameState_ = GameState::Playing;
+			// カメラ演出終わったので、バトル開始の演出をする
+			SetupStartCutScene();
+			gameState_ = GameState::GameStart;
 			/** FALL THROUGH */
+		}
+		case GameState::GameStart:
+		{
+			auto* menu = static_cast<GameStartMenu*>(startLayout_->GetMenu());
+			if (menu->IsCompletedStartCutSceen()) {
+				if (startLayout_) {
+					delete startLayout_;
+					startLayout_ = nullptr;
+				}
+				gameState_ = GameState::Playing;
+			}
+			break;
 		}
 		case GameState::Playing:
 		{
@@ -189,6 +204,9 @@ void BattleManager::Update()
 	if (layout_) {
 		layout_->Update();
 	}
+	if (startLayout_) {
+		startLayout_->Update();
+	}
 
 	GhostBodyManager::Get().Update();
 	CollisionHitManager::Get().Update();
@@ -200,12 +218,24 @@ void BattleManager::Render(RenderContext& rc)
 	if (layout_) {
 		layout_->Render(rc);
 	}
+	if (startLayout_) {
+		startLayout_->Render(rc);
+	}
 }
 
 
 bool BattleManager::UpdateEntryBoss()
 {
 	cutSceneScheduler_->Update(g_gameTime->GetFrameDeltaTime());
+
+	if (g_pad[0]->IsTrigger(enButtonA))
+	{
+		isPlayingEntryBoss_ = false;
+		CameraManager::Get().Unregister(GameCamera::ID());
+		CameraManager::Get().Register(GameCamera::ID(), gameCameraController_);
+		CameraManager::Get().SwitchCamera(gameCameraController_);
+	}
+
 	return isPlayingEntryBoss_;
 }
 
@@ -313,6 +343,14 @@ void BattleManager::SetupEntryBossCutScene()
 				icon->isDraw = false;
 			});
 	}
+}
+
+
+void BattleManager::SetupStartCutScene()
+{
+	startLayout_ = new Layout;
+	startLayout_->Initialize<GameStartMenu>("Assets/ui/layout/GameStartMenu.json");
+
 }
 
 
