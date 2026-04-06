@@ -152,43 +152,9 @@ void InGameMenu::Update()
 	// プレイヤーがダメージを受けたとき
 	{
 		// 表情が変わる
-		auto* playerNormal = GetUI<UIIcon>(Hash32("Player_icon_normal"));
-		if (playerNormal)
+		if (isTakeDamagePlayer)
 		{
-			if (isTakeDamagePlayer)
-			{
-				// 普通のアイコンが消える
-				playerNormal->isDraw = false;
-
-				// ダメージ受けた時の顔に切り替え
-				auto* playerDamage = GetUI<UIIcon>(Hash32("Player_icon_damage"));
-				playerDamage->isDraw = true;
-			}
-			else
-			{
-				// ダメージ受けた時のアイコンが消える
-				playerNormal->isDraw = true;
-
-				// 普通のアイコンに切り替わる
-				auto* playerDamage = GetUI<UIIcon>(Hash32("Player_icon_damage"));
-				playerDamage->isDraw = false;
-			}
-		}
-
-		// 枠が変わる
-		auto* normalFlame = GetUI<UIIcon>(Hash32("Player_icon_flame"));
-		if (normalFlame)
-		{
-			auto* damageColorDummy = GetUI<UIDummy>(Hash32("FlameDamageColorDummy"));
-			auto* normalColorDummy = GetUI<UIDummy>(Hash32("FlameNormalColorDummy"));
-			if (isTakeDamagePlayer)
-			{
-				normalFlame->color = damageColorDummy->color;
-			}
-			else
-			{
-				normalFlame->color = normalColorDummy->color;
-			}
+			CreatePlayerDamageScheduler();
 		}
 	}
 
@@ -202,6 +168,9 @@ void InGameMenu::Update()
 	}
 	bossHitHPPositionSequence_->Update(g_gameTime->GetFrameDeltaTime());
 	
+	if (playerDamageScheduler_) {
+		playerDamageScheduler_->Update(g_gameTime->GetFrameDeltaTime());
+	}
 
 	MenuBase::Update();
 }
@@ -236,4 +205,46 @@ void InGameMenu::InitializeLogic()
 	UIAnimationFactory::Attach<UITranslateOffsetAnimation>(bossHPCanvas, Hash32("HitBossPositionUp2"));
 	bossHitHPPositionSequence_ = std::make_unique<UIAnimationSequence>();
 	bossHitHPPositionSequence_->Add(Hash32("HitBossPositionUp")).Add(Hash32("HitBossPositionDown"));
+}
+
+
+void InGameMenu::CreatePlayerDamageScheduler()
+{
+	// スケジューラーの作成
+	playerDamageScheduler_ = std::make_unique<TaskSchedulerSystem>();
+	// プレイヤー被ダメ時(スタート)
+	playerDamageScheduler_->AddTimer(0.0f, [this]
+		{
+			// 表情が変わる
+			auto* playerNormal = GetUI<UIIcon>(Hash32("Player_icon_normal"));
+			// 普通のアイコンが消える
+			playerNormal->isDraw = false;
+
+			// ダメージ受けた時の顔に切り替え
+			auto* playerDamage = GetUI<UIIcon>(Hash32("Player_icon_damage"));
+			playerDamage->isDraw = true;
+
+			// ダメージ受けたら枠の色が変化
+			auto* normalFlame = GetUI<UIIcon>(Hash32("Player_icon_flame"));
+			auto* damageColorDummy = GetUI<UIDummy>(Hash32("FlameDamageColorDummy"));
+			normalFlame->color = damageColorDummy->color;
+		});
+	// プレイヤー被ダメ時(おわり)
+	playerDamageScheduler_->AddTimer(0.8f, [this]
+		{
+			// 表情が変わる
+			auto* playerNormal = GetUI<UIIcon>(Hash32("Player_icon_normal"));
+			// 普通のアイコンが消える
+			// ダメージ受けた時のアイコンが消える
+			playerNormal->isDraw = true;
+
+			// 普通のアイコンに切り替わる
+			auto* playerDamage = GetUI<UIIcon>(Hash32("Player_icon_damage"));
+			playerDamage->isDraw = false;
+
+			// 枠の色を元に戻す
+			auto* normalFlame = GetUI<UIIcon>(Hash32("Player_icon_flame"));
+			auto* normalColorDummy = GetUI<UIDummy>(Hash32("FlameNormalColorDummy"));
+			normalFlame->color = normalColorDummy->color;
+		});
 }
