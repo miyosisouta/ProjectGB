@@ -101,46 +101,81 @@
             "loop": "Once"
         },
         {
-            "key": "gear_rotation",
-            "valueType": "Float",
-            "startValue": 0.0,
-            "endValue": 360.0,
-            "duration": 10.0,
-            "easing": "Linear",
-            "loop": "Loop"
-        },
-        {
-            "key": "FadeInPauseMenu",
-            "valueType": "Vector4",
-            "startValue": { "x": 0.0, "y": 0.0, "z": 0.0, "w": 0.0 },
-            "endValue":   { "x": 0.3, "y": 0.3, "z": 0.3, "w": 1.0 },
-            "duration": 1.0,
-            "easing": "EaseOut",
-            "loop": "Once"
-        },
-        {
-            "key": "FadeOutPauseMenu",
-            "valueType": "Vector4",
-            "startValue": { "x": 0.3, "y": 0.3, "z": 0.3, "w": 1.0 },
-            "endValue":   { "x": 0.0, "y": 0.0, "z": 0.0, "w": 0.0 },
-            "duration": 1.0,
+            "comment": "ゲームスタート(ゲーム)：右から左より",
+            "key": "gamePosA",
+            "valueType": "Vector3",
+            "startValue": { "x": 1500.0, "y": 0.0, "z": 0.0 },
+            "endValue":   { "x": -100.0, "y": 0.0, "z": 0.0 },
+            "duration": 0.5,
             "easing": "EaseIn",
             "loop": "Once"
         },
         {
-            "key": "ScaleUp_Ready",
+            "comment": "ゲームスタート(ゲーム)：左から真ん中",
+            "key": "gamePosB",
             "valueType": "Vector3",
-            "startValue": { "x": 2.0, "y": 2.0, "z": 1.0 },
-            "endValue":   { "x": 1.0, "y": 1.0, "z": 1.0 },
-            "duration": 1.5,
+            "startValue": { "x": -100.0, "y": 0.0, "z": 0.0 },
+            "endValue":   { "x": 0.0, "y": 0.0, "z": 0.0 },
+            "duration": 0.1,
+            "easing": "EaseIn",
+            "loop": "Once"
+        },
+        {
+            "comment": "ゲームスタート(ゲーム)：真ん中から左",
+            "key": "gamePosC",
+            "valueType": "Vector3",
+            "startValue": { "x": 0.0, "y": 0.0, "z": 0.0 },
+            "endValue":   { "x": -1500.0, "y": 0.0, "z": 0.0 },
+            "duration": 0.5,
             "easing": "EaseOut",
             "loop": "Once"
         },
         {
-            "key": "ScaleUp_Go",
+            "comment": "ゲームスタート(スタート)：左から右より",
+            "key": "startPosA",
             "valueType": "Vector3",
-            "startValue": { "x": 0.8, "y": 0.8, "z": 1.0 },
-            "endValue":   { "x": 2.5, "y": 2.5, "z": 1.0 },
+            "startValue": { "x": -1500.0, "y": 0.0, "z": 0.0 },
+            "endValue":   { "x": 100.0, "y": 0.0, "z": 0.0 },
+            "duration": 0.5,
+            "easing": "EaseIn",
+            "loop": "Once"
+        },
+        {
+            "comment": "ゲームスタート(スタート)：右から真ん中",
+            "key": "startPosB",
+            "valueType": "Vector3",
+            "startValue": { "x": 100.0, "y": 0.0, "z": 0.0 },
+            "endValue":   { "x": 0.0, "y": 0.0, "z": 0.0 },
+            "duration": 0.1,
+            "easing": "EaseIn",
+            "loop": "Once"
+        },
+        {
+            "comment": "ゲームスタート(スタート)：真ん中から右",
+            "key": "startPosC",
+            "valueType": "Vector3",
+            "startValue": { "x": 0.0, "y": 0.0, "z": 0.0 },
+            "endValue":   { "x": 1500.0, "y": 0.0, "z": 0.0 },
+            "duration": 0.5,
+            "easing": "EaseOut",
+            "loop": "Once"
+        },
+        {
+            "comment": "ゲームスタート(帯)：最小から最大",
+            "key": "obiScaleUp",
+            "valueType": "Vector3",
+            "startValue": { "x": 1.0, "y": 0.0, "z": 0.0 },
+            "endValue":   { "x": 1.0, "y": 1.0, "z": 0.0 },
+            "duration": 0.5,
+            "easing": "EaseIn",
+            "loop": "Once"
+        },
+        {
+            "comment": "ゲームスタート(帯)：最大から最小",
+            "key": "obiScaleDown",
+            "valueType": "Vector3",
+            "startValue": { "x": 1.0, "y": 1.0, "z": 0.0 },
+            "endValue":   { "x": 1.0, "y": 0.0, "z": 0.0 },
             "duration": 0.5,
             "easing": "EaseOut",
             "loop": "Once"

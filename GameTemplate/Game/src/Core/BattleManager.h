@@ -28,6 +28,7 @@ private:
     enum class GameState
     {
         Entry,          // 開始前の演出
+        GameStart,      // ゲームスタート演出
         Playing,        // メインのゲームプレイ中
         ResultClear,    // スコア表示・リザルト演出
         ResultOver,     // スコア表示・リザルト演出
@@ -42,6 +43,7 @@ private:
     BossSpawner* boss_ = nullptr;
     Stage* stage_ = nullptr;
     Layout* layout_ = nullptr;
+    Layout* startLayout_ = nullptr;
     SkyCube* skyCube_ = nullptr;
     
     std::unique_ptr<CameraSteering> cameraSteering_ = nullptr;
@@ -92,6 +94,7 @@ private:
     bool UpdateResultOver();
 
     void SetupEntryBossCutScene();
+    void SetupStartCutScene();
     void SetupClearCutScene();
     void SetupOverCutScene();
 

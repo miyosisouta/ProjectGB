@@ -1,0 +1,49 @@
+{
+  "canvas": {
+    "elements": [
+      {
+        "coment": "ゲームスタート：帯",
+        "type": "UIIcon",
+        "name": "gameStart_obi",
+        "asset": "Assets/ui/inGameUI/gameStart/obi.DDS",
+        "width": 1920,
+        "height": 276,
+        "position": [0, 0, 0],
+        "scale": [1, 1, 1],
+        "rotation": 0,
+        "color": [1, 1, 1, 1]
+      },
+      {
+        "coment": "ゲームスタート：ゲーム",
+        "type": "UIIcon",
+        "name": "gameStart_game",
+        "asset": "Assets/ui/inGameUI/gameStart/game.DDS",
+        "width": 463,
+        "height": 110,
+        "position": [0, 100.0, 0],
+        "scale": [1, 1, 1],
+        "rotation": 0,
+        "color": [1, 1, 1, 1]
+      },
+      {
+        "coment": "ゲームスタート：スタート",
+        "type": "UIIcon",
+        "name": "gameStart_start",
+        "asset": "Assets/ui/inGameUI/gameStart/start.DDS",
+        "width": 463,
+        "height": 110,
+        "position": [0, -100.0, 0],
+        "scale": [1, 1, 1],
+        "rotation": 0,
+        "color": [1, 1, 1, 1]
+      },
+      
+      {
+        "comment": "ダミー(座標取得用)",
+        "type": "UIDummy",
+        "name": "StartPositionDummy",
+        "position": [-210, -180, 0]
+      }
+    ]
+}
+}
