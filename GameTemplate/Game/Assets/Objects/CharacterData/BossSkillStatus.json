@@ -3,21 +3,22 @@
         {
             "comment": "通常攻撃",
             "key": "NormalAttack",
-            "attack": 30
+            "motionValues": 30,
+            "cooldown": 1.0
         },
         
         {
             "comment": "ヒットスタンプ",
-            "key" : "Gorilla",
-            "hp": 0,
-            "attack": 50
+            "key" : "HitStamp",
+            "motionValues": 50,
+            "cooldown": 5.0
         },
 
         {
             "comment":"回転攻撃",
-            "key" : "Turtle",
-            "hp": 1500,
-            "attack": 40
+            "key" : "SpinAttack",
+            "motionValues": 40,
+            "cooldown": 5.0
         }
     ],
 

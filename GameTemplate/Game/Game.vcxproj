@@ -379,6 +379,7 @@
     <ClInclude Include="src\UI\UIScreenManager.h" />
     <ClInclude Include="src\Util\Crc32.h" />
     <ClInclude Include="src\Util\Curve.h" />
+    <ClInclude Include="src\Util\DamageCalculator.h" />
     <ClInclude Include="src\Util\Selector.h" />
     <ClInclude Include="src\Util\TaskSchedulerSystem.h" />
     <ClInclude Include="src\Vfx\Particle.h" />
