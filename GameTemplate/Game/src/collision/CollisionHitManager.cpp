@@ -3,6 +3,7 @@
 #include "src/Actor/ActorStatus.h"
 #include "src/Actor/BossCharacter.h"
 #include "src/Actor/Player.h"
+#include "src/Util/DamageCalculator.h"
 
 
 namespace
@@ -33,8 +34,8 @@ namespace
 	}
 
 	/* 定数 */
-	constexpr uint8_t NORMAL_ATTACK_DAMAGE = 1;
-	constexpr uint8_t SKILL_ATTACK_DAMAGE = 2;
+	constexpr uint8_t NORMAL_ATTACK_DAMAGE = 10;
+	constexpr uint8_t SKILL_ATTACK_DAMAGE = 15;
 	constexpr float SPIN_KNOCK_BACK = 300.0f;
 }
 
@@ -221,10 +222,19 @@ bool CollisionHitManager::ContainsPlayerNormalAttackPair(const Pair& hitPair)
 }
 void CollisionHitManager::UpdatePlayerNormalAttackPair(Pair& hitPair)
 {
+	// 通常攻撃
+	auto* playerCharacter = GetHitObject<Player>(hitPair, CharacterID::PlayerNormalAtkID());
 	auto* bossCharacter = GetHitObject<BossCharacter>(hitPair, CharacterID::BossID());
+	if (!bossCharacter || !playerCharacter || !playerCharacter->GetStatus() || !bossCharacter->GetStatus()) return;
+
+
+	auto playerStatus = playerCharacter->GetStatus()->As<PlayerStatus>();
 
 	if (bossCharacter->GetStatus()) {
-		bossCharacter->GetStatus()->Damage(NORMAL_ATTACK_DAMAGE);
+		// ダメージ計算
+		float motion = playerStatus->GetSkillMotionValues("NormalAttack");
+		int damage = Calculate(playerStatus, motion);
+		bossCharacter->GetStatus()->Damage(damage);
 		UpdateAttackHitSound(); // 攻撃が当たったSEを流す
 	}
 }
@@ -243,10 +253,19 @@ bool CollisionHitManager::ContainsPlayerSkillAttackPair(const Pair& hitPair)
 }
 void CollisionHitManager::UpdatePlayerSkillAttackPair(Pair& hitPair)
 {
+	// スキル攻撃
+	auto* playerCharacter = GetHitObject<Player>(hitPair, CharacterID::PlayerSkillAtkID());
 	auto* bossCharacter = GetHitObject<BossCharacter>(hitPair, CharacterID::BossID());
+	if (!bossCharacter || !playerCharacter || !playerCharacter->GetStatus() || !bossCharacter->GetStatus()) return;
+
+
+	auto* playerStatus = playerCharacter->GetStatus()->As<PlayerStatus>();
 
 	if (bossCharacter->GetStatus()) {
-		bossCharacter->GetStatus()->Damage(SKILL_ATTACK_DAMAGE);
+		// "SpecialAttack" スロットの威力を取得してダメージ計算
+		float motion = playerStatus->GetSkillMotionValues("SpecialAttack");
+		int damage = Calculate(playerStatus, motion);
+		bossCharacter->GetStatus()->Damage(damage);
 		UpdateAttackHitSound(); // 攻撃が当たったSEを流す
 	}
 }
@@ -270,20 +289,23 @@ bool CollisionHitManager::ContainsBossAttackPair(const Pair& hitPair)
 void CollisionHitManager::UpdateBossAttackPair(Pair& hitPair)
 {
 	auto* player = GetHitObject<Player>(hitPair, CharacterID::PlayerID());
-	if (player == nullptr || player->GetStatus() == nullptr) {
-		return;
-	}
+	auto* boss = GetHitObject<BossCharacter>(hitPair, CharacterID::BossNormalAtkID());
+	auto bossStatus = boss->GetStatus()->As<BossStatus>();
+	
 
+	// プレイヤーがいるか、プレイヤーのステータスがあるか
+	if (player == nullptr || player->GetStatus() == nullptr) { return; }
 	// プレイヤーが無敵フラグを持っているか
 	PlayerStatus* status = player->GetStatus()->As<PlayerStatus>();
-	if (status && status->IsInvincible())
-	{
-		// 回避時の処理はここへ
-		return;
-	}
+	if (status && status->IsInvincible()) { return; }
 
-	player->GetStatus()->Damage(NORMAL_ATTACK_DAMAGE);
-	UpdateTakeHitSound(); // 攻撃が当たったSEを流す
+	// ボスのステータスがあるならダメージ処理
+	if (boss->GetStatus()) {
+		float motion = bossStatus->GetSkillMotionValues("NormalAttack");
+		int damage = Calculate(bossStatus, motion);
+		player->GetStatus()->Damage(damage);
+		UpdateTakeHitSound(); // 攻撃が当たったSEを流す
+	}
 }
 
 
@@ -301,21 +323,21 @@ bool CollisionHitManager::ContainsBossHitStampPair(const Pair& hitPair)
 void CollisionHitManager::UpdateBossHitStampPair(Pair& hitPair)
 {
 	auto* player = GetHitObject<Player>(hitPair, CharacterID::PlayerID());
-	if (player == nullptr || player->GetStatus() == nullptr) {
-		return;
-	}
+	auto* boss = GetHitObject<BossCharacter>(hitPair, CharacterID::BossHitStampAtkID());
+	auto bossStatus = boss->GetStatus()->As<BossStatus>();
 
-
+	// プレイヤーがいるか、もしくはプレイヤーのステータスがあるか
+	if (player == nullptr || player->GetStatus() == nullptr) { return; }
 	// プレイヤーが無敵フラグを持っているか
 	PlayerStatus* status = player->GetStatus()->As<PlayerStatus>();
-	if (status && status->IsInvincible())
-	{
-		// 回避時の処理はここへ
-		return;
-	}
+	if (status && status->IsInvincible()){ return; }
 
-	player->GetStatus()->Damage(SKILL_ATTACK_DAMAGE); // ダメージを与える
-	UpdateTakeHitSound(); // 攻撃が当たったSEを流す
+	if (boss->GetStatus()) {
+		float motion = bossStatus->GetSkillMotionValues("HitStamp");
+		int damage = Calculate(bossStatus, motion);
+		player->GetStatus()->Damage(damage); // ダメージを与える
+		UpdateTakeHitSound(); // 攻撃が当たったSEを流す
+	}
 }
 
 
@@ -334,26 +356,26 @@ void CollisionHitManager::UpdateBossSpinPair(Pair& hitPair)
 {
 	// Pairの二人のクラスを取得
 	auto* player = GetHitObject<Player>(hitPair, CharacterID::PlayerID());
-	auto* bossCharacter = GetHitObject<BossCharacter>(hitPair, CharacterID::BossSpinAtkID());
-	if (player == nullptr || player->GetStatus() == nullptr || bossCharacter == nullptr) {
-		return;
-	}
+	auto* boss = GetHitObject<BossCharacter>(hitPair, CharacterID::BossSpinAtkID());
+	auto bossStatus = boss->GetStatus()->As<BossStatus>();
 
-	// プレイヤーが無敵フラグを持っているか
+	// プレイヤーがいるかつプレイヤーのステータスがあるかつボスがいいなら続ける
+	if (player == nullptr || player->GetStatus() == nullptr || boss == nullptr) { return; }
 	PlayerStatus* status = player->GetStatus()->As<PlayerStatus>();
-	if (status && status->IsInvincible())
-	{
-		// 回避時の処理はここへ
-		return;
-	}
+	// プレイヤーが無敵フラグを持っているか
+	if (status && status->IsInvincible()){ return; }
 
-	// ダメージを与える
-	player->GetStatus()->Damage(SKILL_ATTACK_DAMAGE);
-	UpdateTakeHitSound(); // 攻撃が当たったSEを流す
+	if (boss->GetStatus()) {
+		float motion = bossStatus->GetSkillMotionValues("SpinAttack");
+		int damage = Calculate(bossStatus, motion);
+		player->GetStatus()->Damage(damage);
+		UpdateTakeHitSound(); // 攻撃が当たったSEを流す
+	}
+	
 
 	// 当たった二人の座標を取得
 	Vector3 playerPos = player->GetTransformPosition();
-	Vector3 bossPos = bossCharacter->GetTransformPosition();
+	Vector3 bossPos = boss->GetTransformPosition();
 
 	// 方向を取得
 	Vector3 dir= playerPos - bossPos;

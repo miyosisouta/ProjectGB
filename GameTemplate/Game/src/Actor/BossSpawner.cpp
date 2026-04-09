@@ -108,6 +108,7 @@ void BossSpawner::SpawnBoss(bool isPlayerControl)
 	//BossType stageType = CharacterDataBase::Get().GetStageType();
 	//GameModeType mode = CharacterDataBase::Get().GetGameModeType();
 
+	// TODO : ゴリラの通常モードを呼ぶ
 	BossType stageType = BossType::enGorilla;
 	GameModeType mode = GameModeType::enNormal;
 

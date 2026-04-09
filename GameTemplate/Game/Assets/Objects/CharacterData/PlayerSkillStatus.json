@@ -3,9 +3,7 @@
         {
             "comment": "かみつき攻撃",
             "key": "Bite",
-            "hp": 300,
-            "attack": 30,
-            "criticalRate":30,
+            "motionValues": 30,
             "cooldown": 1.0
         }
     ],
@@ -14,24 +12,21 @@
         {
             "comment": "デフォルト攻撃",
             "key": "DefaultAttack",
-            "hp": 0,
-            "attack": 100,
+            "motionValues": 100,
             "cooldown": 5.0
         },
 
         {
             "comment": "地雷",
             "key": "Bomb",
-            "hp": 100,
-            "attack": 300,
+            "motionValues": 300,
             "cooldown": 15.0
         },
 
         {
             "comment":"魔法",
             "key": "Magic",
-            "hp": 0,
-            "attack": 150,
+            "motionValues": 150,
             "cooldown": 8.0
         }
     ],
@@ -40,8 +35,7 @@
         {
             "comment": "回避",
             "key": "Dodge",
-            "hp": 0,
-            "attack": 0,
+            "motionValues": 0,
             "cooldown": 3.0
         }
     ]
