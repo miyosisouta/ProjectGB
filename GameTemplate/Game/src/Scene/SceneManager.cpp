@@ -8,6 +8,7 @@
 #include "SceneManager.h"
 #include "src/Scene/IScene.h"
 
+#include "src/Scene/DebugScene.h"
 #include "src/Scene/StartupScene.h"
 #include "src/Scene/BootScene.h"
 #include "src/Scene/TitleScene.h"
@@ -23,6 +24,7 @@ SceneManager* SceneManager::myInstance_ = nullptr;
 SceneManager::SceneManager()
 {
 	// 各シーンを配列に追加
+	AddSceneMap <DebugScene>();
 	AddSceneMap <StartupScene>();
 	AddSceneMap <BootScene>();
 	AddSceneMap <TitleScene>();

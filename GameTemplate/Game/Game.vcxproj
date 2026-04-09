@@ -257,6 +257,7 @@
     <ClCompile Include="src\Math\Transform.cpp" />
     <ClCompile Include="src\Memory\Array.cpp" />
     <ClCompile Include="src\Scene\BootScene.cpp" />
+    <ClCompile Include="src\Scene\DebugScene.cpp" />
     <ClCompile Include="src\Scene\InGameScene.cpp" />
     <ClCompile Include="src\Scene\IScene.cpp" />
     <ClCompile Include="src\Scene\LoadingScreen.cpp" />
@@ -342,6 +343,7 @@
     <ClInclude Include="src\Math\Transform.h" />
     <ClInclude Include="src\Memory\Array.h" />
     <ClInclude Include="src\Scene\BootScene.h" />
+    <ClInclude Include="src\Scene\DebugScene.h" />
     <ClInclude Include="src\Scene\InGameScene.h" />
     <ClInclude Include="src\Scene\IScene.h" />
     <ClInclude Include="src\Scene\LoadingScreen.h" />
