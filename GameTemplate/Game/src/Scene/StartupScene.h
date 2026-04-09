@@ -17,6 +17,7 @@ enum EnSceneKind
 	enSceneKind_Boot = enSceneKind_Default,
 	enSceneKind_Title,
 	enSceneKind_Game,
+	enSceneKind_Debug,
 	enSceneKind_Max,
 };
 
