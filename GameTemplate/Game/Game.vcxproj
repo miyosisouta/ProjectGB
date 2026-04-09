@@ -263,6 +263,7 @@
     <ClCompile Include="src\Scene\OutGameScene.cpp" />
     <ClCompile Include="src\Scene\OutGameScreen.cpp" />
     <ClCompile Include="src\Scene\SceneManager.cpp" />
+    <ClCompile Include="src\Scene\StartupScene.cpp" />
     <ClCompile Include="src\Scene\TitleScene.cpp" />
     <ClCompile Include="src\Scene\TitleScreen.cpp" />
     <ClCompile Include="src\Skill\ISkill.cpp" />
@@ -347,6 +348,7 @@
     <ClInclude Include="src\Scene\OutGameScene.h" />
     <ClInclude Include="src\Scene\OutGameScreen.h" />
     <ClInclude Include="src\Scene\SceneManager.h" />
+    <ClInclude Include="src\Scene\StartupScene.h" />
     <ClInclude Include="src\Scene\TitleScene.h" />
     <ClInclude Include="src\Scene\TitleScreen.h" />
     <ClInclude Include="src\Skill\ISkill.h" />
