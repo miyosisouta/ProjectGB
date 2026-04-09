@@ -78,6 +78,7 @@
     <ClCompile Include="src\UI\BootMenu.cpp" />
     <ClCompile Include="src\Core\ParameterManager.cpp" />
     <ClCompile Include="src\UI\GameStartMenu.cpp" />
+    <ClCompile Include="src\Scene\StartupScene.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Game.h" />
@@ -163,6 +164,7 @@
     <ClInclude Include="src\UI\BootMenu.h" />
     <ClInclude Include="src\Core\ParameterManager.h" />
     <ClInclude Include="src\UI\GameStartMenu.h" />
+    <ClInclude Include="src\Scene\StartupScene.h" />
     <ClInclude Include="src\Util\DamageCalculator.h" />
   </ItemGroup>
 </Project>

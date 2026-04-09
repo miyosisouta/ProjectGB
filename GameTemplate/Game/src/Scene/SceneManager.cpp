@@ -8,6 +8,7 @@
 #include "SceneManager.h"
 #include "src/Scene/IScene.h"
 
+#include "src/Scene/StartupScene.h"
 #include "src/Scene/BootScene.h"
 #include "src/Scene/TitleScene.h"
 #include "src/Scene/LoadingScreen.h"
@@ -22,6 +23,7 @@ SceneManager* SceneManager::myInstance_ = nullptr;
 SceneManager::SceneManager()
 {
 	// 各シーンを配列に追加
+	AddSceneMap <StartupScene>();
 	AddSceneMap <BootScene>();
 	AddSceneMap <TitleScene>();
 	AddSceneMap <InGameScene>();
@@ -31,8 +33,14 @@ SceneManager::SceneManager()
 	// ロード画面クラスを生成
 	loadingScreen_ = NewGO<LoadingScreen>(GameObjectPriority::enLoadScreen,"LoadingScreen");
 
+
+	// デバックの時のみブートシーンを設定
+#if defined(_DEBUG)
+	CreateScene(StartupScene::ID());
+#else
 	// 最初のシーンを生成（タイトルシーン）
 	CreateScene(BootScene::ID());	
+#endif
 }
 
 

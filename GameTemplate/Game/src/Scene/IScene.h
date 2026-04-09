@@ -13,6 +13,9 @@
 public:\
  static constexpr uint32_t ID() { return Hash32(#scene); }
 
+/** かぶることはないはずなので最大値を無効値とする */
+static constexpr uint32_t INVALID_SCENE_ID = 0xffffffff;
+
 
 class IScene
 {

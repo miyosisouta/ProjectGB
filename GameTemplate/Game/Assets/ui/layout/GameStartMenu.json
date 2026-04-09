@@ -7,7 +7,7 @@
         "name": "gameStart_obi",
         "asset": "Assets/ui/inGameUI/gameStart/obi.DDS",
         "width": 1920,
-        "height": 276,
+        "height": 280,
         "position": [0, 0, 0],
         "scale": [1, 1, 1],
         "rotation": 0,
@@ -20,7 +20,7 @@
         "asset": "Assets/ui/inGameUI/gameStart/game.DDS",
         "width": 463,
         "height": 110,
-        "position": [0, 100.0, 0],
+        "position": [0, 70.0, 0],
         "scale": [1, 1, 1],
         "rotation": 0,
         "color": [1, 1, 1, 1]
@@ -32,7 +32,7 @@
         "asset": "Assets/ui/inGameUI/gameStart/start.DDS",
         "width": 463,
         "height": 110,
-        "position": [0, -100.0, 0],
+        "position": [0, -70.0, 0],
         "scale": [1, 1, 1],
         "rotation": 0,
         "color": [1, 1, 1, 1]
