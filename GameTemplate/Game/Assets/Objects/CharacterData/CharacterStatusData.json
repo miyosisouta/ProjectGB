@@ -3,7 +3,7 @@
         {
             "comment": "プレイヤーのステータス",
             "key": "Player",
-            "hp": 300,
+            "hp": 200,
             "attack": 30,
             "criticalRate":30,
             "stamina":100,

@@ -24,7 +24,6 @@ class CharacterDataBase
 {
 private:
     PlayerParam playerData_; //!< プレイヤー用データ保管庫
-    PlayerParam bossData_;   //!< ボス用データ保管庫
 
     BossParam bossParam_; //!< ボスに必要なパラメータ
 
@@ -42,15 +41,6 @@ public:
     void SetPlayerNormalAttack(NormalAttackType type) { playerData_.nAttack = type; }
     void SetPlayerAbility(AbilityType type) { playerData_.ability = type; }
     void SetPlayerUtility(UtilityType type) { playerData_.utility = type; }
-
-
-    /* ============================================================================ */
-    /* ボスデータ */
-    /* ============================================================================ */
-
-    /* ボス用ゲッター・セッター */
-    void SetBossParam(const PlayerParam& param) { bossData_ = param; }
-    const PlayerParam& GetBossParam() const { return bossData_; }
 
 
     /* ============================================================================ */

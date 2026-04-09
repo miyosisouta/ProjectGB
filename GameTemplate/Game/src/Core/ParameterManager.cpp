@@ -67,11 +67,9 @@ void ParameterManager::LoadPlayerSkillStatusData(const char* path)
 		[](const std::string& category, const nlohmann::json& j, MasterPlayerSkillParameter& p)
 		{
 			p.category     = category;
-			p.key          = j.value("key",           "");
-			p.hp           = j.value("hp",             0);
-			p.attack       = j.value("attack",         0);
-			p.criticalRate = j.value("criticalRate",   0);
-			p.cooldown     = j.value("cooldown",       0.0f);
+			p.key          = j.value("key",					"");
+			p.motionValues = j.value("motionValues",         0);
+			p.cooldown     = j.value("cooldown",		  0.0f);
 		}
 	);
 }
@@ -88,8 +86,7 @@ void ParameterManager::LoadBossSkillStatusData(const char* path)
 		{
 			p.category = category;
 			p.key      = j.value("key",    "");
-			p.hp       = j.value("hp",      0);
-			p.attack   = j.value("attack",  0);
+			p.motionValues = j.value("motionValues",  0);
 		}
 	);
 }

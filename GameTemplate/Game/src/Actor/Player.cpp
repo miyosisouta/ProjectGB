@@ -47,6 +47,39 @@ namespace anim
 	constexpr uint8_t ANIMATION_AVOID = 4; // 汎用スキル
 }
 
+namespace 
+{
+	/* 通常攻撃の変換 */
+	const char* ToNormalAttackKey(NormalAttackType type)
+	{
+		switch (type)
+		{
+		case NormalAttackType::enBite: return "Bite";
+		default:                       return nullptr;
+		}
+	}
+	/* 特殊攻撃の変換 */
+	const char* ToAbilityKey(AbilityType type)
+	{
+		switch (type)
+		{
+		case AbilityType::enDefault:         return "DefaultAttack";
+		case AbilityType::enBomb:            return "Bomb";
+		case AbilityType::enFireMagic:       return "Magic";
+		default:                             return nullptr;
+		}
+	}
+	/* 汎用スキルの変換 */
+	const char* ToUtilityKey(UtilityType type)
+	{
+		switch (type)
+		{
+		case UtilityType::enAvoid: return "Dodge";
+		default:                   return nullptr;
+		}
+	}
+}
+
 void Player::PlayAnimation(const int id)
 {
 	// StateID と アニメーションのインデックス(sAnimPathsの並び順)を紐づける
@@ -369,8 +402,7 @@ void Player::Render(RenderContext& rc)
 
 void Player::EquipNormalAttack(NormalAttackType type)
 {
-	
-
+	// スキルを作成
 	switch (type)
 	{
 	case NormalAttackType::enBite:
@@ -380,47 +412,39 @@ void Player::EquipNormalAttack(NormalAttackType type)
 		activeNormalAttack_.reset(); // 何も装備していない状態
 		break;
 	}
+
+	// プレイヤーステータスに通常攻撃を登録
+	const char* skillKey = ToNormalAttackKey(type);
+	if (skillKey) {
+		status_->As<PlayerStatus>()->EquipSkill("NormalAttack", "NormalAttack", skillKey);
+	}
 }
 
 void Player::EquipAbility(AbilityType type) 
 {
-
 	switch (type) {
 		// --- ガード関連 ---
 	case AbilityType::enGuard:
 		// activeAbility_ = std::make_unique<SkillGuard>(); 
 		break;
-	case AbilityType::enReflectiveGuard:
-		// activeAbility_ = std::make_unique<SkillReflectiveGuard>();
-		break;
-	case AbilityType::enCounter:
-		// activeAbility_ = std::make_unique<SkillCounter>();
-		break;
 
-		// --- 魔法関連 ---
 	case AbilityType::enFireMagic:
 		// activeAbility_ = std::make_unique<SkillFireMagic>();
 		break;
-	case AbilityType::enFireMagic_Strong:
-		// activeAbility_ = std::make_unique<SkillFireMagicStrong>();
-		break;
-	case AbilityType::enAbsorption:
-		// activeAbility_ = std::make_unique<SkillAbsorption>();
-		break;
 
-		// --- 爆弾関連 ---
 	case AbilityType::enBomb:
 		// activeAbility_ = std::make_unique<SkillBomb>();
 		break;
-	case AbilityType::enBomb_Decoy:
-		// activeAbility_ = std::make_unique<SkillBombDecoy>();
-		break;
-	case AbilityType::enLandmine:
-		// activeAbility_ = std::make_unique<SkillLandmine>();
-		break;
+
 	default:
 		activeAbility_ = std::make_unique<DefaultAttack>();
 		break;
+	}
+
+	// プレイヤーステータスに特殊攻撃を登録
+	const char* skillKey = ToAbilityKey(type);
+	if (skillKey) {
+		status_->As<PlayerStatus>()->EquipSkill("SpecialAttack", "SpecialAttack", skillKey);
 	}
 }
 
@@ -433,5 +457,11 @@ void Player::EquipUtility(UtilityType type)
 	default:
 		activeUtility_ = std::make_unique<Avoid>();
 		break;
+	}
+
+	// プレイヤーステータスに特殊攻撃を登録
+	const char* skillKey = ToUtilityKey(type);
+	if (skillKey) {
+		status_->As<PlayerStatus>()->EquipSkill("Utility", "Utility", skillKey);
 	}
 }

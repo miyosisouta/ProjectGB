@@ -18,15 +18,6 @@ public:\
   /** 基底クラス。必ず継承すること！ */
 struct IMasterParameter {};
 
-/** プレイヤーのステータス */
-struct MasterSphereStatusParameter : public IMasterParameter
-{
-	appParameter(MasterSphereStatusParameter);
-	//
-	int level;			// 吸着できるレベル
-	int levelUpNum;		// レベルアップに必要な数(吸着したオブジェクトの数)
-};
-
 /**
  * キャラクターのステータス
  * CharacterStatusData.json の "Character" 配列から読み込む
@@ -54,9 +45,7 @@ struct MasterPlayerSkillParameter : public IMasterParameter
 
 	std::string category;   // スキルカテゴリ (例: "NormalAttack", "SpecialAttack", "Utility")
 	std::string key;        // スキル識別キー  (例: "Bite", "Bomb", "Dodge")
-	int         hp;         // HP変動量
-	int         attack;     // 攻撃力
-	int         criticalRate; // クリティカル率 (存在しないスキルは 0)
+	float       motionValues;     // 攻撃力
 	float       cooldown;   // クールダウン (秒)
 };
 
@@ -70,8 +59,8 @@ struct MasterBossSkillParameter : public IMasterParameter
 
 	std::string category;   // ボス名カテゴリ
 	std::string key;        // スキル識別キー
-	int         hp;         // HP変動量
-	int         attack;     // 攻撃力
+	float       motionValues;     // 攻撃力
+	float       cooldown;   // クールダウン (秒)
 };
 
 /** defineの使用終了 */
