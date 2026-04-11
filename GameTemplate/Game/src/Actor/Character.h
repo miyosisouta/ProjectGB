@@ -50,6 +50,8 @@ public:
 
 	/* ステートマシーンの取得 */
 	StateMachine* GetStateMachine() { return  &stateMachine_; }
+	/* キャラクターコントローラの取得 */
+	CharacterController* GetCharaCon() { return &charaCon_; }
 
 	/* 移動速度の設定 */
 	inline void SetMoveVelocity(const Vector3& velocity) { moveVelocity_ = velocity; }

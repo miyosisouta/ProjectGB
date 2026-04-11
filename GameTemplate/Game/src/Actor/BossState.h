@@ -112,6 +112,8 @@ private:
 	Vector3 targetPos_ = Vector3::Zero;
 	Vector3 nextTargetPos_ = Vector3::Zero;
 	Vector3 fixedAttackPos_ = Vector3::Zero;
+	float verticalVelocity_ = 0.0f;  // 垂直速度
+	float gravity_ = 0.0f;        // 重力
 	bool createAttackCollision_ = false;
 	EffectHandle predictionEffectHandle_ = INVALID_EFFECT_HANDLE; //!< 攻撃予測エフェクトのハンドル（追従管理用）
 	

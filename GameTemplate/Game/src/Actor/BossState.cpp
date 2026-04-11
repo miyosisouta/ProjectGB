@@ -23,8 +23,8 @@ namespace
 	constexpr float ATTACK_COLLISION_HEIGHT = 100.0f;   // 高さ
 
 	// ヒットスタンプ
-	static Vector3 ATTACK_HEIGHT = Vector3(0.0f,600.0f,0.0f); // 高さ
-
+	static Vector3 ATTACK_HEIGHT = Vector3(0.0f,3000.0f,0.0f); // 高さ
+	constexpr float GRAVITY_POWER = -800.0f; // 重力の強さ
 	// 回転攻撃
 	constexpr float OVER_MOVE_DISTANCE = 300.0f;
 
@@ -240,6 +240,7 @@ void HitStampState::Enter()
 {
 	isFinished_ = false; // 初期化
 	createAttackCollision_ = false; // コリジョンの生成を可能にする
+	gravity_ = GRAVITY_POWER;
 	phase_ = Phase::Ready; // 準備をする
 
 	Quaternion targetRot = RotateToTarget(BOSS_ROTATE_SPEED);// 攻撃の前にプレイヤーがいる方向へ向く
@@ -255,6 +256,7 @@ void HitStampState::Enter()
 		boss_->SetMoveVelocity(Vector3::Zero);
 		targetPos_ = boss_->GetTransformPosition() + ATTACK_HEIGHT; // 移動する地点を設定
 		nextTargetPos_ = boss_->GetTargetPos() + ATTACK_HEIGHT;// 次に移動する地点を計算
+		verticalVelocity_ = 1500.0f;
 		phase_ = Phase::JumpUp;
 		});
 
@@ -280,7 +282,9 @@ void HitStampState::Enter()
 
 	// 地面に落ちる
 	taskScheduler_->AddTimer(4.0f, [&]() {
+
 		boss_->SetMoveVelocity(Vector3::Zero);
+		verticalVelocity_ = 0.0f;
 
 		// Hover時に確定した固定地点へ落下（プレイヤーが動いても追わない）
 		targetPos_ = fixedAttackPos_;
@@ -293,28 +297,6 @@ void HitStampState::Enter()
 		}
 		phase_ = Phase::FallDown;
 		});
-
-	// 地面に落ちる
-	taskScheduler_->AddTimer(4.7f, [&]() {
-		// エフェクトのPRSを決める
-		Vector3 targetPos = boss_->GetTransformPosition();
-		targetPos.y = 0.0f;
-		Vector3 targetScal = ATTACK_HITSTAMP_COLLISION_SIZE * EFFECT_SCALE_FACTOR;
-		EffectManager::Get().PlayEffect(enEffectKind_HitStamp, targetPos, boss_->GetTransformRotation(), targetScal);
-		});
-
-	// 地面に着地時
-	taskScheduler_->AddTimer(4.8f, [&]() {
-		boss_->SetMoveVelocity(Vector3::Zero);
-		SoundManager::Get().PlaySE(enSoundKind_Gorilla_HitStamp);
-		phase_ = Phase::ShokingStamp;
-		});
-
-	// 地面に着地後
-	taskScheduler_->AddTimer(4.8f, [&]() {
-		boss_->SetMoveVelocity(Vector3::Zero);
-		phase_ = Phase::Finished;
-		}, true);
 }
 
 void HitStampState::Update()
@@ -331,9 +313,21 @@ void HitStampState::Update()
 
 	case Phase::JumpUp:
 	{
-		// 少しずつ上へ
-		Vector3 moveUp = CalcVelocityTowards(targetPos_, BOSS_HITSTAMP_UP_SPEED);
-		boss_->SetMoveVelocity(moveUp);
+		// XZ移動
+		Vector3 move = CalcVelocityTowards(targetPos_, BOSS_HITSTAMP_UP_SPEED);
+		move.y = 0.0f;
+		boss_->SetMoveVelocity(move);
+
+		// Y軸は重力で管理
+		verticalVelocity_ += gravity_ * g_gameTime->GetFrameDeltaTime();
+		boss_->transform_.localPosition.y += verticalVelocity_ * g_gameTime->GetFrameDeltaTime();
+
+		// 目標高度を超えたらHoverへ
+		if (boss_->GetTransformPosition().y >= targetPos_.y)
+		{
+			verticalVelocity_ = 0.0f;
+			phase_ = Phase::Hover;
+		}
 		break;
 	}
 
@@ -350,16 +344,37 @@ void HitStampState::Update()
 
 	case Phase::FallDown:
 	{
-		// プレイヤーのいた場所へ落下
-		Vector3 moveDown = CalcVelocityTowards(targetPos_, BOSS_HITSTAMP_DOWN_SPEED);
-		boss_->SetMoveVelocity(moveDown);
+		Vector3 move = CalcVelocityTowards(targetPos_, BOSS_HITSTAMP_DOWN_SPEED);
+		move.y = 0.0f;
+		boss_->SetMoveVelocity(move);
+
+		verticalVelocity_ += gravity_ * g_gameTime->GetFrameDeltaTime();
+		boss_->transform_.localPosition.y += verticalVelocity_ * g_gameTime->GetFrameDeltaTime();
+
+		if (boss_->GetTransformPosition().y <= 0.0f)
+		{
+			boss_->transform_.localPosition.y = 0.0f;
+			verticalVelocity_ = 0.0f;
+
+			// ここに着地時の処理をまとめる
+			boss_->SetMoveVelocity(Vector3::Zero);
+			Vector3 targetPos = boss_->GetTransformPosition();
+			Vector3 targetScal = ATTACK_HITSTAMP_COLLISION_SIZE * EFFECT_SCALE_FACTOR;
+			EffectManager::Get().PlayEffect(enEffectKind_HitStamp, targetPos, boss_->GetTransformRotation(), targetScal);
+			SoundManager::Get().PlaySE(enSoundKind_Gorilla_HitStamp);
+
+			phase_ = Phase::ShokingStamp;
+		}
 		break;
 	}
 
 	case Phase::ShokingStamp:
 	{
-		// 作られてないならゴーストコリジョンを生成
-		if (!createAttackCollision_) {
+		// 作られてないならゴーストコリジョンを生成、作られているなら最終フェーズへ
+		if (createAttackCollision_) {
+			phase_ = Phase::Finished;
+		}
+		else {
 			attackHitbox_ = std::make_unique<GhostBody>();
 			attackHitbox_->CreateSphere(boss_, CharacterID::BossHitStampAtkID(), 300.0f, ghost::CollisionAttribute::BossAtk, ghost::CollisionAttributeMask::BossAtk);
 			// 固定した攻撃地点に配置（ボスの着地座標 = fixedAttackPos_）

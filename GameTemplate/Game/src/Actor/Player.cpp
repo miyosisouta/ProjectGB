@@ -79,8 +79,9 @@ namespace
 		}
 	}
 
-	constexpr float COLLISION_RADIUS = 30.0f;
-	constexpr float COLLISION_HEIGHT = 100.0f;
+	/* コリジョン */
+	constexpr float COLLISION_RADIUS = 30.0f;	// 半径
+	constexpr float COLLISION_HEIGHT = 100.0f;	// 高さ
 }
 
 void Player::PlayAnimation(const int id)
@@ -372,6 +373,7 @@ void Player::Update()
 	// 共通処理を呼び出す : ステートマシンのアップデートを呼んでます
 	Character::Update();
 
+
 	// モデルへの設定
 	{
 		// 移動処理
@@ -388,6 +390,13 @@ void Player::Update()
 			transform_.localPosition = charaCon_.Execute(transform_.position, 1.0f);
 		}
 
+		if (transform_.localPosition.y < 0.0f)
+		{
+			Vector3 pos = transform_.localPosition;
+			pos.y = 0.0f;
+			transform_.localPosition = pos;
+			charaCon_.SetPosition(pos); // キャラコン内部の座標も合わせる
+		}
 		transform_.UpdateTransform();
 
 		// モデルへ反映
