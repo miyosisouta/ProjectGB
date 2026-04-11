@@ -78,6 +78,9 @@ namespace
 		default:                   return nullptr;
 		}
 	}
+
+	constexpr float COLLISION_RADIUS = 30.0f;
+	constexpr float COLLISION_HEIGHT = 100.0f;
 }
 
 void Player::PlayAnimation(const int id)
@@ -342,10 +345,15 @@ bool Player::Start()
 		}
 	}
 
+	// キャラクターコントローラーの精製
+	{
+		charaCon_.Init(COLLISION_RADIUS, COLLISION_HEIGHT, transform_.position);
+	}
+
 	// ゴーストコリジョンを生成
 	{
 		damageBody_ = std::make_unique<GhostBody>();
-		damageBody_->CreateCapsule(this, CharacterID::PlayerID(), 30.0f, 100.0f, ghost::CollisionAttribute::PlayerDef, ghost::CollisionAttributeMask::Player);
+		damageBody_->CreateCapsule(this, CharacterID::PlayerID(), COLLISION_RADIUS, COLLISION_HEIGHT, ghost::CollisionAttribute::PlayerDef, ghost::CollisionAttributeMask::Player);
 	
 		damageBody_->SetPosition(transform_.position);
 	}
@@ -375,17 +383,30 @@ void Player::Update()
 		// トランスフォームの更新
 		transform_.UpdateTransform();
 
+		// キャラコン
+		{
+			transform_.localPosition = charaCon_.Execute(transform_.position, 1.0f);
+		}
+
+		transform_.UpdateTransform();
+
 		// モデルへ反映
 		modelRender_.SetPosition(transform_.position);
 		modelRender_.SetRotation(transform_.rotation);
 		modelRender_.Update();
 	}
 
-	PlayerStatus* status = GetStatus()->As<PlayerStatus>();
-	status->Update();
+	// ステータス
+	{
+		PlayerStatus* status = GetStatus()->As<PlayerStatus>();
+		status->Update();
+	}
 
-	Vector3 collisionPos = transform_.position + Vector3(0.0f, 40.0f, 0.0f);
-	damageBody_->SetPosition(collisionPos);
+	// ゴーストコリジョン
+	{
+		Vector3 collisionPos = transform_.position + Vector3(0.0f, 40.0f, 0.0f);
+		damageBody_->SetPosition(collisionPos);
+	}
 }
 
 void Player::Render(RenderContext& rc)

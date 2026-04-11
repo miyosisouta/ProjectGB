@@ -49,7 +49,7 @@ public:
 
     /* ボスのパラメータ */
     void SetGameSettingParam(const BossParam& param) { bossParam_ = param; }   //!< 設定
-    const BossParam& GameSettingParam() const { return bossParam_; }           //!< 取得
+    const BossParam& GetGameParam() const { return bossParam_; }           //!< 取得
 
     /* ステージタイプ */
     void SetStageType(BossType type) { bossParam_.stageType_ = type; }    //!< 設定

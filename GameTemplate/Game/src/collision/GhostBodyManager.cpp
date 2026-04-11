@@ -27,20 +27,34 @@ GhostBodyManager::~GhostBodyManager()
 
 void GhostBodyManager::AddBody(GhostBody* body)
 {
+	if (body == nullptr || body->GetBulletObject() == nullptr) {
+		return;
+	}
+
+	if (std::find(bodyList_.begin(), bodyList_.end(), body) != bodyList_.end()) {
+		return; // 既に登録済み
+	}
+
 	bodyList_.push_back(body);
 	broadphase_->Add(body);
 	PhysicsWorld::Get().AddCollisionObject(*body->GetBulletObject());
 }
 
-
 void GhostBodyManager::RemoveBody(GhostBody* body)
 {
+	if (body == nullptr || body->GetBulletObject() == nullptr) {
+		return;
+	}
+
 	auto it = std::find(bodyList_.begin(), bodyList_.end(), body);
-	if (it != bodyList_.end()) bodyList_.erase(it);
+	if (it == bodyList_.end()) {
+		return; // 未登録
+	}
+
+	bodyList_.erase(it);
 	broadphase_->Remove(body);
 	PhysicsWorld::Get().RemoveCollisionObject(*body->GetBulletObject());
 
-	// ★ CollisionHitManagerからダングリングポインタを除去
 	if (CollisionHitManager::IsAvailable()) {
 		CollisionHitManager::Get().OnBodyRemoved(body);
 	}
