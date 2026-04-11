@@ -15,7 +15,7 @@
 #include "src/Actor/BossSpawner.h"
 #include "src/Actor/BossCharacter.h"
 #include "src/Actor/ActorStatus.h"
-#include "src/Stage/Stage.h"
+#include "src/Stage/StageManager.h"
 
 #include "src/Camera/CameraManager.h"
 #include "src/Camera/CameraSteering.h"
@@ -64,7 +64,7 @@ BattleManager::BattleManager()
 	boss_->SetAttackTarger(player_);
 	boss_->SpawnBoss(); // ボスを作成
 
-	stage_ = NewGO<Stage>(0, "stage");		//Stageの生成
+	stage_ = NewGO<StageManagerObject>(0, "stage");		//Stageの生成
 
 	skyCube_ = NewGO<SkyCube>(0, "skyCube");
 	skyCube_->SetType(enSkyCubeType_Day);
@@ -81,6 +81,7 @@ BattleManager::BattleManager()
 		initConfig.rotationSpeedY = CAMERA_ROT_SPEED;
 		CameraData initData;
 		initData.fov = Math::DegToRad(CAMERA_FOVY);
+		initData.nearClip = CAMERA_NEAR;
 		initData.farClip = CAMERA_FAR;
 		cameraSteering_->SetConfig(initConfig);
 		cameraSteering_->SetTargetCharacter(player_);
@@ -162,6 +163,9 @@ void BattleManager::Update()
 			auto cameraData = gameCamera->GetCameraData();
 			cameraSteering_->Update(cameraData, g_gameTime->GetFrameDeltaTime());
 			gameCamera->SetState(cameraData);
+
+			// スカイキューブをプレイヤーに追従させる
+			skyCube_->SetPosition(player_->GetTransformPosition());
 
 			// BossのHPが0になったらクリア演出へ
 			auto* boss = FindGO<BossCharacter>("boss");

@@ -15,7 +15,7 @@
 class Player;
 class PlayerController;
 class BossSpawner;
-class Stage;
+class StageManagerObject;
 class Layout;
 
 
@@ -41,7 +41,7 @@ private:
     Player* player_ = nullptr;
     PlayerController* playerController_ = nullptr;
     BossSpawner* boss_ = nullptr;
-    Stage* stage_ = nullptr;
+    StageManagerObject* stage_ = nullptr;
     Layout* layout_ = nullptr;
     Layout* startLayout_ = nullptr;
     SkyCube* skyCube_ = nullptr;

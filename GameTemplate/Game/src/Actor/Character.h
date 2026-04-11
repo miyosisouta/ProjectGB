@@ -29,6 +29,7 @@ protected:
 	AllocatedArray<AnimationClip> animationClipList_; //!< アニメーションクリップのリスト
 	std::unique_ptr<GhostBody> damageBody_; //!< ダメージ用コリジョン
 	StateMachine stateMachine_;
+	CharacterController charaCon_;
 
 	/* スキルの実態を持つ */
 	std::unique_ptr<NormalAttackBase> activeNormalAttack_;

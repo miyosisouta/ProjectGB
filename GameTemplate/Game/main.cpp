@@ -10,8 +10,9 @@
 #include "src/collision/CollisionHitManager.h"
 
 #include "src/Scene/SceneManager.h"
-#include "src/Effect/EffectManager.h"
 #include "src/Sound/SoundManager.h"
+#include "src/Stage/StageManager.h"
+#include "src/Effect/EffectManager.h"
 
 #include "src/UI/UIAnimationParameter.h"
 

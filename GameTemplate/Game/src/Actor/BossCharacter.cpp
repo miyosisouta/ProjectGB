@@ -122,6 +122,11 @@ bool BossCharacter::Start()
 	// 現在のステートをIdleに設定
 	ChangeState(BossStateID::Idle);
 
+	// キャラコン
+	{
+		charaCon_.Init(COLLISION_SIZE, COLLISION_SIZE, transform_.position);
+	}
+
 	// コリジョン作成
 	{
 		damageBody_ = std::make_unique<GhostBody>();
@@ -150,13 +155,22 @@ void BossCharacter::Update()
 		// トランスフォームの更新
 		transform_.UpdateTransform();
 
+		// キャラコン
+		{
+			transform_.localPosition = charaCon_.Execute(transform_.position, 1.0f);
+		}
+
+		transform_.UpdateTransform();
+
 		// モデルへ反映
 		modelRender_.SetPosition(transform_.position);
 		modelRender_.SetRotation(transform_.rotation);
 		modelRender_.Update();
 	}
 
-	// コリジョン更新
+	
+
+	// ゴーストコリジョン更新
 	{
 		Vector3 collisionPos = transform_.position + Vector3(BOSS_COLLISION_POS);
 		damageBody_->SetPosition(collisionPos);

@@ -31,6 +31,7 @@ private:
 
 	/* 特殊能力が使えるか */
 	bool CanSpecialAbility();
+	
 
 public:
 	/* コンストラクタ */
