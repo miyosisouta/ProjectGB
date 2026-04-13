@@ -19,6 +19,13 @@
             "key" : "SpinAttack",
             "motionValues": 40,
             "cooldown": 5.0
+        },
+
+        {
+            "comment":"岩を投げる",
+            "key" : "ThrowRock",
+            "motionValues": 30,
+            "cooldown": 5.0
         }
     ],
 

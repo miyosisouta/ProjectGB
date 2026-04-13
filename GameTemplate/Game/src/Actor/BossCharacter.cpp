@@ -51,6 +51,7 @@ void BossCharacter::SetupTranslate()
 	AddState(BossStateID::Attack, new BossAttackState(this));
 	AddState(BossStateID::Jump, new HitStampState(this));
 	AddState(BossStateID::Spin, new SpinState(this));
+	AddState(BossStateID::Clicked, new ThrowRockState(this));
 	AddState(BossStateID::Death, new BossDeathState(this));
 }
 
@@ -143,6 +144,7 @@ void BossCharacter::Update()
 	// アクティブでないなら更新しない
 	if (!isUpdate_) return; 
 
+
 	// ボスの移動処理
 	if(!isMoveStop_)
 	{
@@ -157,7 +159,24 @@ void BossCharacter::Update()
 
 		// キャラコン
 		{
-			transform_.localPosition = charaCon_.Execute(transform_.position, 1.0f);
+			Vector3 xzTarget = transform_.position;
+			xzTarget.y = charaCon_.GetPosition().y; // Yはキャラコン内部値を維持（変化させない）
+			Vector3 conResult = charaCon_.Execute(xzTarget, g_gameTime->GetFrameDeltaTime());
+
+			// XZだけ反映、YはState側が管理するので触らない
+			transform_.localPosition.x = conResult.x;
+			transform_.localPosition.z = conResult.z;
+		}
+
+		// 重力
+		{
+			if (transform_.localPosition.y < 0.0f)
+			{
+				Vector3 pos = transform_.localPosition;
+				pos.y = 0.0f;
+				transform_.localPosition = pos;
+				charaCon_.SetPosition(pos); // キャラコン内部の座標も合わせる
+			}
 		}
 
 		transform_.UpdateTransform();
@@ -167,9 +186,7 @@ void BossCharacter::Update()
 		modelRender_.SetRotation(transform_.rotation);
 		modelRender_.Update();
 	}
-
 	
-
 	// ゴーストコリジョン更新
 	{
 		Vector3 collisionPos = transform_.position + Vector3(BOSS_COLLISION_POS);

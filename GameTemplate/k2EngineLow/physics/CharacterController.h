@@ -33,10 +33,6 @@ namespace nsK2EngineLow
 
 		/** 初期化済みフラグ */
 		bool isInited_ = false;
-		/** ジャンプ中フラグ */
-		bool isJump_ = false;
-		/** 地面に接地しているフラグ */
-		bool isOnGround_ = true;
 		/** テレポートリクエストフラグ */
 		bool isRequestTeleport_ = false;
 
@@ -64,25 +60,13 @@ namespace nsK2EngineLow
 			isRequestTeleport_ = true;
 		}
 
-		void SetGravity(const float gravity) { gravity_ = gravity; }
-
 		const Vector3& GetPosition() const { return position_; }
 		const Vector3& GetPrevPosition() const { return prevPosition_; }
 		void SetPosition(const Vector3& position) { position_ = position; }
 		float GetVerticalVelocity() const { return verticalVelocity_; }
-		bool IsJump() const { return isJump_; }
-		bool IsOnGround() const { return isOnGround_; }
-		void Jump(float jumpPower);
 
 		CCapsuleCollider* GetCollider() { return &collider_; }
 		RigidBody* GetRigidBody() { return &rigidBody_; }
 		void RemoveRigidBoby();
-
-		void Bounce(const float power)
-		{
-			// 地面にいるかどうかの判定を無視して、強制的に上方向の速度を上書きする！
-			verticalVelocity_ = power;
-			isOnGround_ = false; // 地面から離れたことにする
-		}
 	};
 }

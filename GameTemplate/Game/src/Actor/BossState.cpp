@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "BossState.h"
 #include "BossCharacter.h"
+#include "src/Actor/AttackObjectManager.h"
 
 namespace
 {
@@ -23,15 +24,20 @@ namespace
 	constexpr float ATTACK_COLLISION_HEIGHT = 100.0f;   // 高さ
 
 	// ヒットスタンプ
-	static Vector3 ATTACK_HEIGHT = Vector3(0.0f,600.0f,0.0f); // 高さ
-
+	static Vector3 ATTACK_HEIGHT = Vector3(0.0f,3000.0f,0.0f); // 高さ
+	constexpr float GRAVITY_POWER = -800.0f; // 重力の強さ
+	
 	// 回転攻撃
-	constexpr float OVER_MOVE_DISTANCE = 300.0f;
+	constexpr float OVER_MOVE_DISTANCE_SPIN_ATTACK = 300.0f;
+
+	// 岩を投げる攻撃
+	constexpr float OVER_MOVE_DISTANCE_THROW_ROCK = 200.0f;
 
 	// コリジョンサイズ(Sphere)
 	constexpr float ATTACK_NORMAL_COLLISION_SIZE = 200.0f;
 	constexpr float ATTACK_HITSTAMP_COLLISION_SIZE = 350.0f;
 	constexpr float ATTACK_SPIN_COLLISION_SIZE = 250.0f;
+	constexpr float ATTACK_ROCK_COLLISION_SIZE = 100.0f;
 
 	// エフェクトスケール変換
 	constexpr float EFFECT_SCALE_FACTOR = 0.4f;
@@ -194,12 +200,12 @@ void BossAttackState::Enter()
 			float heightOffset = ATTACK_COLLISION_HEIGHT;										// 高さの調整
 			Vector3 collisionTargetPos = bossPos + (forward * forwardOffset);	// 前方向の座標を決定
 			collisionTargetPos.y += heightOffset;									// 高さを決定
-			Vector3 collisionTargetScal = ATTACK_NORMAL_COLLISION_SIZE * EFFECT_SCALE_FACTOR;
 
 			// コリジョンの座標を設定
 			attackHitbox_->SetPosition(collisionTargetPos);
 
 			// エフェクトのPRSを決め
+			Vector3 collisionTargetScal = ATTACK_NORMAL_COLLISION_SIZE * EFFECT_SCALE_FACTOR;
 			bossRot.AddRotationDegY(360.0f);
 			EffectManager::Get().PlayEffect(enEffectKind_Wind_Blast_Boss, collisionTargetPos, bossRot, collisionTargetScal);
 			});
@@ -240,6 +246,7 @@ void HitStampState::Enter()
 {
 	isFinished_ = false; // 初期化
 	createAttackCollision_ = false; // コリジョンの生成を可能にする
+	gravity_ = GRAVITY_POWER;
 	phase_ = Phase::Ready; // 準備をする
 
 	Quaternion targetRot = RotateToTarget(BOSS_ROTATE_SPEED);// 攻撃の前にプレイヤーがいる方向へ向く
@@ -255,6 +262,7 @@ void HitStampState::Enter()
 		boss_->SetMoveVelocity(Vector3::Zero);
 		targetPos_ = boss_->GetTransformPosition() + ATTACK_HEIGHT; // 移動する地点を設定
 		nextTargetPos_ = boss_->GetTargetPos() + ATTACK_HEIGHT;// 次に移動する地点を計算
+		verticalVelocity_ = 1500.0f;
 		phase_ = Phase::JumpUp;
 		});
 
@@ -280,7 +288,9 @@ void HitStampState::Enter()
 
 	// 地面に落ちる
 	taskScheduler_->AddTimer(4.0f, [&]() {
+
 		boss_->SetMoveVelocity(Vector3::Zero);
+		verticalVelocity_ = 0.0f;
 
 		// Hover時に確定した固定地点へ落下（プレイヤーが動いても追わない）
 		targetPos_ = fixedAttackPos_;
@@ -293,28 +303,6 @@ void HitStampState::Enter()
 		}
 		phase_ = Phase::FallDown;
 		});
-
-	// 地面に落ちる
-	taskScheduler_->AddTimer(4.7f, [&]() {
-		// エフェクトのPRSを決める
-		Vector3 targetPos = boss_->GetTransformPosition();
-		targetPos.y = 0.0f;
-		Vector3 targetScal = ATTACK_HITSTAMP_COLLISION_SIZE * EFFECT_SCALE_FACTOR;
-		EffectManager::Get().PlayEffect(enEffectKind_HitStamp, targetPos, boss_->GetTransformRotation(), targetScal);
-		});
-
-	// 地面に着地時
-	taskScheduler_->AddTimer(4.8f, [&]() {
-		boss_->SetMoveVelocity(Vector3::Zero);
-		SoundManager::Get().PlaySE(enSoundKind_Gorilla_HitStamp);
-		phase_ = Phase::ShokingStamp;
-		});
-
-	// 地面に着地後
-	taskScheduler_->AddTimer(4.8f, [&]() {
-		boss_->SetMoveVelocity(Vector3::Zero);
-		phase_ = Phase::Finished;
-		}, true);
 }
 
 void HitStampState::Update()
@@ -331,9 +319,21 @@ void HitStampState::Update()
 
 	case Phase::JumpUp:
 	{
-		// 少しずつ上へ
-		Vector3 moveUp = CalcVelocityTowards(targetPos_, BOSS_HITSTAMP_UP_SPEED);
-		boss_->SetMoveVelocity(moveUp);
+		// XZ移動
+		Vector3 move = CalcVelocityTowards(targetPos_, BOSS_HITSTAMP_UP_SPEED);
+		move.y = 0.0f;
+		boss_->SetMoveVelocity(move);
+
+		// Y軸は重力で管理
+		verticalVelocity_ += gravity_ * g_gameTime->GetFrameDeltaTime();
+		boss_->transform_.localPosition.y += verticalVelocity_ * g_gameTime->GetFrameDeltaTime();
+
+		// 目標高度を超えたらHoverへ
+		if (boss_->GetTransformPosition().y >= targetPos_.y)
+		{
+			verticalVelocity_ = 0.0f;
+			phase_ = Phase::Hover;
+		}
 		break;
 	}
 
@@ -350,16 +350,37 @@ void HitStampState::Update()
 
 	case Phase::FallDown:
 	{
-		// プレイヤーのいた場所へ落下
-		Vector3 moveDown = CalcVelocityTowards(targetPos_, BOSS_HITSTAMP_DOWN_SPEED);
-		boss_->SetMoveVelocity(moveDown);
+		Vector3 move = CalcVelocityTowards(targetPos_, BOSS_HITSTAMP_DOWN_SPEED);
+		move.y = 0.0f;
+		boss_->SetMoveVelocity(move);
+
+		verticalVelocity_ += gravity_ * g_gameTime->GetFrameDeltaTime();
+		boss_->transform_.localPosition.y += verticalVelocity_ * g_gameTime->GetFrameDeltaTime();
+
+		if (boss_->GetTransformPosition().y <= 0.0f)
+		{
+			boss_->transform_.localPosition.y = 0.0f;
+			verticalVelocity_ = 0.0f;
+
+			// ここに着地時の処理をまとめる
+			boss_->SetMoveVelocity(Vector3::Zero);
+			Vector3 targetPos = boss_->GetTransformPosition();
+			Vector3 targetScal = ATTACK_HITSTAMP_COLLISION_SIZE * EFFECT_SCALE_FACTOR;
+			EffectManager::Get().PlayEffect(enEffectKind_HitStamp, targetPos, boss_->GetTransformRotation(), targetScal);
+			SoundManager::Get().PlaySE(enSoundKind_Gorilla_HitStamp);
+
+			phase_ = Phase::ShokingStamp;
+		}
 		break;
 	}
 
 	case Phase::ShokingStamp:
 	{
-		// 作られてないならゴーストコリジョンを生成
-		if (!createAttackCollision_) {
+		// 作られてないならゴーストコリジョンを生成、作られているなら最終フェーズへ
+		if (createAttackCollision_) {
+			phase_ = Phase::Finished;
+		}
+		else {
 			attackHitbox_ = std::make_unique<GhostBody>();
 			attackHitbox_->CreateSphere(boss_, CharacterID::BossHitStampAtkID(), 300.0f, ghost::CollisionAttribute::BossAtk, ghost::CollisionAttributeMask::BossAtk);
 			// 固定した攻撃地点に配置（ボスの着地座標 = fixedAttackPos_）
@@ -407,9 +428,6 @@ void SpinState::Enter()
 	// 回転アニメーションを設定
 	boss_->PlayAnimation(BossAnimID::enAnimSpin);
 
-	// タスクシステムを作成
-	taskScheduler_ = std::make_unique<TaskSchedulerSystem>();
-
 	// エフェクトを再生
 	Vector3 targetScal = ATTACK_SPIN_COLLISION_SIZE * EFFECT_SCALE_FACTOR;
 	spinEffectHandle_ = EffectManager::Get().PlayEffect(
@@ -428,7 +446,7 @@ void SpinState::Enter()
 		if (diff.LengthSq() >= 0.001f)
 		{
 			diff.Normalize(); // 方向を正規化
-			targetPos_ = playerPos + (diff * OVER_MOVE_DISTANCE); // プレイヤーのいる位置とボスから見た方向から少し先まで進む
+			targetPos_ = playerPos + (diff * OVER_MOVE_DISTANCE_SPIN_ATTACK); // プレイヤーのいる位置とボスから見た方向から少し先まで進む
 		}
 		else {
 			targetPos_ = playerPos;
@@ -445,20 +463,21 @@ void SpinState::Enter()
 		{
 			dir.Normalize();
 
-			// エフェクトの中心 = ボスと targetPos_ の中点（地面に貼り付け）
+			// エフェクトの中心
 			Vector3 centerPos = bossPos + dir * (totalDist * 0.5f);
 			centerPos.y = 0.0f;
 
-			// 方向に合わせてY軸回転（atan2でボスの進行方向角を求める）
+			// 方向に合わせてY軸回転
 			float angle = atan2(dir.x, dir.z);
 			Quaternion predictionRot;
 			predictionRot.SetRotationY(angle);
 
-			// スケール：幅はコリジョンサイズ準拠、奥行き(Z)を距離に合わせて引き伸ばす
+			// 大きさを計算
 			float zScale = totalDist * EFFECT_SCALE_FACTOR;
 			float xScale = ATTACK_SPIN_COLLISION_SIZE * EFFECT_SCALE_FACTOR;
 			Vector3 predictionScale = Vector3(xScale, 1.0f, zScale);
 
+			// エフェクトを再生
 			predictionEffectHandle_ = EffectManager::Get().PlayEffect(
 				enEffectKind_DamageZone_Ring,
 				centerPos,
@@ -468,14 +487,11 @@ void SpinState::Enter()
 		}
 	}
 
+	// タスクシステムを作成
+	taskScheduler_ = std::make_unique<TaskSchedulerSystem>();
+
 	// タスクシステムの構築
 	{
-		// 攻撃範囲を描画
-		taskScheduler_->AddTimer(0.5f, [&]() {
-
-			});
-
-
 		// 移動開始（予測エフェクトを停止してから攻撃）
 		taskScheduler_->AddTimer(1.5f, [&]() {
 			// 予測エフェクトを停止
@@ -557,6 +573,124 @@ void SpinState::Exit()
 
 
 /*==========================================*/
+// 岩を投げつける攻撃
+/*==========================================*/
+
+void ThrowRockState::Render(RenderContext& rc)
+{
+}
+
+void ThrowRockState::Enter()
+{
+	isFinished_ = false; // 初期化
+	boss_->SetMoveVelocity(Vector3::Zero);
+
+	// 攻撃の前にプレイヤーがいる方向へ向く
+	Quaternion targetRot = RotateToTarget(BOSS_ROTATE_SPEED);
+	boss_->SetTargetRot(targetRot);
+
+
+	// プレイヤーとボスの現在の座標を取得
+	boss_->transform_.UpdateWorldMatrix();
+	Vector3 playerPos = boss_->GetTargetPos();
+	Vector3 bossPos = boss_->GetTransformPosition();
+
+
+	// 方向を算出して目標の座標を設定
+	Vector3 diff = playerPos - bossPos; 
+	if (diff.LengthSq() >= 0.001f)
+	{
+		diff.Normalize(); // 方向を正規化
+		targetPos_ = playerPos + (diff * OVER_MOVE_DISTANCE_THROW_ROCK); // プレイヤーのいる位置とボスから見た方向から少し先まで進む
+	}
+	else {
+		targetPos_ = playerPos;
+	}
+
+	// 攻撃予測エフェクトの設定
+	Vector3 targetDir = targetPos_ - bossPos; // ターゲットの方向
+	float totalDist = targetDir.Length(); // 距離
+
+	if (totalDist >= 0.001f)
+	{
+		targetDir.Normalize();
+
+		// エフェクトの中心
+		Vector3 centerPos = bossPos + targetDir * (totalDist * 0.5f);
+		centerPos.y = 0.0f;
+
+		// 方向に合わせてY軸回転
+		float angle = atan2(targetDir.x, targetDir.z);
+		Quaternion predictionRot;
+		predictionRot.SetRotationY(angle);
+
+		// 大きさを計算
+		float zScale = totalDist * EFFECT_SCALE_FACTOR;
+		float xScale = ATTACK_ROCK_COLLISION_SIZE * EFFECT_SCALE_FACTOR;
+		Vector3 predictionScale = Vector3(xScale, 1.0f, zScale);
+
+		// エフェクトを再生
+		predictionEffectHandle_ = EffectManager::Get().PlayEffect(
+			enEffectKind_DamageZone_Ring,
+			centerPos,
+			predictionRot,
+			predictionScale
+		);
+	}
+
+	// タスクシステムを作成
+	taskScheduler_ = std::make_unique<TaskSchedulerSystem>();
+
+	taskScheduler_->AddTimer(1.5f, [this,bossPos,targetDir]()
+		{
+			// エフェクトの再生を止める
+			EffectManager::Get().StopEffect(predictionEffectHandle_);
+
+			// 岩の初期位置の計算
+			const Matrix& mat = boss_->transform_.GetWorldMatrix(); // ボスのワールド座標を取得
+			Vector3 forward(mat.m[2][0], mat.m[2][1], mat.m[2][2]); // Z軸
+			forward.Normalize(); // ベクトルの長さを1にしておく
+
+			float attackForward = ATTACK_COLLISION_FORWARD;
+			float attackHeight = ATTACK_COLLISION_HEIGHT;
+			Vector3 startPos = bossPos + (forward * attackForward);
+			startPos.y = attackHeight;
+
+			// 岩の生成
+			AttackObjectManager::Get().CreateRock(
+				boss_,
+				startPos,
+				targetDir,
+				ATTACK_ROCK_COLLISION_SIZE
+			);
+			// アニメーションを再生
+			boss_->PlayAnimation(BossAnimID::enAnimClicked);
+		});
+
+	taskScheduler_->AddTimer(2.0f, [&]()
+		{
+			isFinished_ = true;
+		});
+}
+
+void ThrowRockState::Update()
+{
+	if (taskScheduler_) { taskScheduler_->Update(g_gameTime->GetFrameDeltaTime()); }
+}
+
+void ThrowRockState::Exit()
+{
+	// 強制終了された場合の保険（タイマーが起動前に Exit が来るケース）
+	if (predictionEffectHandle_ != INVALID_EFFECT_HANDLE)
+	{
+		EffectManager::Get().StopEffect(predictionEffectHandle_);
+		predictionEffectHandle_ = INVALID_EFFECT_HANDLE;
+	}
+
+	taskScheduler_.reset();
+}
+
+/*==========================================*/
 // 死亡状態
 /*==========================================*/
 
@@ -566,6 +700,7 @@ void BossDeathState::Enter()
 
 void BossDeathState::Update()
 {
+	
 }
 
 void BossDeathState::Exit()

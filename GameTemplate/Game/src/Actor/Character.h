@@ -20,6 +20,7 @@ namespace CharacterID
 	inline uint32_t BossNormalAtkID() { return Hash32("BossNormalAttack"); }
 	inline uint32_t BossHitStampAtkID() { return Hash32("BossHitStamp"); }
 	inline uint32_t BossSpinAtkID() { return Hash32("BossSpin"); }
+	inline uint32_t BossThrowRockAtkID() { return Hash32("BossThrowRock"); }
 }
 
 
@@ -50,6 +51,8 @@ public:
 
 	/* ステートマシーンの取得 */
 	StateMachine* GetStateMachine() { return  &stateMachine_; }
+	/* キャラクターコントローラの取得 */
+	CharacterController* GetCharaCon() { return &charaCon_; }
 
 	/* 移動速度の設定 */
 	inline void SetMoveVelocity(const Vector3& velocity) { moveVelocity_ = velocity; }

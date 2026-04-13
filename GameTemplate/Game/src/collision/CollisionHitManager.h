@@ -146,6 +146,8 @@ private:
 	void UpdateBossHitStampPair(Pair& hitPair);			//!< ヒットスタンプ攻撃の更新
 	bool ContainsBossSpinPair(const Pair& hitPair);	//!< 通常攻撃のフラグ取得
 	void UpdateBossSpinPair(Pair& hitPair);			//!< 通常攻撃の更新
+	bool ContainsBossThrowRockPair(const Pair& hitPair);	//!< 通常攻撃のフラグ取得
+	void UpdateBossThrowRockPair(Pair& hitPair);			//!< 通常攻撃の更新
 
 
 	/**

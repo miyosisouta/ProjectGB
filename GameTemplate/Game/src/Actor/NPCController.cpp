@@ -23,18 +23,18 @@ namespace bossRuleData
 
                 // ▼ 中距離ルールの設定
                 { DistancePhase::enMidAttackType, {
-                    { BossStateID::Run,   2 },   // 走る
-                    { BossStateID::Jump,    2 }, // ヒットスタンプ
-                    { BossStateID::Spin,  3 },   // 回転攻撃
-                    { BossStateID::Clicked,  3 } // 岩を投げる
+                    { BossStateID::Run,     2 },    // 走る
+                    { BossStateID::Jump,    2 },    // ヒットスタンプ
+                    { BossStateID::Spin,    3 },    // 回転攻撃
+                    { BossStateID::Clicked, 3 }     // 岩を投げる
                 }},
 
                 // ▼ 遠距離ルールの設定
                 { DistancePhase::enLongAttackType, {
-                    { BossStateID::Run, 1 },    // 走る
-                    { BossStateID::Jump, 2 },   // ジャンプ
-                    { BossStateID::Spin, 2 },   // 回転攻撃
-                    { BossStateID::Clicked, 5 } // 岩を投げる
+                    { BossStateID::Run,     1 },    // 走る
+                    { BossStateID::Jump,    2 },    // ジャンプ
+                    { BossStateID::Spin,    2 },    // 回転攻撃
+                    { BossStateID::Clicked, 5 }     // 岩を投げる
                 }},
 
                 // ▼ 攻撃範囲外にいる場合
