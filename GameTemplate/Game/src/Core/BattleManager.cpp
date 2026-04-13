@@ -29,6 +29,7 @@
 #include "src/UI/GameClearMenu.h"
 #include "src/UI/GameOverMenu.h"
 #include "src/UI/GameStartMenu.h"
+#include "src/UI/MissionMenu.h"
 
 
 namespace
@@ -110,6 +111,9 @@ BattleManager::BattleManager()
 	cutSceneScheduler_ = std::make_unique<TaskSchedulerSystem>();
 	// ボス登場演出
 	SetupEntryBossCutScene();
+
+	missionLayout_ = new Layout;
+	missionLayout_->Initialize<MissionMenu>("Assets/ui/layout/MissionMenu.json");
 }
 
 
@@ -213,6 +217,10 @@ void BattleManager::Update()
 	if (startLayout_) {
 		startLayout_->Update();
 	}
+	if (missionLayout_) {
+		missionLayout_->Update();
+	}
+
 	
 	AttackObjectManager::Get().Update();
 	GhostBodyManager::Get().Update();
@@ -227,6 +235,9 @@ void BattleManager::Render(RenderContext& rc)
 	}
 	if (startLayout_) {
 		startLayout_->Render(rc);
+	}
+	if (missionLayout_) {
+		missionLayout_->Render(rc);
 	}
 	AttackObjectManager::Get().Render(rc);
 }

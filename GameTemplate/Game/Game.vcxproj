@@ -289,6 +289,7 @@
     <ClCompile Include="src\UI\Layout.cpp" />
     <ClCompile Include="src\UI\LoadingMenu.cpp" />
     <ClCompile Include="src\UI\Menu.cpp" />
+    <ClCompile Include="src\UI\MissionMenu.cpp" />
     <ClCompile Include="src\UI\PauseMenu.cpp" />
     <ClCompile Include="src\UI\SoundOptionMenu.cpp" />
     <ClCompile Include="src\UI\TitleMenu.cpp" />
@@ -381,6 +382,7 @@
     <ClInclude Include="src\UI\Layout.h" />
     <ClInclude Include="src\UI\LoadingMenu.h" />
     <ClInclude Include="src\UI\Menu.h" />
+    <ClInclude Include="src\UI\MissionMenu.h" />
     <ClInclude Include="src\UI\PauseMenu.h" />
     <ClInclude Include="src\UI\SoundOptionMenu.h" />
     <ClInclude Include="src\UI\TitleMenu.h" />

@@ -1,0 +1,71 @@
+{
+    "comment": "四角のエフェクト(perAxis使用例）",
+    "duration": 0,
+    "spawn": {
+        "rate": 5.0,
+        "burstCount": 0,
+        "maxParticles": 5,
+        "looping": true
+    },
+    "modules": [
+        {
+            "type": "InitLifetime",
+            "lifetime": {
+                "mode": "fixed",
+                "value": 0.8
+            }
+        },
+        {
+            "type": "InitPosition",
+            "position": {
+                "mode": "perAxis",
+                "x": { "mode": "random", "min": 0.0, "max": 100.0 },
+                "y": { "mode": "random", "min": 0.0,  "max": 100.0 },
+                "z": 0.0
+            }
+        },
+        {
+            "type": "InitVelocity",
+            "velocity": {
+                "mode": "perAxis",
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            }
+        },
+        {
+            "type": "InitScale",
+            "scale": {
+                "mode": "fixed",
+                "x": 0.5,
+                "y": 0.5,
+                "z": 1.0
+            }
+        },
+        {
+            "type": "ScaleOverLife",
+            "uniform": true,
+            "startScale": { "mode": "random", "min": 0.3, "max": 0.8 },
+            "endScale": 0.0,
+            "easing": "EaseInOut"
+        },
+        {
+            "type": "RotationOverLife",
+            "startAngle": 0.0,
+            "endAngle": { "mode": "random", "min": -180.0, "max": 180.0 },
+            "easing": "EaseOut"
+        },
+        {
+            "type": "AlphaOverLife",
+            "startAlpha": 1.0,
+            "endAlpha": 0.0,
+            "easing": "EaseInOut"
+        },
+        {
+            "type": "Acceleration",
+            "x": 0.0,
+            "y": -30.0,
+            "z": 0.0
+        }
+    ]
+}

@@ -1,0 +1,52 @@
+{
+    "comment": "丸のエフェクト(perAxis使用例）",
+    "duration": 1,
+    "spawn": {
+        "rate": 3.0,
+        "burstCount": 3,
+        "maxParticles": 3,
+        "looping": false
+    },
+    "modules": [
+        {
+            "type": "InitLifetime",
+            "lifetime": {
+                "mode": "fixed",
+                "value": 1.0
+            }
+        },
+        {
+            "type": "InitPosition",
+            "position": {
+                "mode": "fixed",
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            }
+        },
+        {
+            "type": "InitVelocity",
+            "velocity": {
+                "mode": "perAxis",
+                "x": { "mode": "random", "min": -150.0, "max": 0.0 },
+                "y": { "mode": "random", "min": -150.0, "max": 0.0 },
+                "z": 0.0
+            }
+        },
+        {
+            "type": "InitScale",
+            "scale": {
+                "mode": "fixed",
+                "x": 0.15,
+                "y": 0.15,
+                "z": 1.0
+            }
+        },
+        {
+            "type": "AlphaOverLife",
+            "startAlpha": 1.0,
+            "endAlpha": 0.0,
+            "easing": "EaseOut"
+        }
+    ]
+}

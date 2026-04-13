@@ -6,6 +6,7 @@
 
 #pragma once
 #include "IScene.h"
+#include "src/Vfx/ParticleEffectRender.h"
 
 
 class Layout;
@@ -18,6 +19,10 @@ class DebugScene : public IScene
 
 private:
 	Layout* layout_ = nullptr;
+	std::vector<std::unique_ptr<ParticleEffectRender>> effectRenderList;
+
+	std::unique_ptr<TaskSchedulerSystem> taskScheduler_ = nullptr;
+
 
 
 public:
