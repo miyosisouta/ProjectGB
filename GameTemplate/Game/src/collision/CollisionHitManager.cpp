@@ -175,6 +175,10 @@ void CollisionHitManager::OnCollisionEnter(GhostBody* a, GhostBody* b)
 		if (ContainsBossSpinPair(pair)) {
 			UpdateBossSpinPair(pair);
 		}
+		// 岩を投げる
+		if (ContainsBossThrowRockPair(pair)) {
+			UpdateBossThrowRockPair(pair);
+		}
 	}
 }
 
@@ -383,6 +387,37 @@ void CollisionHitManager::UpdateBossSpinPair(Pair& hitPair)
 
 	// ノックバック
 	Vector3 knockBackVelocity = dir * SPIN_KNOCK_BACK;
+}
+
+bool CollisionHitManager::ContainsBossThrowRockPair(const Pair& hitPair)
+{
+	if (!IsHitObject<BossCharacter>(hitPair, CharacterID::BossThrowRockAtkID())) {
+		return false;
+	}
+	if (!IsHitObject<Player>(hitPair, CharacterID::PlayerID())) {
+		return false;
+	}
+	return true;
+}
+
+void CollisionHitManager::UpdateBossThrowRockPair(Pair& hitPair)
+{
+	auto* player = GetHitObject<Player>(hitPair, CharacterID::PlayerID());
+	auto* boss = GetHitObject<BossCharacter>(hitPair, CharacterID::BossThrowRockAtkID());
+	auto bossStatus = boss->GetStatus()->As<BossStatus>();
+
+	// プレイヤーがいるか、もしくはプレイヤーのステータスがあるか
+	if (player == nullptr || player->GetStatus() == nullptr) { return; }
+	// プレイヤーが無敵フラグを持っているか
+	PlayerStatus* status = player->GetStatus()->As<PlayerStatus>();
+	if (status && status->IsInvincible()) { return; }
+
+	if (boss->GetStatus()) {
+		float motion = bossStatus->GetSkillMotionValues("ThrowRock");
+		int damage = Calculate(bossStatus, motion);
+		player->GetStatus()->Damage(damage); // ダメージを与える
+		UpdateTakeHitSound(); // 攻撃が当たったSEを流す
+	}
 }
 
 

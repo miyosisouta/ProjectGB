@@ -15,6 +15,7 @@
 #include "src/Actor/BossSpawner.h"
 #include "src/Actor/BossCharacter.h"
 #include "src/Actor/ActorStatus.h"
+#include "src/Actor/AttackObjectManager.h"
 #include "src/Stage/StageManager.h"
 
 #include "src/Camera/CameraManager.h"
@@ -61,9 +62,10 @@ BattleManager::BattleManager()
 	playerController_->SetTarget(player_);		//PlayerControllerの操作対象をPlayerに設定
 
 	boss_ = new BossSpawner(); // ボス生成用クラス
-	boss_->SetAttackTarger(player_);
+	boss_->SetAttackTarger(player_); // ボスの攻撃対象を設定
 	boss_->SpawnBoss(); // ボスを作成
 
+	AttackObjectManager::CreateInstance(); // 攻撃オブジェクト管理用クラスを生成
 	stage_ = NewGO<StageManagerObject>(0, "stage");		//Stageの生成
 
 	skyCube_ = NewGO<SkyCube>(0, "skyCube");
@@ -211,7 +213,8 @@ void BattleManager::Update()
 	if (startLayout_) {
 		startLayout_->Update();
 	}
-
+	
+	AttackObjectManager::Get().Update();
 	GhostBodyManager::Get().Update();
 	CollisionHitManager::Get().Update();
 }
@@ -225,6 +228,7 @@ void BattleManager::Render(RenderContext& rc)
 	if (startLayout_) {
 		startLayout_->Render(rc);
 	}
+	AttackObjectManager::Get().Render(rc);
 }
 
 

@@ -150,6 +150,41 @@ public:
 	void Update()override;
 	void Exit()override;
 };
+
+
+/*==========================================*/
+// 岩を投げる攻撃
+/*==========================================*/
+class ThrowRockState : public BossStateBase
+{
+private:
+	enum Phase
+	{
+		enReady,
+		enPredict,
+		enThrow,
+		enDone,
+	};
+
+private:
+	Phase phase_ = Phase::enReady;
+	Vector3 targetPos_ = Vector3::Zero;
+	EffectHandle predictionEffectHandle_ = INVALID_EFFECT_HANDLE; // 予測エフェクトのハンドル
+
+public:
+	bool IsFinished() const override { return isFinished_; }
+
+
+public:
+	ThrowRockState(BossCharacter* b) : BossStateBase(b) {}
+
+	void Render(RenderContext& rc);
+
+	void Enter()override;
+	void Update()override;
+	void Exit()override;
+};
+
 /************************************************************/
 // ここからは強制的な状態のものを書く
 
