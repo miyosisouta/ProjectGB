@@ -1,0 +1,138 @@
+{
+  "canvas": {
+    "elements": [
+      {
+        "coment": "ミッション未クリア：バーの背景",
+        "type": "UIIcon",
+        "name": "mission_back",
+        "asset": "Assets/ui/inGameUI/mission/mission_back.DDS",
+        "width": 500,
+        "height": 40,
+        "position": [0, 0, 0],
+        "scale": [1, 1, 1],
+        "rotation": 0,
+        "color": [0.71, 0.71, 0.71, 1]
+      },
+      {
+        "coment": "ミッション未クリア：メダル",
+        "type": "UIIcon",
+        "name": "noClear_medaru",
+        "asset": "Assets/ui/inGameUI/mission/medaru_back.DDS",
+        "width": 30,
+        "height": 35,
+        "position": [-220, 0, 0],
+        "scale": [1, 1, 1],
+        "rotation": 0,
+        "color": [1, 1, 1, 1]
+      },
+
+
+
+      {
+        "coment": "ミッションクリア：メダル",
+        "type": "UIIcon",
+        "name": "clear_medaru",
+        "asset": "Assets/ui/inGameUI/mission/medaru.DDS",
+        "width": 30,
+        "height": 35,
+        "position": [-220, 0, 0],
+        "scale": [1, 1, 1],
+        "rotation": 0,
+        "color": [1, 1, 1, 1],
+        "isDraw":false
+      },
+
+
+      {
+        "coment": "ミッション：白帯",
+        "type": "UIIcon",
+        "name": "mission_obi",
+        "asset": "Assets/ui/inGameUI/mission/obi.DDS",
+        "width": 420,
+        "height": 34,
+        "position": [10, 0, 0],
+        "scale": [1, 1, 1],
+        "rotation": 0,
+        "color": [1, 1, 1, 1]
+      },
+
+
+      {
+        "coment": "ミッション：2分以内にクリア",
+        "type": "UIIcon",
+        "name": "mission_1",
+        "asset": "Assets/ui/inGameUI/mission/time.DDS",
+        "width": 250,
+        "height": 34,
+        "position": [-30, 0, 0],
+        "scale": [1, 1, 1],
+        "rotation": 0,
+        "color": [1, 1, 1, 1]
+      },
+      {
+        "coment": "ミッション：回避できた",
+        "type": "UIIcon",
+        "name": "mission_2",
+        "asset": "Assets/ui/inGameUI/mission/kaihi.DDS",
+        "width": 250,
+        "height": 34,
+        "position": [-30, 0, 0],
+        "scale": [1, 1, 1],
+        "rotation": 0,
+        "color": [1, 1, 1, 1],
+        "isDraw": false
+      },
+      {
+        "coment": "ミッション：スキル使った",
+        "type": "UIIcon",
+        "name": "mission_3",
+        "asset": "Assets/ui/inGameUI/mission/skill.DDS",
+        "width": 250,
+        "height": 34,
+        "position": [-30, 0, 0],
+        "scale": [1, 1, 1],
+        "rotation": 0,
+        "color": [1, 1, 1, 1],
+        "isDraw": false
+      },
+
+
+
+      {
+        "coment": "ミッション：エフェクト丸",
+        "type": "UIIcon",
+        "name": "mission_effect",
+        "asset": "Assets/ui/inGameUI/mission/skill.DDS",
+        "width": 250,
+        "height": 34,
+        "position": [-30, 0, 0],
+        "scale": [1, 1, 1],
+        "rotation": 0,
+        "color": [1, 1, 1, 1],
+        "isDraw": false
+      },
+
+
+      
+      
+      {
+        "comment": "ダミー(出てくる前)",
+        "type": "UIDummy",
+        "name": "StartPositionDummy",
+        "position": [1000, 330, 0]
+      },
+      {
+        "comment": "ダミー(出てきたあと)",
+        "type": "UIDummy",
+        "name": "SoundPositionDummy",
+        "position": [750, 330, 0]
+      },
+      {
+        "comment": "ダミー(おわる座標取得用)",
+        "type": "UIDummy",
+        "name": "ExitPositionDummy",
+        "position": [-170, -420, 0]
+      }
+    ]
+}
+}

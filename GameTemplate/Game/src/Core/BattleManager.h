@@ -44,6 +44,7 @@ private:
     StageManagerObject* stage_ = nullptr;
     Layout* layout_ = nullptr;
     Layout* startLayout_ = nullptr;
+    Layout* missionLayout_ = nullptr;
     SkyCube* skyCube_ = nullptr;
     
     std::unique_ptr<CameraSteering> cameraSteering_ = nullptr;

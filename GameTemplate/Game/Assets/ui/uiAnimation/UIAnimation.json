@@ -180,27 +180,61 @@
             "easing": "EaseOut",
             "loop": "Once"
         },
+
+
         {
-            "key": "SkillReadyScaleUp",
+            "comment": "ミッション(未クリア)：右から出てくる",
+            "key": "missionEventStart",
             "valueType": "Vector3",
-            "startValue": { "x": 1, "y": 1, "z": 1 },
-            "endValue":   { "x": 1.15, "y": 1.15, "z": 1.0 },
-            "duration": 0.1,
+            "startValue": { "x": 200.0, "y": 0.0, "z": 0.0 },
+            "endValue":   { "x": -450.0, "y": 0.0, "z": 0.0 },
+            "duration": 0.5,
             "easing": "Linear",
             "loop": "Once"
         },
         {
-            "key": "SkillReadyScaleDown",
+            "comment": "ミッション(未クリア)：左から最初の位置に戻る",
+            "key": "missionEventEnd",
             "valueType": "Vector3",
-            "startValue": { "x": 1.15, "y": 1.15, "z": 1 },
-            "endValue":   { "x": 1, "y": 1, "z": 1.0 },
-            "duration": 0.05,
-            "easing": "Linear",
+            "startValue": { "x": -450.0, "y": 0.0, "z": 0.0 },
+            "endValue":   { "x": 200.0, "y": 0.0, "z": 0.0 },
+            "duration": 0.5,
+            "easing": "EaseOut",
+            "loop": "Once"
+        },
+        {
+            "comment": "ミッションクリア:メダルの退場",
+            "key": "missionMedaru_pos",
+            "valueType": "Vector3",
+            "startValue": { "x": 0.0, "y": 0.0, "z": 0.0 },
+            "endValue":   { "x": 500.0, "y": 0.0, "z": 0.0 },
+            "duration": 0.5,
+            "easing": "EaseIn",
+            "loop": "Once"
+        },
+        {
+            "comment": "ミッションクリア:色が灰色から黄色になる",
+            "key": "mission_color",
+            "valueType": "Vector4",
+            "startValue": { "x": 0.71, "y": 0.71, "z": 0.71, "w": 1.0 },
+            "endValue":   { "x": 1.0, "y": 0.74, "z": 0.13, "w": 1.0 },
+            "duration": 0.0,
+            "easing": "EaseIn",
+            "loop": "Once"
+        },
+        {
+            "comment": "ミッションクリア:メダルが出てくる",
+            "key": "mission_medaru_scale",
+            "valueType": "Vector3",
+            "startValue": { "x": 2.5, "y": 2.5, "z": 2.5 },
+            "endValue":   { "x": 1.0, "y": 1.0, "z": 1.0 },
+            "duration": 0.5,
+            "easing": "EaseIn",
             "loop": "Once"
         },
         {
             "comment": "ボスが被ダメしたらHPバーが動く",
-            "key": "HitBossPositionUp",
+            "key": "missionPos",
             "valueType": "Vector3",
             "startValue": { "x": 0.0, "y": 0.0, "z": 0.0 },
             "endValue":   { "x": 0.0, "y": 3.0, "z": 0.0 },

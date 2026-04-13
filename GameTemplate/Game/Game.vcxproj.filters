@@ -80,6 +80,7 @@
     <ClCompile Include="src\UI\GameStartMenu.cpp" />
     <ClCompile Include="src\Scene\StartupScene.cpp" />
     <ClCompile Include="src\Scene\DebugScene.cpp" />
+    <ClCompile Include="src\UI\MissionMenu.cpp" />
     <ClCompile Include="src\Stage\StageBase.cpp" />
     <ClCompile Include="src\Stage\StageManager.cpp" />
     <ClCompile Include="src\Actor\AttackObjectManager.cpp" />
@@ -174,6 +175,7 @@
     <ClInclude Include="src\Stage\StageBase.h" />
     <ClInclude Include="src\Stage\StageManager.h" />
     <ClInclude Include="src\Scene\DebugScene.h" />
+    <ClInclude Include="src\UI\MissionMenu.h" />
     <ClInclude Include="src\Actor\AttackObjectManager.h" />
     <ClInclude Include="src\Actor\AttackObject.h" />
   </ItemGroup>
