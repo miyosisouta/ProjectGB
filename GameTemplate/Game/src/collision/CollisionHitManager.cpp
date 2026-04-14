@@ -1,9 +1,11 @@
 ﻿#include "stdafx.h"
 #include "CollisionHitManager.h"
 #include "src/Actor/ActorStatus.h"
+#include "src/Actor/Character.h"
 #include "src/Actor/BossCharacter.h"
 #include "src/Actor/Player.h"
 #include "src/Util/DamageCalculator.h"
+#include "src/Actor/AttackObject.h"
 
 
 namespace
@@ -178,6 +180,16 @@ void CollisionHitManager::OnCollisionEnter(GhostBody* a, GhostBody* b)
 		// 岩を投げる
 		if (ContainsBossThrowRockPair(pair)) {
 			UpdateBossThrowRockPair(pair);
+		}
+	}
+
+	// キャラクター全体
+	{
+		if (ContainsCharacterLandminePlayerPair(pair)) {
+			UpdateCharacterLandminePlayerPair(pair);
+		}
+		if (ContainsCharacterLandmineBossPair(pair)) {
+			UpdateCharacterLandmineBossPair(pair);
 		}
 	}
 }
@@ -394,7 +406,7 @@ bool CollisionHitManager::ContainsBossThrowRockPair(const Pair& hitPair)
 	if (!IsHitObject<BossCharacter>(hitPair, CharacterID::BossThrowRockAtkID())) {
 		return false;
 	}
-	if (!IsHitObject<Player>(hitPair, CharacterID::PlayerID())) {
+	if (!IsHitObject<Character>(hitPair, CharacterID::PlayerID() | CharacterID::BossID())) {
 		return false;
 	}
 	return true;
@@ -418,6 +430,66 @@ void CollisionHitManager::UpdateBossThrowRockPair(Pair& hitPair)
 		player->GetStatus()->Damage(damage); // ダメージを与える
 		UpdateTakeHitSound(); // 攻撃が当たったSEを流す
 	}
+}
+
+
+
+/* ============================================ */
+/* キャラクターの誰かが全員に対して攻撃 */
+/* ============================================ */
+
+bool CollisionHitManager::ContainsCharacterLandminePlayerPair(const Pair& hitPair)
+{
+	if (!IsHitObject<LandmineObject>(hitPair, CharacterID::CharaLandmineAtkID())) {
+		return false;
+	}
+	if (!IsHitObject<Player>(hitPair, CharacterID::PlayerID())) {
+		return false;
+	}
+	return true;
+}
+
+void CollisionHitManager::UpdateCharacterLandminePlayerPair(Pair& hitPair)
+{
+	// ownerはCharacterとして取得 → 攻撃者はどちらかわからないため
+	auto* owner = GetHitObject<Character>(hitPair, CharacterID::CharaLandmineAtkID());
+	auto* player = GetHitObject<Player>(hitPair, CharacterID::PlayerID());
+
+	if (!owner || !player || !owner->GetStatus() || !player->GetStatus()) { return; }
+
+	// プレイヤーの無敵チェック
+	PlayerStatus* playerStatus = player->GetStatus()->As<PlayerStatus>();
+	if (playerStatus && playerStatus->IsInvincible()) { return; }
+
+	auto* ownerStatus = owner->GetStatus()->As<PlayerStatus>();
+	float motion = ownerStatus->GetSkillMotionValues("SpecialAttack");
+	int damage = Calculate(ownerStatus, motion);
+	player->GetStatus()->Damage(damage);
+	UpdateTakeHitSound();
+}
+
+bool CollisionHitManager::ContainsCharacterLandmineBossPair(const Pair& hitPair)
+{
+	if (!IsHitObject<LandmineObject>(hitPair, CharacterID::CharaLandmineAtkID())) {
+		return false;
+	}
+	if (!IsHitObject<BossCharacter>(hitPair, CharacterID::BossID())) {
+		return false;
+	}
+	return true;
+}
+
+void CollisionHitManager::UpdateCharacterLandmineBossPair(Pair& hitPair)
+{
+	// ownerはCharacterとして取得 → 攻撃者はどちらかわからないため
+	auto* owner = GetHitObject<Character>(hitPair, CharacterID::CharaLandmineAtkID());
+	auto* boss = GetHitObject<BossCharacter>(hitPair, CharacterID::BossID());
+
+	auto* ownerStatus = owner->GetStatus()->As<PlayerStatus>();
+	float motion = ownerStatus->GetSkillMotionValues("SpecialAttack");
+	int damage = Calculate(ownerStatus, motion);
+	boss->GetStatus()->Damage(damage);
+	UpdateAttackHitSound();
 }
 
 

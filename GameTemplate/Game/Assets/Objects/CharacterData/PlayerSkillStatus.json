@@ -18,14 +18,14 @@
 
         {
             "comment": "地雷",
-            "key": "Bomb",
+            "key": "Landmine",
             "motionValues": 300,
-            "cooldown": 15.0
+            "cooldown": 20.0
         },
 
         {
             "comment":"魔法",
-            "key": "Magic",
+            "key": "FireMagic",
             "motionValues": 150,
             "cooldown": 8.0
         }

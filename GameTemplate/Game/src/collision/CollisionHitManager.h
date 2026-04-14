@@ -149,6 +149,11 @@ private:
 	bool ContainsBossThrowRockPair(const Pair& hitPair);	//!< 通常攻撃のフラグ取得
 	void UpdateBossThrowRockPair(Pair& hitPair);			//!< 通常攻撃の更新
 
+	/* キャラクターの誰かの攻撃 */
+	bool ContainsCharacterLandminePlayerPair(const Pair& hitPair); // 地雷(対プレイヤー)のフラグ取得
+	void UpdateCharacterLandminePlayerPair(Pair& hitPair); // 地雷(対プレイヤー)の更新
+	bool ContainsCharacterLandmineBossPair(const Pair& hitPair); // 地雷(対ボス)のフラグ取得
+	void UpdateCharacterLandmineBossPair(Pair& hitPair);// 地雷(対ボス)の更新
 
 	/**
 	 * シングルトン関連

@@ -40,7 +40,7 @@ namespace
 	constexpr float ATTACK_ROCK_COLLISION_SIZE = 100.0f;
 
 	// エフェクトスケール変換
-	constexpr float EFFECT_SCALE_FACTOR = 0.4f;
+	constexpr float EFFECT_SCALE_FACTOR_DAMAGE_LING = 0.4f;
 
 	// タスクスケジュールのループ
 	constexpr float BOSS_RUN_SE_LOOP_SEQUENCE = 0.2f;	// 走る際のSEのループシーケンス
@@ -205,7 +205,7 @@ void BossAttackState::Enter()
 			attackHitbox_->SetPosition(collisionTargetPos);
 
 			// エフェクトのPRSを決め
-			Vector3 collisionTargetScal = ATTACK_NORMAL_COLLISION_SIZE * EFFECT_SCALE_FACTOR;
+			Vector3 collisionTargetScal = ATTACK_NORMAL_COLLISION_SIZE * EFFECT_SCALE_FACTOR_DAMAGE_LING;
 			bossRot.AddRotationDegY(360.0f);
 			EffectManager::Get().PlayEffect(enEffectKind_Wind_Blast_Boss, collisionTargetPos, bossRot, collisionTargetScal);
 			});
@@ -268,7 +268,7 @@ void HitStampState::Enter()
 
 	// プレイヤーの頭上へ移動
 	taskScheduler_->AddTimer(2.0f, [&]() {
-		Vector3 collisionScale = ATTACK_HITSTAMP_COLLISION_SIZE * EFFECT_SCALE_FACTOR;
+		Vector3 collisionScale = ATTACK_HITSTAMP_COLLISION_SIZE * EFFECT_SCALE_FACTOR_DAMAGE_LING;
 		boss_->SetMoveVelocity(Vector3::Zero);
 		targetPos_ = nextTargetPos_;// 移動する地点を設定
 
@@ -365,7 +365,7 @@ void HitStampState::Update()
 			// ここに着地時の処理をまとめる
 			boss_->SetMoveVelocity(Vector3::Zero);
 			Vector3 targetPos = boss_->GetTransformPosition();
-			Vector3 targetScal = ATTACK_HITSTAMP_COLLISION_SIZE * EFFECT_SCALE_FACTOR;
+			Vector3 targetScal = ATTACK_HITSTAMP_COLLISION_SIZE * EFFECT_SCALE_FACTOR_DAMAGE_LING;
 			EffectManager::Get().PlayEffect(enEffectKind_HitStamp, targetPos, boss_->GetTransformRotation(), targetScal);
 			SoundManager::Get().PlaySE(enSoundKind_Gorilla_HitStamp);
 
@@ -429,7 +429,7 @@ void SpinState::Enter()
 	boss_->PlayAnimation(BossAnimID::enAnimSpin);
 
 	// エフェクトを再生
-	Vector3 targetScal = ATTACK_SPIN_COLLISION_SIZE * EFFECT_SCALE_FACTOR;
+	Vector3 targetScal = ATTACK_SPIN_COLLISION_SIZE * EFFECT_SCALE_FACTOR_DAMAGE_LING;
 	spinEffectHandle_ = EffectManager::Get().PlayEffect(
 		enEffectkind_Spin,
 		boss_->GetTransformPosition(),
@@ -473,8 +473,8 @@ void SpinState::Enter()
 			predictionRot.SetRotationY(angle);
 
 			// 大きさを計算
-			float zScale = totalDist * EFFECT_SCALE_FACTOR;
-			float xScale = ATTACK_SPIN_COLLISION_SIZE * EFFECT_SCALE_FACTOR;
+			float zScale = totalDist * EFFECT_SCALE_FACTOR_DAMAGE_LING;
+			float xScale = ATTACK_SPIN_COLLISION_SIZE * EFFECT_SCALE_FACTOR_DAMAGE_LING;
 			Vector3 predictionScale = Vector3(xScale, 1.0f, zScale);
 
 			// エフェクトを再生
@@ -625,8 +625,8 @@ void ThrowRockState::Enter()
 		predictionRot.SetRotationY(angle);
 
 		// 大きさを計算
-		float zScale = totalDist * EFFECT_SCALE_FACTOR;
-		float xScale = ATTACK_ROCK_COLLISION_SIZE * EFFECT_SCALE_FACTOR;
+		float zScale = totalDist * EFFECT_SCALE_FACTOR_DAMAGE_LING;
+		float xScale = ATTACK_ROCK_COLLISION_SIZE * EFFECT_SCALE_FACTOR_DAMAGE_LING;
 		Vector3 predictionScale = Vector3(xScale, 1.0f, zScale);
 
 		// エフェクトを再生

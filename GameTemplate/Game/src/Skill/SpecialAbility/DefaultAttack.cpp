@@ -12,7 +12,7 @@ void DefaultAttack::Enter(Character* p)
 
 
 	// 通常攻撃アニメーション
-	p->PlayAnimation(static_cast<int>(PlayerStateID::defaultAttack));
+	p->PlayAnimation(static_cast<int>(PlayerStateID::DefaultAttack));
 	// 移動速度はゼロに
 	p->SetMoveVelocity(Vector3::Zero);
 

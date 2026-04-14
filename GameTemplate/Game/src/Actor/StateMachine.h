@@ -16,7 +16,9 @@ enum class PlayerStateID
 
 
 	/* スキル攻撃 */
-	defaultAttack,	//!< スキル攻撃
+	DefaultAttack,	//!< デフォルトスキル攻撃
+	Landmine,		//!< 地雷攻撃
+	FireMagic,		//!< 火魔法攻撃
 
 
 	/* 汎用スキル */

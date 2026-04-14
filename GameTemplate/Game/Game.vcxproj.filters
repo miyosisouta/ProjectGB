@@ -28,7 +28,6 @@
     <ClCompile Include="src\Scene\SceneManager.cpp" />
     <ClCompile Include="src\Skill\ISkill.cpp" />
     <ClCompile Include="src\Skill\SpecialAbility\Bomb.cpp" />
-    <ClCompile Include="src\Skill\SpecialAbility\Guard.cpp" />
     <ClCompile Include="src\Skill\SpecialAbility\Magic.cpp" />
     <ClCompile Include="src\Skill\Utility\Utility.cpp" />
     <ClCompile Include="src\Sound\SoundManager.cpp" />
@@ -115,7 +114,6 @@
     <ClInclude Include="src\Scene\SceneManager.h" />
     <ClInclude Include="src\Skill\ISkill.h" />
     <ClInclude Include="src\Skill\SpecialAbility\Bomb.h" />
-    <ClInclude Include="src\Skill\SpecialAbility\Guard.h" />
     <ClInclude Include="src\Skill\SpecialAbility\Magic.h" />
     <ClInclude Include="src\Skill\Utility\Utility.h" />
     <ClInclude Include="src\Sound\SoundManager.h" />

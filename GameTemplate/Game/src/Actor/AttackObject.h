@@ -3,13 +3,16 @@
  * AttackObject.h
  * 攻撃オブジェクトクラス
  */
+class Character;
+class Player;
 class BossCharacter;
 class AttackObjectBase
 {
 protected:
+    std::unique_ptr<TaskSchedulerSystem> taskScheduler_;
     Transform transform_;
     ModelRender model_; // モデル
-    std::unique_ptr<GhostBody> hitbox_; // 当たり判定
+    std::unique_ptr<GhostBody> attackHitBox_; // 当たり判定
     bool isFinished_ = false; // 処理が終わったかどうか
 
 public:
@@ -30,6 +33,10 @@ public:
     virtual void Render(RenderContext& rc) = 0;
 };
 
+
+/*
+ * 岩を投げる攻撃
+ */
 class ThrowRockObject : public AttackObjectBase
 {
 private:
@@ -45,7 +52,7 @@ private:
 
 public:
     /** 投げる際のセットアップ */
-    void SetupThrow(const Vector3& startPos,
+    void Setup(const Vector3& startPos,
         const Vector3& direction,
         float collisionSize,
         float speed,
@@ -60,6 +67,42 @@ private:
 public:
     ThrowRockObject();
     ~ThrowRockObject();
+
+    bool Start()override;
+    void Update()override;
+    void Render(RenderContext& rc)override;
+};
+
+
+/*
+ * 地雷攻撃
+ */
+class LandmineObject : public AttackObjectBase
+{
+private:
+    enum class Phase
+    {
+        enWaiting,
+        enWarning,
+        enExpload,
+        enDone
+    };
+
+private:
+    EffectHandle predictionEffectHandle_ = INVALID_EFFECT_HANDLE;
+    Phase phase_; // 状態
+    Character* owner_ = nullptr; //!< 設置したキャラクター
+    float motionValue_ = 0.0f; //!< 威力
+
+public:
+    /** 設置したキャラクターを設定 */
+    void SetOwnerData(Character* character) { owner_ = character; }
+    /** セットアップ */
+    void Setup(Vector3 targetPos, float motionValue);
+
+public:
+    LandmineObject();
+    ~LandmineObject();
 
     bool Start()override;
     void Update()override;

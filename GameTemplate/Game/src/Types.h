@@ -20,9 +20,8 @@ enum class NormalAttackType {
 enum class AbilityType {
     enNone,     //!< 何もない
     enDefault,  //!< デフォルトアビリティ                                        
-    enGuard, enReflectiveGuard, enCounter,            //!< ガード関連 1～3
-    enFireMagic, enFireMagic_Strong, enAbsorption,    //!< 魔法関連 4～6
-    enBomb, enBomb_Decoy, enLandmine                  //!< 爆弾関連 7～9
+    enFireMagic,//!< 魔法関連
+    enLandmine, //!< 爆弾関連
 };
 
 /* 汎用スキルタイプ */
