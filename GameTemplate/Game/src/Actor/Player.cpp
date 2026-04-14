@@ -7,7 +7,6 @@
 #include "src/Skill/ISkill.h"
 #include "src/Skill/NormalAttack/NormalAtatck.h"  
 #include "src/Skill/SpecialAbility/DefaultAttack.h"
-#include "src/Skill/SpecialAbility/Guard.h"
 #include "src/Skill/SpecialAbility/Magic.h"
 #include "src/Skill/SpecialAbility/Bomb.h"
 #include "src/Skill/Utility/Utility.h"
@@ -35,6 +34,8 @@ namespace anim
 		AnimationData{"Assets/Objects/Player/Animation/Run.tka",true},		// 走る
 		AnimationData{"Assets/Objects/Player/Animation/Attack.tka",false},	// 攻撃
 		AnimationData{"Assets/Objects/Player/Animation/Roll.tka",false},	// 回転
+		AnimationData{"Assets/Objects/Player/Animation/Fear.tka",false},	// 地雷
+		AnimationData{"Assets/Objects/Player/Animation/Eat.tka",false},		// 魔法
 		AnimationData{"Assets/Objects/Player/Animation/Death.tka",false}	// 死亡
 		// アニメーションを増やすときはここから
 	};
@@ -64,7 +65,7 @@ namespace
 		switch (type)
 		{
 		case AbilityType::enDefault:         return "DefaultAttack";
-		case AbilityType::enBomb:            return "Bomb";
+		case AbilityType::enLandmine:        return "Landmine";
 		case AbilityType::enFireMagic:       return "Magic";
 		default:                             return nullptr;
 		}
@@ -93,7 +94,8 @@ void Player::PlayAnimation(const int id)
 	case PlayerStateID::Walk: animIndex = anim::ANIMATION_WALK; break;	// 歩き。
 	case PlayerStateID::Run:  animIndex = anim::ANIMATION_RUN; break;		// 走る。
 	case PlayerStateID::Bite:  animIndex = anim::ANIMATION_NORMAL_ATTACK; break;		// 通常攻撃。
-	case PlayerStateID::defaultAttack:  animIndex = anim::ANIMATION_SPECIAL_ABILITY; break;	// 特殊能力。
+	case PlayerStateID::DefaultAttack:  animIndex = anim::ANIMATION_SPECIAL_ABILITY; break;	// 特殊能力。
+	case PlayerStateID::Landmine:	animIndex = anim::ANIMATION_SPECIAL_ABILITY; break;
 	case PlayerStateID::Avoid: animIndex = anim::ANIMATION_AVOID; break;
 
 	default: return; // ないなら処理を返す
@@ -116,7 +118,7 @@ void Player::SetUpTranslateRulu()
 		stateMachine_.AddState(PlayerStateID::Walk, new WalkState(this));
 		stateMachine_.AddState(PlayerStateID::Run, new RunState(this));
 		stateMachine_.AddState(PlayerStateID::Bite, new NormalAttackState(this));
-		stateMachine_.AddState(PlayerStateID::defaultAttack, new SpecialAbilityState(this));
+		stateMachine_.AddState(PlayerStateID::DefaultAttack, new SpecialAbilityState(this));
 		stateMachine_.AddState(PlayerStateID::Avoid, new UtilityState(this));
 		stateMachine_.AddState(PlayerStateID::Dead, new DeathState(this));
 	}
@@ -157,7 +159,7 @@ void Player::SetUpTranslateRulu()
 					return stateMachine_.IsActionButtonB();
 					});
 				// 待機 -> 特殊能力
-				stateMachine_.AddTransition(PlayerStateID::Idle, PlayerStateID::defaultAttack, [this]() {
+				stateMachine_.AddTransition(PlayerStateID::Idle, PlayerStateID::DefaultAttack, [this]() {
 					return CanSpecialAbility();
 					});
 			}
@@ -188,7 +190,7 @@ void Player::SetUpTranslateRulu()
 					return stateMachine_.IsActionButtonB();
 					});
 				// 歩き -> 特殊能力
-				stateMachine_.AddTransition(PlayerStateID::Walk, PlayerStateID::defaultAttack, [this]() {
+				stateMachine_.AddTransition(PlayerStateID::Walk, PlayerStateID::DefaultAttack, [this]() {
 					return CanSpecialAbility();
 					});
 			}
@@ -220,7 +222,7 @@ void Player::SetUpTranslateRulu()
 					});
 
 				// 走り -> 特殊能力
-				stateMachine_.AddTransition(PlayerStateID::Run, PlayerStateID::defaultAttack, [this]() {
+				stateMachine_.AddTransition(PlayerStateID::Run, PlayerStateID::DefaultAttack, [this]() {
 					return CanSpecialAbility();
 					});
 			}
@@ -245,12 +247,12 @@ void Player::SetUpTranslateRulu()
 			/* 特殊能力 */
 			{
 				// 特殊能力 → 待機
-				stateMachine_.AddTransition(PlayerStateID::defaultAttack, PlayerStateID::Idle, [this]() {
+				stateMachine_.AddTransition(PlayerStateID::DefaultAttack, PlayerStateID::Idle, [this]() {
 					auto* currentState = static_cast<SpecialAbilityState*>(stateMachine_.GetCurrentState());
 					return currentState && currentState->IsFinished();
 					});
 				// 特殊能力 -> 回避
-				stateMachine_.AddTransition(PlayerStateID::defaultAttack, PlayerStateID::Avoid, [this]() {
+				stateMachine_.AddTransition(PlayerStateID::DefaultAttack, PlayerStateID::Avoid, [this]() {
 					if (stateMachine_.IsAvoidRequested()) {
 						stateMachine_.ClearAvoidRequest();
 						return true;
@@ -453,17 +455,12 @@ void Player::EquipNormalAttack(NormalAttackType type)
 void Player::EquipAbility(AbilityType type) 
 {
 	switch (type) {
-		// --- ガード関連 ---
-	case AbilityType::enGuard:
-		// activeAbility_ = std::make_unique<SkillGuard>(); 
+	case AbilityType::enLandmine:
+		activeAbility_ = std::make_unique<Landmine>();
 		break;
 
 	case AbilityType::enFireMagic:
-		// activeAbility_ = std::make_unique<SkillFireMagic>();
-		break;
-
-	case AbilityType::enBomb:
-		// activeAbility_ = std::make_unique<SkillBomb>();
+		// activeAbility_ = std::make_unique<FireMagic>();
 		break;
 
 	default:

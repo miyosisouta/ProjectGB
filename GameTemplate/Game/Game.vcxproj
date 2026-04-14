@@ -274,7 +274,6 @@
     <ClCompile Include="src\Skill\SpecialAbility\AbilityBase.cpp" />
     <ClCompile Include="src\Skill\SpecialAbility\Bomb.cpp" />
     <ClCompile Include="src\Skill\SpecialAbility\DefaultAttack.cpp" />
-    <ClCompile Include="src\Skill\SpecialAbility\Guard.cpp" />
     <ClCompile Include="src\Skill\SpecialAbility\Magic.cpp" />
     <ClCompile Include="src\Skill\Utility\Utility.cpp" />
     <ClCompile Include="src\Sound\SoundManager.cpp" />
@@ -365,7 +364,6 @@
     <ClInclude Include="src\Skill\SpecialAbility\AbilityBase.h" />
     <ClInclude Include="src\Skill\SpecialAbility\Bomb.h" />
     <ClInclude Include="src\Skill\SpecialAbility\DefaultAttack.h" />
-    <ClInclude Include="src\Skill\SpecialAbility\Guard.h" />
     <ClInclude Include="src\Skill\SpecialAbility\Magic.h" />
     <ClInclude Include="src\Skill\Utility\Utility.h" />
     <ClInclude Include="src\Sound\SoundManager.h" />

@@ -31,6 +31,11 @@ public:
         float gravity = 980.0f
     );
 
+    void CreateLandmine(
+        Character* owner,
+        const Vector3& startPos,
+        float motionValue
+    );
 
 /*=========================================*/
 /* ここから先シングルトン */

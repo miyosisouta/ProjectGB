@@ -8,6 +8,7 @@
 namespace CharacterID
 {
 	/* キャラクターの体のID */
+	inline uint32_t CharacterID() { return Hash32("Character"); }
 	inline uint32_t PlayerID() { return Hash32("Player"); }
 	inline uint32_t BossID() { return Hash32("Boss"); }
 
@@ -21,6 +22,9 @@ namespace CharacterID
 	inline uint32_t BossHitStampAtkID() { return Hash32("BossHitStamp"); }
 	inline uint32_t BossSpinAtkID() { return Hash32("BossSpin"); }
 	inline uint32_t BossThrowRockAtkID() { return Hash32("BossThrowRock"); }
+
+	/** キャラクター全体に影響を与える */
+	inline uint32_t CharaLandmineAtkID() { return Hash32("CharaLandmine"); }
 }
 
 

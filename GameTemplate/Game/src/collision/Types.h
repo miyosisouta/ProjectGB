@@ -32,6 +32,7 @@ struct CollisionAttributeMask
 
 namespace ghost
 {
+	// 自分はだれか
 	struct CollisionAttribute
 	{
 		enum Enum : uint32_t
@@ -41,20 +42,26 @@ namespace ghost
 			BossDef = 1 << 1,
 			PlayerAtk = 1 << 2,
 			BossAtk = 1 << 3,
-			PlayerAvoid = 1 << 4,
-			BossAvoid = 1 << 5,
+			CharacterAtk = 1 << 4,
+			PlayerAvoid = 1 << 5,
+			BossAvoid = 1 << 6,
 		};
 	};
 
-
+	// 相手は誰なのか
 	struct CollisionAttributeMask
 	{
 		enum Enum : uint32_t
 		{
-			Player = CollisionAttribute::BossAtk,   // ボスの攻撃だけ受ける
-			Boss = CollisionAttribute::PlayerAtk, // プレイヤーの攻撃だけ受ける
-			PlayerAtk = CollisionAttribute::BossDef,      // ボスのダメージ体にだけ当たる
-			BossAtk = CollisionAttribute::PlayerDef,    // プレイヤーのダメージ体にだけ当たる
+			// 攻撃を受ける相手
+			Character = CollisionAttribute::BossAtk | CollisionAttribute::PlayerAtk,// ボスもプレイヤーもダメージを受ける
+			Player = CollisionAttribute::BossAtk | CollisionAttribute::CharacterAtk, // ボスの攻撃だけ受ける
+			Boss = CollisionAttribute::PlayerAtk | CollisionAttribute::CharacterAtk, // プレイヤーの攻撃だけ受ける
+
+			// 攻撃が当たる相手
+			CharacterAtk = CollisionAttribute::PlayerDef | CollisionAttribute::BossDef, // プレイヤーもボスもダメージを与える
+			PlayerAtk = CollisionAttribute::BossDef, // ボスのダメージ体にだけ当たる
+			BossAtk = CollisionAttribute::PlayerDef, // プレイヤーのダメージ体にだけ当たる
 			All				= 0xFFFFFFFF,
 		};
 	};
