@@ -8,6 +8,7 @@
 #pragma once
 #include "src/Stage/StageBase.h"
 #include "src/Stage/StaticObject.h"
+#include "src/Stage/StageCullingSystem.h"
 
 class StageManager
 {
@@ -15,6 +16,8 @@ private:
 	// std::unique_ptr<StageBase> stage_; //!< ギミックのあるステージを作成時に子の変数に入れる
     std::vector<StaticObject*> staticObjectList_;
     std::vector<PhysicalBody*> collisionList_;
+
+    std::unique_ptr<StageCullingSystem> stageCullingSystem_;
 
 
 public:

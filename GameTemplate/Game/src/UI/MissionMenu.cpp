@@ -147,6 +147,4 @@ void MissionMenu::InitializeLogic()
 		effectRenderList_[i]->SetPosition(Vector3(530.0f, 330, 0.0f));
 		effectRenderList_[i]->EnableHotReload();
 	}
-
-
 }

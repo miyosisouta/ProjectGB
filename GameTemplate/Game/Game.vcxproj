@@ -277,6 +277,7 @@
     <ClCompile Include="src\Skill\SpecialAbility\Magic.cpp" />
     <ClCompile Include="src\Skill\Utility\Utility.cpp" />
     <ClCompile Include="src\Sound\SoundManager.cpp" />
+    <ClCompile Include="src\Stage\StageCullingSystem.cpp" />
     <ClCompile Include="src\Stage\StaticObject.cpp" />
     <ClCompile Include="src\Stage\StageBase.cpp" />
     <ClCompile Include="src\Stage\StageManager.cpp" />
@@ -368,6 +369,7 @@
     <ClInclude Include="src\Skill\Utility\Utility.h" />
     <ClInclude Include="src\Sound\SoundManager.h" />
     <ClInclude Include="src\Sound\Types.h" />
+    <ClInclude Include="src\Stage\StageCullingSystem.h" />
     <ClInclude Include="src\Stage\StaticObject.h" />
     <ClInclude Include="src\Stage\StageBase.h" />
     <ClInclude Include="src\Stage\StageManager.h" />

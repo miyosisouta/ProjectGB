@@ -34,5 +34,8 @@ StaticObject::~StaticObject()
 
 void StaticObject::Render(RenderContext& rc)
 {
-	model_.Draw(rc);
+	if(isDraw_)
+	{
+		model_.Draw(rc);
+	}
 }

@@ -110,13 +110,15 @@ bool StageManager::Start()
 		break;
 	}
 
+	stageCullingSystem_ = std::make_unique<StageCullingSystem>();
+
 	return true;
 }
 
 
 void StageManager::Update()
 {
-	
+	stageCullingSystem_->Update(staticObjectList_);
 }
 
 
