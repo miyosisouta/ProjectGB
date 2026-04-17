@@ -48,7 +48,7 @@ void DefaultAttack::Enter(Character* p)
 					playerRot.AddRotationDegY(360.0f);
 					EffectManager::Get().PlayEffect(enEffectKind_Wind_Blast_Strong, targetPos, playerRot, Vector3(9.0f, 9.0f, 9.0f));
 					// 通常攻撃のSEを再生
-					SoundManager::Get().PlaySE(enSoundKind_Player_SpecialAbility);
+					SoundManager::Get().PlaySE(enSoundKind_Player_DefaultAttack);
 				});
 			// 2. 1フレーム生成後、削除
 			taskScheduler_->AddTimer(0.1f, [&]()

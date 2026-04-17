@@ -15,7 +15,9 @@ enum enSoundKind
 	/* プレイヤー */
 	enSoundKind_Player_Walk = enSoundKind_SE,	//!< 移動
 	enSoundKind_Player_NormalAttack,			//!< 通常攻撃
-	enSoundKind_Player_SpecialAbility,			//!< 特殊攻撃
+	enSoundKind_Player_DefaultAttack,			//!< デフォルトスペシャルスキル
+	enSoundKind_Player_Landmine,				//!< 地雷
+	enSoundKind_Player_FireMagic,				//!< 火魔法
 	enSoundKind_Player_Utility,					//!< 汎用スキル
 	enSoundKind_Player_AttackHit,				//!< 攻撃をあてた
 	enSoundKind_Player_TakeHit,					//!< 攻撃をあてられた
@@ -64,8 +66,13 @@ static SoundInformation soundInformation[enSoundKind_SE_Max] =
 	/* プレイヤー */
 	SoundInformation("Assets/Audio/SE/Player/Walk.wav"),						// 歩き
 	SoundInformation("Assets/Audio/SE/Player/NormalAttack/Bite.wav"),			// 通常攻撃
+
 	SoundInformation("Assets/Audio/SE/Player/SpecialAbility/DefaultAttack.wav"),// 特殊スキル
-	SoundInformation("Assets/Audio/SE/Player/Utility/Avoid.wav"),				// 汎用スキル
+	SoundInformation("Assets/Audio/SE/Player/SpecialAbility/Expload.wav"),		// 地雷スキル爆発
+	SoundInformation("Assets/Audio/SE/Player/SpecialAbility/FireMagic.wav"),	// 火魔法
+
+	SoundInformation("Assets/Audio/SE/Player/Utility/Avoid.wav"),				// 回避スキル
+
 	SoundInformation("Assets/Audio/SE/Player/AttackHit.wav"),					// 攻撃をあてる
 	SoundInformation("Assets/Audio/SE/Player/TakeHit.wav"),						// 攻撃をあてられた
 

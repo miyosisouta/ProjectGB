@@ -96,6 +96,7 @@ void Player::PlayAnimation(const int id)
 	case PlayerStateID::Bite:  animIndex = anim::ANIMATION_NORMAL_ATTACK; break;		// ’ÊíUŒ‚B
 	case PlayerStateID::DefaultAttack:  animIndex = anim::ANIMATION_SPECIAL_ABILITY; break;	// “Áê”\—ÍB
 	case PlayerStateID::Landmine:	animIndex = anim::ANIMATION_SPECIAL_ABILITY; break;
+	case PlayerStateID::FireMagic:	animIndex = anim::ANIMATION_SPECIAL_ABILITY; break;
 	case PlayerStateID::Avoid: animIndex = anim::ANIMATION_AVOID; break;
 
 	default: return; // ‚È‚¢‚È‚çˆ—‚ğ•Ô‚·
@@ -460,7 +461,7 @@ void Player::EquipAbility(AbilityType type)
 		break;
 
 	case AbilityType::enFireMagic:
-		// activeAbility_ = std::make_unique<FireMagic>();
+		activeAbility_ = std::make_unique<FireMagic>();
 		break;
 
 	default:

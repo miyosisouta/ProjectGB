@@ -12,20 +12,21 @@ enum enEffectKind
 	enEffectKind = 0,
 	/* 共通エフェクト */
 	enEffectKind_Dash_Wind = enEffectKind, 
-	enEffectKind_Expload,					// 1
+	enEffectKind_Expload,			// 1
 
 	/* プレイヤー */
 	enEffectKind_Wind_Blast_Weak,
 	enEffectKind_Wind_Blast_Strong,
-	emEffectKind_Avoid,				// 4
+	enEffectKind_Fire_Bress,
+	enEffectKind_Avoid,				// 5
 
 	/* ボス */
 	enEffectKind_Wind_Blast_Boss,
 	enEffectKind_HitStamp,
 	enEffectkind_Spin, 
 	enEffectKind_DamageZone_Ring,
-	enEffectKind_DamageZone_Box,	// 9
-	enEffectKind_Max
+	enEffectKind_DamageZone_Box,	
+	enEffectKind_Max				// 10
 };
 
 
@@ -48,6 +49,7 @@ static EffectInformation effectInformation[enEffectKind_Max] =
 	/* プレイヤー */
 	EffectInformation(u"Assets/Effect/Wind_Blast_Weak.efk"),
 	EffectInformation(u"Assets/Effect/Wind_Blast_Strong.efk"),
+	EffectInformation(u"Assets/Effect/Fire_Bress.efk"),
 	EffectInformation(u"Assets/Effect/Avoid.efk"),
 
 	/* ボス */

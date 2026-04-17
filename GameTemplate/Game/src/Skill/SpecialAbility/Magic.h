@@ -16,6 +16,9 @@ public:
 
 class FireMagic : public MagicBase
 {
+private:
+	EffectHandle fireEffectHandle_ = INVALID_EFFECT_HANDLE; // 予測エフェクトのハンドル
+
 public:
 	FireMagic();
 	~FireMagic()override;
