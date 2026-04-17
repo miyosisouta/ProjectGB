@@ -5,6 +5,9 @@
  */
 class BombBase : public AbilityBase
 {	
+private:
+	ModelRender model_;
+
 public:
 	BombBase();
 	virtual ~BombBase()override;
@@ -16,10 +19,6 @@ public:
 
 class Landmine : public BombBase
 {
-private:
-	ModelRender model_;
-
-
 public:
 	Landmine();
 	~Landmine()override;

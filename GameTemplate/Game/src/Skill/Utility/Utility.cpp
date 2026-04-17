@@ -33,7 +33,7 @@ void Avoid::Enter(Character* p)
 			
 			p->PlayAnimation(static_cast<int> (PlayerStateID::Avoid));
 			playerRot.AddRotationDegY(180.0f);
-			EffectManager::Get().PlayEffect(emEffectKind_Avoid, playerPos, playerRot, Vector3(3.0f, 3.0f, 3.0f));
+			EffectManager::Get().PlayEffect(enEffectKind_Avoid, playerPos, playerRot, Vector3(3.0f, 3.0f, 3.0f));
 
 			// 移動先の設定
 			targetPos_ = playerPos + (forwardDir * TARGET_POS_FORWARD);

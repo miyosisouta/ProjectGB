@@ -80,7 +80,6 @@ void Bite::Update(Character* p)
 {
 	if (attackHitbox_) {
 		attackHitbox_->SetPosition(p->transform_.position);
-
 	}
 
 	taskScheduler_->Update(g_gameTime->GetFrameDeltaTime());

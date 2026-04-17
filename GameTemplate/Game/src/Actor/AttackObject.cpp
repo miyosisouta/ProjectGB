@@ -205,7 +205,7 @@ bool LandmineObject::Start()
             exploadEffectScale
         );
 
-
+        SoundManager::Get().PlaySE(enSoundKind_Player_Landmine);
         attackHitBox_ = std::make_unique<GhostBody>();
         attackHitBox_->CreateSphere(
             owner_,

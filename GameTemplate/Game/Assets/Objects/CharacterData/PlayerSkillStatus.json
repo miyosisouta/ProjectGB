@@ -26,8 +26,8 @@
         {
             "comment":"魔法",
             "key": "FireMagic",
-            "motionValues": 150,
-            "cooldown": 8.0
+            "motionValues": 175,
+            "cooldown": 10.0
         }
     ],
 
