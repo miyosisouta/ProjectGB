@@ -48,8 +48,12 @@ bool DebugScene::Start()
 		effectRenderList[i]->EnableHotReload();
 	}
 	
-	
-	
+	gaugeRender_ = std::make_unique<GaugeRender>();
+	gaugeRender_->Init(300.0f, 300.0f);
+	gaugeRender_->SetRadius(0.3f, 0.4f);
+	gaugeRender_->SetProgress(0.5f);
+	gaugeRender_->SetBgColor(Vector4(1.0f,1.0f,1.0f, 1.0f));
+	gaugeRender_->SetGaugeColor(Vector4::Yellow);
 
 	return true;
 }
@@ -81,6 +85,8 @@ void DebugScene::Update()
 		taskScheduler_->Update(g_gameTime->GetFrameDeltaTime());
 	}
 
+	gaugeRender_->Update();
+
 }
 
 
@@ -92,6 +98,7 @@ void DebugScene::Render(RenderContext& rc)
 	{
 		effectRenderList[i]->Draw(rc);
 	}
+	gaugeRender_->Draw(rc);
 }
 
 

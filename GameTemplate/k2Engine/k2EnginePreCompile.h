@@ -13,6 +13,7 @@ using namespace nsK2EngineLow;
 #include "graphics/IRenderer.h"
 #include "graphics/ModelRender.h"
 #include "graphics/SpriteRender.h"
+#include "graphics/GaugeRender.h"
 #include "graphics/FontRender.h"
 #include "graphics/light/SceneLight.h"
 #include "nature/SkyCube.h"

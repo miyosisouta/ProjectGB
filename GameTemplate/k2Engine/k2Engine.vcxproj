@@ -34,6 +34,7 @@
     <ClCompile Include="geometry\GeometryData.cpp" />
     <ClCompile Include="geometry\SceneGeometryData.cpp" />
     <ClCompile Include="graphics\FontRender.cpp" />
+    <ClCompile Include="graphics\GaugeRender.cpp" />
     <ClCompile Include="graphics\light\PointLight.cpp" />
     <ClCompile Include="graphics\light\SceneLight.cpp" />
     <ClCompile Include="graphics\light\SpotLight.cpp" />
@@ -76,6 +77,7 @@
     <ClInclude Include="geometry\GeometryData.h" />
     <ClInclude Include="geometry\SceneGeometryData.h" />
     <ClInclude Include="graphics\FontRender.h" />
+    <ClInclude Include="graphics\GaugeRender.h" />
     <ClInclude Include="graphics\IRenderer.h" />
     <ClInclude Include="graphics\light\PointLight.h" />
     <ClInclude Include="graphics\light\SceneLight.h" />
