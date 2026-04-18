@@ -24,12 +24,14 @@ StageCullingSystem::~StageCullingSystem()
 
 void StageCullingSystem::Update(std::vector<StaticObject*> staticObjects)
 {
-	// --- VP 行列からフラスタムを構築（毎フレーム更新） ---
+	// View行列 (カメラの位置と向き)
+	// Projection行列 (視野角と遠近)
+	// VP行列からフラスタムを構築(毎フレーム更新)
 	Frustum frustum;
 	frustum.BuildFromViewProjectionMatrix(g_camera3D->GetViewProjectionMatrix());
 
 	for (auto* object : staticObjects) {
-		// モデルの頂点から AABB を計算
+		// モデルの頂点から AABB を計算(箱を作る)
 		Bounds bounds;
 		bounds.Compute(object->GetModel()->GetModel());
 
