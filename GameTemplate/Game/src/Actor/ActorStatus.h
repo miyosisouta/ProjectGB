@@ -374,11 +374,17 @@ public:
             isExhausted_ = true;
             staminaState_ = StaminaState::enDepletion;
         }
-        float test = maxStamina_ * exhaustedThreshold_;
-        // 一定量回復するまでフラグを解除しない（ヒステリシス）
-        if (isExhausted_ && stamina_ >= test)
+
+        // 枯渇状態から回復するために必要なスタミナ量を計算
+        const float exhaustedReleaseStamina = maxStamina_ * exhaustedThreshold_;
+        // 一定量回復するまでフラグを解除しない
+        if (isExhausted_ && stamina_ >= exhaustedReleaseStamina)
         {
             isExhausted_ = false;
+            if (staminaState_ == StaminaState::enDepletion)
+            {
+                staminaState_ = StaminaState::enRecover;
+            }
         }
 
         skillStatus_.Update();
@@ -554,24 +560,23 @@ private:
         // スタミナ回復
         stamina_ += amount;
 
+        // スタミナが上限を超えないよう補正
+        if (stamina_ > maxStamina_)
+        {
+            stamina_ = maxStamina_;
+        }
         // 枯渇状態なら
-        if (isExhausted_) 
+        if (isExhausted_)
         {
             // 枯渇状態から戻すスタミナの値を取得
             float needStaminaValue = maxStamina_ * exhaustedThreshold_;
             // 必要量を満たしているなら
-            if (stamina_ > needStaminaValue) 
+            if (stamina_ >= needStaminaValue)
             {
                 // 枯渇状態ではなくし、状態を初期に戻す
-                isExhausted_ = !isExhausted_;
+                isExhausted_ = false;
             }
             return;
-        }
-
-        // スタミナが上限来てるなら、回復しない
-        if (stamina_ > maxStamina_)
-        {
-            stamina_ = maxStamina_;
         }
     }
 
@@ -579,12 +584,13 @@ public:
     /** 回避など瞬間コスト用。スタミナを直接減算し枯渇チェックも行う */
     void ConsumeStamina(float amount)
     {
-        if (stamina_ < 0.0f) {
-            stamina_ = 0.0f;
+        // 1フレームでコスト分スタミナを消費
+        DrainStamina(amount);
+
+        if (stamina_ <= 0.0f) {
             isExhausted_ = true;
             staminaState_ = StaminaState::enDepletion;
         }
-        stamina_ -= amount;
     }
 
 };

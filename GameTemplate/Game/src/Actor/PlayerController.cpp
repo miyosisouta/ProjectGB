@@ -56,7 +56,7 @@ void PlayerController::UpdateAButton(StateMachine* sm)
 	{
 		if (!aButtonHeld_)
 		{
-			avoidInputConsumed_ = false; // ✅ 押し始めにリセット
+			avoidInputConsumed_ = false; // 押し始めにリセット
 		}
 
 		aButtonHeld_ = true;
@@ -74,12 +74,16 @@ void PlayerController::UpdateAButton(StateMachine* sm)
 			// 短押し かつ まだ消費していない場合だけリクエスト
 			if (aButtonHeldTime_ < DASH_HOLD_THRESHOLD && !avoidInputConsumed_)
 			{
-				// ★ 枯渇中は回避フラグを立てない
+				// 枯渇中は回避フラグを立てない
 				if (!target_->IsExhausted()) {
 					sm->SetAvoidRequested(true);
 				}
 				sm->SetAvoidRequested(true);
 				avoidInputConsumed_ = true;
+			}
+
+			if (!target_->IsExhausted()) {
+				sm->SetAvoidRequested(true);
 			}
 
 			sm->ActionButtonA(false);
