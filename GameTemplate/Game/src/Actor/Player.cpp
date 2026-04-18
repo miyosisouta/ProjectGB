@@ -111,6 +111,12 @@ void Player::PlayAnimation(const int id)
 /* セットアップ */
 /* ==================================== */
 
+
+bool Player::IsExhausted() const
+{
+	return status_->As<PlayerStatus>()->IsExhausted();
+}
+
 void Player::SetUpTranslateRulu()
 {
 	// ステート（状態）を登録
@@ -129,6 +135,7 @@ void Player::SetUpTranslateRulu()
 	{
 		// 優先される条件
 		{
+			/*  */
 			stateMachine_.AddGlobalTransition([this]() { if (IsDead()) { return true; } return false; }, PlayerStateID::Dead); /* HPが0なら他のステート関係なく実行 */
 		}
 
@@ -143,14 +150,14 @@ void Player::SetUpTranslateRulu()
 
 				// 待機 -> 走り
 				stateMachine_.AddTransition(PlayerStateID::Idle, PlayerStateID::Run, [this]() {
-					return stateMachine_.GetStickLAmount() > 0.01f && stateMachine_.IsDash();
+					return !IsExhausted() && stateMachine_.GetStickLAmount() > 0.01f && stateMachine_.IsDash();
 					});
 
 				// 待機 -> 回避
 				stateMachine_.AddTransition(PlayerStateID::Idle, PlayerStateID::Avoid, [this]() {
 					if (stateMachine_.IsAvoidRequested()) {
-						stateMachine_.ClearAvoidRequest();
-						return true;
+						stateMachine_.ClearAvoidRequest(); // true/false関係なく必ずクリア
+						return !IsExhausted();             // 枯渇中ならfalseを返すだけ
 					}
 					return false;
 					});
@@ -174,14 +181,14 @@ void Player::SetUpTranslateRulu()
 
 				// 歩き -> 走り
 				stateMachine_.AddTransition(PlayerStateID::Walk, PlayerStateID::Run, [this]() {
-					return stateMachine_.IsDash();
+					return !IsExhausted() && stateMachine_.IsDash();
 					});
 
 				// 歩き -> 回避
 				stateMachine_.AddTransition(PlayerStateID::Walk, PlayerStateID::Avoid, [this]() {
 					if (stateMachine_.IsAvoidRequested()) {
-						stateMachine_.ClearAvoidRequest();
-						return true;
+						stateMachine_.ClearAvoidRequest(); // true/false関係なく必ずクリア
+						return !IsExhausted();             // 枯渇中ならfalseを返すだけ
 					}
 					return false;
 					});
@@ -205,14 +212,14 @@ void Player::SetUpTranslateRulu()
 
 				// 走り -> 歩き
 				stateMachine_.AddTransition(PlayerStateID::Run, PlayerStateID::Walk, [this]() {
-					return !stateMachine_.IsDash();
+					return !stateMachine_.IsDash() || IsExhausted();
 					});
 
 				// 待機 -> 回避
 				stateMachine_.AddTransition(PlayerStateID::Run, PlayerStateID::Avoid, [this]() {
 					if (stateMachine_.IsAvoidRequested()) {
-						stateMachine_.ClearAvoidRequest();
-						return true;
+						stateMachine_.ClearAvoidRequest(); // true/false関係なく必ずクリア
+						return !IsExhausted();             // 枯渇中ならfalseを返すだけ
 					}
 					return false;
 					});
@@ -238,8 +245,8 @@ void Player::SetUpTranslateRulu()
 				// 通常攻撃 -> 回避
 				stateMachine_.AddTransition(PlayerStateID::Bite, PlayerStateID::Avoid, [this]() {
 					if (stateMachine_.IsAvoidRequested()) {
-						stateMachine_.ClearAvoidRequest();
-						return true;
+						stateMachine_.ClearAvoidRequest(); // true/false関係なく必ずクリア
+						return !IsExhausted();             // 枯渇中ならfalseを返すだけ
 					}
 					return false;
 					});
@@ -255,8 +262,8 @@ void Player::SetUpTranslateRulu()
 				// 特殊能力 -> 回避
 				stateMachine_.AddTransition(PlayerStateID::DefaultAttack, PlayerStateID::Avoid, [this]() {
 					if (stateMachine_.IsAvoidRequested()) {
-						stateMachine_.ClearAvoidRequest();
-						return true;
+						stateMachine_.ClearAvoidRequest(); // true/false関係なく必ずクリア
+						return !IsExhausted();             // 枯渇中ならfalseを返すだけ
 					}
 					return false;
 					});
@@ -299,6 +306,8 @@ bool Player::CanSpecialAbility()
 Player::Player()
 {
 	PlayerStatus* status = new PlayerStatus();
+	// ステータスの初期化
+	status->Init();
 	status_ = status;
 }
 Player::~Player()
@@ -308,9 +317,6 @@ Player::~Player()
 }
 bool Player::Start()
 {
-	// ステータスの初期化
-	status_->As<PlayerStatus>()->Init(); 
-
 	// アニメーション
 	{
 		// アニメーションクリップリストの配列数を決定

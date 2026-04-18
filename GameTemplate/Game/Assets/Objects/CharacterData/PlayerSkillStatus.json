@@ -36,7 +36,8 @@
             "comment": "回避",
             "key": "Dodge",
             "motionValues": 0,
-            "cooldown": 3.0
+            "cooldown": 3.0,
+            "decreaseStamina": 20
         }
     ]
 }

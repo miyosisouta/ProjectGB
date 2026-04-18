@@ -27,12 +27,24 @@ struct MasterCharacterStatusParameter : public IMasterParameter
 {
 	appParameter(MasterCharacterStatusParameter);
 
-	std::string key;                   // キャラクター識別キー (例: "Player", "Gorilla", "Turtle")
-	int         hp;                    // HP
-	int         attack;                // 攻撃力
-	int         criticalRate;          // クリティカル率 (%)
-	int         stamina;               // スタミナ (存在しないキャラは 0)
-	float       criticalDamageMultiplier; // クリティカルダメージ倍率
+	struct Stamina 
+	{
+		float maxStamina;				//!< スタミナの最大値
+		float drainPerSec;				//!< 1秒間に消費するスタミナ量
+		float recoverPerSec;			//!< 通常状態に回復する1秒間のスタミナ量
+		float exhaustedRecoverPerSec;	//!< 枯渇状態に回復する1秒間のスタミナ量
+		float exhaustedThreshold;		//!< 枯渇解除に必要なスタミナ（最大値に対する割合）
+		float exhaustedSpeedRate;		//!< 枯渇中の移動速度倍率
+	};
+
+	std::string key;						//!< キャラクター識別キー (例: "Player", "Gorilla", "Turtle")
+	int         hp;							//!< HP
+	int         attack;						//!< 攻撃力
+	int         criticalRate;				//!< クリティカル率 (%)
+	float       criticalDamageMultiplier;	//!< クリティカルダメージ倍率
+	Stamina     stamina;					//!< スタミナ
+	float		moveSpeedBase;				//!< 通常のベース速度
+	float		runSpeedBase;				//!< 走るときのベース速度
 };
 
 /**
@@ -47,6 +59,7 @@ struct MasterPlayerSkillParameter : public IMasterParameter
 	std::string key;        // スキル識別キー  (例: "Bite", "Bomb", "Dodge")
 	float       motionValues;     // 攻撃力
 	float       cooldown;   // クールダウン (秒)
+	float		decreaseStamina;	// スタミナ消費量
 };
 
 /**
