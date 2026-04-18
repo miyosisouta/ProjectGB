@@ -140,6 +140,9 @@
     <ClCompile Include="graphics\postEffect\CalcSceneLuminance.cpp">
       <Filter>graphics\postEffect</Filter>
     </ClCompile>
+    <ClCompile Include="graphics\GaugeRender.cpp">
+      <Filter>graphics</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="graphics\ModelRender.h">
@@ -251,6 +254,9 @@
     </ClInclude>
     <ClInclude Include="graphics\postEffect\CalcSceneLuminance.h">
       <Filter>graphics\postEffect</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\GaugeRender.h">
+      <Filter>graphics</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

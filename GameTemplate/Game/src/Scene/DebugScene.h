@@ -23,7 +23,7 @@ private:
 
 	std::unique_ptr<TaskSchedulerSystem> taskScheduler_ = nullptr;
 
-
+	std::unique_ptr<GaugeRender> gaugeRender_ = nullptr;
 
 public:
 	DebugScene();
