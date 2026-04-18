@@ -36,16 +36,18 @@ struct CoolDown
 /** スキル1つに必要な情報 */
 struct SkillSlot
 {
-    std::string key_          = "";     //!< スキル識別キー（JSON の "key" と対応）
-    float       motionValues_ = 0.0f;   //!< モーション倍率（本体 attack_ にかける係数）
-    CoolDown    coolDown_;              //!< このスキル専用のクールダウン
+    std::string key_          = "";      //!< スキル識別キー（JSON の "key" と対応）
+    float       motionValues_ = 0.0f;    //!< モーション倍率（本体 attack_ にかける係数）
+    CoolDown    coolDown_;               //!< このスキル専用のクールダウン
+    float       decreaseStamina_ = 0.0f; //!< スタミナ消費量
 
     /** スキルスロットを初期化する */
-    void Init(const std::string& key, float motionValues, float coolDownTime)
+    void Init(const std::string& key, float motionValues, float coolDownTime, float decreaseStamina = 0.0f)
     {
         key_                    = key;
         motionValues_           = motionValues;
         coolDown_.coolDownTime_ = coolDownTime;
+        decreaseStamina_ = decreaseStamina;
     }
 
     /** 毎フレーム呼ぶ */
@@ -54,10 +56,11 @@ struct SkillSlot
     /** スキル使用時に呼ぶ。クールダウンを開始させる */
     void Activate() { coolDown_.Activate(); }
 
-    float GetMotionValues() const { return motionValues_; }
-    float GetCoolTimer()    const { return coolDown_.GetTimer(); }
-    bool  CanUse()          const { return coolDown_.CanUse(); }
-    bool  IsReadyFrame()    const { return coolDown_.IsReadyFrame(); }
+    float GetMotionValues()     const { return motionValues_; }
+    float GetCoolTimer()        const { return coolDown_.GetTimer(); }
+    float GetDecreaseStamina()  const { return decreaseStamina_; }
+    bool  CanUse()              const { return coolDown_.CanUse(); }
+    bool  IsReadyFrame()        const { return coolDown_.IsReadyFrame(); }
 };
 
 
@@ -70,6 +73,7 @@ protected:
     int   attack_                   = 0;     //!< 攻撃力
     int   critical_                 = 0;     //!< クリティカル率（%）
     float criticalDamageMultiplier_ = 0.0f;  //!< クリティカル時ダメージ倍率
+    float moveSpeedBase_            = 0.0f;  //!< ベースの移動速度（ボス用）
     bool  isTakeDamage_             = false; //!< このフレームにダメージを受けたか
 
 
@@ -87,6 +91,7 @@ public:
     int   GetAttack()                   const { return attack_; }
     int   GetCritical()                 const { return critical_; }
     float GetCriticalDamageMultiplier() const { return criticalDamageMultiplier_; }
+    float GetMoveSpeedBase()            const { return moveSpeedBase_; }
     bool  IsDead()                      const { return hp_ <= 0; }
     bool  IsTakeDamage()                const { return isTakeDamage_; }
 
@@ -162,7 +167,7 @@ public:
         if (!param) { return; }
 
         SkillSlot slot;
-        slot.Init(skillKey, param->motionValues, param->cooldown);
+        slot.Init(skillKey, param->motionValues, param->cooldown, param->decreaseStamina);
         slots_[slotName] = slot;
     }
 
@@ -194,6 +199,13 @@ public:
     {
         auto it = slots_.find(slotName);
         return (it != slots_.end()) ? it->second.GetMotionValues() : 0.0f;
+    }
+
+    /** 指定スロットのスタミナ消費量を取得 */
+    float GetDecreaseStamina(const std::string& slotName) const
+    {
+        auto it = slots_.find(slotName);
+        return (it != slots_.end()) ? it->second.GetDecreaseStamina() : 0.0f;
     }
 
 public:
@@ -290,39 +302,119 @@ public:
         enSkill  = 1 << 3, //!< スキル使用中
     };
 
+    enum class StaminaState
+    {
+        enNone,     //!< 回復も消費もしない
+        enRecover,  //!< 回復
+        enDrain,    //!< 消費
+        enDepletion //!< 枯渇
+    };
 
 private:
-    int               stamina_        = 0; //!< 現在スタミナ（プレイヤー専用）
-    int               maxStamina_     = 0; //!< 最大スタミナ（プレイヤー専用）
-    uint32_t          invincibleFlag_ = 0; //!< 無敵フラグ（ビット演算）
-    PlayerSkillStatus skillStatus_;        //!< スキルスロット＋クールダウン管理
+    /* スタミナ：設定値 */
+    float maxStamina_                = 0.0f; //!< 最大スタミナ
+    float staminaDrainPerSec_        = 0.0f; //!< 毎秒消費量（ダッシュ中）
+    float staminaRecoverPerSec_      = 0.0f; //!< 毎秒回復量（通常：IdleまたはWalk中）
+    float exhaustedRecoverPerSec_    = 0.0f; //!< 毎秒回復量（枯渇中）
+    float exhaustedThreshold_        = 0.0f; //!< 枯渇解除に必要なスタミナ（最大値に対する割合）
+    float exhaustedSpeedRate_        = 0.0f; //!< 枯渇中の移動速度倍率
+
+    /* スタミナ：1フレームあたりの増減量 */
+    float staminaDrainPerFrame_      = 0.0f; //!< 1フレームあたりの消費量
+    float staminaRecoverPerFrame_    = 0.0f; //!< 1フレームあたりの回復量（通常）
+    float exhaustedRecoverPerFrame_  = 0.0f; //!< 1フレームあたりの回復量（枯渇中）
+
+    /* スタミナ：実行時の状態 */
+    float           stamina_                = 0.0f; //!< 現在スタミナ
+    StaminaState    staminaState_           = StaminaState::enNone; //!< スタミナ状態
+    bool            isExhausted_            = false; //!< スタミナ枯渇フラグ
+    
+
+    /* 移動速度 */
+    float runSpeedBase_              = 0.0f; //!< 走り時のベース移動速度
+
+    /* その他 */
+    uint32_t          invincibleFlag_ = 0;   //!< 無敵フラグ（ビット演算）
+    PlayerSkillStatus skillStatus_;          //!< スキルスロット＋クールダウン管理
 
 
 public:
-    PlayerStatus()  {}
+    PlayerStatus()  
+    {
+
+    }
     ~PlayerStatus() {}
 
-    /** 毎フレーム呼ぶ。スキルのクールダウン更新と基底フラグリセットを行う */
-    virtual void Update() override
+    /**
+     * 毎フレーム呼ぶ。
+     * 回復するのは Idle と Walk のみ。それ以外（攻撃など）は増減なし
+     */
+    virtual void Update()
     {
+        // 1フレームの時間
+        const float delta = g_gameTime->GetFrameDeltaTime();
+
+        // 1フレームあたりの増減量を毎フレーム再計算
+        staminaDrainPerFrame_ = staminaDrainPerSec_ * delta;
+        staminaRecoverPerFrame_ = staminaRecoverPerSec_ * delta;
+        exhaustedRecoverPerFrame_ = exhaustedRecoverPerSec_ * delta;
+
+        if (staminaState_ == StaminaState::enDrain && !isExhausted_)
+        {
+            DrainStamina(staminaDrainPerFrame_);
+        }
+        else if (staminaState_ == StaminaState::enRecover || staminaState_ == StaminaState::enDepletion)
+        {
+            RecoverStamina(isExhausted_ ? exhaustedRecoverPerFrame_ : staminaRecoverPerFrame_);
+        }
+
+        // 枯渇フラグの更新
+        if (stamina_ <= 0.0f)
+        {
+            isExhausted_ = true;
+            staminaState_ = StaminaState::enDepletion;
+        }
+        float test = maxStamina_ * exhaustedThreshold_;
+        // 一定量回復するまでフラグを解除しない（ヒステリシス）
+        if (isExhausted_ && stamina_ >= test)
+        {
+            isExhausted_ = false;
+        }
+
         skillStatus_.Update();
         CharacterStatus::Update();
     }
+
 
 public:
     /** ParameterManager からキャラクターステータスを読み込んで初期化する */
     void Init(const std::string& characterKey = "Player")
     {
+        // パラメータをjsonファイルから取得
         const auto* param = ParameterManager::Get().GetCharacterStatus(characterKey);
         if (!param) { return; }
 
-        hp_                       = param->hp;
-        maxHp_                    = param->hp;
-        attack_                   = param->attack;
-        critical_                 = param->criticalRate;
-        criticalDamageMultiplier_ = param->criticalDamageMultiplier;
-        stamina_                  = param->stamina;
-        maxStamina_               = param->stamina;
+        // パラメータを設定
+        {
+            hp_ = param->hp;
+            maxHp_ = param->hp;
+            attack_ = param->attack;
+            critical_ = param->criticalRate;
+            criticalDamageMultiplier_ = param->criticalDamageMultiplier;
+
+            // スタミナ設定値
+            maxStamina_ = param->stamina.maxStamina;
+            stamina_ = maxStamina_;
+            staminaDrainPerSec_ = param->stamina.drainPerSec;
+            staminaRecoverPerSec_ = param->stamina.recoverPerSec;
+            exhaustedRecoverPerSec_ = param->stamina.exhaustedRecoverPerSec;
+            exhaustedThreshold_ = param->stamina.exhaustedThreshold;
+            exhaustedSpeedRate_ = param->stamina.exhaustedSpeedRate;
+
+            // 移動速度
+            moveSpeedBase_ = param->moveSpeedBase;
+            runSpeedBase_ = param->runSpeedBase;
+        }
     }
 
     /** スキルをスロットに装備する。Init() の後に呼ぶ */
@@ -335,8 +427,26 @@ public:
 
 
 public:
-    int GetStamina()    const { return stamina_; }
-    int GetMaxStamina() const { return maxStamina_; }
+    /* スタミナ取得 */
+    float GetStamina()              const { return stamina_; }
+    float GetMaxStamina()           const { return maxStamina_; }
+    bool  IsExhausted()             const { return isExhausted_; }
+    StaminaState GetStaminaState()  const { return staminaState_; }
+    void SetStaminaState(StaminaState state) { staminaState_ = state; }
+
+    /* スタミナ設定値取得（UIなどデバッグ用） */
+    float GetStaminaDrainPerSec()       const { return staminaDrainPerSec_; }
+    float GetStaminaRecoverPerSec()     const { return staminaRecoverPerSec_; }
+    float GetExhaustedRecoverPerSec()   const { return exhaustedRecoverPerSec_; }
+
+    /* 1フレームあたりの増減量取得 */
+    float GetStaminaDrainPerFrame()     const { return staminaDrainPerFrame_; }
+    float GetStaminaRecoverPerFrame()   const { return staminaRecoverPerFrame_; }
+    float GetExhaustedRecoverPerFrame() const { return exhaustedRecoverPerFrame_; }
+
+    /* 移動速度取得 */
+    float GetRunSpeedBase()         const { return runSpeedBase_; }
+    float GetExhaustedSpeedRate()   const { return exhaustedSpeedRate_; }
 
 
 public:
@@ -414,9 +524,69 @@ public:
 
 
 public:
+    /* 無敵フラグ */
     void AddInvincible(InvincibleFlags flag)    { invincibleFlag_ |=  static_cast<uint32_t>(flag); }
     void RemoveInvincible(InvincibleFlags flag) { invincibleFlag_ &= ~static_cast<uint32_t>(flag); }
     bool IsInvincible() const                  { return invincibleFlag_ != 0; }
+
+
+    /*************** スタミナの増減に関する関数 ***************/
+private: 
+    /**
+     * スタミナを減少させる。
+     * @param amount 1フレームで減少するスタミナ量
+     */
+    void DrainStamina(float amount)
+    {
+        // スタミナを消費
+        stamina_ -= amount;
+
+        // スタミナが切れるなら0にする
+        if (stamina_ < 0.0f){ stamina_ = 0.0f; }
+    }
+
+    /**
+     * スタミナを回復させる。
+     * @param amount 1フレームで回復するスタミナ量（通常 or 枯渇中で呼び分ける）
+     */
+    void RecoverStamina(float amount)
+    {
+        // スタミナ回復
+        stamina_ += amount;
+
+        // 枯渇状態なら
+        if (isExhausted_) 
+        {
+            // 枯渇状態から戻すスタミナの値を取得
+            float needStaminaValue = maxStamina_ * exhaustedThreshold_;
+            // 必要量を満たしているなら
+            if (stamina_ > needStaminaValue) 
+            {
+                // 枯渇状態ではなくし、状態を初期に戻す
+                isExhausted_ = !isExhausted_;
+            }
+            return;
+        }
+
+        // スタミナが上限来てるなら、回復しない
+        if (stamina_ > maxStamina_)
+        {
+            stamina_ = maxStamina_;
+        }
+    }
+
+public:
+    /** 回避など瞬間コスト用。スタミナを直接減算し枯渇チェックも行う */
+    void ConsumeStamina(float amount)
+    {
+        if (stamina_ < 0.0f) {
+            stamina_ = 0.0f;
+            isExhausted_ = true;
+            staminaState_ = StaminaState::enDepletion;
+        }
+        stamina_ -= amount;
+    }
+
 };
 
 
@@ -451,6 +621,7 @@ public:
             attack_                   = param->attack;
             critical_                 = param->criticalRate;
             criticalDamageMultiplier_ = param->criticalDamageMultiplier;
+            moveSpeedBase_            = param->moveSpeedBase; //!< ボスの移動速度
         }
 
         skillStatus_.Init(characterKey);

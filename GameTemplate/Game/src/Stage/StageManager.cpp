@@ -1,6 +1,5 @@
 ﻿/**
  * Stage.cpp
- *
  * ステージの描画を行う
  */
 
@@ -80,7 +79,17 @@ StageManager::StageManager()
 }
 StageManager::~StageManager()
 {
+	// 見た目のあるオブジェクトの削除
+	for (auto* obj : staticObjectList_) {
+		delete obj;
+	}
+	staticObjectList_.clear();
 
+	// コリジョンの削除
+	for (auto* obj : collisionList_) {
+		delete obj;
+	}
+	collisionList_.clear();
 }
 
 

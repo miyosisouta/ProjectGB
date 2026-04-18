@@ -28,6 +28,10 @@ void IdleState::Enter()
 {
 	// 待機アニメーション
 	player_->PlayAnimation(static_cast<int>(PlayerStateID::Idle));
+
+	// スタミナステートの変更
+	auto* status = player_->GetStatus()->As<PlayerStatus>();
+	status->SetStaminaState(PlayerStatus::StaminaState::enRecover);
 }
 
 void IdleState::Update()
@@ -38,6 +42,9 @@ void IdleState::Update()
 
 void IdleState::Exit()
 {
+	// スタミナステートを回復しないように変更
+	auto* status = player_->GetStatus()->As<PlayerStatus>();
+	status->SetStaminaState(PlayerStatus::StaminaState::enNone);
 }
 
 
@@ -49,6 +56,18 @@ void WalkState::Enter()
 {
 	// 歩きアニメーション
 	player_->PlayAnimation(static_cast<int>(PlayerStateID::Walk));
+
+	// スタミナステートの変更
+	auto* status = player_->GetStatus()->As<PlayerStatus>();
+	status->SetStaminaState(PlayerStatus::StaminaState::enRecover);
+
+	// ベーススピードを取得
+	baseMoveSpeed_ = status->GetMoveSpeedBase();
+
+	// 枯渇状態なら速度を下げる
+	if (status->IsExhausted()) {
+		baseMoveSpeed_ *= status->GetExhaustedSpeedRate();
+	}
 
 	// SE
 	{
@@ -63,7 +82,7 @@ void WalkState::Enter()
 void WalkState::Update()
 {
 	// 共通関数に歩く時の基本スピードを渡す
-	Vector3 velocity = CalcMovementVelocity(WALK_BASE_SPEED);
+	Vector3 velocity = CalcMovementVelocity(baseMoveSpeed_);
 
 	// 移動先をPlayerに渡す
 	player_->SetMoveVelocity(velocity);
@@ -77,6 +96,11 @@ void WalkState::Update()
 void WalkState::Exit()
 {
 	taskScheduler_.reset();
+	baseMoveSpeed_ = 0.0f;
+
+	// スタミナステートを回復しないように変更
+	auto* status = player_->GetStatus()->As<PlayerStatus>();
+	status->SetStaminaState(PlayerStatus::StaminaState::enNone);
 }
 
 
@@ -88,6 +112,10 @@ void RunState::Enter()
 {
 	// 走るアニメーション
 	player_->PlayAnimation(static_cast<int>(PlayerStateID::Run));
+
+	// スタミナステートの変更
+	auto* status = player_->GetStatus()->As<PlayerStatus>();
+	status->SetStaminaState(PlayerStatus::StaminaState::enDrain);
 
 	taskScheduler_ = std::make_unique<TaskSchedulerSystem>();
 	// SEの再生
@@ -111,8 +139,12 @@ void RunState::Enter()
 
 void RunState::Update()
 {
+	// プレイヤーの走るときのベース速度を取得
+	auto* status = player_->GetStatus()->As<PlayerStatus>();
+	float moveSpeed = status->GetRunSpeedBase();
+
 	// 共通関数に歩く時の基本スピードを渡す
-	Vector3 velocity = CalcMovementVelocity(RUN_BASE_SPEED);
+	Vector3 velocity = CalcMovementVelocity(moveSpeed);
 
 	// 移動先をPlayerに渡す
 	player_->SetMoveVelocity(velocity);
@@ -126,6 +158,10 @@ void RunState::Update()
 void RunState::Exit()
 {
 	taskScheduler_.reset();
+
+	// スタミナステートを回復しないように変更
+	auto* status = player_->GetStatus()->As<PlayerStatus>();
+	status->SetStaminaState(PlayerStatus::StaminaState::enNone);
 }
 
 
@@ -225,6 +261,11 @@ bool SpecialAbilityState::IsCancelable() const
 
 void UtilityState::Enter()
 {
+	// スタミナを消費する
+	auto* status = player_->GetStatus()->As<PlayerStatus>();
+	const float staminaCost = status->GetSkillStatus().GetDecreaseStamina("Utility");
+	status->ConsumeStamina(staminaCost);
+
 	// playerの通常攻撃タイプを取得
 	currentSkill_ = player_->GetUtilitySkill();
 
@@ -248,6 +289,9 @@ void UtilityState::Exit()
 	// 借りていたポインタを空にする（deleteはされないので安全）
 	currentSkill_ = nullptr;
 
+	// スタミナ消費を止める
+	auto* status = player_->GetStatus()->As<PlayerStatus>();
+	status->SetStaminaState(PlayerStatus::StaminaState::enNone);
 }
 
 bool UtilityState::IsFinished() const

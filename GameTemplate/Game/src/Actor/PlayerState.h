@@ -56,7 +56,7 @@ class WalkState : public PlayerStateBase
 private:
 	/** •à‚«‚ÌSE‚ğÄ¶‚µ‚½Œo‰ßŠÔ */
 	float walkSEElapsedTime_ = 0.0f;
-
+	float baseMoveSpeed_ = 0.0f;
 
 public:
 	WalkState(Player* p) : PlayerStateBase(p) {}

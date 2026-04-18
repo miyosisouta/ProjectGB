@@ -31,7 +31,10 @@ private:
 
 	/* 特殊能力が使えるか */
 	bool CanSpecialAbility();
-	
+
+public:
+	/** 回避を使えるか */
+	bool IsExhausted() const;
 
 public:
 	/* コンストラクタ */
