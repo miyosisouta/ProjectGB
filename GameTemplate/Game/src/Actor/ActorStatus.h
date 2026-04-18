@@ -438,7 +438,7 @@ public:
     float GetMaxStamina()           const { return maxStamina_; }
     bool  IsExhausted()             const { return isExhausted_; }
     StaminaState GetStaminaState()  const { return staminaState_; }
-    void SetStaminaState(StaminaState state) { staminaState_ = state; }
+    void SetStaminaState(const StaminaState state) { staminaState_ = state; }
 
     /* スタミナ設定値取得（UIなどデバッグ用） */
     float GetStaminaDrainPerSec()       const { return staminaDrainPerSec_; }
@@ -576,7 +576,6 @@ private:
                 // 枯渇状態ではなくし、状態を初期に戻す
                 isExhausted_ = false;
             }
-            return;
         }
     }
 
