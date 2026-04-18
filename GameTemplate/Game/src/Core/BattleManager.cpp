@@ -58,20 +58,52 @@ BattleManager* BattleManager::myInstance_ = nullptr; //初期化
 
 BattleManager::BattleManager()
 {
-	player_ = NewGO<Player>(0, "player");			//Playerの生成
-	playerController_ = NewGO<PlayerController>(10, "playerController");	//PlayerControllerの生成
-	playerController_->SetTarget(player_);		//PlayerControllerの操作対象をPlayerに設定
+	// プレイヤー
+	{
+		player_ = NewGO<Player>(0, "player");			//Playerの生成
+		playerController_ = NewGO<PlayerController>(10, "playerController");	//PlayerControllerの生成
+		playerController_->SetTarget(player_);		//PlayerControllerの操作対象をPlayerに設定
+	}
+	
 
-	boss_ = new BossSpawner(); // ボス生成用クラス
-	boss_->SetAttackTarger(player_); // ボスの攻撃対象を設定
-	boss_->SpawnBoss(); // ボスを作成
+	// ボス
+	{
+		boss_ = new BossSpawner(); // ボス生成用クラス
+		boss_->SetAttackTarger(player_); // ボスの攻撃対象を設定
+		boss_->SpawnBoss(); // ボスを作成
+	}
+	
 
-	AttackObjectManager::CreateInstance(); // 攻撃オブジェクト管理用クラスを生成
-	stage_ = NewGO<StageManagerObject>(0, "stage");		//Stageの生成
+	// キャラクター用設定
+	{
+		// TODO : スキルの設定のテスト
+		CharacterDataBase::Get().SetPlayerNormalAttack(NormalAttackType::enBite);
+		CharacterDataBase::Get().SetPlayerAbility(AbilityType::enLandmine);
+		CharacterDataBase::Get().SetPlayerUtility(UtilityType::enAvoid);
 
-	skyCube_ = NewGO<SkyCube>(0, "skyCube");
-	skyCube_->SetType(enSkyCubeType_Day);
-	skyCube_->SetScale(SKYCUBE_SCALE);
+		// TODO : スキルの作成のテスト
+		player_->CreateSkill(
+			CharacterDataBase::Get().GetPlayerParam().nAttack,
+			CharacterDataBase::Get().GetPlayerParam().ability,
+			CharacterDataBase::Get().GetPlayerParam().utility
+		);
+
+		// 攻撃用オブジェクト管理クラスの作成
+		AttackObjectManager::CreateInstance();
+	}
+
+
+	// ステージの作成
+	stage_ = NewGO<StageManagerObject>(0, "stage");
+
+
+	// スカイキューブ
+	{
+		skyCube_ = NewGO<SkyCube>(0, "skyCube");
+		skyCube_->SetType(enSkyCubeType_Day);
+		skyCube_->SetScale(SKYCUBE_SCALE);
+	}
+	
 
 	// カメラ初期化
 	{
@@ -96,24 +128,24 @@ BattleManager::BattleManager()
 		//CameraManager::Get().SwitchCamera(gameCameraController_);
 	}
 
-	// TODO : スキルの設定のテスト
-	CharacterDataBase::Get().SetPlayerNormalAttack(NormalAttackType::enBite);
-	CharacterDataBase::Get().SetPlayerAbility(AbilityType::enLandmine);
-	CharacterDataBase::Get().SetPlayerUtility(UtilityType::enAvoid);
+	// 演出
+	{
+		// 演出用カットシーンスケジューラーの作成
+		cutSceneScheduler_ = std::make_unique<TaskSchedulerSystem>();
+		// ボス登場演出
+		SetupEntryBossCutScene();
+	}
 
-	player_->CreateSkill(
-		CharacterDataBase::Get().GetPlayerParam().nAttack,
-		CharacterDataBase::Get().GetPlayerParam().ability,
-		CharacterDataBase::Get().GetPlayerParam().utility
-	);
 
-	// 演出用カットシーンスケジューラーの作成
-	cutSceneScheduler_ = std::make_unique<TaskSchedulerSystem>();
-	// ボス登場演出
-	SetupEntryBossCutScene();
+	// その他設定
+	{
+		// ミッション
+		missionLayout_ = new Layout;
+		missionLayout_->Initialize<MissionMenu>("Assets/ui/layout/MissionMenu.json");
 
-	missionLayout_ = new Layout;
-	missionLayout_->Initialize<MissionMenu>("Assets/ui/layout/MissionMenu.json");
+		// ゲームタイマーを起動
+		gameTimer_.Init();
+	}
 }
 
 
@@ -162,6 +194,7 @@ void BattleManager::Update()
 		}
 		case GameState::Playing:
 		{
+			gameTimer_.Update();
 			boss_->Update();
 
 			// カメラの更新
@@ -182,7 +215,7 @@ void BattleManager::Update()
 				}
 			}
 
-			if (player_->GetStatus()->IsDead())
+			if (player_->GetStatus()->IsDead() || gameTimer_.IsTimeUp())
 			{
 				SetupOverCutScene();
 				gameState_ = GameState::ResultOver;
@@ -206,7 +239,7 @@ void BattleManager::Update()
 		}
 		case GameState::Shutdown:
 		{
-
+			gameTimer_.Reset(); // ゲームタイマーを初期化
 			break;
 		}
 	}

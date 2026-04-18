@@ -85,6 +85,7 @@
     <ClCompile Include="src\Actor\AttackObjectManager.cpp" />
     <ClCompile Include="src\Actor\AttackObject.cpp" />
     <ClCompile Include="src\Stage\StageCullingSystem.cpp" />
+    <ClCompile Include="src\Util\GameTimer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Game.h" />
@@ -178,5 +179,6 @@
     <ClInclude Include="src\Actor\AttackObjectManager.h" />
     <ClInclude Include="src\Actor\AttackObject.h" />
     <ClInclude Include="src\Stage\StageCullingSystem.h" />
+    <ClInclude Include="src\Util\GameTimer.h" />
   </ItemGroup>
 </Project>

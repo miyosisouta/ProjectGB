@@ -10,7 +10,6 @@
 class Layout;
 class PouseMenu;
 
-
 class InGameScene : public IScene
 {
 private:

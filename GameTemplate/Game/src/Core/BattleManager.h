@@ -10,7 +10,7 @@
 #pragma once
 #include "src/Camera/CameraController.h"
 #include "src/Camera/CameraSteering.h"
-
+#include "src/Util/GameTimer.h"
 
 class Player;
 class PlayerController;
@@ -45,6 +45,7 @@ private:
     Layout* layout_ = nullptr;
     Layout* startLayout_ = nullptr;
     Layout* missionLayout_ = nullptr;
+    GameTimer gameTimer_;
     SkyCube* skyCube_ = nullptr;
     
     std::unique_ptr<CameraSteering> cameraSteering_ = nullptr;
@@ -66,6 +67,11 @@ public:
     /** アクティブ対象を設定 */
     void SetActiveTarget(const uint32_t target);
 
+    /** ポーズ画面か否か */
+    void SetPouse(const bool flg) {
+        if (flg) { gameTimer_.Pause(); } // ポーズ画面を表示中ならtrueに
+        else { gameTimer_.Resume(); } // それ以外ならfalse
+    }
 
 private:
     BattleManager();
