@@ -23,15 +23,16 @@ void MissionMenu::Update()
 	auto* missionMedaru = GetUI<UIIcon>(Hash32("noClear_medaru"));
 	// ミッション１
 	auto* mission1 = GetUI<UIIcon>(Hash32("mission_1"));
-	//クリアメダル(退場)
+	//クリアメダル
 	auto* clearMedaru = GetUI<UIIcon>(Hash32("clear_medaru"));
-	
+
+
 	if (g_pad[0]->IsTrigger(enButtonX)) {
 
 		missionSequence_->Play(mission);
 		missionObiSequence_->Play(missionObi);
 		missionMedaruSequence_->Play(missionMedaru);
-		mission1Sequence_->Play(mission1);	
+		mission1Sequence_->Play(mission1);
 		missionClearSequence_->Play(clearMedaru);
 
 		// タスクスケジューラー
@@ -44,21 +45,34 @@ void MissionMenu::Update()
 				UIAnimationFactory::Attach<UIColorAnimation>(missionColor, Hash32("mission_color"));
 				auto* colorAnimation = missionColor->FindAnimation(Hash32("mission_color"));
 				colorAnimation->Play();
-				
+
 				// クリアメダル
 				auto* clearMedaru = GetUI<UIIcon>(Hash32("clear_medaru"));
 				clearMedaru->isDraw = true;
 				UIAnimationFactory::Attach<UIScaleAnimation>(clearMedaru, Hash32("mission_medaru_scale"));
 				auto* scaleAnimation = clearMedaru->FindAnimation(Hash32("mission_medaru_scale"));
 				scaleAnimation->Play();
-			});		
+			});
 		// エフェクト
-		missionTaskScheduler_->AddTimer(2.5f, [&]()
+		missionTaskScheduler_->AddTimer(2.5f, [this]()
 			{
 				for (int i = 0; i < MAX_EFFECT_NUM; i++)
 				{
 					effectRenderList_[i]->Play();
 				}
+			});
+		// @仮 時間でボタンを押すたび、リセットするようにした(連打未対応)
+		missionTaskScheduler_->AddTimer(6.0f, [this]()
+			{
+				// ミッション
+				auto* missionNormal = GetUI<UIIcon>(Hash32("mission_back"));
+				auto* missionColorDummy = GetUI<UIDummy>(Hash32("missionDummy"));
+				missionNormal->color = missionColorDummy -> color;
+				// クリアメダル
+				auto* clearMedaru = GetUI<UIIcon>(Hash32("clear_medaru"));
+				clearMedaru->isDraw = false;
+				auto* scaleAnimation = clearMedaru->FindAnimation(Hash32("mission_medaru_scale"));
+				scaleAnimation->Clear();
 			});
 	}
 
@@ -108,7 +122,7 @@ void MissionMenu::InitializeLogic()
 	UIAnimationFactory::Attach<UITranslateOffsetAnimation>(mission, Hash32("missionEventEnd"));
 	missionSequence_ = std::make_unique<UIAnimationSequence>();
 	missionSequence_->Add(Hash32("missionEventStart")).Add(Hash32("missionEventEnd"), 5.0f);
-	
+
 	// ミッションの白帯
 	auto* missionObi = GetUI<UIIcon>(Hash32("mission_obi"));
 	UIAnimationFactory::Attach<UITranslateOffsetAnimation>(missionObi, Hash32("missionEventStart"));
@@ -123,10 +137,24 @@ void MissionMenu::InitializeLogic()
 	missionMedaruSequence_ = std::make_unique<UIAnimationSequence>();
 	missionMedaruSequence_->Add(Hash32("missionEventStart")).Add(Hash32("missionEventEnd"), 5.0f);
 
-	// ミッション１
+	// ミッション１ (2分以内にクリア)
 	auto* mission1 = GetUI<UIIcon>(Hash32("mission_1"));
 	UIAnimationFactory::Attach<UITranslateOffsetAnimation>(mission1, Hash32("missionEventStart"));
 	UIAnimationFactory::Attach<UITranslateOffsetAnimation>(mission1, Hash32("missionEventEnd"));
+	mission1Sequence_ = std::make_unique<UIAnimationSequence>();
+	mission1Sequence_->Add(Hash32("missionEventStart")).Add(Hash32("missionEventEnd"), 5.0f);
+
+	// ミッション2 (回避できた)
+	auto* mission2 = GetUI<UIIcon>(Hash32("mission_2"));
+	UIAnimationFactory::Attach<UITranslateOffsetAnimation>(mission2, Hash32("missionEventStart"));
+	UIAnimationFactory::Attach<UITranslateOffsetAnimation>(mission2, Hash32("missionEventEnd"));
+	mission1Sequence_ = std::make_unique<UIAnimationSequence>();
+	mission1Sequence_->Add(Hash32("missionEventStart")).Add(Hash32("missionEventEnd"), 5.0f);
+
+	// ミッション3 (スキルを?回使った) 
+	auto* mission3 = GetUI<UIIcon>(Hash32("mission_3"));
+	UIAnimationFactory::Attach<UITranslateOffsetAnimation>(mission3, Hash32("missionEventStart"));
+	UIAnimationFactory::Attach<UITranslateOffsetAnimation>(mission3, Hash32("missionEventEnd"));
 	mission1Sequence_ = std::make_unique<UIAnimationSequence>();
 	mission1Sequence_->Add(Hash32("missionEventStart")).Add(Hash32("missionEventEnd"), 5.0f);
 
@@ -144,7 +172,7 @@ void MissionMenu::InitializeLogic()
 		char jsonPath[] = "Assets/ui/vfx/effect_mission_maru/effect_mission_maru_1.json";
 		jsonPath[54] = '1' + i;
 		effectRenderList_[i]->Init(jsonPath, "Assets/ui/inGameUI/mission/maru.dds", 128.0f, 128.0f);
-		effectRenderList_[i]->SetPosition(Vector3(530.0f, 330, 0.0f));
+		effectRenderList_[i]->SetPosition(Vector3(528.0f, 330, 0.0f));
 		effectRenderList_[i]->EnableHotReload();
 	}
 }
