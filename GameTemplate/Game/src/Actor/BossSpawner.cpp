@@ -105,12 +105,8 @@ BossParam BossSpawner::CreateBossData(BossType type, GameModeType mode)
 void BossSpawner::SpawnBoss(bool isPlayerControl)
 {
 	// データベースからはステージ選択で選ばれたタイプを取得
-	//BossType stageType = CharacterDataBase::Get().GetStageType();
-	//GameModeType mode = CharacterDataBase::Get().GetGameModeType();
-
-	// TODO : ゴリラの通常モードを呼ぶ
-	BossType stageType = BossType::enGorilla;
-	GameModeType mode = GameModeType::enNormal;
+	BossType stageType = CharacterDataBase::Get().GetStageType();
+	GameModeType mode = CharacterDataBase::Get().GetGameModeType();
 
 
 	// JSON読み込み ＋ モード補正 がここで完了

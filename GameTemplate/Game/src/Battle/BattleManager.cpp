@@ -9,6 +9,7 @@
 
 #include "stdafx.h"
 #include "BattleManager.h"
+#include "MissionManager.h"
 
 #include "Src/Actor/Player.h"
 #include "Src/Actor/PlayerController.h"
@@ -68,6 +69,12 @@ BattleManager::BattleManager()
 
 	// ボス
 	{
+		// test::ステージ選択画面がまだ作られていないのでここでボスデータを作る
+		BossType stageType = BossType::enGorilla;
+		GameModeType mode = GameModeType::enNormal;
+		CharacterDataBase::Get().SetStageType(stageType);
+		CharacterDataBase::Get().SetGameModeType(mode);
+
 		boss_ = new BossSpawner(); // ボス生成用クラス
 		boss_->SetAttackTarger(player_); // ボスの攻撃対象を設定
 		boss_->SpawnBoss(); // ボスを作成
@@ -145,6 +152,10 @@ BattleManager::BattleManager()
 
 		// ゲームタイマーを起動
 		gameTimer_.Init();
+
+		// ミッションを作成
+		MissionManager::CreateInstance();
+		MissionManager::Get().InitByBossType(CharacterDataBase::Get().GetStageType());
 	}
 }
 
@@ -161,6 +172,8 @@ BattleManager::~BattleManager()
 		delete boss_;
 		boss_ = nullptr;
 	}
+
+	MissionManager::Get().DestroyInstance();
 }
 
 
@@ -178,7 +191,6 @@ void BattleManager::Update()
 			// カメラ演出終わったので、バトル開始の演出をする
 			SetupStartCutScene();
 			gameState_ = GameState::GameStart;
-			/** FALL THROUGH */
 		}
 		case GameState::GameStart:
 		{
@@ -196,6 +208,7 @@ void BattleManager::Update()
 		{
 			gameTimer_.Update();
 			boss_->Update();
+			MissionManager::Get().Update();
 
 			// カメラの更新
 			auto gameCamera = gameCameraController_->As<GameCamera>();
@@ -210,6 +223,7 @@ void BattleManager::Update()
 			auto* boss = FindGO<BossCharacter>("boss");
 			if (boss && boss->GetStatus()) {
 				if (boss->GetStatus()->IsDead()) {
+					MissionManager::Get().NotifyBossDefeated(); // ボスを倒したら、通知を飛ばす
 					SetupClearCutScene();
 					gameState_ = GameState::ResultClear;
 				}

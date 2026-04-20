@@ -239,6 +239,11 @@
     <ClCompile Include="src\Actor\PlayerController.cpp" />
     <ClCompile Include="src\Actor\PlayerState.cpp" />
     <ClCompile Include="src\Actor\StateMachine.cpp" />
+    <ClCompile Include="src\Battle\BattleManager.cpp" />
+    <ClCompile Include="src\Battle\Mission.cpp" />
+    <ClCompile Include="src\Battle\MissionCondition.cpp" />
+    <ClCompile Include="src\Battle\MissionEvent.cpp" />
+    <ClCompile Include="src\Battle\MissionManager.cpp" />
     <ClCompile Include="src\Camera\CameraCommon.cpp" />
     <ClCompile Include="src\Camera\CameraController.cpp" />
     <ClCompile Include="src\Camera\CameraManager.cpp" />
@@ -252,7 +257,6 @@
     <ClCompile Include="src\collision\GhostBodyManager.cpp" />
     <ClCompile Include="src\collision\GhostPrimitive.cpp" />
     <ClCompile Include="src\collision\PhysicalBody.cpp" />
-    <ClCompile Include="src\Core\BattleManager.cpp" />
     <ClCompile Include="src\Core\ParameterManager.cpp" />
     <ClCompile Include="src\Core\PouseMenu.cpp" />
     <ClCompile Include="src\Effect\EffectManager.cpp" />
@@ -329,6 +333,12 @@
     <ClInclude Include="src\Actor\PlayerController.h" />
     <ClInclude Include="src\Actor\PlayerState.h" />
     <ClInclude Include="src\Actor\StateMachine.h" />
+    <ClInclude Include="src\Battle\BattleManager.h" />
+    <ClInclude Include="src\Battle\Mission.h" />
+    <ClInclude Include="src\Battle\MissionCondition.h" />
+    <ClInclude Include="src\Battle\MissionEvent.h" />
+    <ClInclude Include="src\Battle\MissionManager.h" />
+    <ClInclude Include="src\Battle\MissionType.h" />
     <ClInclude Include="src\Camera\CameraCommon.h" />
     <ClInclude Include="src\Camera\CameraController.h" />
     <ClInclude Include="src\Camera\CameraManager.h" />
@@ -343,7 +353,6 @@
     <ClInclude Include="src\collision\GhostPrimitive.h" />
     <ClInclude Include="src\collision\PhysicalBody.h" />
     <ClInclude Include="src\collision\Types.h" />
-    <ClInclude Include="src\Core\BattleManager.h" />
     <ClInclude Include="src\Core\ParameterManager.h" />
     <ClInclude Include="src\Core\PouseMenu.h" />
     <ClInclude Include="src\Effect\EffectManager.h" />
