@@ -6,13 +6,13 @@ Mission::Mission(std::wstring name, std::unique_ptr<MissionConditionBase> condit
 {
 }
 
-void Mission::Update() {
-    // 進行してないなら返す
-    if (!IsActive()) return;
-
+void Mission::Update() 
+{
     // 毎フレームフラグをリセット
     ClearFrameFlags();
 
+    // 進行してないなら返す
+    if (!IsActive()) return;
     // ミッションの状態を更新
     condition_->Update();
 
@@ -20,12 +20,13 @@ void Mission::Update() {
     UpdateState();
 }
 
-void Mission::OnEvent(const MissionEventData& ev) {
-    // 進行してないなら返す
-    if (!IsActive()) return;
-
+void Mission::OnEvent(const MissionEventData& ev) 
+{
     // 毎フレームフラグをリセット
     ClearFrameFlags();
+
+    // 進行してないなら返す
+    if (!IsActive()) return;
 
     // ミッションの状態イベントを呼ぶ
     condition_->OnEvent(ev);
