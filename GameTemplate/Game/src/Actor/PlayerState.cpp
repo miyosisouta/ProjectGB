@@ -2,6 +2,7 @@
 #include "PlayerState.h"
 #include "Player.h"
 #include "ActorStatus.h"
+#include "src/Battle/MissionManager.h"
 #include "src/Skill/NormalAttack/NormalAtatck.h"
 #include "src/Skill/SpecialAbility/AbilityBase.h"
 #include "src/Skill/Utility/Utility.h"
@@ -178,6 +179,10 @@ void NormalAttackState::Enter()
 	if (currentSkill_) {
 		currentSkill_->Enter(player_);
 	}
+
+	// ミッションに使用したことを報告
+	const PlayerParam& playerParam = CharacterDataBase::Get().GetPlayerParam();
+	MissionManager::Get().NotifyNormalAttackUsed(playerParam.nAttack);
 }
 
 void NormalAttackState::Update()
@@ -223,6 +228,10 @@ void SpecialAbilityState::Enter()
 	if (currentSkill_) {
 		currentSkill_->Enter(player_);
 	}
+
+	// ミッションに使用したことを報告
+	const PlayerParam& playerParam = CharacterDataBase::Get().GetPlayerParam();
+	MissionManager::Get().NotifyAbilityUsed(playerParam.ability);
 }
 
 void SpecialAbilityState::Update()
@@ -256,7 +265,7 @@ bool SpecialAbilityState::IsCancelable() const
 
 
 /*==================================================*/
-/* 特殊行動状態 */
+/* 汎用行動状態 */
 /*==================================================*/
 
 void UtilityState::Enter()
@@ -273,6 +282,10 @@ void UtilityState::Enter()
 	if (currentSkill_) {
 		currentSkill_->Enter(player_);
 	}
+
+	// ミッションに使用したことを報告
+	const PlayerParam& playerParam = CharacterDataBase::Get().GetPlayerParam();
+	MissionManager::Get().NotifyUtilityUsed(playerParam.utility);
 }
 
 void UtilityState::Update()

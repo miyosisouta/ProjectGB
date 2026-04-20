@@ -42,7 +42,6 @@
     <ClCompile Include="src\Util\TaskSchedulerSystem.cpp" />
     <ClCompile Include="stdafx.cpp" />
     <ClCompile Include="system\system.cpp" />
-    <ClCompile Include="src\Core\BattleManager.cpp" />
     <ClCompile Include="src\Skill\NormalAttack\NormalAtatck.cpp" />
     <ClCompile Include="src\Skill\SpecialAbility\AbilityBase.cpp" />
     <ClCompile Include="src\Skill\SpecialAbility\DefaultAttack.cpp" />
@@ -86,6 +85,11 @@
     <ClCompile Include="src\Actor\AttackObject.cpp" />
     <ClCompile Include="src\Stage\StageCullingSystem.cpp" />
     <ClCompile Include="src\Util\GameTimer.cpp" />
+    <ClCompile Include="src\Battle\BattleManager.cpp" />
+    <ClCompile Include="src\Battle\MissionManager.cpp" />
+    <ClCompile Include="src\Battle\MissionEvent.cpp" />
+    <ClCompile Include="src\Battle\Mission.cpp" />
+    <ClCompile Include="src\Battle\MissionCondition.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Game.h" />
@@ -138,7 +142,6 @@
     <ClInclude Include="src\Skill\NormalAttack\NormalAtatck.h" />
     <ClInclude Include="src\Skill\SpecialAbility\AbilityBase.h" />
     <ClInclude Include="src\Skill\SpecialAbility\DefaultAttack.h" />
-    <ClInclude Include="src\Core\BattleManager.h" />
     <ClInclude Include="src\CharacterDataBase.h" />
     <ClInclude Include="src\Actor\ActorStatus.h" />
     <ClInclude Include="src\Scene\TitleScene.h" />
@@ -180,5 +183,11 @@
     <ClInclude Include="src\Actor\AttackObject.h" />
     <ClInclude Include="src\Stage\StageCullingSystem.h" />
     <ClInclude Include="src\Util\GameTimer.h" />
+    <ClInclude Include="src\Battle\BattleManager.h" />
+    <ClInclude Include="src\Battle\MissionManager.h" />
+    <ClInclude Include="src\Battle\MissionType.h" />
+    <ClInclude Include="src\Battle\MissionEvent.h" />
+    <ClInclude Include="src\Battle\Mission.h" />
+    <ClInclude Include="src\Battle\MissionCondition.h" />
   </ItemGroup>
 </Project>

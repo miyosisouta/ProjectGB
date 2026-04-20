@@ -73,6 +73,10 @@ public:
         else { gameTimer_.Resume(); } // それ以外ならfalse
     }
 
+    /* ゲームタイマーを取得 */
+    GameTimer* GetGameTimer() { return &gameTimer_; }
+
+
 private:
     BattleManager();
     ~BattleManager();

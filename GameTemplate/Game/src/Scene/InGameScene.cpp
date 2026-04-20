@@ -7,7 +7,7 @@
 #include "stdafx.h"
 #include "InGameScene.h"
 
-#include "src/Core/BattleManager.h"
+#include "src/Battle/BattleManager.h"
 #include "src/Core/PouseMenu.h"
 #include "src/Scene/OutGameScene.h"
 #include "src/Scene/TitleScene.h"
