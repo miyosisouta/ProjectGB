@@ -82,9 +82,10 @@ struct BossParam
     GameModeType mode_ = GameModeType::enNone;
     
     /* モデル */
-    std::string characterKey_ = "Gorilla";
+    std::string characterKey_ = "Turtle";
     std::string modelPath_ = "";
     AnimSetting anims[enAnimNum];
+    EnModelUpAxis modelAxis_ = EnModelUpAxis::enModelUpAxisZ;
 
     /* コリジョン */
     float colliderRadius = 10.0f; //!< 当たり判定（カプセルやスフィア）の半径
