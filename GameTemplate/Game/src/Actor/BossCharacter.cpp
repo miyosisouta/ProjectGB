@@ -107,7 +107,7 @@ bool BossCharacter::Start()
 		param_.modelPath_.c_str(),
 		animationClipList_.data(),
 		animationClipList_.size(),
-		enModelUpAxisZ
+		param_.modelAxis_
 	);
 
 	// TODO : プレイヤーとの距離を話すため

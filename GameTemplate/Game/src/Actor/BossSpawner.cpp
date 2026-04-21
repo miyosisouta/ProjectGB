@@ -54,7 +54,9 @@ BossParam BossSpawner::CreateBossData(BossType type, GameModeType mode)
 	{
 		// モデルtkm
 		std::string path = modelpath + "Gorilla/Model/Gorilla.tkm";
+		param.characterKey_ = "Gorilla";
 		param.modelPath_ = path;
+		param.modelAxis_ = EnModelUpAxis::enModelUpAxisZ;
 
 		// アニメ登録を自動化
 		auto AddAnim = [&](BossAnimID id, const std::string& fileName, bool loop)
@@ -71,6 +73,33 @@ BossParam BossSpawner::CreateBossData(BossType type, GameModeType mode)
 		AddAnim(enAnimAttack,"Attack.tka",false);
 		AddAnim(enAnimHit,"Hit.tka",false);
 		AddAnim(enAnimDeath,"Death.tka",false);
+		AddAnim(enAnimSpin, "Spin.tka", true);
+		AddAnim(enAnimClicked, "Clicked.tka", false);
+		break;
+	}
+	case BossType::enTurtle:
+	{
+		// モデルtkm
+		std::string path = modelpath + "Turtle/Model/Turtle.tkm";
+		param.characterKey_ = "Turtle";
+		param.modelPath_ = path;
+		param.modelAxis_ = EnModelUpAxis::enModelUpAxisY;
+
+		// アニメ登録を自動化
+		auto AddAnim = [&](BossAnimID id, const std::string& fileName, bool loop)
+			{
+				// ここでパスを結合して、paramに直接突っ込む！
+				param.anims[id].filePath = modelpath + "Turtle/Animation/" + fileName;
+				param.anims[id].isLoop = loop;
+			};
+
+		// アニメーションの追加
+		AddAnim(enAnimIdle, "IdleA.tka", true);
+		AddAnim(enAnimRun, "Run.tka", true);
+		AddAnim(enAnimJump, "Jump.tka", false);
+		AddAnim(enAnimAttack, "Attack.tka", false);
+		AddAnim(enAnimHit, "Hit.tka", false);
+		AddAnim(enAnimDeath, "Death.tka", false);
 		AddAnim(enAnimSpin, "Spin.tka", true);
 		AddAnim(enAnimClicked, "Clicked.tka", false);
 		break;
