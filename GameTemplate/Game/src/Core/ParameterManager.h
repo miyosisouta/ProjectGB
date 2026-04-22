@@ -38,6 +38,14 @@ struct MasterCharacterStatusParameter : public IMasterParameter
 	};
 
 	std::string key;						//!< キャラクター識別キー (例: "Player", "Gorilla", "Turtle")
+	Vector3		position;					//!< 座標
+	Quaternion	rotation;					//!< 回転
+	Vector3		scale;						//!< 大きさ
+	Vector3		collisionPosUp;				//!< コリジョンの座標を上にあげる量
+	float		collisionSizeRadius;		//!< コリジョンの半径
+	float		collisionSizeHeight;		//!< コリジョンの高さ
+	float		charaConSizeRadius;			//!< キャラコンの半径
+	float		charaConSizeHeight;			//!< キャラコンの高さ
 	int         hp;							//!< HP
 	int         attack;						//!< 攻撃力
 	int         criticalRate;				//!< クリティカル率 (%)
