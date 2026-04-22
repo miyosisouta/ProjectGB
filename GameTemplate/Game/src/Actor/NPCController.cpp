@@ -26,7 +26,7 @@ namespace bossRuleData
                     { BossStateID::Run,     2 },    // 走る
                     { BossStateID::Jump,    2 },    // ヒットスタンプ
                     { BossStateID::Spin,    3 },    // 回転攻撃
-                    { BossStateID::Clicked, 3 }     // 岩を投げる
+                    { BossStateID::Clicked_Gollira, 3 }     // 岩を投げる
                 }},
 
                 // ▼ 遠距離ルールの設定
@@ -34,7 +34,7 @@ namespace bossRuleData
                     { BossStateID::Run,     1 },    // 走る
                     { BossStateID::Jump,    2 },    // ジャンプ
                     { BossStateID::Spin,    2 },    // 回転攻撃
-                    { BossStateID::Clicked, 5 }     // 岩を投げる
+                    { BossStateID::Clicked_Gollira, 5 }     // 岩を投げる
                 }},
 
                 // ▼ 攻撃範囲外にいる場合
@@ -47,7 +47,43 @@ namespace bossRuleData
     }
 
     // ここから下に新しいボスのルールを書く
-    // inline std::array<DistanceRule, static_cast<int>(DistancePhase::enMax)> GetKangarooRules() { ... }
+    // カメのルールセットを返す関数（std::array版）
+    inline std::array<DistanceRule, static_cast<int>(DistancePhase::enMax)> GetTurtleRules()
+    {
+        // std::array を返すため、全体を {{ }} で囲みます
+        return {
+            {
+                // ▼ 近距離ルールの設定
+                { DistancePhase::enShortAttackType, {
+                    { BossStateID::Attack, 3 }, // 通常攻撃
+                    { BossStateID::Spin,   2 }, // 回転攻撃
+                    { BossStateID::Jump,   2 },  // ヒットスタンプ
+                    { BossStateID::Clicked_Turtle, 3 }     // レーザー
+                }},
+
+            // ▼ 中距離ルールの設定
+            { DistancePhase::enMidAttackType, {
+                { BossStateID::Run,     1 },    // 走る
+                { BossStateID::Jump,    2 },    // ヒットスタンプ
+                { BossStateID::Spin,    2 },    // 回転攻撃
+                { BossStateID::Clicked_Turtle, 5 }     // レーザー
+            }},
+
+            // ▼ 遠距離ルールの設定
+            { DistancePhase::enLongAttackType, {
+                { BossStateID::Jump,    3 },    // ジャンプ
+                { BossStateID::Spin,    2 },    // 回転攻撃
+                { BossStateID::Clicked_Turtle, 5 }     // レーザー
+            }},
+
+            // ▼ 攻撃範囲外にいる場合
+            { DistancePhase::enOutRange, {
+                { BossStateID::Run, 10 }    // 追跡
+                // 攻撃範囲外なら1つでもOK
+            }}
+        }
+        };
+    }
 }
 
 namespace
@@ -88,12 +124,8 @@ bool NPCController::Start()
             currentRules_ = bossRuleData::GetGorillaRules(); // ゴリラ用の設定を取得
             break;
 
-        case BossType::enKangaroo:
-            // currentRules_[BossType::enKangaroo] = BossRuleData::GetKangarooRules(); // カンガルー用の設定を取得
-            break;
-
         case BossType::enTurtle:
-            // currentRules_[BossType::enTurtle] = BossRuleData::GetTurtleRules(); // カメ用の設定を取得
+            currentRules_ = bossRuleData::GetTurtleRules(); // カメ用の設定を取得
             break;
 
         default:

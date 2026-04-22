@@ -8,9 +8,10 @@ enum class BossStateID
 	Jump,
 	Attack,
 	Hit,
-	Death,
 	Spin,
-	Clicked
+	Clicked_Gollira,
+	Clicked_Turtle,
+	Death
 };
 
 

@@ -79,10 +79,6 @@ namespace
 		default:                   return nullptr;
 		}
 	}
-
-	/* コリジョン */
-	constexpr float COLLISION_RADIUS = 30.0f;	// 半径
-	constexpr float COLLISION_HEIGHT = 100.0f;	// 高さ
 }
 
 void Player::PlayAnimation(const int id)
@@ -317,6 +313,7 @@ Player::~Player()
 }
 bool Player::Start()
 {
+	auto initParam = status_->As<ActorStatus>()->GetInitParam();
 	// アニメーション
 	{
 		// アニメーションクリップリストの配列数を決定
@@ -345,9 +342,11 @@ bool Player::Start()
 		// モデルの座標を更新・初期化
 		{
 			// TODO::Boss都の初期の距離を離すため
-			transform_.localPosition = Vector3(300.0f, 0.0f, 0.0f);
-
+			transform_.localPosition = initParam.pos_;
+			transform_.localRotation = initParam.rot_;
+			transform_.localScale = initParam.scal_;
 			transform_.UpdateTransform();
+
 			modelRender_.SetPosition(transform_.position);
 			modelRender_.SetRotation(transform_.rotation);
 			modelRender_.SetScale(transform_.scale);
@@ -357,13 +356,13 @@ bool Player::Start()
 
 	// キャラクターコントローラーの精製
 	{
-		charaCon_.Init(COLLISION_RADIUS, COLLISION_HEIGHT, transform_.position);
+		charaCon_.Init(initParam.charaConRadius_, initParam.charaConHeight_, transform_.position);
 	}
 
 	// ゴーストコリジョンを生成
 	{
 		damageBody_ = std::make_unique<GhostBody>();
-		damageBody_->CreateCapsule(this, CharacterID::PlayerID(), COLLISION_RADIUS, COLLISION_HEIGHT, ghost::CollisionAttribute::PlayerDef, ghost::CollisionAttributeMask::Player);
+		damageBody_->CreateCapsule(this, CharacterID::PlayerID(), initParam.collisionRadius_, initParam.collisionHeight_, ghost::CollisionAttribute::PlayerDef, ghost::CollisionAttributeMask::Player);
 	
 		damageBody_->SetPosition(transform_.position);
 	}
@@ -422,7 +421,8 @@ void Player::Update()
 
 	// ゴーストコリジョン
 	{
-		Vector3 collisionPos = transform_.position + Vector3(0.0f, 40.0f, 0.0f);
+		const Vector3 heightUp = status_->As<ActorStatus>()->GetInitParam().collisionHeightUpValue_;
+		Vector3 collisionPos = transform_.position + heightUp;
 		damageBody_->SetPosition(collisionPos);
 	}
 }

@@ -64,6 +64,7 @@ enum BossAnimID {
     enAnimDeath,
     enAnimSpin,
     enAnimClicked,
+    enAnimAntic,
     enAnimNum  //!< アニメーションの総数（自動的に7になる）
 };
 

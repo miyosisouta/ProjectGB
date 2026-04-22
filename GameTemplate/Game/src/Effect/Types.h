@@ -24,6 +24,7 @@ enum enEffectKind
 	enEffectKind_Wind_Blast_Boss,
 	enEffectKind_HitStamp,
 	enEffectkind_Spin, 
+	enEffectKind_Raser,
 	enEffectKind_DamageZone_Ring,
 	enEffectKind_DamageZone_Box,	
 	enEffectKind_Max				// 10
@@ -56,6 +57,7 @@ static EffectInformation effectInformation[enEffectKind_Max] =
 	EffectInformation(u"Assets/Effect/Wind_Blast_Boss.efk"),
 	EffectInformation(u"Assets/Effect/HitStamp.efk"),
 	EffectInformation(u"Assets/Effect/SpinAttack.efk"),
+	EffectInformation(u"Assets/Effect/Thunder.efk"),
 	EffectInformation(u"Assets/Effect/DamageZone_Ring.efk"),
 	EffectInformation(u"Assets/Effect/DamageZone_Box.efk"),
 };

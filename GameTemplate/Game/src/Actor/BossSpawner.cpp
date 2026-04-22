@@ -43,14 +43,14 @@ BossParam BossSpawner::CreateBossData(BossType type, GameModeType mode)
 	param.stageType_ = type;
 	param.mode_ = mode;
 
-	// TODO　: ここでjsonファイルを読み込むつもり
-
-
+	// 共通のモデルパスを定義
 	std::string modelpath = "Assets/Objects/Enemy/";
+
+
 	// ボスの種類を決める
 	switch (type)
 	{
-	case BossType::enGorilla:
+	case BossType::enGorilla: /**************** ゴリラ *************************/
 	{
 		// モデルtkm
 		std::string path = modelpath + "Gorilla/Model/Gorilla.tkm";
@@ -77,7 +77,7 @@ BossParam BossSpawner::CreateBossData(BossType type, GameModeType mode)
 		AddAnim(enAnimClicked, "Clicked.tka", false);
 		break;
 	}
-	case BossType::enTurtle:
+	case BossType::enTurtle:/**************** カメ *************************/
 	{
 		// モデルtkm
 		std::string path = modelpath + "Turtle/Model/Turtle.tkm";
@@ -102,6 +102,7 @@ BossParam BossSpawner::CreateBossData(BossType type, GameModeType mode)
 		AddAnim(enAnimDeath, "Death.tka", false);
 		AddAnim(enAnimSpin, "Spin.tka", true);
 		AddAnim(enAnimClicked, "Clicked.tka", false);
+		AddAnim(enAnimAntic, "Antic.tka", true);
 		break;
 	}
 	default:
@@ -112,12 +113,12 @@ BossParam BossSpawner::CreateBossData(BossType type, GameModeType mode)
 	// モード
 	switch (mode)
 	{
-	case GameModeType::enHighAttack:
+	case GameModeType::enHighAttack: /* 攻撃力が高いモード */
 	{
 		param.attack_ = static_cast<int>(param.attack_ * MODE_ATTACK_MULTIPLIER);
 		break;
 	}
-	case GameModeType::enTimeAttack:
+	case GameModeType::enTimeAttack: /* 防御力が高いモード */
 	{
 		param.maxHp_ = static_cast<int>(param.maxHp_ * MODE_HP_MULTIPLIER);
 

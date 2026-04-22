@@ -144,10 +144,14 @@ private:
 	void UpdateBossAttackPair(Pair& hitPair);			//!< 通常攻撃の更新
 	bool ContainsBossHitStampPair(const Pair& hitPair);	//!< ヒットスタンプ攻撃のフラグ取得
 	void UpdateBossHitStampPair(Pair& hitPair);			//!< ヒットスタンプ攻撃の更新
-	bool ContainsBossSpinPair(const Pair& hitPair);	//!< 通常攻撃のフラグ取得
-	void UpdateBossSpinPair(Pair& hitPair);			//!< 通常攻撃の更新
-	bool ContainsBossThrowRockPair(const Pair& hitPair);	//!< 通常攻撃のフラグ取得
-	void UpdateBossThrowRockPair(Pair& hitPair);			//!< 通常攻撃の更新
+	bool ContainsBossSpinPair(const Pair& hitPair);	//!< 回転攻撃のフラグ取得
+	void UpdateBossSpinPair(Pair& hitPair);			//!< 回転攻撃の更新
+	bool ContainsBossThrowRockPair(const Pair& hitPair);	//!< 岩を投げるのフラグ取得
+	void UpdateBossThrowRockPair(Pair& hitPair);			//!< 岩を投げるの更新
+	bool ContainsBossLaserWeakPair(const Pair& hitPair);	//!< 弱いレーザーのフラグ取得
+	void UpdateBossLaserWeakPair(Pair& hitPair);			//!< 弱いレーザーの更新
+	bool ContainsBossLaserStrongPair(const Pair& hitPair);	//!< 強いレーザーのフラグ取得
+	void UpdateBossLaserStrongPair(Pair& hitPair);			//!< 強いレーザーの更新
 
 	/* キャラクターの誰かの攻撃 */
 	bool ContainsCharacterLandminePlayerPair(const Pair& hitPair); // 地雷(対プレイヤー)のフラグ取得

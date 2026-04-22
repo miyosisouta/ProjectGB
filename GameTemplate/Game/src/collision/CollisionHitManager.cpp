@@ -181,6 +181,13 @@ void CollisionHitManager::OnCollisionEnter(GhostBody* a, GhostBody* b)
 		if (ContainsBossThrowRockPair(pair)) {
 			UpdateBossThrowRockPair(pair);
 		}
+		// レーザー
+		if (ContainsBossLaserWeakPair(pair)) {
+			UpdateBossLaserWeakPair(pair);
+		}
+		if (ContainsBossLaserStrongPair(pair)) {
+			UpdateBossLaserStrongPair(pair);
+		}
 	}
 
 	// キャラクター全体
@@ -426,6 +433,68 @@ void CollisionHitManager::UpdateBossThrowRockPair(Pair& hitPair)
 
 	if (boss->GetStatus()) {
 		float motion = bossStatus->GetSkillMotionValues("ThrowRock");
+		int damage = Calculate(bossStatus, motion);
+		player->GetStatus()->Damage(damage); // ダメージを与える
+		UpdateTakeHitSound(); // 攻撃が当たったSEを流す
+	}
+}
+
+bool CollisionHitManager::ContainsBossLaserWeakPair(const Pair& hitPair)
+{
+	if (!IsHitObject<BossCharacter>(hitPair, CharacterID::BossLaserWeakAtkID())) {
+		return false;
+	}
+	if (!IsHitObject<Character>(hitPair, CharacterID::PlayerID())) {
+		return false;
+	}
+	return true;
+}
+
+void CollisionHitManager::UpdateBossLaserWeakPair(Pair& hitPair)
+{
+	auto* player = GetHitObject<Player>(hitPair, CharacterID::PlayerID());
+	auto* boss = GetHitObject<BossCharacter>(hitPair, CharacterID::BossLaserWeakAtkID());
+	auto bossStatus = boss->GetStatus()->As<BossStatus>();
+
+	// プレイヤーがいるか、もしくはプレイヤーのステータスがあるか
+	if (player == nullptr || player->GetStatus() == nullptr) { return; }
+	// プレイヤーが無敵フラグを持っているか
+	PlayerStatus* status = player->GetStatus()->As<PlayerStatus>();
+	if (status && status->IsInvincible()) { return; }
+
+	if (boss->GetStatus()) {
+		float motion = bossStatus->GetSkillMotionValues("LaserWeak");
+		int damage = Calculate(bossStatus, motion);
+		player->GetStatus()->Damage(damage); // ダメージを与える
+		UpdateTakeHitSound(); // 攻撃が当たったSEを流す
+	}
+}
+
+bool CollisionHitManager::ContainsBossLaserStrongPair(const Pair& hitPair)
+{
+	if (!IsHitObject<BossCharacter>(hitPair, CharacterID::BossLaserStrongAtkID())) {
+		return false;
+	}
+	if (!IsHitObject<Character>(hitPair, CharacterID::PlayerID())) {
+		return false;
+	}
+	return true;
+}
+
+void CollisionHitManager::UpdateBossLaserStrongPair(Pair& hitPair)
+{
+	auto* player = GetHitObject<Player>(hitPair, CharacterID::PlayerID());
+	auto* boss = GetHitObject<BossCharacter>(hitPair, CharacterID::BossLaserStrongAtkID());
+	auto bossStatus = boss->GetStatus()->As<BossStatus>();
+
+	// プレイヤーがいるか、もしくはプレイヤーのステータスがあるか
+	if (player == nullptr || player->GetStatus() == nullptr) { return; }
+	// プレイヤーが無敵フラグを持っているか
+	PlayerStatus* status = player->GetStatus()->As<PlayerStatus>();
+	if (status && status->IsInvincible()) { return; }
+
+	if (boss->GetStatus()) {
+		float motion = bossStatus->GetSkillMotionValues("LaserStrong");
 		int damage = Calculate(bossStatus, motion);
 		player->GetStatus()->Damage(damage); // ダメージを与える
 		UpdateTakeHitSound(); // 攻撃が当たったSEを流す

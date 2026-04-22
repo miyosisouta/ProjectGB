@@ -63,11 +63,23 @@ struct SkillSlot
     bool  IsReadyFrame()        const { return coolDown_.IsReadyFrame(); }
 };
 
+struct ActorInitParam
+{
+    Vector3 pos_ = Vector3::Zero; //!< 座標
+    Quaternion rot_ = Quaternion::Identity; //!< 回転
+    Vector3 scal_ = Vector3::Zero; //!< 大きさ
+    Vector3 collisionHeightUpValue_ = Vector3::Zero; //!< コリジョンの高さを上げる量
+    float collisionRadius_ = 0.0f;  //!< コリジョンの半径
+    float collisionHeight_ = 0.0f;  //!< コリジョンの高さ
+    float charaConRadius_ = 0.0f;  //!< キャラコンの半径
+    float charaConHeight_ = 0.0f;  //!< キャラコンの高さ
+};
 
 /** 実体あるもののステータス */
 class ActorStatus
 {
 protected:
+    ActorInitParam initParam_;               //!< 座標などの初期パラメータ
     int   hp_                       = 0;     //!< 現在 HP
     int   maxHp_                    = 0;     //!< 最大 HP
     int   attack_                   = 0;     //!< 攻撃力
@@ -86,6 +98,7 @@ public:
 
 
 public:
+    ActorInitParam GetInitParam()       const { return initParam_; }
     int   GetHP()                       const { return hp_; }
     int   GetMaxHP()                    const { return maxHp_; }
     int   GetAttack()                   const { return attack_; }
@@ -402,6 +415,14 @@ public:
 
         // パラメータを設定
         {
+            initParam_.pos_ = param->position;
+            initParam_.rot_ = param->rotation;
+            initParam_.scal_ = param->scale;
+            initParam_.collisionHeightUpValue_ = param->collisionPosUp;
+            initParam_.collisionRadius_ = param->collisionSizeRadius;
+            initParam_.collisionHeight_ = param->collisionSizeHeight;
+            initParam_.charaConRadius_ = param->charaConSizeRadius;
+            initParam_.charaConHeight_ = param->charaConSizeHeight;
             hp_ = param->hp;
             maxHp_ = param->hp;
             attack_ = param->attack;
@@ -621,6 +642,14 @@ public:
         const auto* param = ParameterManager::Get().GetCharacterStatus(characterKey);
         if (param)
         {
+            initParam_.pos_ = param->position;
+            initParam_.rot_ = param->rotation;
+            initParam_.scal_ = param->scale;
+            initParam_.collisionHeightUpValue_ = param->collisionPosUp;
+            initParam_.collisionRadius_ = param->collisionSizeRadius;
+            initParam_.collisionHeight_ = param->collisionSizeHeight;
+            initParam_.charaConRadius_ = param->charaConSizeRadius;
+            initParam_.charaConHeight_ = param->charaConSizeHeight;
             hp_                       = param->hp;
             maxHp_                    = param->hp;
             attack_                   = param->attack;

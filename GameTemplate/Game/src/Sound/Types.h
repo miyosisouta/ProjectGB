@@ -23,11 +23,13 @@ enum enSoundKind
 	enSoundKind_Player_TakeHit,					//!< 攻撃をあてられた
 
 	/* ゴリラ */
-	enSoundKind_Gorilla_Run,							//!< 走る
-	enSoundKind_Gorilla_NormalAttack,					//!< 通常攻撃
-	enSoundKind_Gorilla_HitStamp,						//!< ヒットスタンプ
-	enSoundKind_Gorilla_Spin,							//!< 回転攻撃
-	enSoundKind_Gorilla_SlowAttack,						//!< 岩を投げる攻撃
+	enSoundKind_Boss_Run,							//!< 走る
+	enSoundKind_Boss_NormalAttack,					//!< 通常攻撃
+	enSoundKind_Boss_HitStamp,						//!< ヒットスタンプ
+	enSoundKind_Boss_Spin,							//!< 回転攻撃
+	enSoundKind_Boss_ThrowAttack,					//!< 岩を投げる攻撃
+	enSoundKind_Boss_Thunder_Weak,					//!< レーザーを打つ弱い攻撃
+	enSoundKind_Boss_Thunder_Strong,				//!< レーザーを打つ強い攻撃
 	enSoundKind_Gorilla_SingleImpact,					//!< ボス登場シーンで使うドンの音
 	enSoundKind_Gorilla_DoubleImpact,					//!< ボス登場シーンで使うドドンの音
 	enSoundKind_Max = enSoundKind_Gorilla_DoubleImpact, //!< SEの最大数
@@ -77,13 +79,15 @@ static SoundInformation soundInformation[enSoundKind_SE_Max] =
 	SoundInformation("Assets/Audio/SE/Player/TakeHit.wav"),						// 攻撃をあてられた
 
 	/** ボス */
-	SoundInformation("Assets/Audio/SE/Gorilla/Footsteps.wav"),		// 走る
-	SoundInformation("Assets/Audio/SE/Gorilla/NormalAttack.wav"),	// 通常攻撃
-	SoundInformation("Assets/Audio/SE/Gorilla/FallAttack.wav"),		// ヒットスタンプ
-	SoundInformation("Assets/Audio/SE/Gorilla/SpinAttack.wav"),		// 回転攻撃
-	SoundInformation("Assets/Audio/SE/Gorilla/SlowAttack.wav"),		// 岩投げる
-	SoundInformation("Assets/Audio/SE/Gorilla/uiTextImpactSingle.wav"),		// 登場シーンで使用するドンの音
-	SoundInformation("Assets/Audio/SE/Gorilla/uiTextImpactDouble.wav"),		// 登場シーンで使用するドドンの音
+	SoundInformation("Assets/Audio/SE/Enemy/Common/Footsteps.wav"),			// 走る
+	SoundInformation("Assets/Audio/SE/Enemy/Common/NormalAttack.wav"),		// 通常攻撃
+	SoundInformation("Assets/Audio/SE/Enemy/Common/FallAttack.wav"),		// ヒットスタンプ
+	SoundInformation("Assets/Audio/SE/Enemy/Common/SpinAttack.wav"),		// 回転攻撃
+	SoundInformation("Assets/Audio/SE/Enemy/Common/SlowAttack.wav"),		// 岩投げる
+	SoundInformation("Assets/Audio/SE/Enemy/Common/Thunder_Weak.wav"),		// 弱い雷
+	SoundInformation("Assets/Audio/SE/Enemy/Common/Thunder_Strong.wav"),	// 強い雷
+	SoundInformation("Assets/Audio/SE/Enemy/Gorilla/uiTextImpactSingle.wav"),		// 登場シーンで使用するドンの音
+	SoundInformation("Assets/Audio/SE/Enemy/Gorilla/uiTextImpactDouble.wav"),		// 登場シーンで使用するドドンの音
 
 	/** UI */
 	SoundInformation("Assets/Audio/SE/Menu/Decide.wav"),

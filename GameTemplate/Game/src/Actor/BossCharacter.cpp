@@ -4,13 +4,7 @@
 #include "BossState.h"
 #include "src/Actor/ActorStatus.h"
 
-namespace 
-{
-	static Vector3 BOSS_INIT_POS = Vector3(-300.0f, 0.0f, 0.0f);
-	static Vector3 BOSS_SCALE = Vector3(2.5f, 2.5f, 2.5f);
-	static Vector3 BOSS_COLLISION_POS = Vector3(0.0f, 120.0f, 0.0f);
-	constexpr float COLLISION_SIZE = 110.0f;
-}
+
 
 /** ===================================================== */
 /** アニメーション関連 */
@@ -51,7 +45,8 @@ void BossCharacter::SetupTranslate()
 	AddState(BossStateID::Attack, new BossAttackState(this));
 	AddState(BossStateID::Jump, new HitStampState(this));
 	AddState(BossStateID::Spin, new SpinState(this));
-	AddState(BossStateID::Clicked, new ThrowRockState(this));
+	AddState(BossStateID::Clicked_Gollira, new ThrowRockState(this));
+	AddState(BossStateID::Clicked_Turtle, new LaserState(this));
 	AddState(BossStateID::Death, new BossDeathState(this));
 }
 
@@ -95,6 +90,7 @@ bool BossCharacter::Start()
 {
 	// ステータスの初期化
 	status_->As<BossStatus>()->Init(param_.characterKey_);
+	auto initParam = status_->As<BossStatus>()->GetInitParam();
 
 	// セットアップ
 	{
@@ -111,11 +107,11 @@ bool BossCharacter::Start()
 	);
 
 	// TODO : プレイヤーとの距離を話すため
-	transform_.localPosition = Vector3(BOSS_INIT_POS);
-
-	// モデルの設定
-	transform_.localScale = Vector3(BOSS_SCALE);
+	transform_.localPosition = initParam.pos_;
+	transform_.localRotation = initParam.rot_;
+	transform_.localScale = initParam.scal_;
 	transform_.UpdateTransform();
+
 	modelRender_.SetPosition(transform_.position);
 	modelRender_.SetRotation(transform_.rotation);
 	modelRender_.SetScale(transform_.scale);
@@ -125,17 +121,15 @@ bool BossCharacter::Start()
 
 	// キャラコン
 	{
-		charaCon_.Init(COLLISION_SIZE, COLLISION_SIZE, transform_.position);
+		charaCon_.Init(initParam.charaConRadius_, initParam.charaConHeight_, transform_.position);
 	}
 
 	// コリジョン作成
 	{
 		damageBody_ = std::make_unique<GhostBody>();
-		damageBody_->CreateSphere(this, CharacterID::BossID(), COLLISION_SIZE, ghost::CollisionAttribute::BossDef, ghost::CollisionAttributeMask::Boss);
+		damageBody_->CreateCapsule(this, CharacterID::BossID(), initParam.collisionRadius_,initParam.collisionHeight_, ghost::CollisionAttribute::BossDef, ghost::CollisionAttributeMask::Boss);
 		damageBody_->SetPosition(transform_.position);
 	}
-
-
 	return true;
 }
 
@@ -189,9 +183,9 @@ void BossCharacter::Update()
 	
 	// ゴーストコリジョン更新
 	{
-		Vector3 collisionPos = transform_.position + Vector3(BOSS_COLLISION_POS);
+		Vector3 collisionHeightUp = status_->As<BossStatus>()->GetInitParam().collisionHeightUpValue_;
+		Vector3 collisionPos = transform_.position + collisionHeightUp;
 		damageBody_->SetPosition(collisionPos);
-
 	}
 	// 更新
 	{

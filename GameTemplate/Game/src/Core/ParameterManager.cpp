@@ -8,6 +8,44 @@
 #include "ParameterManager.h"
 
 
+/*==================================*/
+/* パース関連						*/
+/*==================================*/
+
+Vector3 ParseVector3(const nlohmann::json& arr)
+{
+	if (!arr.is_array() || arr.size() < 3) {
+		return Vector3::Zero;
+	}
+	return Vector3(
+		arr[0].get<float>(),
+		arr[1].get<float>(),
+		arr[2].get<float>()
+	);
+}
+
+
+Vector4 ParseVector4(const nlohmann::json& arr)
+{
+	return Vector4(
+		arr[0].get<float>(),
+		arr[1].get<float>(),
+		arr[2].get<float>(),
+		arr[3].get<float>()
+	);
+}
+
+
+Quaternion ParseRotation(const nlohmann::json& arr)
+{
+	Vector4 vec4 = ParseVector4(arr);
+	return Quaternion(vec4.x,vec4.y,vec4.z,vec4.w);
+}
+
+
+/*====================================*/
+/* パラメータマネージャー */
+/*====================================*/
 ParameterManager* ParameterManager::instance_ = nullptr; //初期化
 
 
@@ -47,16 +85,29 @@ void ParameterManager::LoadCharacterStatusData(const char* path)
 			p.key = j.value("key", "");
 
 			// ステータス
+			p.position							= ParseVector3(j["position"]);
+			p.rotation							= ParseRotation(j["rotation"]);
+			p.scale								= ParseVector3(j["scale"]);
+			p.collisionPosUp					= ParseVector3(j["collisionPosUp"]);
+			p.collisionSizeRadius				= j.value("collisionSizeRadius",		0.0f);
+			p.collisionSizeHeight				= j.value("collisionSizeHeight",		0.0f);
+			p.charaConSizeRadius				= j.value("charaConSizeRadius",			0.0f);
+			p.charaConSizeHeight				= j.value("charaConSizeHeight",			0.0f);
 			p.hp								= j.value("hp",							0);
 			p.attack							= j.value("attack",						0);
 			p.criticalRate						= j.value("criticalRate",				0);
 			p.criticalDamageMultiplier			= j.value("criticalDamageMultiplier",	0.0f);
-			p.stamina.maxStamina				= j.value("stamina",					0.0f);
-			p.stamina.drainPerSec				= j.value("drainPerSec",				0.0f);
-			p.stamina.recoverPerSec				= j.value("recoverPerSec",				0.0f);
-			p.stamina.exhaustedRecoverPerSec	= j.value("exhaustedRecoverPerSec",		0.0f);
-			p.stamina.exhaustedThreshold		= j.value("exhaustedThreshold",			0.0f);
-			p.stamina.exhaustedSpeedRate		= j.value("exhaustedSpeedRate",			0.0f);
+			const nlohmann::json staminaJson =
+				(j.contains("stamina") && j["stamina"].is_object())
+				? j["stamina"]
+				: nlohmann::json::object();
+
+			p.stamina.maxStamina				= staminaJson.value("maxStamina", j.value("stamina", 0.0f));
+			p.stamina.drainPerSec				= staminaJson.value("drainPerSec", j.value("drainPerSec", 0.0f));
+			p.stamina.recoverPerSec				= staminaJson.value("recoverPerSec", j.value("recoverPerSec", 0.0f));
+			p.stamina.exhaustedRecoverPerSec	= staminaJson.value("exhaustedRecoverPerSec", j.value("exhaustedRecoverPerSec", 0.0f));
+			p.stamina.exhaustedThreshold		= staminaJson.value("exhaustedThreshold", j.value("exhaustedThreshold", 0.0f));
+			p.stamina.exhaustedSpeedRate		= staminaJson.value("exhaustedSpeedRate", j.value("exhaustedSpeedRate", 0.0f));
 			p.moveSpeedBase						= j.value("walkSpeedBase",				0.0f);
 			p.runSpeedBase						= j.value("runSpeedBase",				0.0f);
 		}
