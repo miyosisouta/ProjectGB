@@ -57,6 +57,7 @@ namespace
 BattleManager* BattleManager::myInstance_ = nullptr; //初期化
 
 
+
 BattleManager::BattleManager()
 {
 	// プレイヤー
