@@ -5,14 +5,15 @@
 
 void GameTimer::Init()
 {
-    limitTime_ = 0.0f;                             // 制限時間を保存
+    limitTime_ = 0.0f;                             // 制限時間を初期化
     elapsedTime_ = 0.0f;                           // 経過時間をリセット
     isRunning_ = true;                             // 時間が進むように設定
 }
 
 void GameTimer::Update()
 {
-    if (!isRunning_ || isPaused_) { return; }
+    if (!isRunning_ || isPaused_) { return; } // ポーズ画面が開いているもしくは走ってほしくないときは処理を返す 
+    if (hasWarned_) { isWarningFrame_ = false; } // 1フレームだけtrue,それ以外false
 
     // 時間を増やす
     elapsedTime_ += g_gameTime->GetFrameDeltaTime();

@@ -50,7 +50,7 @@ namespace
 
 	/* ゲームタイマー */
 	constexpr float GAME_TIMER_LIMIT = 300.0f; // 制限時間の設定
-	constexpr float GAME_TIMER_WARING = 240.0f; // 警告時間の設定
+	constexpr float GAME_TIMER_WARNING = 240.0f; // 警告時間の設定
 }
 
 
@@ -154,7 +154,7 @@ BattleManager::BattleManager()
 		// ゲームタイマーを起動
 		gameTimer_.Init();
 		gameTimer_.SetLimitTime(GAME_TIMER_LIMIT);
-		gameTimer_.SetWarningTime(GAME_TIMER_WARING);
+		gameTimer_.SetWarningTime(GAME_TIMER_WARNING);
 
 		// ミッションを作成
 		MissionManager::CreateInstance();

@@ -48,9 +48,9 @@ public:
     float GetElapsedTime()    const { return elapsedTime_; }
     /** 残り時間 */
     float GetRemainTime()     const { return limitTime_ - elapsedTime_; }
-    /** 残り時間 : 分 */
-    int GetRemainSeconds()  const { return (int)GetRemainTime() % TIMER_MINUTE_PER_SECOND; }
     /** 残り時間 : 秒 */
+    int GetRemainSeconds()  const { return (int)GetRemainTime() % TIMER_MINUTE_PER_SECOND; }
+    /** 残り時間 : 分 */
     int GetRemainMinutes()  const { return (int)GetRemainTime() / TIMER_MINUTE_PER_SECOND; }
     /** 残り時間の割合 */
     float GetRate()           const { return GetRemainTime() / limitTime_; }
