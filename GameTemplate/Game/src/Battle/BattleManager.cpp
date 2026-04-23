@@ -36,21 +36,21 @@
 namespace
 {
 	// TODO: あとでパラメータを外部から読み込むようにする
-	// カメラ近平面
-	constexpr float CAMERA_NEAR = 1.0f;
-	// カメラ遠平面
-	constexpr float CAMERA_FAR = 50000.0f;
-	// カメラの画角
-	constexpr float CAMERA_FOVY = 60.0f;
-	// カメラの高さ
-	constexpr float CAMERA_HEIGHT = 200.0f;
-	// カメラとプレイヤーの距離
-	constexpr float CAMERA_DISTANCE = 600.0f;
-	// カメラ回転速度
-	constexpr float CAMERA_ROT_SPEED = 0.05f;
+	
+	/* カメラ */
+	constexpr float CAMERA_NEAR = 1.0f; 		// 近平面
+	constexpr float CAMERA_FAR = 50000.0f;		// 遠平面
+	constexpr float CAMERA_FOVY = 60.0f;		// 画角
+	constexpr float CAMERA_HEIGHT = 200.0f;		// 高さ
+	constexpr float CAMERA_DISTANCE = 600.0f;	// プレイヤーとの距離
+	constexpr float CAMERA_ROT_SPEED = 0.05f;	// 回転速度
 
-	// スカイキューブ
-	constexpr float SKYCUBE_SCALE = 400.0f;
+	/* スカイキューブ */ 
+	constexpr float SKYCUBE_SCALE = 400.0f; // スカイキューブの大きさ
+
+	/* ゲームタイマー */
+	constexpr float GAME_TIMER_LIMIT = 300.0f; // 制限時間の設定
+	constexpr float GAME_TIMER_WARING = 240.0f; // 警告時間の設定
 }
 
 
@@ -153,6 +153,8 @@ BattleManager::BattleManager()
 
 		// ゲームタイマーを起動
 		gameTimer_.Init();
+		gameTimer_.SetLimitTime(GAME_TIMER_LIMIT);
+		gameTimer_.SetWarningTime(GAME_TIMER_WARING);
 
 		// ミッションを作成
 		MissionManager::CreateInstance();

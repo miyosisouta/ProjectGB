@@ -1,17 +1,13 @@
 #include "stdafx.h"
 #include "GameTimer.h"
 
-namespace
-{
-    constexpr float WARNING_TIME = 60.0f; // 警告時間（残り60秒で警告）
-}
 
-void GameTimer::Init(float limitTime)
+
+void GameTimer::Init()
 {
-    limitTime_ = limitTime;                        // 制限時間を保存
+    limitTime_ = 0.0f;                             // 制限時間を保存
     elapsedTime_ = 0.0f;                           // 経過時間をリセット
-    remainWarningTime_ = limitTime - WARNING_TIME; // 警告開始時間（540秒経過で警告）
-    isRunning_ = true;
+    isRunning_ = true;                             // 時間が進むように設定
 }
 
 void GameTimer::Update()
@@ -21,8 +17,11 @@ void GameTimer::Update()
     // 時間を増やす
     elapsedTime_ += g_gameTime->GetFrameDeltaTime();
 
-    // 警告判定（経過時間が警告時間を超えたら）
-    if (!isWarning_ && elapsedTime_ >= remainWarningTime_) { isWarning_ = true; }
+    // 警告判定：未発火かつ警告時間を超えたフレームだけtrue
+    if (!hasWarned_ && elapsedTime_ >= remainWarningTime_) {
+        isWarningFrame_ = true;
+        hasWarned_ = true; // 以降は発火しない
+    }
 
     // タイムアップ判定
     if (elapsedTime_ >= limitTime_) {
@@ -39,6 +38,7 @@ void GameTimer::Reset()
     remainWarningTime_ = 0.0f;
     isRunning_ = false;
     isTimeUp_ = false;
-    isWarning_ = false;
+    isWarningFrame_ = false;
+    hasWarned_ = false;
     isPaused_ = false;
 }
