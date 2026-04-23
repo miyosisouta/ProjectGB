@@ -14,7 +14,8 @@
 class Mission
 {
 public:
-	Mission(std::wstring name,
+	Mission(MissionID id,
+        std::wstring name,
 		std::unique_ptr<MissionConditionBase> condition);
 
 public:
@@ -26,6 +27,8 @@ public:
 
 
 public:
+    /** ミッションのIDを取得 */
+    MissionID GetID() const { return id_; }
     /** ミッションの現在の状態を取得する */
     MissionState GetState()const { return state_; }
 
@@ -69,6 +72,7 @@ private:
     void ClearFrameFlags();
 
 private:
+    MissionID id_ = MissionID::enNone; //!< ミッションのID
     std::wstring name_; //!< ミッション名
     std::unique_ptr<MissionConditionBase> condition_; //!< 達成条件
     MissionState state_ = MissionState::enActive; //!< ミッションの現在の状態

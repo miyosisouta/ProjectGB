@@ -118,6 +118,66 @@ private:
 
 
 /*=============================================*/
+/* 通常攻撃の使用回数の条件 */
+/*=============================================*/
+
+class ConditionUseNormalAttackCount : public MissionConditionBase {
+public:
+    /* targetType = enNone なら全通常攻撃対象 */
+    ConditionUseNormalAttackCount(int requiredCount,
+        NormalAttackType targetType = NormalAttackType::enNone);
+
+    /* イベント */
+    void  OnEvent(const MissionEventData& ev) override;
+    /* クリアしたか */
+    inline bool  IsCleared()const override { return isCleared_; }
+    /* 進捗を取得 */
+    inline float GetProgress()const override {
+        if (required_ == 0) return 0.0f;
+        return min(1.0f, (float)count_ / (float)required_);
+    }
+    /* 現在の値を取得 */
+    inline uint8_t GetCurrentCount()const override { return count_; }
+    /* クリアに必要な値を取得 */
+    inline uint8_t GetRequiredCount()const override { return required_; }
+
+private:
+    uint8_t required_ = 0; //!< クリアの値
+    NormalAttackType targetType_ = NormalAttackType::enNone; //!< 条件のタイプ
+    uint8_t count_ = 0; //!< 現在の値
+    bool isCleared_ = false; //!< クリアしたか
+};
+
+
+
+/*=============================================*/
+/* 残りHP割合以上でボスを倒す条件 */
+/*=============================================*/
+
+class ConditionClearWithHpRate : public MissionConditionBase {
+public:
+    /* minHpRate : クリアに必要な最低HP割合(0.0〜1.0) */
+    explicit ConditionClearWithHpRate(float minHpRate);
+
+    /* イベント */
+    void  OnEvent(const MissionEventData& ev) override;
+    /* クリアしたか */
+    inline bool  IsCleared()const override { return isCleared_; }
+    /* 失敗したか */
+    inline bool  IsFailed()const override { return isFailed_; }
+    /* 進捗を取得(クリア前は現在HPレートをそのまま返す) */
+    inline float GetProgress()const override { return isCleared_ ? 1.0f : currentHpRate_; }
+
+private:
+    float minHpRate_ = 0.0f;     //!< クリアに必要な最低HP割合
+    float currentHpRate_ = 1.0f; //!< 現在のHP割合(毎フレーム更新)
+    bool  isCleared_ = false;    //!< クリアしたか
+    bool  isFailed_ = false;     //!< 失敗したか
+};
+
+
+
+/*=============================================*/
 /* 時間内撃破 */
 /*=============================================*/
 class ConditionKillUnderTime : public MissionConditionBase {

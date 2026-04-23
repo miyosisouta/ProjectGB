@@ -1,8 +1,8 @@
 ﻿#include "stdafx.h"
 #include "Mission.h"
 
-Mission::Mission(std::wstring name, std::unique_ptr<MissionConditionBase> condition)
-	:name_(name), condition_(std::move(condition))
+Mission::Mission(MissionID id,std::wstring name, std::unique_ptr<MissionConditionBase> condition)
+	:id_(id),name_(name), condition_(std::move(condition))
 {
 }
 

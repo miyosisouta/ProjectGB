@@ -11,8 +11,10 @@
 #include "src/Camera/CameraController.h"
 #include "src/Camera/CameraSteering.h"
 #include "src/Util/GameTimer.h"
+#include "src/Actor/Player.h"
+#include "src/Actor/ActorStatus.h"
 
-class Player;
+
 class PlayerController;
 class BossSpawner;
 class StageManagerObject;
@@ -75,7 +77,12 @@ public:
 
     /* ゲームタイマーを取得 */
     GameTimer* GetGameTimer() { return &gameTimer_; }
-
+    /* プレイヤーの情報を取得 */
+    float GetPlayerHPRate() {
+        auto* status = player_->GetStatus()->As<ActorStatus>();
+        float value = static_cast<float>(status->GetHP() / static_cast<float>(status->GetMaxHP()));
+        return value;
+    }
 
 private:
     BattleManager();

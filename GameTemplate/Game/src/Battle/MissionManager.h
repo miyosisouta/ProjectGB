@@ -49,16 +49,35 @@ private:
     void SetupTurtle();
 
 
+private:
+    /** インデックスでミッションを取得する */
+    const Mission* GetMissionAt(MissionID id) const
+    {
+        for (const auto& mission : missions_) {
+            if (mission.get()->GetID() == id) {
+                return mission.get();
+            }
+        }
+    }
+
+
+
     /*========================================================*/
     /* ゲッター・セッター */
     /*========================================================*/
 
-    /** 指定のミッションのインデックスを取得 */
-    const Mission* GetMission(int index) const 
-    {
-        if (index < 0 || index >= static_cast<int>(missions_.size())) return nullptr;
-        return missions_[index].get();
-    }
+public:
+    /** 指定IDのミッションを取得 */
+    /* --- ゴリラ --- */
+    const Mission* GetGorillaTimeMission()        const { return GetMissionAt(MissionID::enGorillaTime); }
+    const Mission* GetGorillaAbilityMission()     const { return GetMissionAt(MissionID::enGorillaAbility); }
+    const Mission* GetGorillaUtilityMission()     const { return GetMissionAt(MissionID::enGorillaUtility); }
+
+    /* --- カメ --- */
+    const Mission* GetTurtleTimeMission()         const { return GetMissionAt(MissionID::enTurtleTime); }
+    const Mission* GetTurtleNormalAttackMission() const { return GetMissionAt(MissionID::enTurtleNormalAttack); }
+    const Mission* GetTurtleHpRateMission()       const { return GetMissionAt(MissionID::enTurtleHpRate); }
+
     /** ミッションの数を取得 */
     int GetMissionCount() const 
     { 
