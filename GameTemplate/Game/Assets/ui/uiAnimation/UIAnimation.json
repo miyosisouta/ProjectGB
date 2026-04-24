@@ -1,7 +1,7 @@
 {
     "animations": [
         {
-            "comment": "サウンドオプション背景の肉球",
+            "comment": "サウンドオプション：背景の肉球",
             "key": "nikukyuu_fadein",
             "valueType": "Vector4",
             "startValue": { "x": 1.0, "y": 1.0, "z": 1.0, "w": 0.0 },
@@ -11,7 +11,7 @@
             "loop": "PingPong"
         },
         {
-            "comment": "サウンドオプション背景の肉球",
+            "comment": "サウンドオプション：背景の肉球",
             "key": "nikukyuu_fadeout",
             "valueType": "Vector4",
             "startValue": { "x": 1.0, "y": 1.0, "z": 1.0, "w": 1.0 },
@@ -21,7 +21,7 @@
             "loop": "Once"
         },
         {
-            "comment": "Aボタン押してね",
+            "comment": "タイトル画面：Aボタン押してね",
             "key": "pushAbutton_fadeout",
             "valueType": "Vector4",
             "startValue": { "x": 1.0, "y": 1.0, "z": 1.0, "w": 0.3 },
@@ -31,7 +31,7 @@
             "loop": "PingPong"
         },
         {
-            "comment": "タイトル画のがぶっと",
+            "comment": "タイトル画面：がぶっと",
             "key": "gabu_fadeout",
             "valueType": "Vector4",
             "startValue": { "x": 1.0, "y": 1.0, "z": 1.0, "w": 0.0 },
@@ -41,7 +41,7 @@
             "loop": "Once"
         },
         {
-            "comment": "タイトル画のがぶっと",
+            "comment": "タイトル画面：がぶっと",
             "key": "gabu_scaleUp",
             "valueType": "Vector3",
             "startValue": { "x": 0.0, "y": 0.0, "z": 0.0 },
@@ -51,7 +51,7 @@
             "loop": "Once"
         },
         {
-            "comment": "タイトル画のがぶっと",
+            "comment": "タイトル画面：がぶっと",
             "key": "gabu_scaleDown",
             "valueType": "Vector3",
             "startValue": { "x": 2.0, "y": 2.0, "z": 2.0 },
@@ -61,7 +61,7 @@
             "loop": "Once"
         },
         {
-            "comment": "タイトル画のバスター",
+            "comment": "タイトル画面：バスター",
             "key": "bustar_fadeout",
             "valueType": "Vector4",
             "startValue": { "x": 1.0, "y": 1.0, "z": 1.0, "w": 0.0 },
@@ -71,7 +71,7 @@
             "loop": "Once"
         },
         {
-            "comment": "タイトル画のきらきら(左上大)",
+            "comment": "タイトル画面：きらきら(左上大)",
             "key": "kira_left_scaleUp",
             "valueType": "Vector3",
             "startValue": { "x": 1.0, "y": 1.0, "z": 1.0 },
@@ -80,6 +80,9 @@
             "easing": "EaseOut",
             "loop": "PingPong"
         },
+
+
+
         {
             "comment": "ブートシーン:フェードイン",
             "key": "boot_Fadein",
@@ -100,6 +103,10 @@
             "easing": "EaseIn",
             "loop": "Once"
         },
+
+
+
+
         {
             "comment": "ゲームスタート(ゲーム)：右から左より",
             "key": "gamePosA",
@@ -182,6 +189,7 @@
         },
 
 
+
         {
             "comment": "ミッション(未クリア)：右から出てくる",
             "key": "missionEventStart",
@@ -232,6 +240,35 @@
             "easing": "EaseIn",
             "loop": "Once"
         },
+
+
+
+
+        {
+            "comment": "時間:制限時間が近づくと赤色にする",
+            "key": "timer_color",
+            "valueType": "Vector4",
+            "startValue": { "x": 0.45, "y": 0.45, "z": 0.45, "w": 1.0 },
+            "endValue":   { "x": 1, "y": 0.49, "z": 0.49, "w": 1.0 },
+            "duration": 1.3,
+            "easing": "EaseOut",
+            "loop": "PingPong"
+        },
+        {
+            "comment": "針のエフェクト:制限時間が近づくと赤色にする",
+            "key": "effect_color",
+            "valueType": "Vector4",
+            "startValue": { "x": 1, "y": 1, "z": 1, "w": 0 },
+            "endValue":   { "x": 1, "y": 1, "z": 1, "w": 1 },
+            "duration": 1.3,
+            "easing": "EaseOut",
+            "loop": "PingPong"
+        },
+        
+
+
+
+
         {
             "comment": "ボスが被ダメしたらHPバーが動く",
             "key": "missionPos",

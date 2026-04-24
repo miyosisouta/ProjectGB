@@ -90,6 +90,7 @@
     <ClCompile Include="src\Battle\MissionEvent.cpp" />
     <ClCompile Include="src\Battle\Mission.cpp" />
     <ClCompile Include="src\Battle\MissionCondition.cpp" />
+    <ClCompile Include="src\UI\TimerMenu.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Game.h" />
@@ -189,5 +190,6 @@
     <ClInclude Include="src\Battle\MissionEvent.h" />
     <ClInclude Include="src\Battle\Mission.h" />
     <ClInclude Include="src\Battle\MissionCondition.h" />
+    <ClInclude Include="src\UI\TimerMenu.h" />
   </ItemGroup>
 </Project>

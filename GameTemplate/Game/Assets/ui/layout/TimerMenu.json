@@ -1,0 +1,170 @@
+{
+  "canvas": {
+    "elements": [
+      {
+        "coment": "時計：背景",
+        "type": "UIIcon",
+        "name": "clock_back",
+        "asset": "Assets/ui/inGameUI/clock/maru.DDS",
+        "width": 150,
+        "height": 150,
+        "position": [ -820, 380, 0],
+        "scale": [1, 1, 1],
+        "rotation": 0,
+        "color": [1, 1, 1, 1]
+      },
+      {
+        "coment": "時計：点の指標",
+        "type": "UIIcon",
+        "name": "clock_ten",
+        "asset": "Assets/ui/inGameUI/clock/ten.DDS",
+        "width": 130,
+        "height": 130,
+        "position": [ -820, 380, 0],
+        "scale": [1, 1, 1],
+        "rotation": 0,
+        "color": [1, 1, 1, 1]
+      },
+      {
+        "coment": "時計：枠",
+        "type": "UIIcon",
+        "name": "clock_waku",
+        "asset": "Assets/ui/inGameUI/clock/waku.DDS",
+        "width": 150,
+        "height": 150,
+        "position": [ -820, 380, 0],
+        "scale": [1, 1, 1],
+        "rotation": 0,
+        "color": [1, 1, 1, 1]
+      },
+      {
+        "coment": "時計：針",
+        "type": "UIIcon",
+        "name": "clock_hari",
+        "asset": "Assets/ui/inGameUI/clock/bou.DDS",
+        "width": 130,
+        "height": 130,
+        "position": [ -820, 380, 0],
+        "scale": [1, 1, 1],
+        "rotation": 0,
+        "color": [1, 1, 1, 1]
+      },
+      {
+        "coment": "時計：針のエフェクト",
+        "type": "UIIcon",
+        "name": "clock_effect",
+        "asset": "Assets/ui/inGameUI/clock/effect.DDS",
+        "width": 130,
+        "height": 130,
+        "position": [ -820, 380, 0],
+        "scale": [1, 1, 1],
+        "rotation": 0,
+        "color": [1, 1, 1, 1],
+        "isDraw": false
+      },
+      {
+        "coment": "時計：骨",
+        "type": "UIIcon",
+        "name": "Title_start",
+        "asset": "Assets/ui/inGameUI/clock/hone.DDS",
+        "width": 210,
+        "height": 80,
+        "position": [-820, 270, 0],
+        "scale": [1, 1, 1],
+        "rotation": 0,
+        "color": [1, 1, 1, 1]
+      },
+
+
+
+
+
+      {
+        "coment": "数字：セミコロン",
+        "type": "UIIcon",
+        "name": "clock_colon",
+        "asset": "Assets/ui/suuji/colon.DDS",
+        "width": 10,
+        "height": 30,
+        "position": [-820, 270, 0],
+        "scale": [1, 1, 1],
+        "rotation": 0,
+        "color": [0.45, 0.45, 0.45, 1]
+      },
+      {
+        "coment": "数字：分単位の2桁目",
+        "type": "UIDigit",
+        "name": "clockMin2",
+        "asset": "Assets/ui/suuji",
+        "width": 45,
+        "height": 45,
+        "digit": 1,
+        "position": [-875, 270, 0],
+        "scale": [1, 1, 1],
+        "rotation": 0,
+        "color": [0.45, 0.45, 0.45, 1]
+      },
+      {
+        "coment": "数字：分単位の1桁目",
+        "type": "UIDigit",
+        "name": "clockMin1",
+        "asset": "Assets/ui/suuji",
+        "width": 45,
+        "height": 45,
+        "digit": 1,
+        "position": [-843, 270, 0],
+        "scale": [1, 1, 1],
+        "rotation": 0,
+        "color": [0.45, 0.45, 0.45, 1]
+      },
+      {
+        "coment": "数字：秒単位の2桁目",
+        "type": "UIDigit",
+        "name": "clockSec2",
+        "asset": "Assets/ui/suuji",
+        "width": 45,
+        "height": 45,
+        "digit": 1,
+        "position": [-797, 270, 0],
+        "scale": [1, 1, 1],
+        "rotation": 0,
+        "color": [0.45, 0.45, 0.45, 1]
+      },
+      {
+        "coment": "数字：秒単位の1桁目",
+        "type": "UIDigit",
+        "name": "clockSec1",
+        "asset": "Assets/ui/suuji",
+        "width": 45,
+        "height": 45,
+        "digit": 1,
+        "position": [-765, 270, 0],
+        "scale": [1, 1, 1],
+        "rotation": 0,
+        "color": [0.45, 0.45, 0.45, 1]
+      },
+
+
+
+
+      {
+        "comment": "ダミー(はじめる座標取得用)",
+        "type": "UIDummy",
+        "name": "StartPositionDummy",
+        "position": [-210, -180, 0]
+      },
+      {
+        "comment": "ダミー(サウンド座標取得用)",
+        "type": "UIDummy",
+        "name": "SoundPositionDummy",
+        "position": [-210, -300, 0]
+      },
+      {
+        "comment": "ダミー(おわる座標取得用)",
+        "type": "UIDummy",
+        "name": "ExitPositionDummy",
+        "position": [-170, -420, 0]
+      }
+    ]
+}
+}
