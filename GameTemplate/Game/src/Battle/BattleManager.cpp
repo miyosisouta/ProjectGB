@@ -31,6 +31,7 @@
 #include "src/UI/GameOverMenu.h"
 #include "src/UI/GameStartMenu.h"
 #include "src/UI/MissionMenu.h"
+#include "src/UI/TimerMenu.h"
 
 
 namespace
@@ -165,7 +166,23 @@ BattleManager::BattleManager()
 
 BattleManager::~BattleManager()
 {
-	ReleaseCutSceneLayout();
+	// レイアウトの削除
+	{
+		ReleaseCutSceneLayout();
+		if (startLayout_) {
+			delete startLayout_;
+			startLayout_ = nullptr;
+		}
+		if (missionLayout_) {
+			delete missionLayout_;
+			missionLayout_ = nullptr;
+		}
+		if (timerLayout_) {
+			delete timerLayout_;
+			timerLayout_ = nullptr;
+		}
+	}
+	
 
 	DeleteGO(player_);
 	DeleteGO(playerController_);
@@ -203,6 +220,11 @@ void BattleManager::Update()
 					delete startLayout_;
 					startLayout_ = nullptr;
 				}
+
+				// ゲームタイマーのUIを作る
+				timerLayout_ = new Layout;
+				timerLayout_->Initialize<TimerMenu>("Assets/ui/layout/TimerMenu.json");
+
 				gameState_ = GameState::Playing;
 			}
 			break;
@@ -222,6 +244,17 @@ void BattleManager::Update()
 			// スカイキューブをプレイヤーに追従させる
 			skyCube_->SetPosition(player_->GetTransformPosition());
 
+			// 時間をUIに渡す
+			{
+				TimerMenu* menu = static_cast<TimerMenu*>(timerLayout_->GetMenu());
+				menu->SetRate(gameTimer_.GetRate());
+
+				menu->SetMinutes(gameTimer_.GetRemainMinutes());
+				menu->SetSeconds(gameTimer_.GetRemainSeconds());
+
+				menu->SetRequestFlashing(gameTimer_.IsWarningFrame());
+			}
+			
 			// BossのHPが0になったらクリア演出へ
 			auto* boss = FindGO<BossCharacter>("boss");
 			if (boss && boss->GetStatus()) {
@@ -270,6 +303,9 @@ void BattleManager::Update()
 	if (missionLayout_) {
 		missionLayout_->Update();
 	}
+	if (timerLayout_) {
+		timerLayout_->Update();
+	}
 
 	
 	AttackObjectManager::Get().Update();
@@ -288,6 +324,9 @@ void BattleManager::Render(RenderContext& rc)
 	}
 	if (missionLayout_) {
 		missionLayout_->Render(rc);
+	}
+	if (timerLayout_) {
+		timerLayout_->Render(rc);
 	}
 	AttackObjectManager::Get().Render(rc);
 }

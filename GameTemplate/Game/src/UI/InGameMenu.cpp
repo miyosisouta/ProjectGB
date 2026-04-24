@@ -6,7 +6,6 @@
 #include "InGameMenu.h"
 #include "UIAnimationFactory.h"
 
-
 #include "src/Util/TaskSchedulerSystem.h"
 
 #include "src/Actor/Player.h"

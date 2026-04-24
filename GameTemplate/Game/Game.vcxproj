@@ -296,6 +296,7 @@
     <ClCompile Include="src\UI\MissionMenu.cpp" />
     <ClCompile Include="src\UI\PauseMenu.cpp" />
     <ClCompile Include="src\UI\SoundOptionMenu.cpp" />
+    <ClCompile Include="src\UI\TimerMenu.cpp" />
     <ClCompile Include="src\UI\TitleMenu.cpp" />
     <ClCompile Include="src\UI\UIAnimation.cpp" />
     <ClCompile Include="src\UI\UIParts.cpp" />
@@ -395,6 +396,7 @@
     <ClInclude Include="src\UI\MissionMenu.h" />
     <ClInclude Include="src\UI\PauseMenu.h" />
     <ClInclude Include="src\UI\SoundOptionMenu.h" />
+    <ClInclude Include="src\UI\TimerMenu.h" />
     <ClInclude Include="src\UI\TitleMenu.h" />
     <ClInclude Include="src\UI\UIAnimation.h" />
     <ClInclude Include="src\UI\UIAnimationFactory.h" />

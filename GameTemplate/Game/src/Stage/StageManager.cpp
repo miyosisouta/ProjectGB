@@ -158,7 +158,7 @@ bool StageManagerObject::Start()
 
 	// TODO : 当たり判定の可視化
 #ifdef K2_DEBUG 
-	PhysicsWorld::Get().EnableDrawDebugWireFrame();
+	//PhysicsWorld::Get().EnableDrawDebugWireFrame();
 #endif
 
 	return true;

@@ -44,11 +44,14 @@ private:
     PlayerController* playerController_ = nullptr;
     BossSpawner* boss_ = nullptr;
     StageManagerObject* stage_ = nullptr;
+    GameTimer gameTimer_;
+   
+    SkyCube* skyCube_ = nullptr;
+
     Layout* layout_ = nullptr;
     Layout* startLayout_ = nullptr;
     Layout* missionLayout_ = nullptr;
-    GameTimer gameTimer_;
-    SkyCube* skyCube_ = nullptr;
+    Layout* timerLayout_ = nullptr;
     
     std::unique_ptr<CameraSteering> cameraSteering_ = nullptr;
     RefCameraController gameCameraController_ = nullptr;

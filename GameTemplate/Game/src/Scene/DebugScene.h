@@ -6,7 +6,8 @@
 
 #pragma once
 #include "IScene.h"
-#include "src/Vfx/ParticleEffectRender.h"
+#include "src/UI/Menu.h"
+#include "src/Util/TaskSchedulerSystem.h"
 
 
 class Layout;
@@ -19,11 +20,13 @@ class DebugScene : public IScene
 
 private:
 	Layout* layout_ = nullptr;
-	std::vector<std::unique_ptr<ParticleEffectRender>> effectRenderList;
 
 	std::unique_ptr<TaskSchedulerSystem> taskScheduler_ = nullptr;
 
-	std::unique_ptr<GaugeRender> gaugeRender_ = nullptr;
+	/** 今の時間 */
+	float currentTimer_ = 0.0f;
+	/** 全体の時間 */
+	float maxTimer_ = 0.0f;
 
 public:
 	DebugScene();

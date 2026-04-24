@@ -12,12 +12,12 @@
 #include "src/Util/TaskSchedulerSystem.h"
 
 #include "src/UI/Layout.h"
-#include "src/UI/MissionMenu.h"
+#include "src/UI/TimerMenu.h"
 
 
 namespace
 {
-	constexpr int MAX_EFFECT_NUM = 4;
+	float ONE_LAP = 360.0f;
 }
 
 
@@ -35,25 +35,7 @@ DebugScene::~DebugScene()
 bool DebugScene::Start()
 {
 	layout_ = new Layout;
-	layout_->Initialize<MissionMenu>("Assets/ui/Layout/MissionMenu.json");
-
-	// 星のエフェクト
-	for (int i = 0; i < MAX_EFFECT_NUM; i++)
-	{
-		effectRenderList.push_back(std::make_unique<ParticleEffectRender>());
-		char jsonPath[] = "Assets/ui/vfx/effect_mission_maru/effect_mission_maru_1.json";
-		jsonPath[54] = '1' + i;
-		effectRenderList[i]->Init(jsonPath, "Assets/ui/inGameUI/mission/maru.dds", 128.0f, 128.0f);
-		effectRenderList[i]->SetPosition(Vector3(530.0f, 330, 0.0f));
-		effectRenderList[i]->EnableHotReload();
-	}
-	
-	gaugeRender_ = std::make_unique<GaugeRender>();
-	gaugeRender_->Init(300.0f, 300.0f);
-	gaugeRender_->SetRadius(0.3f, 0.4f);
-	gaugeRender_->SetProgress(0.5f);
-	gaugeRender_->SetBgColor(Vector4(1.0f,1.0f,1.0f, 1.0f));
-	gaugeRender_->SetGaugeColor(Vector4::Yellow);
+	layout_->Initialize<TimerMenu>("Assets/ui/Layout/TimerMenu.json");
 
 	return true;
 }
@@ -61,44 +43,23 @@ bool DebugScene::Start()
 
 void DebugScene::Update()
 {
+	TimerMenu* menu = static_cast<TimerMenu*>(layout_->GetMenu());
+	//menu->SetCurrentTimer();
+	//menu->SetMaxTimer(180.0f);
+
+	
+
+
 	layout_->Update();
 
-	for (int i = 0; i < MAX_EFFECT_NUM; i++)
-	{
-		effectRenderList[i]->Update(g_gameTime->GetFrameDeltaTime());
-	}
-
-	if (g_pad[0]->IsTrigger(enButtonX))
-	{
-		// タスクスケジューラー
-		taskScheduler_ = std::make_unique<TaskSchedulerSystem>();
-		taskScheduler_->AddTimer(2.5f, [&]()
-			{
-				for (int i = 0; i < MAX_EFFECT_NUM; i++)
-				{
-					effectRenderList[i]->Play();
-				}
-
-			});
-	}
-	if (taskScheduler_) {
-		taskScheduler_->Update(g_gameTime->GetFrameDeltaTime());
-	}
-
-	gaugeRender_->Update();
-
+	//時間
+	layout_->GetMenu();
 }
 
 
 void DebugScene::Render(RenderContext& rc)
 {
 	layout_->Render(rc);
-
-	for (int i = 0; i < MAX_EFFECT_NUM; i++)
-	{
-		effectRenderList[i]->Draw(rc);
-	}
-	gaugeRender_->Draw(rc);
 }
 
 
