@@ -21,12 +21,10 @@ void PlayerController::Update()
 	// Aボタン、長押しでダッシュ、短押しで回避
 	UpdateAButton(targetStateMachine);
 
-	// Bボタンで通常攻撃
-	targetStateMachine->ActionButtonB(g_pad[0]->IsPress(enButtonB));
-	// Yボタンで特殊能力
-	targetStateMachine->ActionButtonY(g_pad[0]->IsPress(enButtonY));
-	// Xボタンで汎用能力
-	targetStateMachine->ActionButtonX(g_pad[0]->IsPress(enButtonX));
+	// 各スキルボタン
+	targetStateMachine->ActionButtonB(KeyConfig::Get().IsPress(enActionNormalSkill));
+	targetStateMachine->ActionButtonY(KeyConfig::Get().IsPress(enActionSpecialSkill));
+
 
 	// スティックの入力を取得
 	float stickX = g_pad[0]->GetLStickXF();
@@ -49,46 +47,24 @@ void PlayerController::Update()
 
 void PlayerController::UpdateAButton(StateMachine* sm)
 {
-	const bool isPressed = g_pad[0]->IsPress(enButtonA);
-	const float deltaTime = g_gameTime->GetFrameDeltaTime();
+	// ダッシュキーを押しているか
+	bool isDashHolding = KeyConfig::Get().IsHolding(enActionDash);
 
-	if (isPressed)
+	// スタミナが枯渇している場合はダッシュ入力をキャンセルする
+	if (target_->IsExhausted())
 	{
-		if (!aButtonHeld_)
-		{
-			avoidInputConsumed_ = false; // 押し始めにリセット
-		}
-
-		aButtonHeld_ = true;
-		aButtonHeldTime_ += deltaTime;
-
-		if (aButtonHeldTime_ >= DASH_HOLD_THRESHOLD)
-		{
-			sm->ActionButtonA(true);
-		}
+		isDashHolding = false;
 	}
-	else
+
+	// Aボタンをホールドしているか否か
+	sm->ActionButtonA(isDashHolding);
+
+	// 回避するか、ダッシュするか
+	if (KeyConfig::Get().IsShortRelease(enActionDash))
 	{
-		if (aButtonHeld_)
+		if (!target_->IsExhausted())
 		{
-			// 短押し かつ まだ消費していない場合だけリクエスト
-			if (aButtonHeldTime_ < DASH_HOLD_THRESHOLD && !avoidInputConsumed_)
-			{
-				// 枯渇中は回避フラグを立てない
-				if (!target_->IsExhausted()) {
-					sm->SetAvoidRequested(true);
-				}
-				sm->SetAvoidRequested(true);
-				avoidInputConsumed_ = true;
-			}
-
-			if (!target_->IsExhausted()) {
-				sm->SetAvoidRequested(true);
-			}
-
-			sm->ActionButtonA(false);
-			aButtonHeld_ = false;
-			aButtonHeldTime_ = 0.0f;
+			sm->SetAvoidRequested(true);
 		}
 	}
 }

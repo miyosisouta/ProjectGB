@@ -62,6 +62,9 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 	ParameterManager::Get().LoadPlayerSkillStatusData("Assets/Objects/CharacterData/PlayerSkillStatus.json");
 	ParameterManager::Get().LoadBossSkillStatusData("Assets/Objects/CharacterData/BossSkillStatus.json");
 
+	// キーコンフィグ
+	KeyConfig::CreateInstance();
+	KeyConfig::Get().ResetToDefault();
 
 	// カメラ
 	CameraManager::Initialize();
@@ -118,10 +121,10 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 	}
 
 	CameraManager::Finalize();
-
-	CharacterDataBase::DestroyInstance();
+	CharacterDataBase::Finalize();
 	GhostBodyManager::Finalize();
 	CollisionHitManager::Finalize();
+	KeyConfig::Finalize();
 
 	K2Engine::DeleteInstance();
 

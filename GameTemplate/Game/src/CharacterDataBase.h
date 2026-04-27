@@ -95,7 +95,7 @@ public:
     /**
      * インスタンスを破棄
      */
-    static void DestroyInstance()
+    static void Finalize()
     {
         if (instance_) {
             delete instance_;

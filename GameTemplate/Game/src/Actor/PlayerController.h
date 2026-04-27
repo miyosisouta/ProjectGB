@@ -8,9 +8,6 @@ class PlayerController : public IGameObject
 private:
 	Player* target_ = nullptr; //!< 操作対象
 
-	bool aButtonHeld_ = false; //!< Aボタンを入力し続けているか
-	bool avoidInputConsumed_ = false;
-	float aButtonHeldTime_ = 0.0f; //!< 入力し続けている時間
 
 public:
 	PlayerController() {};

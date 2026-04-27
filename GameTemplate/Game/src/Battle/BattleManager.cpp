@@ -311,6 +311,7 @@ void BattleManager::Update()
 	AttackObjectManager::Get().Update();
 	GhostBodyManager::Get().Update();
 	CollisionHitManager::Get().Update();
+	KeyConfig::Get().Update();
 }
 
 

@@ -257,6 +257,7 @@
     <ClCompile Include="src\collision\GhostBodyManager.cpp" />
     <ClCompile Include="src\collision\GhostPrimitive.cpp" />
     <ClCompile Include="src\collision\PhysicalBody.cpp" />
+    <ClCompile Include="src\Core\KeyConfig.cpp" />
     <ClCompile Include="src\Core\ParameterManager.cpp" />
     <ClCompile Include="src\Core\PouseMenu.cpp" />
     <ClCompile Include="src\Effect\EffectManager.cpp" />
@@ -354,6 +355,7 @@
     <ClInclude Include="src\collision\GhostPrimitive.h" />
     <ClInclude Include="src\collision\PhysicalBody.h" />
     <ClInclude Include="src\collision\Types.h" />
+    <ClInclude Include="src\Core\KeyConfig.h" />
     <ClInclude Include="src\Core\ParameterManager.h" />
     <ClInclude Include="src\Core\PouseMenu.h" />
     <ClInclude Include="src\Effect\EffectManager.h" />
