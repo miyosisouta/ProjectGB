@@ -20,3 +20,4 @@ using namespace nsK2Engine;
 #include "src/Sound/SoundManager.h"
 #include "src/Battle/BattleManager.h"
 #include "src/Core/ParameterManager.h"
+#include "src/Core/KeyConfig.h"
