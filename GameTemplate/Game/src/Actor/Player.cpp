@@ -413,12 +413,6 @@ void Player::Update()
 		modelRender_.Update();
 	}
 
-	// ステータス
-	{
-		PlayerStatus* status = GetStatus()->As<PlayerStatus>();
-		status->Update();
-	}
-
 	// ゴーストコリジョン
 	{
 		const Vector3 heightUp = status_->As<ActorStatus>()->GetInitParam().collisionHeightUpValue_;
