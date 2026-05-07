@@ -1,0 +1,28 @@
+{
+    "Battle": [
+        {
+            "comment": "カメラ",
+            "nearClip": 1.0,
+            "farClip":50000.0,
+            "fovy":60.0,
+            "height":200.0,
+            "distance":600.0,
+            "rotSpeed":0.5,
+            "sensitivity": 1.0,
+            
+            "scale":400.0, 
+
+            "limitTime":300.0,
+            "warningTime":240.0,
+
+            "firstCutTime":1.0,
+            "secondCutTime":2.0,
+            "thirdCutTime":3.0,
+            "endCutTime":7.0,
+            "firstCutCameraPos":[0.0,100.0,0.0],
+            "secondCutCameraPos":[-600.0,100.0,0.0],
+            "thirdCutCameraPos":[-300.0,100.0,400.0],
+            "cutTargetPos":[-300.0,100.0,0.0]
+        }
+    ]
+}

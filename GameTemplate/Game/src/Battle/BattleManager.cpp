@@ -36,35 +36,22 @@
 
 namespace
 {
-	// TODO: あとでパラメータを外部から読み込むようにする
-	
-	/* カメラ */
-	constexpr float CAMERA_NEAR = 1.0f; 		// 近平面
-	constexpr float CAMERA_FAR = 50000.0f;		// 遠平面
-	constexpr float CAMERA_FOVY = 60.0f;		// 画角
-	constexpr float CAMERA_HEIGHT = 200.0f;		// 高さ
-	constexpr float CAMERA_DISTANCE = 600.0f;	// プレイヤーとの距離
-	constexpr float CAMERA_ROT_SPEED = 0.05f;	// 回転速度
-
-	/* スカイキューブ */ 
-	constexpr float SKYCUBE_SCALE = 400.0f; // スカイキューブの大きさ
-
-	/* ゲームタイマー */
-	constexpr float GAME_TIMER_LIMIT = 300.0f; // 制限時間の設定
-	constexpr float GAME_TIMER_WARNING = 240.0f; // 警告時間の設定
+	/* 優先度 */
+	constexpr uint8_t PRIORITY_PLAYER = 0;				// プレイヤー
+	constexpr uint8_t PRIORITY_PLAYER_CONTROLLER = 10;	// プレイヤーコントローラー
+	constexpr uint8_t PRIORITY_STAGE = 0;				// ステージ
+	constexpr uint8_t PRIORITY_SKYCUBE = 0;				// スカイキューブ
 }
-
 
 BattleManager* BattleManager::myInstance_ = nullptr; //初期化
 
-
-
 BattleManager::BattleManager()
 {
+	const auto* param = ParameterManager::Get().GetParameter<MasterBattleCommonParameter>(0);
 	// プレイヤー
 	{
-		player_ = NewGO<Player>(0, "player");			//Playerの生成
-		playerController_ = NewGO<PlayerController>(10, "playerController");	//PlayerControllerの生成
+		player_ = NewGO<Player>(PRIORITY_PLAYER, "player");			//Playerの生成
+		playerController_ = NewGO<PlayerController>(PRIORITY_PLAYER_CONTROLLER, "playerController");	//PlayerControllerの生成
 		playerController_->SetTarget(player_);		//PlayerControllerの操作対象をPlayerに設定
 	}
 	
@@ -103,14 +90,14 @@ BattleManager::BattleManager()
 
 
 	// ステージの作成
-	stage_ = NewGO<StageManagerObject>(0, "stage");
+	stage_ = NewGO<StageManagerObject>(PRIORITY_STAGE, "stage");
 
 
 	// スカイキューブ
 	{
-		skyCube_ = NewGO<SkyCube>(0, "skyCube");
+		skyCube_ = NewGO<SkyCube>(PRIORITY_SKYCUBE, "skyCube");
 		skyCube_->SetType(enSkyCubeType_Day);
-		skyCube_->SetScale(SKYCUBE_SCALE);
+		skyCube_->SetScale(param->skyCubeScale);
 	}
 	
 
@@ -119,14 +106,14 @@ BattleManager::BattleManager()
 		cameraSteering_ = std::make_unique<CameraSteering>();
 
 		CameraSteering::Config initConfig;
-		initConfig.distance = CAMERA_DISTANCE;
-		initConfig.height = CAMERA_HEIGHT;
-		initConfig.rotationSpeedX = CAMERA_ROT_SPEED;
-		initConfig.rotationSpeedY = CAMERA_ROT_SPEED;
+		initConfig.distance = param->cameraParam.distance;
+		initConfig.height = param->cameraParam.height;
+		initConfig.rotationSpeedX = param->cameraParam.rotSpeed;
+		initConfig.rotationSpeedY = param->cameraParam.rotSpeed;
 		CameraData initData;
-		initData.fov = Math::DegToRad(CAMERA_FOVY);
-		initData.nearClip = CAMERA_NEAR;
-		initData.farClip = CAMERA_FAR;
+		initData.fov = Math::DegToRad(param->cameraParam.fovy);
+		initData.nearClip = param->cameraParam.nearClip;
+		initData.farClip = param->cameraParam.farClip;
 		cameraSteering_->SetConfig(initConfig);
 		cameraSteering_->SetTargetCharacter(player_);
 
@@ -135,6 +122,12 @@ BattleManager::BattleManager()
 		gameCameraController_ = gameCamera;
 		//CameraManager::Get().Register(GameCamera::ID(), gameCameraController_);
 		//CameraManager::Get().SwitchCamera(gameCameraController_);
+
+		CameraOption initOption;
+		initOption.sensitivity = param->cameraParam.sensitivity;
+		initOption.distance = param->cameraParam.distance;
+		initOption.fovDeg = param->cameraParam.fovy;
+		SetCameraOption(initOption);
 	}
 
 	// 演出
@@ -154,8 +147,8 @@ BattleManager::BattleManager()
 
 		// ゲームタイマーを起動
 		gameTimer_.Init();
-		gameTimer_.SetLimitTime(GAME_TIMER_LIMIT);
-		gameTimer_.SetWarningTime(GAME_TIMER_WARNING);
+		gameTimer_.SetLimitTime(param->gameTimeParam.limitTime);
+		gameTimer_.SetWarningTime(param->gameTimeParam.warningTime);
 
 		// ミッションを作成
 		MissionManager::CreateInstance();
@@ -235,6 +228,7 @@ void BattleManager::Update()
 			boss_->Update();
 			MissionManager::Get().Update();
 
+			
 			// カメラの更新
 			auto gameCamera = gameCameraController_->As<GameCamera>();
 			auto cameraData = gameCamera->GetCameraData();
@@ -381,6 +375,8 @@ bool BattleManager::UpdateResultOver()
 
 void BattleManager::SetupEntryBossCutScene()
 {
+	const auto* param = ParameterManager::Get().GetParameter<MasterBattleCommonParameter>(0);
+
 	isPlayingEntryBoss_ = true;
 
 	// レイアウト生成
@@ -390,8 +386,8 @@ void BattleManager::SetupEntryBossCutScene()
 	// 演出カメラ
 	// NOTE: GameCameraを使い回しているが必要に応じて専用のカメラコントローラーを作りたい
 	CameraData initData;
-	initData.fov = Math::DegToRad(CAMERA_FOVY);
-	initData.farClip = CAMERA_FAR;
+	initData.fov = Math::DegToRad(param->cameraParam.fovy);
+	initData.farClip = param->cameraParam.farClip;
 	auto gameCamera = std::make_shared<GameCamera>();
 	gameCamera->SetState(initData);
 	bossEntryCameraController_ = gameCamera;
@@ -401,11 +397,11 @@ void BattleManager::SetupEntryBossCutScene()
 
 	// スケジューラーを作成
 	{
-		cutSceneScheduler_->AddTimer(1.0f, [this]()
+		cutSceneScheduler_->AddTimer(param->cutSceneParam.firstCutTime, [this,param]()
 			{
 				CameraData cameraData;
-				cameraData.position = Vector3(0, 100.0f, 0.0f);
-				cameraData.target = Vector3(-300.0f, 100.0f, 0.0f);
+				cameraData.position = param->cutSceneParam.firstCutCameraPos;
+				cameraData.target = param->cutSceneParam.cutSceneTargetPos;
 				bossEntryCameraController_->As<GameCamera>()->SetState(cameraData);
 
 				auto* menu = layout_->GetMenu();
@@ -414,22 +410,22 @@ void BattleManager::SetupEntryBossCutScene()
 				icon = menu->GetUI<UIIcon>(Hash32("gollira_nameA"));
 				icon->isDraw = true;
 			});
-		cutSceneScheduler_->AddTimer(2.0f, [this]()
+		cutSceneScheduler_->AddTimer(param->cutSceneParam.secondCutTime, [this, param]()
 			{
 				CameraData cameraData;
-				cameraData.position = Vector3(-600, 100.0f, 0.0f);
-				cameraData.target = Vector3(-300.0f, 100.0f, 0.0f);
+				cameraData.position = param->cutSceneParam.secondCutCameraPos;
+				cameraData.target = param->cutSceneParam.cutSceneTargetPos;
 				bossEntryCameraController_->As<GameCamera>()->SetState(cameraData);
 
 				auto* menu = layout_->GetMenu();
 				auto* icon = menu->GetUI<UIIcon>(Hash32("gollira_nameC"));
 				icon->isDraw = true;
 			});
-		cutSceneScheduler_->AddTimer(3.0f, [this]()
+		cutSceneScheduler_->AddTimer(param->cutSceneParam.thirdCutTime, [this, param]()
 			{
 				CameraData cameraData;
-				cameraData.position = Vector3(-300, 100.0f, 400.0f);
-				cameraData.target = Vector3(-300.0f, 100.0f, 0.0f);
+				cameraData.position = param->cutSceneParam.thirdCutCameraPos;
+				cameraData.target = param->cutSceneParam.cutSceneTargetPos;
 				bossEntryCameraController_->As<GameCamera>()->SetState(cameraData);
 
 				auto* menu = layout_->GetMenu();
@@ -438,7 +434,7 @@ void BattleManager::SetupEntryBossCutScene()
 
 			});
 		// 終了
-		cutSceneScheduler_->AddTimer(7.0f, [this]()
+		cutSceneScheduler_->AddTimer(param->cutSceneParam.endCutTime, [this]()
 			{
 				isPlayingEntryBoss_ = false;
 				CameraManager::Get().Unregister(GameCamera::ID());

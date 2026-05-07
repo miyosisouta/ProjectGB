@@ -149,3 +149,36 @@ void ParameterManager::LoadBossSkillStatusData(const char* path)
 		}
 	);
 }
+
+void ParameterManager::LoadBattleCommonParamData(const char* path)
+{
+	ParameterManager::Get().LoadParameterFromArray<MasterBattleCommonParameter>(
+		path,
+		"Battle",
+		[](const nlohmann::json& j, MasterBattleCommonParameter& p)
+		{
+			p.cameraParam.nearClip	= j.value("nearClip",	0.0f);
+			p.cameraParam.farClip	= j.value("farClip",	0.0f);
+			p.cameraParam.fovy		= j.value("fovy",		0.0f);
+			p.cameraParam.height	= j.value("height",		0.0f);
+			p.cameraParam.distance	= j.value("distance",	0.0f);
+			p.cameraParam.rotSpeed	= j.value("rotSpeed",	0.0f);
+			p.cameraParam.invert = j.value("invert", false);
+			p.cameraParam.sensitivity = j.value("sensitivity", 0.0f);
+
+			p.skyCubeScale = j.value("scale", 0);
+
+			p.gameTimeParam.limitTime	= j.value("limitTime",		0.0f);
+			p.gameTimeParam.warningTime = j.value("warningTime",	0.0f);
+
+			p.cutSceneParam.firstCutTime		= j.value("firstCutTime",	0.0f);
+			p.cutSceneParam.secondCutTime		= j.value("secondCutTime",	0.0f);
+			p.cutSceneParam.thirdCutTime		= j.value("thirdCutTime",	0.0f);
+			p.cutSceneParam.endCutTime			= j.value("endCutTime",		0.0f);
+			p.cutSceneParam.firstCutCameraPos	= ParseVector3(j["firstCutCameraPos"]);
+			p.cutSceneParam.secondCutCameraPos	= ParseVector3(j["secondCutCameraPos"]);
+			p.cutSceneParam.thirdCutCameraPos	= ParseVector3(j["thirdCutCameraPos"]);
+			p.cutSceneParam.cutSceneTargetPos	= ParseVector3(j["cutTargetPos"]);
+		}
+	);
+}

@@ -1,7 +1,6 @@
 ﻿/**
  * BattleManager.h
- * 
-  * インゲーム管理
+ * インゲーム管理
  * インゲームのゲームオブジェクトはこのクラスで管理する。
  * クラス間の情報伝達もこのクラスを介して行う。
  */
@@ -37,7 +36,16 @@ private:
         Shutdown        // 終了処理
     };
 
+    /** カメラのオプションにて変更する値の構造体 */
+    struct CameraOption
+    {
+        bool  invert = false;       //!< 反転するか否か
+        float sensitivity = 1.0f;   //!< 感度
+        float distance = 50.0f;     //!< 距離
+        float fovDeg = 60.0f;       //!< 視野角
+    };
 
+    
 private:
     /** 各オブジェクトのポインタ */
     Player* player_ = nullptr;
@@ -53,22 +61,48 @@ private:
     Layout* missionLayout_ = nullptr;
     Layout* timerLayout_ = nullptr;
     
+	std::unique_ptr<TaskSchedulerSystem> cutSceneScheduler_ = nullptr;
     std::unique_ptr<CameraSteering> cameraSteering_ = nullptr;
     RefCameraController gameCameraController_ = nullptr;
     RefCameraController bossEntryCameraController_ = nullptr;
 
-	std::unique_ptr<TaskSchedulerSystem> cutSceneScheduler_ = nullptr;
+private:
+    GameState gameState_ = GameState::Entry;
+	uint32_t activeTarget_ = 0; //!< 現在アクティブな対象
     bool isPlayingEntryBoss_ = true;
     bool isPlayingResult_ = false;
 
-    GameState gameState_ = GameState::Entry;
 
-
-    /** 現在アクティブな対象 */
-	uint32_t activeTarget_ = 0;
-
-
+    /*===================================================*/
+    /* セッター・ゲッター */
+    /*===================================================*/
 public:
+
+    /** 
+     * カメラオプションの値を取得 
+     * カメラのオプションを設定する際まずこれを呼び、現在の値を取得してください
+     */
+    CameraOption GetCameraOption() const
+    {
+        CameraOption option;
+        option.invert = cameraSteering_->GetInvert();   // カメラの操作を反転するか否か
+        option.sensitivity = cameraSteering_->GetSensitivity(); // 感度
+        option.distance = cameraSteering_->GetDistance(); // 距離
+        option.fovDeg = gameCameraController_->As<GameCamera>()->GetFovDeg(); // 視野角
+        return option;
+    }
+    /** 
+     * カメラオプションの値を設定 
+     * 設定前にGetCameraOptionで現在の値を取得してください
+     */
+    void SetCameraOption(const CameraOption& option)
+    {
+        cameraSteering_->SetInvert(option.invert); // カメラの操作を反転するか否か
+        cameraSteering_->SetSensitivity(option.sensitivity); // 感度
+        cameraSteering_->SetDistance(option.distance); // 距離
+        gameCameraController_->As<GameCamera>()->SetFovDeg(option.fovDeg); // 視野角
+    }
+
     /** アクティブ対象を設定 */
     void SetActiveTarget(const uint32_t target);
 
@@ -78,6 +112,7 @@ public:
         else { gameTimer_.Resume(); } // それ以外ならfalse
     }
 
+
     /* ゲームタイマーを取得 */
     GameTimer* GetGameTimer() { return &gameTimer_; }
     /* プレイヤーの情報を取得 */
@@ -86,6 +121,7 @@ public:
         float value = static_cast<float>(status->GetHP() / static_cast<float>(status->GetMaxHP()));
         return value;
     }
+
 
 private:
     BattleManager();
@@ -122,6 +158,9 @@ private:
     void ReleaseCutSceneLayout();
 
 
+    /*===================================*/
+    /* シングルトン関連 */
+    /*===================================*/
 private:
     /** 自身のインスタンス */
     static BattleManager* myInstance_;

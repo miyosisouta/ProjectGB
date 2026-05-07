@@ -15,10 +15,8 @@ class GameCamera : public ICameraController
 
 
 private:
-    CameraData data_;
-
-    /** 更新の可否状態 */
-	bool isUpdate_ = true;
+    CameraData data_; //!< カメラのデータ
+	bool isUpdate_ = true; //!< 更新の可否状態
 
 
 public:
@@ -31,12 +29,25 @@ public:
         data_ = data;
     }
 
+    /** 視野角の設定 */
+    void SetFovDeg(const float deg)
+    {
+        data_.fov = Math::DegToRad(deg);
+    }
+
+    /** 視野角の取得 */
+    float GetFovDeg() const
+    {
+        return Math::RadToDeg(data_.fov);
+    }
+
     void Update() override
     {
         // 基本何もしない。
-        // 必要ならここで画面揺れ(Shake)のオフセットを加算する処理などを入れても良い
+        // 必要ならここで画面揺れの処理を入れるかも
     }
 
+    /** カメラデータの取得 */
     const CameraData& GetCameraData() const override { return data_; }
 };
 
@@ -57,10 +68,13 @@ private:
 
 
 public:
+    /** 始まりの処理 */
     void OnEnter() override;
 
+    /** 更新処理 */
     void Update() override;
 
+    /** カメラデータの取得 */
     const CameraData& GetCameraData() const override { return cameraData_; }
 };
 #endif // _DEBUG
