@@ -59,7 +59,7 @@ BattleManager::BattleManager()
 	// ボス
 	{
 		// test::ステージ選択画面がまだ作られていないのでここでボスデータを作る
-		BossType stageType = BossType::enTurtle;
+		BossType stageType = BossType::enGorilla;
 		GameModeType mode = GameModeType::enNormal;
 		CharacterDataBase::Get().SetStageType(stageType);
 		CharacterDataBase::Get().SetGameModeType(mode);

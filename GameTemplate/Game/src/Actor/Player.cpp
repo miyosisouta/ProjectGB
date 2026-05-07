@@ -29,7 +29,7 @@ namespace anim
 	// 読み込みたいアニメーションのファイルパスを並べる
 	// ここにパスを追加・削除するだけで、スタート処理にてm_animationClipListに自動で追加される
 	static AnimationData sAnimPaths[] = {
-		AnimationData{"Assets/Objects/Player/Animation/IdleA.tka",false},	// 待機
+		AnimationData{"Assets/Objects/Player/Animation/IdleA.tka",true},	// 待機
 		AnimationData{"Assets/Objects/Player/Animation/Walk.tka",true},		// 歩き
 		AnimationData{"Assets/Objects/Player/Animation/Run.tka",true},		// 走る
 		AnimationData{"Assets/Objects/Player/Animation/Attack.tka",false},	// 攻撃
