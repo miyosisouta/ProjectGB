@@ -109,8 +109,6 @@ void CameraManager::Update(const float deltaTime)
             applyData = current_->GetCameraData();
         }
         else {
-            // SmoothStepなどで滑らかにするとより良い
-            // t = t * t * (3.0f - 2.0f * t); 
             applyData = CameraData::Lerp(t, blendStartData_, next_->GetCameraData());
         }
     }
@@ -121,11 +119,4 @@ void CameraManager::Update(const float deltaTime)
     // 3. エンジンカメラへの反映
     engineCamera_->SetPosition(applyData.position);
     engineCamera_->SetTarget(applyData.target);
-    //engineCamera_->SetUp(applyData.up);
-    //engineCamera_->SetViewAngle(applyData.fov);
-    //engineCamera_->SetNear(applyData.nearClip);
-    //engineCamera_->SetFar(applyData.farClip);
-
-    // 必要ならUpdateを呼ぶ
-    //engineCamera_->Update(); 
 }

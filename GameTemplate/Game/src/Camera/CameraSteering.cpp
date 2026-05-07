@@ -1,49 +1,45 @@
-#include "stdafx.h"
+ï»¿#include "stdafx.h"
 #include "CameraSteering.h"
 #include "src/Actor/Character.h"
 
 
-namespace
-{
-}
-
-
 void CameraSteering::Update(CameraData& data, const float deltaTime)
 {
-	// ƒJƒƒ‰‚ªƒAƒNƒeƒBƒu‚Å‚È‚¢ê‡‚ÍXV‚µ‚È‚¢
-	if (!isUpdate_) return;
+    if (!isUpdate_ || targetCharacter_ == nullptr) {
+        return;
+    }
 
+    // ã‚¹ãƒ†ã‚£ãƒƒã‚¯å…¥åŠ›ã‚’å–å¾—
+    const float rawX = g_pad[0]->GetRStickXF(); // Xã®å…¥åŠ›é‡
+    const float rawY = g_pad[0]->GetRStickYF(); // Yã®å…¥åŠ›é‡
+    const float invert = invert_ ? -1.0f : 1.0f; // åè»¢ã•ã›ã‚‹ã‹å¦ã‹
+    const float inputX = rawX * sensitivity_ * invert; // æ„Ÿåº¦ã¨åè»¢ã‚’åŠ å‘³ã—ãŸXã®å…¥åŠ›é‡
+    const float inputY = rawY * sensitivity_ * invert; // æ„Ÿåº¦ã¨åè»¢ã‚’åŠ å‘³ã—ãŸYã®å…¥åŠ›é‡
 
-	if (targetCharacter_ == nullptr) {
-		return;
-	}
-	CameraData nextData = data;
+    // ä¸Šä¸‹ã®åˆ¶é™
+    currentPitch_ -= inputY * config_.rotationSpeedY * deltaTime;
+    currentPitch_ = Clamp(currentPitch_, config_.pitchMin, config_.pitchMax);
 
+    // æ°´å¹³å›žè»¢ã‚’åæ˜ 
+    const float yawDelta = inputX * config_.rotationSpeedX * deltaTime;
+    Quaternion yawRot;
+    yawRot.SetRotationY(yawDelta);
+    yawRot.Apply(toVector_);
 
-	// —‘z‚ÌƒJƒƒ‰ˆÊ’u‚ðŒvŽZiƒ^[ƒQƒbƒg‚ÌŒã‚ëEãj
-	// ¦ŠÈˆÕ“I‚ÉZŽ²Žè‘O‚Éˆø‚¢‚Ä‚¢‚Ü‚·‚ªA–{—ˆ‚Íƒ^[ƒQƒbƒg‚ÌŒü‚«(Rotation)‚àl—¶‚µ‚Ä‰ñ“]‚³‚¹‚Ü‚·
-	Vector3 targetPosition = targetCharacter_->transform_.position;
-	Vector3 position = targetCharacter_->transform_.position + toVector_;
+    // ãƒ”ãƒƒãƒã‚’ toVector_ ã®ä»°è§’ã¨ã—ã¦åæ˜ 
+    const float horizontalDist = config_.distance * cosf(currentPitch_);
+    const float verticalOffset = config_.distance * sinf(currentPitch_);
+    // toVector_ ã® XZ æˆåˆ†ã¯é•·ã•1ã«æ­£è¦åŒ–ã—ã¦æ°´å¹³è·é›¢ã‚’æŽ›ã‘ã‚‹
+    Vector3 horizontal = toVector_;
+    horizontal.y = 0.0f;
+    horizontal.Normalize();
+    horizontal *= horizontalDist;
 
-	nextData.position = position;
-	nextData.target = targetPosition;
+    toVector_ = horizontal;
+    toVector_.y = verticalOffset + config_.height;
 
-	// ‰EƒXƒeƒBƒbƒN‚Å‰ñ“]
-	Vector3 rotationVector = Vector3(g_pad[0]->GetRStickXF(), g_pad[0]->GetRStickYF(), 0.0f);
-	if (rotationVector.LengthSq() > 0.001f) {
-		rotationVector.x *= config_.rotationSpeedX;
-		rotationVector.y *= config_.rotationSpeedY;
-		// æ‚Éã‰º‰ñ“]
-		Quaternion xzRotation;
-		xzRotation.SetRotation(g_camera3D->GetRight(), rotationVector.y);
-		xzRotation.Apply(toVector_);
-
-		// Œã‚É¶‰E‰ñ“]
-		Quaternion yRotation;
-		yRotation.SetRotationY(-rotationVector.x);
-		yRotation.Apply(toVector_);
-		nextData.position = nextData.target + toVector_;
-	}
-
-	data = nextData;
+    // ã‚«ãƒ¡ãƒ©åº§æ¨™ã‚’æ±ºå®šã—ã¦CameraDataã«æ›¸ãè¾¼ã‚€
+    const Vector3 targetPos = targetCharacter_->transform_.position;
+    data.position = targetPos + toVector_;
+    data.target = targetPos;
 }

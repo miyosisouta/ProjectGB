@@ -9,11 +9,12 @@
 class CameraManager
 {
 private:
-    std::map<uint32_t, std::shared_ptr<ICameraController>> controllers_;
-    std::shared_ptr<ICameraController> current_;
-    std::shared_ptr<ICameraController> next_;
+    std::map<uint32_t, std::shared_ptr<ICameraController>> controllers_; //!< コントローラーの一覧
+    std::shared_ptr<ICameraController> current_; //!< 現在アクティブなコントローラ
+    std::shared_ptr<ICameraController> next_; //!< 次アクティブになるコントローラ
+
 #if defined(_DEBUG)
-    std::shared_ptr<ICameraController> prev_;
+    std::shared_ptr<ICameraController> prev_; //!< ひとつ前のコントローラー
 #endif
 
 
@@ -55,6 +56,7 @@ public:
      */
     void SwitchCamera(const uint32_t nameHash, const float blendTime = 0.0f);
     void SwitchCamera(RefCameraController controller, const float blendTime = 0.0f);
+
 #if defined(_DEBUG)
     /** デバッグ用: 前のカメラに戻す */
     void SwitchPrevCamera(const float blendTime = 0.0f)
@@ -82,17 +84,21 @@ public:
      * シングルトン関連
      */
 private:
-    static CameraManager* instance_;
+    static CameraManager* instance_; //!< インスタンス
 
 
 public:
+    /** インスタンスを生成 */
     static void Initialize()
     {
         if (instance_ == nullptr) {
             instance_ = new CameraManager();
         }
     }
+    /** インスタンスを取得 */
     static CameraManager& Get() { return *instance_; }
+
+    /** インスタンスを破棄 */
     static void Finalize()
     {
         if (instance_ != nullptr) {

@@ -63,11 +63,11 @@ struct MasterPlayerSkillParameter : public IMasterParameter
 {
 	appParameter(MasterPlayerSkillParameter);
 
-	std::string category;   // スキルカテゴリ (例: "NormalAttack", "SpecialAttack", "Utility")
-	std::string key;        // スキル識別キー  (例: "Bite", "Bomb", "Dodge")
-	float       motionValues;     // 攻撃力
-	float       cooldown;   // クールダウン (秒)
-	float		decreaseStamina;	// スタミナ消費量
+	std::string category;			//!< スキルカテゴリ (例: "NormalAttack", "SpecialAttack", "Utility")
+	std::string key;				//!< スキル識別キー  (例: "Bite", "Bomb", "Dodge")
+	float       motionValues;		//!< 攻撃力
+	float       cooldown;			//!< クールダウン (秒)
+	float		decreaseStamina;	//!< スタミナ消費量
 };
 
 /**
@@ -78,10 +78,54 @@ struct MasterBossSkillParameter : public IMasterParameter
 {
 	appParameter(MasterBossSkillParameter);
 
-	std::string category;   // ボス名カテゴリ
-	std::string key;        // スキル識別キー
-	float       motionValues;     // 攻撃力
-	float       cooldown;   // クールダウン (秒)
+	std::string category;		//!< ボス名カテゴリ
+	std::string key;			//!< スキル識別キー
+	float       motionValues;   //!< 攻撃力
+	float       cooldown;		//!< クールダウン (秒)
+};
+
+struct MasterBattleCommonParameter : public IMasterParameter
+{
+	appParameter(MasterBattleCommonParameter);
+
+
+	struct CameraParam
+	{
+		float nearClip = 0.0f;		//!< 近平面
+		float farClip = 0.0f;		//!< 遠平面
+		float fovy = 0.0f;			//!< 視野角
+		float height = 0.0f;		//!< 高さ
+		float distance = 0.0f;		//!< 距離
+		float rotSpeed = 0.0f;		//!< 回転速度
+		bool invert = false;		//!< 反転させるか否か
+		float sensitivity = 0.0f;	//!< 感度
+	};
+	
+	struct GameTimerParam
+	{
+		float limitTime = 0.0f;		//!< 制限時間
+		float warningTime = 0.0f;	//!< 警告時間
+	};
+
+	struct CutSceneParam 
+	{
+		float firstCutTime = 0.0f;	//!< 最初のカットの処理を始める時間
+		float secondCutTime = 0.0f;	//!< 2番目のカットの処理を始める時間
+		float thirdCutTime = 0.0f;	//!< 3番目のカットの処理を始める時間
+		float endCutTime = 0.0f;	//!< 最後のカットの処理を始める時間
+		Vector3 firstCutCameraPos = Vector3::Zero;	//!< 最初のカットのカメラの座標
+		Vector3 secondCutCameraPos = Vector3::Zero;	//!< 2番目のカットのカメラの座標
+		Vector3 thirdCutCameraPos = Vector3::Zero;	//!< 3番目のカットのカメラの座標
+		Vector3 cutSceneTargetPos = Vector3::Zero;	//!< 注視点
+	};
+
+	std::string category;			//!< ボス名カテゴリ
+	std::string key;				//!< スキル識別キー
+	CameraParam cameraParam;		//!< カメラのパラメータ
+	GameTimerParam gameTimeParam;	//!< ゲームタイマーのパラメータ
+	CutSceneParam cutSceneParam;	//!< カットシーンのパラメータ
+	float skyCubeScale = 0.0f;		//!< スカイキューブの大きさ
+
 };
 
 /** defineの使用終了 */
@@ -112,6 +156,7 @@ public:
 	void LoadCharacterStatusData(const char* path);
 	void LoadPlayerSkillStatusData(const char* path);
 	void LoadBossSkillStatusData(const char* path);
+	void LoadBattleCommonParamData(const char* path);
 
 public:
 	/**
@@ -310,6 +355,17 @@ public:
 		);
 	}
 
+	/** キーでキャラクターのステータスを取得するショートカット */
+	const MasterBattleCommonParameter* GetBattleCommonParam(const std::string& key)
+	{
+		return FindParameter<MasterBattleCommonParameter>(
+			[&key](const MasterBattleCommonParameter& p) {
+				return p.key == key;
+			}
+		);
+	}
+
+
 	/** カテゴリ名で絞り込んで全スキルを取得するショートカット */
 	std::vector<const MasterPlayerSkillParameter*> GetPlayerSkillsByCategory(const std::string& category)
 	{
@@ -332,9 +388,10 @@ public:
 			}
 		);
 		return result;
-	
 	}
 
+
+	
 
 
 private:

@@ -22,7 +22,7 @@ StageCullingSystem::~StageCullingSystem()
 }
 
 
-void StageCullingSystem::Update(std::vector<StaticObject*> staticObjects)
+void StageCullingSystem::Update(const std::vector<StaticObject*> staticObjects)
 {
 	// View行列 (カメラの位置と向き)
 	// Projection行列 (視野角と遠近)
