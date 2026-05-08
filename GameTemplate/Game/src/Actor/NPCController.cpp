@@ -23,8 +23,8 @@ namespace bossRuleData
 
                 // ▼ 中距離ルールの設定
                 { DistancePhase::enMidAttackType, {
-                    { BossStateID::Run,     2 },    // 走る
-                    { BossStateID::Jump,    2 },    // ヒットスタンプ
+                    { BossStateID::Run,     1 },    // 走る
+                    { BossStateID::Jump,    3 },    // ヒットスタンプ
                     { BossStateID::Spin,    3 },    // 回転攻撃
                     { BossStateID::Clicked_Gollira, 3 }     // 岩を投げる
                 }},
