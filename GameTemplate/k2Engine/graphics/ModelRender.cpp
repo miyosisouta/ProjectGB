@@ -1,8 +1,10 @@
 #include "k2EnginePreCompile.h"
 #include "ModelRender.h"
 #include "RenderingEngine.h"
+#include "DitherCBData.h"
 
 
+DitherCBData g_ditherCBData;  // グローバル変数
 
 namespace nsK2Engine {
 	ModelRender::ModelRender()
@@ -210,6 +212,9 @@ namespace nsK2Engine {
 	{
 		ModelInitData modelInitData;
 		modelInitData.m_fxFilePath = "Assets/shader/preProcess/RenderToGBufferFor3DModel.fx";
+
+		modelInitData.m_expandConstantBuffer = &g_ditherCBData;
+		modelInitData.m_expandConstantBufferSize = sizeof(DitherCBData);
 
 		// 頂点シェーダーのエントリーポイントをセットアップ。
 		SetupVertexShaderEntryPointFunc(modelInitData);

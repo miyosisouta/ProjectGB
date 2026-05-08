@@ -76,6 +76,7 @@
     <ClInclude Include="dbg\dbgVectorRenderer.h" />
     <ClInclude Include="geometry\GeometryData.h" />
     <ClInclude Include="geometry\SceneGeometryData.h" />
+    <ClInclude Include="graphics\DitherCBData.h" />
     <ClInclude Include="graphics\FontRender.h" />
     <ClInclude Include="graphics\GaugeRender.h" />
     <ClInclude Include="graphics\IRenderer.h" />

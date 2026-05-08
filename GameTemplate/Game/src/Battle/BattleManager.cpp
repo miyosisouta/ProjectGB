@@ -32,6 +32,8 @@
 #include "src/UI/GameStartMenu.h"
 #include "src/UI/MissionMenu.h"
 #include "src/UI/TimerMenu.h"
+#include "../../k2Engine/graphics/DitherCBData.h"
+
 
 
 namespace
@@ -41,6 +43,11 @@ namespace
 	constexpr uint8_t PRIORITY_PLAYER_CONTROLLER = 10;	// プレイヤーコントローラー
 	constexpr uint8_t PRIORITY_STAGE = 0;				// ステージ
 	constexpr uint8_t PRIORITY_SKYCUBE = 0;				// スカイキューブ
+
+	/* ディザリング */
+	constexpr float DITHERING_ENAVLE_TRUE_VALUE = 1.0f; // ディザリング可能な値
+	constexpr float DITHERING_ENAVLE_FALSE_VALUE = 0.0f; // ディザリング不可能な値
+
 }
 
 BattleManager* BattleManager::myInstance_ = nullptr; //初期化
@@ -227,8 +234,12 @@ void BattleManager::Update()
 			gameTimer_.Update();
 			boss_->Update();
 			MissionManager::Get().Update();
-
 			
+			// ディザリングの設定
+			g_ditherCBData.isEnable = DITHERING_ENAVLE_TRUE_VALUE;
+			g_ditherCBData.cameraWorldPos = CameraManager::Get().GetCurrentCameraData().position;
+			g_ditherCBData.playerWorldPos = player_->GetTransformPosition();
+
 			// カメラの更新
 			auto gameCamera = gameCameraController_->As<GameCamera>();
 			auto cameraData = gameCamera->GetCameraData();
@@ -268,6 +279,7 @@ void BattleManager::Update()
 		}
 		case GameState::ResultClear:
 		{
+			g_ditherCBData.isEnable = DITHERING_ENAVLE_FALSE_VALUE;
 			if (!UpdateResultClear()) {
 				gameState_ = GameState::Shutdown;
 			}
