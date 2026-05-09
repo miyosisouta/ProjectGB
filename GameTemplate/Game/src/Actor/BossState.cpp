@@ -64,6 +64,9 @@ namespace
 	constexpr float LASER_SHOT_COLLISION_SCALE = 180.0f; // レーザーのhitCollisonのサイズ
 	constexpr float EFFECT_SCALE_FACTOR_LASER = 0.5f; // レーザーエフェクトサイズ調整
 
+	// 死亡
+	constexpr float DEATH_ANIMATION_TIME = 2.0f;
+
 	// 共通
 	constexpr float EFFECT_SCALE_FACTOR_DAMAGE_LING = 0.4f;		// 円形の攻撃予測用エフェクトのサイズ調整
 	constexpr uint8_t INT_ZERO = 0;				// 初期化の値(int)
@@ -912,16 +915,31 @@ void BossDeathState::Enter()
 
 	// 初期化
 	isFinished_ = false; 
+
+	// タスクスケジューラを作成
+	taskScheduler_ = std::make_unique<TaskSchedulerSystem>();
+
+	// アニメーションが再生されてから特定の時間たったら
+	taskScheduler_->AddTimer(DEATH_ANIMATION_TIME, [&]()
+		{
+			BossStatus* status = boss_->GetStatus()->As<BossStatus>();
+			status->Die();
+			isFinished_ = true;
+		});
 }
 
 void BossDeathState::Update()
 {
 	// 移動速度を0に
 	boss_->SetMoveVelocity(Vector3::Zero);
+
+	// 時間を計算
+	if (taskScheduler_) { taskScheduler_->Update(g_gameTime->GetFrameDeltaTime()); }
 }
 
 void BossDeathState::Exit()
 {
+	taskScheduler_.reset();
 }
 
 
