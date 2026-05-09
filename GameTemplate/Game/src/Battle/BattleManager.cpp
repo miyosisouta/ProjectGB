@@ -45,8 +45,8 @@ namespace
 	constexpr uint8_t PRIORITY_SKYCUBE = 0;				// スカイキューブ
 
 	/* ディザリング */
-	constexpr float DITHERING_ENAVLE_TRUE_VALUE = 1.0f; // ディザリング可能な値
-	constexpr float DITHERING_ENAVLE_FALSE_VALUE = 0.0f; // ディザリング不可能な値
+	constexpr float DITHERING_ENABLE_TRUE_VALUE = 1.0f; // ディザリング有効な値
+	constexpr float DITHERING_ENABLE_FALSE_VALUE = 0.0f; // ディザリング無効な値
 
 }
 
