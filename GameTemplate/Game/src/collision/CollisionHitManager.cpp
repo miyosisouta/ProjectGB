@@ -413,7 +413,7 @@ bool CollisionHitManager::ContainsBossThrowRockPair(const Pair& hitPair)
 	if (!IsHitObject<BossCharacter>(hitPair, CharacterID::BossThrowRockAtkID())) {
 		return false;
 	}
-	if (!IsHitObject<Character>(hitPair, CharacterID::PlayerID() | CharacterID::BossID())) {
+	if (!IsHitObject<Player>(hitPair, CharacterID::PlayerID())) {
 		return false;
 	}
 	return true;

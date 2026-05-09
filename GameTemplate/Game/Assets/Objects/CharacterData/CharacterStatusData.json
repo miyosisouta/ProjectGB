@@ -36,7 +36,7 @@
             "charaConSizeRadius":110.0,
             "charaConSizeHeight":110.0,
             "hp": 1000,
-            "attack": 250,
+            "attack": 50,
             "criticalRate": 5,
             "criticalDamageMultiplier": 1.8
         },
