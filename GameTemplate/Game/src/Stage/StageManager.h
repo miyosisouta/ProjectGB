@@ -13,7 +13,6 @@
 class StageManager
 {
 private:
-	// std::unique_ptr<StageBase> stage_; //!< ギミックのあるステージを作成時に子の変数に入れる
     std::vector<StaticObject*> staticObjectList_;
     std::vector<PhysicalBody*> collisionList_;
 

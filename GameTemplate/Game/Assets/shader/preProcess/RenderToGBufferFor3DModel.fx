@@ -34,7 +34,8 @@ cbuffer DitherCB : register(b1)
     float3 g_cameraPos; // 12バイト  ← cameraWorldPos
     float g_ditherFar; // 4バイト   ← ditherFar
     float g_ditherdValue; // 4バイト   ← isEnable
-    float3 g_ditherPad; // 12バイト  ← padding0,1,2};
+    float g_ditherAlpha;  // 4バイト   ← ditherAlpha (per-objectの透明度ディザ, 0.0=完全透明 1.0=不透明)
+    float2 g_ditherPad;   // 8バイト   ← padding1, padding2
 };
 ///////////////////////////////////////
 // シェーダーリソース
@@ -86,7 +87,6 @@ SPSIn VSMainCore(SVSIn vsIn, float4x4 mWorldLocal, uniform bool isUsePreComputed
 
 SPSOut PSMainCore(SPSIn psIn, int isShadowReciever)
 {
-    // ディザリング
     static const float BayerMatrix[16] =
     {
         0.0 / 16.0, 8.0 / 16.0, 2.0 / 16.0, 10.0 / 16.0,
@@ -96,14 +96,14 @@ SPSOut PSMainCore(SPSIn psIn, int isShadowReciever)
     };
 
     float3 cameraPos = g_cameraPos;
-    
+
     if (g_ditherdValue > 0.5f)
     {
-        float ditherStrength = 0.0f;
         float dist = length(cameraPos - psIn.worldPos);
-        ditherStrength = 1.0f - saturate(
+        float distStrength = 1.0f - saturate(
             (dist - g_ditherNear) / max(g_ditherFar - g_ditherNear, 0.001f)
         );
+        float ditherStrength = distStrength * (1.0f - g_ditherAlpha);
 
         uint px = (uint) psIn.pos.x % 4;
         uint py = (uint) psIn.pos.y % 4;
@@ -111,8 +111,6 @@ SPSOut PSMainCore(SPSIn psIn, int isShadowReciever)
         {
             discard;
         }
-        
-        
     }
    
     

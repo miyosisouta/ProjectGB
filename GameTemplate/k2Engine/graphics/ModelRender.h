@@ -1,15 +1,16 @@
-#pragma once
+ï»¿#pragma once
 
 #include "MyRenderer.h"
 #include "geometry/AABB.h"
 #include "geometry/geometryData.h"
 #include "graphics/ComputeAnimationVertexBuffer.h"
+#include "graphics/DitherCBData.h"
 
 namespace nsK2Engine {
 	class RenderingEngine;
 
 	/// <summary>
-	/// ƒXƒLƒ“ƒ‚ƒfƒ‹ƒŒƒ“ƒ_[B
+	/// ï¿½Xï¿½Lï¿½ï¿½ï¿½ï¿½ï¿½fï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½_ï¿½[ï¿½B
 	/// </summary>
 	class ModelRender : public IRenderer
 	{
@@ -17,24 +18,24 @@ namespace nsK2Engine {
 		ModelRender();
 		~ModelRender();
 		/// <summary>
-		/// ‰Šú‰»B’Êí‚Í‚±‚ÌŠÖ”‚Å‰Šú‰»‚µ‚Ä‚­‚¾‚³‚¢B
+		/// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Bï¿½Êï¿½Í‚ï¿½ï¿½ÌŠÖï¿½ï¿½Åï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä‚ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½B
 		/// </summary>
-		/// <param name="filePath">ƒtƒ@ƒCƒ‹ƒpƒXB</param>
-		/// <param name="animationClips">ƒAƒjƒ[ƒVƒ‡ƒ“ƒNƒŠƒbƒvB</param>
-		/// <param name="numAnimationClips">ƒAƒjƒ[ƒVƒ‡ƒ“ƒNƒŠƒbƒv‚Ì”B</param>
-		/// <param name="enModelUpAxis">ƒ‚ƒfƒ‹‚Ìã•ûŒüB</param>
-		/// <param name="isShadowReciever">ƒVƒƒƒhƒEƒŒƒV[ƒo[ƒtƒ‰ƒOtrue‚È‚ç‰e‚ª—Ž‚¿‚éB</param>
+		/// <param name="filePath">ï¿½tï¿½@ï¿½Cï¿½ï¿½ï¿½pï¿½Xï¿½B</param>
+		/// <param name="animationClips">ï¿½Aï¿½jï¿½ï¿½ï¿½[ï¿½Vï¿½ï¿½ï¿½ï¿½ï¿½Nï¿½ï¿½ï¿½bï¿½vï¿½B</param>
+		/// <param name="numAnimationClips">ï¿½Aï¿½jï¿½ï¿½ï¿½[ï¿½Vï¿½ï¿½ï¿½ï¿½ï¿½Nï¿½ï¿½ï¿½bï¿½vï¿½Ìï¿½ï¿½B</param>
+		/// <param name="enModelUpAxis">ï¿½ï¿½ï¿½fï¿½ï¿½ï¿½Ìï¿½ï¿½ï¿½ï¿½ï¿½B</param>
+		/// <param name="isShadowReciever">ï¿½Vï¿½ï¿½ï¿½hï¿½Eï¿½ï¿½ï¿½Vï¿½[ï¿½oï¿½[ï¿½tï¿½ï¿½ï¿½Otrueï¿½È‚ï¿½eï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½B</param>
 		/// <param name="maxInstance">
-		/// ƒCƒ“ƒXƒ^ƒ“ƒX‚ÌÅ‘å”B‚±‚Ìˆø”‚ð‚P‚æ‚è‘å‚«‚­‚·‚é‚ÆƒCƒ“ƒXƒ^ƒ“ƒVƒ“ƒO•`‰æ‚ªs‚í‚ê‚Ü‚·B
-		/// ƒCƒ“ƒXƒ^ƒ“ƒVƒ“ƒO•`‰æ‚ðs‚¤Û‚Í•`‰æ‚µ‚½‚¢ƒCƒ“ƒXƒ^ƒ“ƒX‚Ì”•ª‚¾‚¯AUpdateInstancingDraw()‚ðŒÄ‚Ño‚·•K—v‚ª‚ ‚è‚Ü‚·B
-		/// ƒCƒ“ƒXƒ^ƒ“ƒVƒ“ƒO•`‰æ‚ÌÚ×‚ÍSmaple_XX‚ðŽQÆ‚µ‚Ä‚­‚¾‚³‚¢B
+		/// ï¿½Cï¿½ï¿½ï¿½Xï¿½^ï¿½ï¿½ï¿½Xï¿½ÌÅ‘å”ï¿½Bï¿½ï¿½ï¿½Ìˆï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Pï¿½ï¿½ï¿½å‚«ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ÆƒCï¿½ï¿½ï¿½Xï¿½^ï¿½ï¿½ï¿½Vï¿½ï¿½ï¿½Oï¿½`ï¿½æ‚ªï¿½sï¿½ï¿½ï¿½Ü‚ï¿½ï¿½B
+		/// ï¿½Cï¿½ï¿½ï¿½Xï¿½^ï¿½ï¿½ï¿½Vï¿½ï¿½ï¿½Oï¿½`ï¿½ï¿½ï¿½ï¿½sï¿½ï¿½ï¿½Û‚Í•`ï¿½æ‚µï¿½ï¿½ï¿½ï¿½ï¿½Cï¿½ï¿½ï¿½Xï¿½^ï¿½ï¿½ï¿½Xï¿½Ìï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½AUpdateInstancingDraw()ï¿½ï¿½ï¿½Ä‚Ñoï¿½ï¿½ï¿½Kï¿½vï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ü‚ï¿½ï¿½B
+		/// ï¿½Cï¿½ï¿½ï¿½Xï¿½^ï¿½ï¿½ï¿½Vï¿½ï¿½ï¿½Oï¿½`ï¿½ï¿½ÌÚ×‚ï¿½Smaple_XXï¿½ï¿½ï¿½Qï¿½Æ‚ï¿½ï¿½Ä‚ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½B
 		/// </param>
 		/// <param name="isFrontCullingOnDrawShadowMap">
-		/// ƒVƒƒƒhƒEƒ}ƒbƒv‚ð•`‰æ‚·‚éÛ‚Éƒtƒƒ“ƒgƒJƒŠƒ“ƒO‚ðs‚¤H
-		/// ƒtƒƒ“ƒgƒJƒŠƒ“ƒO‚ðs‚¤‚ÆƒVƒƒƒhƒEƒAƒNƒl‚ªŒyŒ¸‚Å‚«‚Ü‚·B
-		/// ‚µ‚©‚µA”Âƒ|ƒŠ‚Ì‚æ‚¤‚È•Â‚¶‚Ä‚¢‚È‚¢ƒ‚ƒfƒ‹‚ðƒtƒƒ“ƒgƒJƒŠƒ“ƒO‚Å•`‰æ‚·‚é‚ÆA
-		/// ƒVƒƒƒhƒEƒ}ƒbƒv‚É•`‰æ‚³‚ê‚È‚­‚È‚Á‚Ä‚µ‚Ü‚¤‚½‚ßA‚»‚Ìê‡‚Í‚±‚Ìƒtƒ‰ƒO‚ðfalse‚É‚µ‚Ä‚­‚¾‚³‚¢B
-		/// —á)’n–Ê‚È‚ÇB
+		/// ï¿½Vï¿½ï¿½ï¿½hï¿½Eï¿½}ï¿½bï¿½vï¿½ï¿½`ï¿½æ‚·ï¿½ï¿½Û‚Éƒtï¿½ï¿½ï¿½ï¿½ï¿½gï¿½Jï¿½ï¿½ï¿½ï¿½ï¿½Oï¿½ï¿½ï¿½sï¿½ï¿½ï¿½H
+		/// ï¿½tï¿½ï¿½ï¿½ï¿½ï¿½gï¿½Jï¿½ï¿½ï¿½ï¿½ï¿½Oï¿½ï¿½ï¿½sï¿½ï¿½ï¿½ÆƒVï¿½ï¿½ï¿½hï¿½Eï¿½Aï¿½Nï¿½lï¿½ï¿½ï¿½yï¿½ï¿½ï¿½Å‚ï¿½ï¿½Ü‚ï¿½ï¿½B
+		/// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Aï¿½Âƒ|ï¿½ï¿½ï¿½Ì‚æ‚¤ï¿½È•Â‚ï¿½ï¿½Ä‚ï¿½ï¿½È‚ï¿½ï¿½ï¿½ï¿½fï¿½ï¿½ï¿½ï¿½ï¿½tï¿½ï¿½ï¿½ï¿½ï¿½gï¿½Jï¿½ï¿½ï¿½ï¿½ï¿½Oï¿½Å•`ï¿½æ‚·ï¿½ï¿½ÆA
+		/// ï¿½Vï¿½ï¿½ï¿½hï¿½Eï¿½}ï¿½bï¿½vï¿½É•`ï¿½æ‚³ï¿½ï¿½È‚ï¿½ï¿½È‚ï¿½ï¿½Ä‚ï¿½ï¿½Ü‚ï¿½ï¿½ï¿½ï¿½ßAï¿½ï¿½ï¿½Ìê‡ï¿½Í‚ï¿½ï¿½Ìƒtï¿½ï¿½ï¿½Oï¿½ï¿½falseï¿½É‚ï¿½ï¿½Ä‚ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½B
+		/// ï¿½ï¿½)ï¿½nï¿½Ê‚È‚ÇB
 		/// </param>
 		void Init(
 			const char* filePath,
@@ -45,24 +46,24 @@ namespace nsK2Engine {
 			int maxInstance = 1,
 			bool isFrontCullingOnDrawShadowMap = false);
 		/// <summary>
-		/// ”¼“§–¾•`‰æ‚ðs‚¤ƒIƒuƒWƒFƒNƒg‚ð‰Šú‰»B
+		/// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½`ï¿½ï¿½ï¿½ï¿½sï¿½ï¿½ï¿½Iï¿½uï¿½Wï¿½Fï¿½Nï¿½gï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½B
 		/// </summary>
-		/// <param name="filePath">ƒtƒ@ƒCƒ‹ƒpƒXB</param>
-		/// <param name="animationClips">ƒAƒjƒ[ƒVƒ‡ƒ“ƒNƒŠƒbƒvB</param>
-		/// <param name="numAnimationClips">ƒAƒjƒ[ƒVƒ‡ƒ“ƒNƒŠƒbƒv‚Ì”B</param>
-		/// <param name="enModelUpAxis">ƒ‚ƒfƒ‹‚Ìã•ûŒüB</param>
-		/// <param name="isShadowReciever">true‚È‚ç‰e‚ª—Ž‚¿‚éB</param>
+		/// <param name="filePath">ï¿½tï¿½@ï¿½Cï¿½ï¿½ï¿½pï¿½Xï¿½B</param>
+		/// <param name="animationClips">ï¿½Aï¿½jï¿½ï¿½ï¿½[ï¿½Vï¿½ï¿½ï¿½ï¿½ï¿½Nï¿½ï¿½ï¿½bï¿½vï¿½B</param>
+		/// <param name="numAnimationClips">ï¿½Aï¿½jï¿½ï¿½ï¿½[ï¿½Vï¿½ï¿½ï¿½ï¿½ï¿½Nï¿½ï¿½ï¿½bï¿½vï¿½Ìï¿½ï¿½B</param>
+		/// <param name="enModelUpAxis">ï¿½ï¿½ï¿½fï¿½ï¿½ï¿½Ìï¿½ï¿½ï¿½ï¿½ï¿½B</param>
+		/// <param name="isShadowReciever">trueï¿½È‚ï¿½eï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½B</param>
 		/// <param name="maxInstance">
-		/// ƒCƒ“ƒXƒ^ƒ“ƒX‚ÌÅ‘å”B‚±‚Ìˆø”‚ð‚P‚æ‚è‘å‚«‚­‚·‚é‚ÆƒCƒ“ƒXƒ^ƒ“ƒVƒ“ƒO•`‰æ‚ªs‚í‚ê‚Ü‚·B
-		/// ƒCƒ“ƒXƒ^ƒ“ƒVƒ“ƒO•`‰æ‚ðs‚¤Û‚Í•`‰æ‚µ‚½‚¢ƒCƒ“ƒXƒ^ƒ“ƒX‚Ì”•ª‚¾‚¯AUpdateInstancingDraw()‚ðŒÄ‚Ño‚·•K—v‚ª‚ ‚è‚Ü‚·B
-		/// ƒCƒ“ƒXƒ^ƒ“ƒVƒ“ƒO•`‰æ‚ÌÚ×‚ÍSmaple_XX‚ðŽQÆ‚µ‚Ä‚­‚¾‚³‚¢B
+		/// ï¿½Cï¿½ï¿½ï¿½Xï¿½^ï¿½ï¿½ï¿½Xï¿½ÌÅ‘å”ï¿½Bï¿½ï¿½ï¿½Ìˆï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Pï¿½ï¿½ï¿½å‚«ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ÆƒCï¿½ï¿½ï¿½Xï¿½^ï¿½ï¿½ï¿½Vï¿½ï¿½ï¿½Oï¿½`ï¿½æ‚ªï¿½sï¿½ï¿½ï¿½Ü‚ï¿½ï¿½B
+		/// ï¿½Cï¿½ï¿½ï¿½Xï¿½^ï¿½ï¿½ï¿½Vï¿½ï¿½ï¿½Oï¿½`ï¿½ï¿½ï¿½ï¿½sï¿½ï¿½ï¿½Û‚Í•`ï¿½æ‚µï¿½ï¿½ï¿½ï¿½ï¿½Cï¿½ï¿½ï¿½Xï¿½^ï¿½ï¿½ï¿½Xï¿½Ìï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½AUpdateInstancingDraw()ï¿½ï¿½ï¿½Ä‚Ñoï¿½ï¿½ï¿½Kï¿½vï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ü‚ï¿½ï¿½B
+		/// ï¿½Cï¿½ï¿½ï¿½Xï¿½^ï¿½ï¿½ï¿½Vï¿½ï¿½ï¿½Oï¿½`ï¿½ï¿½ÌÚ×‚ï¿½Smaple_XXï¿½ï¿½ï¿½Qï¿½Æ‚ï¿½ï¿½Ä‚ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½B
 		/// </param>	
 		/// <param name="isFrontCullingOnDrawShadowMap">
-		/// ƒVƒƒƒhƒEƒ}ƒbƒv‚ð•`‰æ‚·‚éÛ‚Éƒtƒƒ“ƒgƒJƒŠƒ“ƒO‚ðs‚¤H
-		/// ƒtƒƒ“ƒgƒJƒŠƒ“ƒO‚ðs‚¤‚ÆƒVƒƒƒhƒEƒAƒNƒl‚ªŒyŒ¸‚Å‚«‚Ü‚·B
-		/// ‚µ‚©‚µA”Âƒ|ƒŠ‚Ì‚æ‚¤‚È•Â‚¶‚Ä‚¢‚È‚¢ƒ‚ƒfƒ‹‚ðƒtƒƒ“ƒgƒJƒŠƒ“ƒO‚Å•`‰æ‚·‚é‚ÆA
-		/// ƒVƒƒƒhƒEƒ}ƒbƒv‚É•`‰æ‚³‚ê‚È‚­‚È‚Á‚Ä‚µ‚Ü‚¤‚½‚ßA‚»‚Ìê‡‚Í‚±‚Ìƒtƒ‰ƒO‚ðfalse‚É‚µ‚Ä‚­‚¾‚³‚¢B
-		/// —á)’n–Ê‚È‚ÇB
+		/// ï¿½Vï¿½ï¿½ï¿½hï¿½Eï¿½}ï¿½bï¿½vï¿½ï¿½`ï¿½æ‚·ï¿½ï¿½Û‚Éƒtï¿½ï¿½ï¿½ï¿½ï¿½gï¿½Jï¿½ï¿½ï¿½ï¿½ï¿½Oï¿½ï¿½ï¿½sï¿½ï¿½ï¿½H
+		/// ï¿½tï¿½ï¿½ï¿½ï¿½ï¿½gï¿½Jï¿½ï¿½ï¿½ï¿½ï¿½Oï¿½ï¿½ï¿½sï¿½ï¿½ï¿½ÆƒVï¿½ï¿½ï¿½hï¿½Eï¿½Aï¿½Nï¿½lï¿½ï¿½ï¿½yï¿½ï¿½ï¿½Å‚ï¿½ï¿½Ü‚ï¿½ï¿½B
+		/// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Aï¿½Âƒ|ï¿½ï¿½ï¿½Ì‚æ‚¤ï¿½È•Â‚ï¿½ï¿½Ä‚ï¿½ï¿½È‚ï¿½ï¿½ï¿½ï¿½fï¿½ï¿½ï¿½ï¿½ï¿½tï¿½ï¿½ï¿½ï¿½ï¿½gï¿½Jï¿½ï¿½ï¿½ï¿½ï¿½Oï¿½Å•`ï¿½æ‚·ï¿½ï¿½ÆA
+		/// ï¿½Vï¿½ï¿½ï¿½hï¿½Eï¿½}ï¿½bï¿½vï¿½É•`ï¿½æ‚³ï¿½ï¿½È‚ï¿½ï¿½È‚ï¿½ï¿½Ä‚ï¿½ï¿½Ü‚ï¿½ï¿½ï¿½ï¿½ßAï¿½ï¿½ï¿½Ìê‡ï¿½Í‚ï¿½ï¿½Ìƒtï¿½ï¿½ï¿½Oï¿½ï¿½falseï¿½É‚ï¿½ï¿½Ä‚ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½B
+		/// ï¿½ï¿½)ï¿½nï¿½Ê‚È‚ÇB
 		/// </param>
 		void IniTranslucent(
 			const char* filePath,
@@ -73,39 +74,39 @@ namespace nsK2Engine {
 			int maxInstance = 1,
 			bool isFrontCullingOnDrawShadowMap = false);
 		/// <summary>
-		/// “ÁŽê‚ÈƒVƒF[ƒfƒBƒ“ƒO‚ðs‚¢‚½‚¢ê‡‚Ì‰Šú‰»ˆ—B
+		/// ï¿½ï¿½ï¿½ï¿½ÈƒVï¿½Fï¿½[ï¿½fï¿½Bï¿½ï¿½ï¿½Oï¿½ï¿½ï¿½sï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ê‡ï¿½Ìï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½B
 		/// </summary>
-		/// <param name="initData">ƒ‚ƒfƒ‹ƒf[ƒ^B</param>
+		/// <param name="initData">ï¿½ï¿½ï¿½fï¿½ï¿½ï¿½fï¿½[ï¿½^ï¿½B</param>
 		void InitForwardRendering(ModelInitData& initData);
 		/// <summary>
-		/// XVˆ—B
+		/// ï¿½Xï¿½Vï¿½ï¿½ï¿½ï¿½ï¿½B
 		/// </summary>
 		void Update();
 		/// <summary>
-		/// ƒCƒ“ƒXƒ^ƒ“ƒVƒ“ƒOƒf[ƒ^‚ÌXVB
+		/// ï¿½Cï¿½ï¿½ï¿½Xï¿½^ï¿½ï¿½ï¿½Vï¿½ï¿½ï¿½Oï¿½fï¿½[ï¿½^ï¿½ÌXï¿½Vï¿½B
 		/// </summary>
-		/// <param name="instanceNo">ƒCƒ“ƒXƒ^ƒ“ƒX”Ô†</param>
-		/// <param name="pos">À•W</param>
-		/// <param name="rot">‰ñ“]</param>
-		/// <param name="scale">Šg‘å—¦</param>
+		/// <param name="instanceNo">ï¿½Cï¿½ï¿½ï¿½Xï¿½^ï¿½ï¿½ï¿½Xï¿½Ôï¿½</param>
+		/// <param name="pos">ï¿½ï¿½ï¿½W</param>
+		/// <param name="rot">ï¿½ï¿½]</param>
+		/// <param name="scale">ï¿½gï¿½å—¦</param>
 		void UpdateInstancingData(int instanceNo, const Vector3& pos, const Quaternion& rot, const Vector3& scale);
 		/// <summary>
-		/// •`‰æˆ—B
+		/// ï¿½`ï¿½æˆï¿½ï¿½ï¿½B
 		/// </summary>
 		void Draw(RenderContext& rc);
 
 		/// <summary>
-		/// ƒAƒjƒ[ƒVƒ‡ƒ“Ä¶B
+		/// ï¿½Aï¿½jï¿½ï¿½ï¿½[ï¿½Vï¿½ï¿½ï¿½ï¿½ï¿½Äï¿½ï¿½B
 		/// </summary>
-		/// <param name="animNo">ƒAƒjƒ[ƒVƒ‡ƒ“ƒNƒŠƒbƒv‚Ì”Ô†B</param>
-		/// <param name="interpolateTime">•âŠ®ŽžŠÔ(’PˆÊF•bB)</param>
+		/// <param name="animNo">ï¿½Aï¿½jï¿½ï¿½ï¿½[ï¿½Vï¿½ï¿½ï¿½ï¿½ï¿½Nï¿½ï¿½ï¿½bï¿½vï¿½Ì”Ôï¿½ï¿½B</param>
+		/// <param name="interpolateTime">ï¿½âŠ®ï¿½ï¿½ï¿½ï¿½(ï¿½Pï¿½ÊFï¿½bï¿½B)</param>
 		void PlayAnimation(int animNo, float interpolateTime = 0.0f)
 		{
 			m_animation.Play(animNo, interpolateTime);
 		}
 
 		/// <summary>
-		/// ƒAƒjƒ[ƒVƒ‡ƒ“‚ÌÄ¶’†H
+		/// ï¿½Aï¿½jï¿½ï¿½ï¿½[ï¿½Vï¿½ï¿½ï¿½ï¿½ï¿½ÌÄï¿½ï¿½ï¿½ï¿½H
 		/// </summary>
 		bool IsPlayingAnimation() const
 		{
@@ -113,9 +114,9 @@ namespace nsK2Engine {
 		}
 
 		/// <summary>
-		/// ƒ‚ƒfƒ‹‚ðŽæ“¾B
+		/// ï¿½ï¿½ï¿½fï¿½ï¿½ï¿½ï¿½ï¿½æ“¾ï¿½B
 		/// </summary>
-		/// <returns>ƒ‚ƒfƒ‹</returns>
+		/// <returns>ï¿½ï¿½ï¿½fï¿½ï¿½</returns>
 		Model& GetModel()
 		{
 			if (m_renderToGBufferModel.IsInited()) {
@@ -128,19 +129,19 @@ namespace nsK2Engine {
 			{
 				return m_translucentModel;
 			}
-			// ‚±‚±‚Ü‚Å—ˆ‚é‚Ì‚Í‚¨‚©‚µ‚¢B
+			// ï¿½ï¿½ï¿½ï¿½ï¿½Ü‚Å—ï¿½ï¿½ï¿½Ì‚Í‚ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½B
 			return m_zprepassModel;
 		}
 
 		/// <summary>
-		/// À•WA‰ñ“]AŠg‘å‚ð‘S‚ÄÝ’èB
+		/// ï¿½ï¿½ï¿½Wï¿½Aï¿½ï¿½]ï¿½Aï¿½gï¿½ï¿½ï¿½Sï¿½ÄÝ’ï¿½B
 		/// </summary>
 		/// <remark>
-		/// ƒCƒ“ƒXƒ^ƒ“ƒVƒ“ƒO•`‰æ‚ª—LŒø‚Ìê‡‚ÍA‚±‚ÌÝ’è‚Í–³Ž‹‚³‚ê‚Ü‚·B
+		/// ï¿½Cï¿½ï¿½ï¿½Xï¿½^ï¿½ï¿½ï¿½Vï¿½ï¿½ï¿½Oï¿½`ï¿½æ‚ªï¿½Lï¿½ï¿½ï¿½Ìê‡ï¿½ÍAï¿½ï¿½ï¿½ÌÝ’ï¿½Í–ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ü‚ï¿½ï¿½B
 		/// </remark>
-		/// <param name="pos">À•WB</param>
-		/// <param name="rotation">‰ñ“]B</param>
-		/// <param name="scale">Šg‘åB</param>
+		/// <param name="pos">ï¿½ï¿½ï¿½Wï¿½B</param>
+		/// <param name="rotation">ï¿½ï¿½]ï¿½B</param>
+		/// <param name="scale">ï¿½gï¿½ï¿½B</param>
 		void SetTRS(const Vector3& pos, const Quaternion& rotation, const Vector3& scale)
 		{
 			SetPosition(pos);
@@ -149,45 +150,45 @@ namespace nsK2Engine {
 		}
 
 		/// <summary>
-		/// À•W‚ðÝ’èB
+		/// ï¿½ï¿½ï¿½Wï¿½ï¿½Ý’ï¿½B
 		/// </summary>
 		/// <remark>
-		/// ƒCƒ“ƒXƒ^ƒ“ƒVƒ“ƒO•`‰æ‚ª—LŒø‚Ìê‡‚ÍA‚±‚ÌÝ’è‚Í–³Ž‹‚³‚ê‚Ü‚·B
+		/// ï¿½Cï¿½ï¿½ï¿½Xï¿½^ï¿½ï¿½ï¿½Vï¿½ï¿½ï¿½Oï¿½`ï¿½æ‚ªï¿½Lï¿½ï¿½ï¿½Ìê‡ï¿½ÍAï¿½ï¿½ï¿½ÌÝ’ï¿½Í–ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ü‚ï¿½ï¿½B
 		/// </remark>
-		/// <param name="pos">À•WB</param>
+		/// <param name="pos">ï¿½ï¿½ï¿½Wï¿½B</param>
 		void SetPosition(const Vector3& pos)
 		{
 			m_position = pos;
 		}
 		/// <summary>
-		/// À•W‚ðÝ’èB
+		/// ï¿½ï¿½ï¿½Wï¿½ï¿½Ý’ï¿½B
 		/// </summary>
-		/// <param name="x">xÀ•W</param>
-		/// <param name="y">yÀ•W</param>
-		/// <param name="z">zÀ•W</param>
+		/// <param name="x">xï¿½ï¿½ï¿½W</param>
+		/// <param name="y">yï¿½ï¿½ï¿½W</param>
+		/// <param name="z">zï¿½ï¿½ï¿½W</param>
 		void SetPosition(float x, float y, float z)
 		{
 			SetPosition({ x, y, z });
 		}
 		/// <summary>
-		/// ‰ñ“]‚ðÝ’èB
+		/// ï¿½ï¿½]ï¿½ï¿½Ý’ï¿½B
 		/// </summary>
 		/// <remark>
-		/// ƒCƒ“ƒXƒ^ƒ“ƒVƒ“ƒO•`‰æ‚ª—LŒø‚Ìê‡‚ÍA‚±‚ÌÝ’è‚Í–³Ž‹‚³‚ê‚Ü‚·B
+		/// ï¿½Cï¿½ï¿½ï¿½Xï¿½^ï¿½ï¿½ï¿½Vï¿½ï¿½ï¿½Oï¿½`ï¿½æ‚ªï¿½Lï¿½ï¿½ï¿½Ìê‡ï¿½ÍAï¿½ï¿½ï¿½ÌÝ’ï¿½Í–ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ü‚ï¿½ï¿½B
 		/// </remark>
-		/// <param name="rotation">‰ñ“]B</param>
+		/// <param name="rotation">ï¿½ï¿½]ï¿½B</param>
 		void SetRotation(const Quaternion& rotation)
 		{
 			m_rotation = rotation;
 		}
 
 		/// <summary>
-		/// Šg‘å—¦‚ðÝ’èB
+		/// ï¿½gï¿½å—¦ï¿½ï¿½Ý’ï¿½B
 		/// </summary>
 		/// <remark>
-		/// ƒCƒ“ƒXƒ^ƒ“ƒVƒ“ƒO•`‰æ‚ª—LŒø‚Ìê‡‚ÍA‚±‚ÌÝ’è‚Í–³Ž‹‚³‚ê‚Ü‚·B
+		/// ï¿½Cï¿½ï¿½ï¿½Xï¿½^ï¿½ï¿½ï¿½Vï¿½ï¿½ï¿½Oï¿½`ï¿½æ‚ªï¿½Lï¿½ï¿½ï¿½Ìê‡ï¿½ÍAï¿½ï¿½ï¿½ÌÝ’ï¿½Í–ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ü‚ï¿½ï¿½B
 		/// </remark>
-		/// <param name="scale">Šg‘å—¦B</param>
+		/// <param name="scale">ï¿½gï¿½å—¦ï¿½B</param>
 		void SetScale(const Vector3& scale)
 		{
 			m_scale = scale;
@@ -197,34 +198,34 @@ namespace nsK2Engine {
 			SetScale({ x, y, z });
 		}
 		/// <summary>
-		/// ƒVƒƒƒhƒEƒLƒƒƒXƒ^[‚Ìƒtƒ‰ƒO‚ðÝ’è‚·‚é
+		/// ï¿½Vï¿½ï¿½ï¿½hï¿½Eï¿½Lï¿½ï¿½ï¿½Xï¿½^ï¿½[ï¿½Ìƒtï¿½ï¿½ï¿½Oï¿½ï¿½Ý’è‚·ï¿½ï¿½
 		/// </summary>
 		void SetShadowCasterFlag(bool flag)
 		{
 			m_isShadowCaster = flag;
 		}
 		/// <summary>
-		/// ƒAƒjƒ[ƒVƒ‡ƒ“Ä¶‚Ì‘¬“x‚ðÝ’è‚·‚éB
+		/// ï¿½Aï¿½jï¿½ï¿½ï¿½[ï¿½Vï¿½ï¿½ï¿½ï¿½ï¿½Äï¿½ï¿½Ì‘ï¿½ï¿½xï¿½ï¿½Ý’è‚·ï¿½ï¿½B
 		/// </summary>
-		/// <param name="animationSpeed">”’l‚Ì•ª‚¾‚¯”{‚É‚·‚éB</param>
+		/// <param name="animationSpeed">ï¿½ï¿½ï¿½lï¿½Ì•ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½{ï¿½É‚ï¿½ï¿½ï¿½B</param>
 		void SetAnimationSpeed(const float animationSpeed)
 		{
 			m_animationSpeed = animationSpeed;
 		}
 		/// <summary>
-		/// ƒ{[ƒ“‚Ì–¼‘O‚©‚çƒ{[ƒ“”Ô†‚ðŒŸõB
+		/// ï¿½{ï¿½[ï¿½ï¿½ï¿½Ì–ï¿½ï¿½Oï¿½ï¿½ï¿½ï¿½{ï¿½[ï¿½ï¿½ï¿½Ôï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½B
 		/// </summary>
-		/// <param name="boneName">ƒ{[ƒ“‚Ì–¼‘O</param>
-		/// <returns>ƒ{[ƒ“”Ô†BŒ©‚Â‚©‚ç‚È‚©‚Á‚½ê‡‚Í-1‚ª•Ô‚Á‚Ä‚«‚Ü‚·B</returns>
+		/// <param name="boneName">ï¿½{ï¿½[ï¿½ï¿½ï¿½Ì–ï¿½ï¿½O</param>
+		/// <returns>ï¿½{ï¿½[ï¿½ï¿½ï¿½Ôï¿½ï¿½Bï¿½ï¿½ï¿½Â‚ï¿½ï¿½ï¿½È‚ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ê‡ï¿½ï¿½-1ï¿½ï¿½ï¿½Ô‚ï¿½ï¿½Ä‚ï¿½ï¿½Ü‚ï¿½ï¿½B</returns>
 		int FindBoneID(const wchar_t* boneName) const
 		{
 			return m_skeleton.FindBoneID(boneName);
 		}
 		/// <summary>
-		/// ƒ{[ƒ“”Ô†‚©‚çƒ{[ƒ“‚ðŽæ“¾B
+		/// ï¿½{ï¿½[ï¿½ï¿½ï¿½Ôï¿½ï¿½ï¿½ï¿½ï¿½{ï¿½[ï¿½ï¿½ï¿½ï¿½ï¿½æ“¾ï¿½B
 		/// </summary>
-		/// <param name="boneNo">ƒ{[ƒ“”Ô†</param>
-		/// <returns>ƒ{[ƒ“</returns>
+		/// <param name="boneNo">ï¿½{ï¿½[ï¿½ï¿½ï¿½Ôï¿½</param>
+		/// <returns>ï¿½{ï¿½[ï¿½ï¿½</returns>
 		Bone* GetBone(int boneNo) const
 		{
 			return m_skeleton.GetBone(boneNo);
@@ -235,7 +236,7 @@ namespace nsK2Engine {
 		}
 
 		/// <summary>
-		/// ƒVƒƒƒhƒEƒLƒƒƒXƒ^[H
+		/// ï¿½Vï¿½ï¿½ï¿½hï¿½Eï¿½Lï¿½ï¿½ï¿½Xï¿½^ï¿½[ï¿½H
 		/// </summary>
 		/// <returns></returns>
 		bool IsShadowCaster() const
@@ -243,7 +244,7 @@ namespace nsK2Engine {
 			return m_isShadowCaster;
 		}
 		/// <summary>
-		/// ƒCƒ“ƒXƒ^ƒ“”‚ðŽæ“¾B
+		/// ï¿½Cï¿½ï¿½ï¿½Xï¿½^ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½æ“¾ï¿½B
 		/// </summary>
 		/// <returns></returns>
 		int GetNumInstance() const
@@ -251,7 +252,7 @@ namespace nsK2Engine {
 			return m_numInstance;
 		}
 		/// <summary>
-		/// ƒCƒ“ƒXƒ^ƒ“ƒVƒ“ƒO•`‰æ‚ðs‚¤H
+		/// ï¿½Cï¿½ï¿½ï¿½Xï¿½^ï¿½ï¿½ï¿½Vï¿½ï¿½ï¿½Oï¿½`ï¿½ï¿½ï¿½ï¿½sï¿½ï¿½ï¿½H
 		/// </summary>
 		/// <returns></returns>
 		bool IsInstancingDraw() const
@@ -259,11 +260,11 @@ namespace nsK2Engine {
 			return m_isEnableInstancingDraw;
 		}
 		/// <summary>
-		/// ƒ[ƒ‹ƒhs—ñ‚ðŽæ“¾B
+		/// ï¿½ï¿½ï¿½[ï¿½ï¿½ï¿½hï¿½sï¿½ï¿½ï¿½ï¿½æ“¾ï¿½B
 		/// </summary>
 		/// <param name="instanceId">
-		/// ƒCƒ“ƒXƒ^ƒ“ƒXIDB
-		/// ‚±‚Ìˆø”‚ÍƒCƒ“ƒXƒ^ƒ“ƒVƒ“ƒO•`‰æ‚ªŒü‚±‚¤‚Ìê‡‚Í–³Ž‹‚³‚ê‚Ü‚·B
+		/// ï¿½Cï¿½ï¿½ï¿½Xï¿½^ï¿½ï¿½ï¿½XIDï¿½B
+		/// ï¿½ï¿½ï¿½Ìˆï¿½ï¿½ï¿½ï¿½ÍƒCï¿½ï¿½ï¿½Xï¿½^ï¿½ï¿½ï¿½Vï¿½ï¿½ï¿½Oï¿½`ï¿½æ‚ªï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ìê‡ï¿½Í–ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ü‚ï¿½ï¿½B
 		/// </param>
 		/// <returns></returns>
 		const Matrix& GetWorldMatrix(int instanceId) const
@@ -274,86 +275,101 @@ namespace nsK2Engine {
 			return m_zprepassModel.GetWorldMatrix();
 		}
 		/// <summary>
-		/// ƒCƒ“ƒXƒ^ƒ“ƒX‚ðœ‹ŽB
+		/// ï¿½Cï¿½ï¿½ï¿½Xï¿½^ï¿½ï¿½ï¿½Xï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½B
 		/// </summary>
 		/// <remark>
-		/// ƒCƒ“ƒXƒ^ƒ“ƒX•`‰æ‚ð—˜—p‚µ‚Ä‚¢‚éÛ‚ÉA‚»‚ÌƒCƒ“ƒXƒ^ƒ“ƒX‚ðƒV[ƒ“‚©‚çœ‹Ž‚µ‚½‚¢ê‡‚É—˜—p‚µ‚Ä‚­‚¾‚³‚¢B
+		/// ï¿½Cï¿½ï¿½ï¿½Xï¿½^ï¿½ï¿½ï¿½Xï¿½`ï¿½ï¿½ð—˜—pï¿½ï¿½ï¿½Ä‚ï¿½ï¿½ï¿½Û‚ÉAï¿½ï¿½ï¿½ÌƒCï¿½ï¿½ï¿½Xï¿½^ï¿½ï¿½ï¿½Xï¿½ï¿½ï¿½Vï¿½[ï¿½ï¿½ï¿½ï¿½ï¿½çœï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ê‡ï¿½É—ï¿½ï¿½pï¿½ï¿½ï¿½Ä‚ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½B
 		/// </remark>
-		/// <param name="instanceNo">ƒCƒ“ƒXƒ^ƒ“ƒX”Ô†</param>
+		/// <param name="instanceNo">ï¿½Cï¿½ï¿½ï¿½Xï¿½^ï¿½ï¿½ï¿½Xï¿½Ôï¿½</param>
 		void RemoveInstance(int instanceNo);
 		/// <summary>
-		/// ƒŒƒCƒgƒŒƒ[ƒ‹ƒh‚É“o˜^‚·‚é‚©‚Ìƒtƒ‰ƒO‚ðÝ’è‚·‚é
-		/// •p”É‚É¶¬‚·‚éƒ‚ƒfƒ‹i’e‚È‚Çj‚ðInit‚·‚é‘O‚Éˆø”false‚ÅŽÀs‚µ‚Ä‚­‚¾‚³‚¢B
+		/// ï¿½ï¿½ï¿½Cï¿½gï¿½ï¿½ï¿½ï¿½ï¿½[ï¿½ï¿½ï¿½hï¿½É“oï¿½^ï¿½ï¿½ï¿½é‚©ï¿½Ìƒtï¿½ï¿½ï¿½Oï¿½ï¿½Ý’è‚·ï¿½ï¿½
+		/// ï¿½pï¿½É‚Éï¿½ï¿½ï¿½ï¿½ï¿½ï¿½éƒ‚ï¿½fï¿½ï¿½ï¿½iï¿½eï¿½È‚Çjï¿½ï¿½Initï¿½ï¿½ï¿½ï¿½Oï¿½Éˆï¿½ï¿½ï¿½falseï¿½ÅŽï¿½ï¿½sï¿½ï¿½ï¿½Ä‚ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½B
 		/// </summary>
 		void SetRaytracingWorld(bool flag) {
 			m_isRaytracingWorld = flag;
 		}
+		/// <summary>
+		/// é€æ˜Žåº¦ãƒ‡ã‚£ã‚¶å€¤ã‚’è¨­å®šã™ã‚‹(0.0=å®Œå…¨é€æ˜Ž, 1.0=ä¸é€æ˜Ž)ã€‚
+		/// GBufferãƒ‘ã‚¹ã§ã®ã¿æœ‰åŠ¹ã€‚
+		/// </summary>
+		void SetDitherAlpha(float alpha)
+		{
+			m_localDitherCBData.ditherAlpha = alpha;
+		}
+		/// <summary>
+		/// é€æ˜Žåº¦ãƒ‡ã‚£ã‚¶å€¤ã‚’å–å¾—ã™ã‚‹ã€‚
+		/// </summary>
+		float GetDitherAlpha() const
+		{
+			return m_localDitherCBData.ditherAlpha;
+		}
 	private:
 		/// <summary>
-		/// ƒXƒPƒ‹ƒgƒ“‚Ì‰Šú‰»B
+		/// ï¿½Xï¿½Pï¿½ï¿½ï¿½gï¿½ï¿½ï¿½Ìï¿½ï¿½ï¿½ï¿½ï¿½ï¿½B
 		/// </summary>
-		/// <param name="filePath">ƒtƒ@ƒCƒ‹ƒpƒXB</param>
+		/// <param name="filePath">ï¿½tï¿½@ï¿½Cï¿½ï¿½ï¿½pï¿½Xï¿½B</param>
 		void InitSkeleton(const char* filePath);
 		/// <summary>
-		/// ƒAƒjƒ[ƒVƒ‡ƒ“‚Ì‰Šú‰»B
+		/// ï¿½Aï¿½jï¿½ï¿½ï¿½[ï¿½Vï¿½ï¿½ï¿½ï¿½ï¿½Ìï¿½ï¿½ï¿½ï¿½ï¿½ï¿½B
 		/// </summary>
-		/// <param name="animationClips">ƒAƒjƒ[ƒVƒ‡ƒ“ƒNƒŠƒbƒvB</param>
-		/// <param name="numAnimationClips">ƒAƒjƒ[ƒVƒ‡ƒ“ƒNƒŠƒbƒv‚Ì”B</param>
-		/// <param name="enModelUpAxis">ƒ‚ƒfƒ‹‚ÌãŒü‚«B</param>
+		/// <param name="animationClips">ï¿½Aï¿½jï¿½ï¿½ï¿½[ï¿½Vï¿½ï¿½ï¿½ï¿½ï¿½Nï¿½ï¿½ï¿½bï¿½vï¿½B</param>
+		/// <param name="numAnimationClips">ï¿½Aï¿½jï¿½ï¿½ï¿½[ï¿½Vï¿½ï¿½ï¿½ï¿½ï¿½Nï¿½ï¿½ï¿½bï¿½vï¿½Ìï¿½ï¿½B</param>
+		/// <param name="enModelUpAxis">ï¿½ï¿½ï¿½fï¿½ï¿½ï¿½Ìï¿½ï¿½ï¿½ï¿½ï¿½B</param>
 		void InitAnimation(AnimationClip* animationClips,
 			int numAnimationClips,
 			EnModelUpAxis enModelUpAxis);
 		/// <summary>
-		/// ’¸“_ŒvŽZƒpƒX‚©‚çŒÄ‚Ño‚³‚ê‚éˆ—B
+		/// ï¿½ï¿½ï¿½_ï¿½vï¿½Zï¿½pï¿½Xï¿½ï¿½ï¿½ï¿½Ä‚Ñoï¿½ï¿½ï¿½ï¿½éˆï¿½ï¿½ï¿½B
 		/// </summary>
 		/// <param name="rc"></param>
 		void OnComputeVertex(RenderContext& rc);
 		/// <summary>
-		/// ƒVƒƒƒhƒEƒ}ƒbƒv‚Ö‚Ì•`‰æƒpƒX‚©‚çŒÄ‚Î‚ê‚éˆ—B
+		/// ï¿½Vï¿½ï¿½ï¿½hï¿½Eï¿½}ï¿½bï¿½vï¿½Ö‚Ì•`ï¿½ï¿½pï¿½Xï¿½ï¿½ï¿½ï¿½Ä‚Î‚ï¿½éˆï¿½ï¿½ï¿½B
 		/// </summary>
-		/// <param name="rc">ƒŒƒ“ƒ_ƒŠƒ“ƒOƒRƒ“ƒeƒLƒXƒg</param>
-		/// <param name="ligNo">ƒ‰ƒCƒg”Ô†</param>
-		/// <param name="shadowMapNo">ƒVƒƒƒhƒEƒ}ƒbƒv”Ô†</param>
-		/// <param name="lvpMatrix">ƒ‰ƒCƒgƒrƒ…[ƒvƒƒWƒFƒNƒVƒ‡ƒ“s—ñ</param>
+		/// <param name="rc">ï¿½ï¿½ï¿½ï¿½ï¿½_ï¿½ï¿½ï¿½ï¿½ï¿½Oï¿½Rï¿½ï¿½ï¿½eï¿½Lï¿½Xï¿½g</param>
+		/// <param name="ligNo">ï¿½ï¿½ï¿½Cï¿½gï¿½Ôï¿½</param>
+		/// <param name="shadowMapNo">ï¿½Vï¿½ï¿½ï¿½hï¿½Eï¿½}ï¿½bï¿½vï¿½Ôï¿½</param>
+		/// <param name="lvpMatrix">ï¿½ï¿½ï¿½Cï¿½gï¿½rï¿½ï¿½ï¿½[ï¿½vï¿½ï¿½ï¿½Wï¿½Fï¿½Nï¿½Vï¿½ï¿½ï¿½ï¿½ï¿½sï¿½ï¿½</param>
 		void OnRenderShadowMap(
 			RenderContext& rc,
 			int ligNo,
 			int shadowMapNo,
 			const Matrix& lvpMatrix) override;
 		/// <summary>
-		/// ZPrepass‚©‚çŒÄ‚Î‚ê‚éˆ—B
+		/// ZPrepassï¿½ï¿½ï¿½ï¿½Ä‚Î‚ï¿½éˆï¿½ï¿½ï¿½B
 		/// </summary>
 		/// <param name="rc"></param>
 		void OnZPrepass(RenderContext& rc) override;
 		/// <summary>
-		/// G-Buffer•`‰æƒpƒX‚©‚çŒÄ‚Î‚ê‚éˆ—B
+		/// G-Bufferï¿½`ï¿½ï¿½pï¿½Xï¿½ï¿½ï¿½ï¿½Ä‚Î‚ï¿½éˆï¿½ï¿½ï¿½B
 		/// </summary>
 		void OnRenderToGBuffer(RenderContext& rc) override;
 		/// <summary>
-		/// ƒtƒHƒ[ƒhƒŒƒ“ƒ_[ƒpƒX‚©‚çŒÄ‚Î‚ê‚éˆ—B
+		/// ï¿½tï¿½Hï¿½ï¿½ï¿½[ï¿½hï¿½ï¿½ï¿½ï¿½ï¿½_ï¿½[ï¿½pï¿½Xï¿½ï¿½ï¿½ï¿½Ä‚Î‚ï¿½éˆï¿½ï¿½ï¿½B
 		/// </summary>
 		void OnForwardRender(RenderContext& rc) override;
 		/// <summary>
-		/// ”¼“§–¾ƒIƒuƒWƒFƒNƒg•`‰æƒpƒX‚©‚çŒÄ‚Î‚ê‚éˆ—B
+		/// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Iï¿½uï¿½Wï¿½Fï¿½Nï¿½gï¿½`ï¿½ï¿½pï¿½Xï¿½ï¿½ï¿½ï¿½Ä‚Î‚ï¿½éˆï¿½ï¿½ï¿½B
 		/// </summary>
 		/// <param name="rc"></param>
 		void OnTlanslucentRender(RenderContext& rc) override;
 		/// <summary>
-		/// ŠeŽíƒ‚ƒfƒ‹‚Ìƒ[ƒ‹ƒhs—ñ‚ðXV‚·‚éB
+		/// ï¿½eï¿½íƒ‚ï¿½fï¿½ï¿½ï¿½Ìƒï¿½ï¿½[ï¿½ï¿½ï¿½hï¿½sï¿½ï¿½ï¿½ï¿½Xï¿½Vï¿½ï¿½ï¿½ï¿½B
 		/// </summary>
 		void UpdateWorldMatrixInModes();
 	private:
 		/// <summary>
-		/// ƒŒƒ“ƒ_ƒŠƒ“ƒOƒGƒ“ƒWƒ“‚Å”­¶‚µ‚½ƒCƒxƒ“ƒg‚ðŽó‚¯Žæ‚Á‚½‚Æ‚«‚ÉŒÄ‚Î‚ê‚éˆ—B
+		/// ï¿½ï¿½ï¿½ï¿½ï¿½_ï¿½ï¿½ï¿½ï¿½ï¿½Oï¿½Gï¿½ï¿½ï¿½Wï¿½ï¿½ï¿½Å”ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Cï¿½xï¿½ï¿½ï¿½gï¿½ï¿½ï¿½ó‚¯Žï¿½ï¿½ï¿½ï¿½ï¿½Æ‚ï¿½ï¿½ÉŒÄ‚Î‚ï¿½éˆï¿½ï¿½ï¿½B
 		/// </summary>
 		/// <param name="enEvent"></param>
 		void OnRecievedEventFromRenderingEngine(RenderingEngine::EnEvent enEvent);
 		/// <summary>
-		/// ƒVƒƒƒhƒEƒ}ƒbƒv•`‰æ—p‚Ìƒ‚ƒfƒ‹‚ð‰Šú‰»B
+		/// ï¿½Vï¿½ï¿½ï¿½hï¿½Eï¿½}ï¿½bï¿½vï¿½`ï¿½ï¿½pï¿½Ìƒï¿½ï¿½fï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½B
 		/// </summary>
-		/// <param name="renderingEngine">ƒŒƒ“ƒ_ƒŠƒ“ƒOƒGƒ“ƒWƒ“</param>
-		/// <param name="tkmFilePath">tkmƒtƒ@ƒCƒ‹ƒpƒX</param>
-		/// <param name="modelUpAxis">ƒ‚ƒfƒ‹‚ÌãŽ²</param>
+		/// <param name="renderingEngine">ï¿½ï¿½ï¿½ï¿½ï¿½_ï¿½ï¿½ï¿½ï¿½ï¿½Oï¿½Gï¿½ï¿½ï¿½Wï¿½ï¿½</param>
+		/// <param name="tkmFilePath">tkmï¿½tï¿½@ï¿½Cï¿½ï¿½ï¿½pï¿½X</param>
+		/// <param name="modelUpAxis">ï¿½ï¿½ï¿½fï¿½ï¿½ï¿½ÌãŽ²</param>
 		void InitModelOnShadowMap(
 			RenderingEngine& renderingEngine,
 			const char* tkmFilePath,
@@ -361,7 +377,7 @@ namespace nsK2Engine {
 			bool isFrontCullingOnDrawShadowMap
 		);
 		/// <summary>
-		/// ZPrepass•`‰æ—p‚Ìƒ‚ƒfƒ‹‚ð‰Šú‰»B
+		/// ZPrepassï¿½`ï¿½ï¿½pï¿½Ìƒï¿½ï¿½fï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½B
 		/// </summary>
 		/// <param name="renderingEngine"></param>
 		/// <param name="tkmFilePath"></param>
@@ -372,30 +388,30 @@ namespace nsK2Engine {
 		);
 
 		/// <summary>
-		/// ƒCƒ“ƒXƒ^ƒ“ƒVƒ“ƒO•`‰æ—p‚Ì‰Šú‰»ˆ—‚ðŽÀsB
+		/// ï¿½Cï¿½ï¿½ï¿½Xï¿½^ï¿½ï¿½ï¿½Vï¿½ï¿½ï¿½Oï¿½`ï¿½ï¿½pï¿½Ìï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½sï¿½B
 		/// </summary>
-		/// <param name="maxInstance">Å‘åƒCƒ“ƒXƒ^ƒ“ƒX”</param>
+		/// <param name="maxInstance">ï¿½Å‘ï¿½Cï¿½ï¿½ï¿½Xï¿½^ï¿½ï¿½ï¿½Xï¿½ï¿½</param>
 		void InitInstancingDraw(int maxInstance);
 		/// <summary>
-		/// ƒAƒjƒ[ƒVƒ‡ƒ“Ï‚Ý’¸“_ƒoƒbƒtƒ@‚ÌŒvŽZˆ—‚ð‰Šú‰»B
+		/// ï¿½Aï¿½jï¿½ï¿½ï¿½[ï¿½Vï¿½ï¿½ï¿½ï¿½ï¿½Ï‚Ý’ï¿½ï¿½_ï¿½oï¿½bï¿½tï¿½@ï¿½ÌŒvï¿½Zï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½B
 		/// </summary>
-		/// <param name="tkmFilePath">tkmƒtƒ@ƒCƒ‹‚Ìƒtƒ@ƒCƒ‹ƒpƒX</param>
-		/// <param name="enModelUpAxis">ƒ‚ƒfƒ‹‚ÌãŽ²</param>
+		/// <param name="tkmFilePath">tkmï¿½tï¿½@ï¿½Cï¿½ï¿½ï¿½Ìƒtï¿½@ï¿½Cï¿½ï¿½ï¿½pï¿½X</param>
+		/// <param name="enModelUpAxis">ï¿½ï¿½ï¿½fï¿½ï¿½ï¿½ÌãŽ²</param>
 		void InitComputeAnimatoinVertexBuffer(
 			const char* tkmFilePath,
 			EnModelUpAxis enModelUpAxis);
 		/// <summary>
-		/// GBuffer•`‰æ—p‚Ìƒ‚ƒfƒ‹‚ð‰Šú‰»B
+		/// GBufferï¿½`ï¿½ï¿½pï¿½Ìƒï¿½ï¿½fï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½B
 		/// </summary>
-		/// <param name="renderingEngine">ƒŒƒ“ƒ_ƒŠƒ“ƒOƒGƒ“ƒWƒ“</param>
-		/// <param name="tkmFilePath">tkmƒtƒ@ƒCƒ‹ƒpƒX</param>
+		/// <param name="renderingEngine">ï¿½ï¿½ï¿½ï¿½ï¿½_ï¿½ï¿½ï¿½ï¿½ï¿½Oï¿½Gï¿½ï¿½ï¿½Wï¿½ï¿½</param>
+		/// <param name="tkmFilePath">tkmï¿½tï¿½@ï¿½Cï¿½ï¿½ï¿½pï¿½X</param>
 		void InitModelOnRenderGBuffer(
 			RenderingEngine& renderingEngine,
 			const char* tkmFilePath,
 			EnModelUpAxis enModelUpAxis,
 			bool isShadowReciever);
 		/// <summary>
-		/// ”¼“§–¾ƒIƒuƒWƒFƒNƒg•`‰æƒpƒX‚ÅŽg—p‚³‚ê‚éƒ‚ƒfƒ‹‚ð‰Šú‰»B
+		/// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Iï¿½uï¿½Wï¿½Fï¿½Nï¿½gï¿½`ï¿½ï¿½pï¿½Xï¿½ÅŽgï¿½pï¿½ï¿½ï¿½ï¿½éƒ‚ï¿½fï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½B
 		/// </summary>
 		/// <param name="renderingEngine"></param>
 		/// <param name="tkmFilePath"></param>
@@ -408,51 +424,52 @@ namespace nsK2Engine {
 			bool isShadowReciever
 		);
 		/// <summary>
-		/// ŠeŽíƒ‚ƒfƒ‹‚Ì’¸“_ƒVƒF[ƒ_[‚ÌƒGƒ“ƒgƒŠ[ƒ|ƒCƒ“ƒg‚ðÝ’èB
+		/// ï¿½eï¿½íƒ‚ï¿½fï¿½ï¿½ï¿½Ì’ï¿½ï¿½_ï¿½Vï¿½Fï¿½[ï¿½_ï¿½[ï¿½ÌƒGï¿½ï¿½ï¿½gï¿½ï¿½ï¿½[ï¿½|ï¿½Cï¿½ï¿½ï¿½gï¿½ï¿½Ý’ï¿½B
 		/// </summary>
 		void SetupVertexShaderEntryPointFunc(ModelInitData& modelInitData);
 		/// <summary>
-		/// ƒ‚ƒfƒ‹‚ð“à•ï‚·‚éƒoƒEƒ“ƒfƒBƒ“ƒOƒ{ƒŠƒ…[ƒ€‚ð‰Šú‰»B
+		/// ï¿½ï¿½ï¿½fï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï‚·ï¿½ï¿½oï¿½Eï¿½ï¿½ï¿½fï¿½Bï¿½ï¿½ï¿½Oï¿½{ï¿½ï¿½ï¿½ï¿½ï¿½[ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½B
 		/// </summary>
 		/// <remark>
-		/// AABB‚ð\’z‚µ‚Ü‚·B
+		/// AABBï¿½ï¿½ï¿½\ï¿½zï¿½ï¿½ï¿½Ü‚ï¿½ï¿½B
 		/// </remark>
 		void InitBoundingVolume();
 		/// <summary>
-		/// Šô‰½Šwî•ñ‚ð‰Šú‰»
+		/// ï¿½ô‰½Šwï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 		/// </summary>
-		/// <param name="maxInstance">ƒCƒ“ƒXƒ^ƒ“ƒX”</param>
+		/// <param name="maxInstance">ï¿½Cï¿½ï¿½ï¿½Xï¿½^ï¿½ï¿½ï¿½Xï¿½ï¿½</param>
 		void InitGeometryDatas(int maxInstance);
 	public:
 		static const int NUM_SHADOW_LIGHT = 1;
 	private:
-		AnimationClip* m_animationClips = nullptr;			// ƒAƒjƒ[ƒVƒ‡ƒ“ƒNƒŠƒbƒvB
-		int							m_numAnimationClips = 0;			// ƒAƒjƒ[ƒVƒ‡ƒ“ƒNƒŠƒbƒv‚Ì”B
-		Vector3 					m_position = Vector3::Zero;			// À•WB
-		Quaternion	 				m_rotation = Quaternion::Identity;	// ‰ñ“]B
-		Vector3						m_scale = Vector3::One;				// Šg‘å—¦B
-		EnModelUpAxis				m_enFbxUpAxis = enModelUpAxisZ;		// FBX‚Ìã•ûŒüB
-		Animation					m_animation;						// ƒAƒjƒ[ƒVƒ‡ƒ“B
-		ComputeAnimationVertexBuffer m_computeAnimationVertexBuffer;	// ƒAƒjƒ[ƒVƒ‡ƒ“Ï‚Ý’¸“_ƒoƒbƒtƒ@‚ÌŒvŽZˆ—B
-		Model*						m_addRaytracingWorldModel = nullptr;// ƒŒƒCƒgƒŒƒ[ƒ‹ƒh‚É“o˜^‚µ‚½ƒ‚ƒfƒ‹B				
-		Model						m_zprepassModel;					// ZPrepass‚Å•`‰æ‚³‚ê‚éƒ‚ƒfƒ‹
-		Model						m_forwardRenderModel;				// ƒtƒHƒ[ƒhƒŒƒ“ƒ_ƒŠƒ“ƒO‚Ì•`‰æƒpƒX‚Å•`‰æ‚³‚ê‚éƒ‚ƒfƒ‹
-		Model						m_translucentModel;					// ”¼“§–¾ƒ‚ƒfƒ‹B
-		Model						m_renderToGBufferModel;				// RenderToGBuffer‚Å•`‰æ‚³‚ê‚éƒ‚ƒfƒ‹
-		Model						m_shadowModels[MAX_DIRECTIONAL_LIGHT][NUM_SHADOW_MAP];	// ƒVƒƒƒhƒEƒ}ƒbƒv‚É•`‰æ‚·‚éƒ‚ƒfƒ‹
-		ConstantBuffer				m_drawShadowMapCameraParamCB[MAX_DIRECTIONAL_LIGHT][NUM_SHADOW_MAP];		// ƒVƒƒƒhƒEƒ}ƒbƒvì¬Žž‚É•K—v‚ÈƒJƒƒ‰ƒpƒ‰ƒ[ƒ^—p‚Ì’è”ƒoƒbƒtƒ@B
-		bool						m_isUpdateAnimation = true;			// ƒAƒjƒ[ƒVƒ‡ƒ“‚ðXV‚·‚éH
-		Skeleton					m_skeleton;							// œB
-		bool						m_isShadowCaster = true;			// ƒVƒƒƒhƒEƒLƒƒƒXƒ^[ƒtƒ‰ƒO
+		AnimationClip* m_animationClips = nullptr;			// ï¿½Aï¿½jï¿½ï¿½ï¿½[ï¿½Vï¿½ï¿½ï¿½ï¿½ï¿½Nï¿½ï¿½ï¿½bï¿½vï¿½B
+		int							m_numAnimationClips = 0;			// ï¿½Aï¿½jï¿½ï¿½ï¿½[ï¿½Vï¿½ï¿½ï¿½ï¿½ï¿½Nï¿½ï¿½ï¿½bï¿½vï¿½Ìï¿½ï¿½B
+		Vector3 					m_position = Vector3::Zero;			// ï¿½ï¿½ï¿½Wï¿½B
+		Quaternion	 				m_rotation = Quaternion::Identity;	// ï¿½ï¿½]ï¿½B
+		Vector3						m_scale = Vector3::One;				// ï¿½gï¿½å—¦ï¿½B
+		EnModelUpAxis				m_enFbxUpAxis = enModelUpAxisZ;		// FBXï¿½Ìï¿½ï¿½ï¿½ï¿½ï¿½B
+		Animation					m_animation;						// ï¿½Aï¿½jï¿½ï¿½ï¿½[ï¿½Vï¿½ï¿½ï¿½ï¿½ï¿½B
+		ComputeAnimationVertexBuffer m_computeAnimationVertexBuffer;	// ï¿½Aï¿½jï¿½ï¿½ï¿½[ï¿½Vï¿½ï¿½ï¿½ï¿½ï¿½Ï‚Ý’ï¿½ï¿½_ï¿½oï¿½bï¿½tï¿½@ï¿½ÌŒvï¿½Zï¿½ï¿½ï¿½ï¿½ï¿½B
+		Model*						m_addRaytracingWorldModel = nullptr;// ï¿½ï¿½ï¿½Cï¿½gï¿½ï¿½ï¿½ï¿½ï¿½[ï¿½ï¿½ï¿½hï¿½É“oï¿½^ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½fï¿½ï¿½ï¿½B				
+		Model						m_zprepassModel;					// ZPrepassï¿½Å•`ï¿½æ‚³ï¿½ï¿½éƒ‚ï¿½fï¿½ï¿½
+		Model						m_forwardRenderModel;				// ï¿½tï¿½Hï¿½ï¿½ï¿½[ï¿½hï¿½ï¿½ï¿½ï¿½ï¿½_ï¿½ï¿½ï¿½ï¿½ï¿½Oï¿½Ì•`ï¿½ï¿½pï¿½Xï¿½Å•`ï¿½æ‚³ï¿½ï¿½éƒ‚ï¿½fï¿½ï¿½
+		Model						m_translucentModel;					// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½fï¿½ï¿½ï¿½B
+		Model						m_renderToGBufferModel;				// RenderToGBufferï¿½Å•`ï¿½æ‚³ï¿½ï¿½éƒ‚ï¿½fï¿½ï¿½
+		Model						m_shadowModels[MAX_DIRECTIONAL_LIGHT][NUM_SHADOW_MAP];	// ï¿½Vï¿½ï¿½ï¿½hï¿½Eï¿½}ï¿½bï¿½vï¿½É•`ï¿½æ‚·ï¿½éƒ‚ï¿½fï¿½ï¿½
+		ConstantBuffer				m_drawShadowMapCameraParamCB[MAX_DIRECTIONAL_LIGHT][NUM_SHADOW_MAP];		// ï¿½Vï¿½ï¿½ï¿½hï¿½Eï¿½}ï¿½bï¿½vï¿½ì¬ï¿½ï¿½ï¿½É•Kï¿½vï¿½ÈƒJï¿½ï¿½ï¿½ï¿½ï¿½pï¿½ï¿½ï¿½ï¿½ï¿½[ï¿½^ï¿½pï¿½Ì’è”ï¿½oï¿½bï¿½tï¿½@ï¿½B
+		bool						m_isUpdateAnimation = true;			// ï¿½Aï¿½jï¿½ï¿½ï¿½[ï¿½Vï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Xï¿½Vï¿½ï¿½ï¿½ï¿½H
+		Skeleton					m_skeleton;							// ï¿½ï¿½ï¿½B
+		bool						m_isShadowCaster = true;			// ï¿½Vï¿½ï¿½ï¿½hï¿½Eï¿½Lï¿½ï¿½ï¿½Xï¿½^ï¿½[ï¿½tï¿½ï¿½ï¿½O
 		float						m_animationSpeed = 1.0f;
-		int							m_numInstance = 0;					// ƒCƒ“ƒXƒ^ƒ“ƒX‚Ì”B
-		int							m_maxInstance = 1;					// Å‘åƒCƒ“ƒXƒ^ƒ“ƒX”B
-		bool						m_isEnableInstancingDraw = false;	// ƒCƒ“ƒXƒ^ƒ“ƒVƒ“ƒO•`‰æ‚ª—LŒøH
-		bool						m_isRaytracingWorld = true;			//ƒŒƒCƒgƒŒƒ[ƒ‹ƒh‚É“o˜^‚·‚éH
-		std::unique_ptr<Matrix[]>	m_worldMatrixArray;					// ƒ[ƒ‹ƒhs—ñ‚Ì”z—ñB
-		StructuredBuffer			m_worldMatrixArraySB;				// ƒ[ƒ‹ƒhs—ñ‚Ì”z—ñ‚ÌƒXƒgƒ‰ƒNƒ`ƒƒ[ƒhƒoƒbƒtƒ@B
-		std::vector< GemometryData > m_geometryDatas;					// ƒWƒIƒƒgƒŠî•ñB
-		std::unique_ptr<int[]>		m_instanceNoToWorldMatrixArrayIndexTable;	// ƒCƒ“ƒXƒ^ƒ“ƒX”Ô†‚©‚çƒ[ƒ‹ƒhs—ñ‚Ì”z—ñ‚ÌƒCƒ“ƒfƒbƒNƒX‚É•ÏŠ·‚·‚éƒe[ƒuƒ‹B
+		int							m_numInstance = 0;					// ï¿½Cï¿½ï¿½ï¿½Xï¿½^ï¿½ï¿½ï¿½Xï¿½Ìï¿½ï¿½B
+		int							m_maxInstance = 1;					// ï¿½Å‘ï¿½Cï¿½ï¿½ï¿½Xï¿½^ï¿½ï¿½ï¿½Xï¿½ï¿½ï¿½B
+		bool						m_isEnableInstancingDraw = false;	// ï¿½Cï¿½ï¿½ï¿½Xï¿½^ï¿½ï¿½ï¿½Vï¿½ï¿½ï¿½Oï¿½`ï¿½æ‚ªï¿½Lï¿½ï¿½ï¿½H
+		bool						m_isRaytracingWorld = true;			//ï¿½ï¿½ï¿½Cï¿½gï¿½ï¿½ï¿½ï¿½ï¿½[ï¿½ï¿½ï¿½hï¿½É“oï¿½^ï¿½ï¿½ï¿½ï¿½H
+		std::unique_ptr<Matrix[]>	m_worldMatrixArray;					// ï¿½ï¿½ï¿½[ï¿½ï¿½ï¿½hï¿½sï¿½ï¿½Ì”zï¿½ï¿½B
+		StructuredBuffer			m_worldMatrixArraySB;				// ï¿½ï¿½ï¿½[ï¿½ï¿½ï¿½hï¿½sï¿½ï¿½Ì”zï¿½ï¿½ÌƒXï¿½gï¿½ï¿½ï¿½Nï¿½`ï¿½ï¿½ï¿½[ï¿½hï¿½oï¿½bï¿½tï¿½@ï¿½B
+		std::vector< GemometryData > m_geometryDatas;					// ï¿½Wï¿½Iï¿½ï¿½ï¿½gï¿½ï¿½ï¿½ï¿½ï¿½B
+		std::unique_ptr<int[]>		m_instanceNoToWorldMatrixArrayIndexTable;	// ï¿½Cï¿½ï¿½ï¿½Xï¿½^ï¿½ï¿½ï¿½Xï¿½Ôï¿½ï¿½ï¿½ï¿½çƒï¿½[ï¿½ï¿½ï¿½hï¿½sï¿½ï¿½Ì”zï¿½ï¿½ÌƒCï¿½ï¿½ï¿½fï¿½bï¿½Nï¿½Xï¿½É•ÏŠï¿½ï¿½ï¿½ï¿½ï¿½eï¿½[ï¿½uï¿½ï¿½ï¿½B
+		DitherCBData				m_localDitherCBData;						// per-objectï¿½Ì’è”ï¿½oï¿½bï¿½tï¿½@(ditherAlphaï¿½Ì“Zï¿½bï¿½^ï¿½[ï¿½Å•ÏX)
 
 	};
 }
