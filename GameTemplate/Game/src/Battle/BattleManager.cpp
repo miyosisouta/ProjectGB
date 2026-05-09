@@ -236,7 +236,7 @@ void BattleManager::Update()
 			MissionManager::Get().Update();
 			
 			// ディザリングの設定
-			g_ditherCBData.isEnable = DITHERING_ENAVLE_TRUE_VALUE;
+			g_ditherCBData.isEnable = DITHERING_ENABLE_TRUE_VALUE;
 			g_ditherCBData.cameraWorldPos = CameraManager::Get().GetCurrentCameraData().position;
 			g_ditherCBData.playerWorldPos = player_->GetTransformPosition();
 
@@ -279,7 +279,7 @@ void BattleManager::Update()
 		}
 		case GameState::ResultClear:
 		{
-			g_ditherCBData.isEnable = DITHERING_ENAVLE_FALSE_VALUE;
+			g_ditherCBData.isEnable = DITHERING_ENABLE_FALSE_VALUE;
 			if (!UpdateResultClear()) {
 				gameState_ = GameState::Shutdown;
 			}

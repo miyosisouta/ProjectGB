@@ -46,6 +46,7 @@ namespace anim
 	constexpr uint8_t ANIMATION_NORMAL_ATTACK = 3;  // 通常攻撃
 	constexpr uint8_t ANIMATION_SPECIAL_ABILITY = 3; // 特殊能力
 	constexpr uint8_t ANIMATION_AVOID = 4; // 汎用スキル
+	constexpr uint8_t ANIMATION_DEATH = 7; // 死亡
 }
 
 namespace 
@@ -94,6 +95,7 @@ void Player::PlayAnimation(const int id)
 	case PlayerStateID::Landmine:	animIndex = anim::ANIMATION_SPECIAL_ABILITY; break;
 	case PlayerStateID::FireMagic:	animIndex = anim::ANIMATION_SPECIAL_ABILITY; break;
 	case PlayerStateID::Avoid: animIndex = anim::ANIMATION_AVOID; break;
+	case PlayerStateID::Dead: animIndex = anim::ANIMATION_DEATH; break;
 
 	default: return; // ないなら処理を返す
 	}
@@ -132,7 +134,13 @@ void Player::SetUpTranslateRulu()
 		// 優先される条件
 		{
 			/*  */
-			stateMachine_.AddGlobalTransition([this]() { if (IsDead()) { return true; } return false; }, PlayerStateID::Dead); /* HPが0なら他のステート関係なく実行 */
+			stateMachine_.AddGlobalTransition([this]() {
+				if (status_->IsHpDepleted() && dynamic_cast<DeathState*>(stateMachine_.GetCurrentState()) == nullptr) {
+					return true; 
+				} 
+					return false; 
+				}, 
+				PlayerStateID::Dead); /* HPが0なら他のステート関係なく実行 */
 		}
 
 		// 一般ルール 

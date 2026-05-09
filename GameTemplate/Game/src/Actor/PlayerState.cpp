@@ -13,11 +13,21 @@
 
 namespace
 {
-	const float WALK_BASE_SPEED = 100.0f;
-	constexpr float WALK_SE_INTERVAL = 0.3f;		// 歩きのSEを鳴らす間隔
+	/* 歩き */
+	constexpr float WALK_BASE_SPEED = 100.0f;	// 移動スピード
+	constexpr float WALK_SE_INTERVAL = 0.3f;	// 歩きのSEを鳴らす間隔
+	constexpr float WALK_LOOP_TIME = 0.0f;		// ループ感覚の時間
+	static const Vector3 WALK_EFFENCT_SCALE = Vector3(10.0f, 10.0f, 10.0f);
 
+	/* 走る */
 	const float RUN_BASE_SPEED = 300.0f;
 	constexpr float RUN_SE_INTERVAL = 0.1f;		// 走りのSEを鳴らす間隔
+
+	/* 死亡 */
+	constexpr float DEATH_ANIMATION_TIME = 2.0f;
+
+	/* 共通 */
+	constexpr float MOVE_THRESHOLD = 0.01f;
 }
 
 
@@ -74,7 +84,7 @@ void WalkState::Enter()
 	{
 		taskScheduler_ = std::make_unique<TaskSchedulerSystem>();
 		const int id = taskScheduler_->CreateLoopSequence(WALK_SE_INTERVAL);
-		taskScheduler_->AddLoopTimer(id, 0.0f, [&](void) {
+		taskScheduler_->AddLoopTimer(id, WALK_LOOP_TIME, [&](void) {
 			SoundManager::Get().PlaySE(enSoundKind_Player_Walk);
 			});
 	}
@@ -122,7 +132,7 @@ void RunState::Enter()
 	// SEの再生
 	{
 		const int id = taskScheduler_->CreateLoopSequence(RUN_SE_INTERVAL);
-		taskScheduler_->AddLoopTimer(id, 0.0f, [&](void) {
+		taskScheduler_->AddLoopTimer(id, WALK_LOOP_TIME, [&](void) {
 			SoundManager::Get().PlaySE(enSoundKind_Player_Walk);
 			});
 	}
@@ -130,10 +140,10 @@ void RunState::Enter()
 	// エフェクト
 	{
 		const int id = taskScheduler_->CreateLoopSequence(RUN_SE_INTERVAL);
-		taskScheduler_->AddLoopTimer(id, 0.0f, [&](void) {
+		taskScheduler_->AddLoopTimer(id, WALK_LOOP_TIME, [&](void) {
 			const Vector3 playerPos = player_->GetTransformPosition();
 			const Quaternion playerRot = player_->GetStateMachine()->GetRotation();
-			EffectManager::Get().PlayEffect(enEffectKind_Dash_Wind, playerPos, playerRot, Vector3(10.0f, 10.0f, 10.0f));
+			EffectManager::Get().PlayEffect(enEffectKind_Dash_Wind, playerPos, playerRot, WALK_EFFENCT_SCALE);
 			});
 	}
 }
@@ -328,17 +338,32 @@ void DeathState::Enter()
 {
 	// 死亡アニメーション
 	player_->PlayAnimation(static_cast<int>(PlayerStateID::Dead));
-	// 移動速度はゼロに
-	player_->SetMoveVelocity(Vector3::Zero);
+
+	isFinished_ = false; //!< 現在のステート処理が終わったか
+
+	// タスクスケジューラを作成
+	taskScheduler_ = std::make_unique<TaskSchedulerSystem>();
+
+	// アニメーションが再生されてから特定の時間たったら
+	taskScheduler_->AddTimer(DEATH_ANIMATION_TIME, [&]()
+		{
+			PlayerStatus* status = player_->GetStatus()->As<PlayerStatus>();
+			status->Die();
+		});
 }
 
 void DeathState::Update()
 {
-	
+	// 移動速度を0に
+	player_->SetMoveVelocity(Vector3::Zero);
+
+	// 時間を計算
+	if (taskScheduler_) { taskScheduler_->Update(g_gameTime->GetFrameDeltaTime()); }
 }
 
 void DeathState::Exit()
 {
+	taskScheduler_.reset();
 }
 
 
@@ -356,7 +381,7 @@ Vector3 PlayerStateBase::CalcMovementVelocity(float speed)
 	float stickLAmount = stateMachine->GetStickLAmount();
 
 	// 入力がなければゼロベクトルを返す
-	if (stickLAmount < 0.01f) { return Vector3::Zero; }
+	if (stickLAmount < MOVE_THRESHOLD) { return Vector3::Zero; }
 
 	// 方向を取得
 	Vector3 dir = stateMachine->GetDirection();

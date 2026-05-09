@@ -87,6 +87,7 @@ protected:
     float criticalDamageMultiplier_ = 0.0f;  //!< クリティカル時ダメージ倍率
     float moveSpeedBase_            = 0.0f;  //!< ベースの移動速度（ボス用）
     bool  isTakeDamage_             = false; //!< このフレームにダメージを受けたか
+    bool  isDead_                   = false; //!< 死亡フラグ
 
 
 public:
@@ -105,7 +106,8 @@ public:
     int   GetCritical()                 const { return critical_; }
     float GetCriticalDamageMultiplier() const { return criticalDamageMultiplier_; }
     float GetMoveSpeedBase()            const { return moveSpeedBase_; }
-    bool  IsDead()                      const { return hp_ <= 0; }
+    bool  IsHpDepleted()                const { return hp_ <= 0; } /* HPが0になったかを確認 : ルール設定時に使用 */
+    bool  IsDead()                      const { return isDead_; } /* 死亡しているかを確認 : BattleManagerにてクリアかオーバーか確認するために使用 */
     bool  IsTakeDamage()                const { return isTakeDamage_; }
 
 
@@ -125,6 +127,7 @@ public:
         if (hp_ > maxHp_) hp_ = maxHp_;
     }
 
+    void Die() { isDead_ = true; }
 
 public:
     /** 派生型かどうか確認する */

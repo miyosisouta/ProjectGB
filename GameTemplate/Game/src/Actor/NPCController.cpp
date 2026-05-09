@@ -140,8 +140,19 @@ bool NPCController::Start()
 
 void NPCController::Update()
 {
-    // 動作対象と攻撃対象がいない場合は処理を返す
-    if (!boss_ || !targerPlayer_) return;
+    // 処理をかえす処理
+    {
+        // 動作対象と攻撃対象がいない場合
+        if (!boss_ || !targerPlayer_) return;
+        // ボスが死んでいる場合
+        if (boss_->GetCurrentStateID() == BossStateID::Death) return;
+    }
+    
+
+    // ボスのHPが0なら死亡ステートへ移行
+    if (boss_->GetStatus()->IsHpDepleted()) { 
+        boss_->ChangeState(BossStateID::Death); 
+    }
 
     // プレイヤーの座標をボス本体に設定
     boss_->SetTargetPos(targerPlayer_->GetTransformPosition());
