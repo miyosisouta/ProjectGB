@@ -258,5 +258,6 @@
     <ClInclude Include="graphics\GaugeRender.h">
       <Filter>graphics</Filter>
     </ClInclude>
+    <ClInclude Include="graphics\DitherCBData.h" />
   </ItemGroup>
 </Project>

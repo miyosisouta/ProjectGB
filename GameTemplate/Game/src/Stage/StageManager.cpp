@@ -15,6 +15,12 @@ StageManager* StageManager::instance_ = nullptr;
 
 namespace 
 {
+	/* ディザリング時の透明度 */
+	constexpr float DITHERING_ALPHA_GROUND = 1.0f;
+	constexpr float DITHERING_ALPHA_FENCE = 0.5f;
+	constexpr float DITHERING_ALPHA_TREE = 0.2f;
+
+	/* その他 */
 	constexpr float COLLISION_UP = 600.0f;
 	constexpr float METER_TO_CENTIMETER = 100.0f;
 }
@@ -52,24 +58,28 @@ void StageManager::StageTKLLoader(const char* path)
 				enCollisionAttr_Ground
 			);
 			collisionList_.push_back(collision);
-			// 見た目のオブジェクトを作る必要がないので return true
+			// 見た目のオブジェクトを作る必要がないので処理をか
 			return true;
 		}
 
 
-		// ファイルパスがあるなら作る
 		if (!assetPath.empty()) {
 			auto* staticObject = new StaticObject();
-			staticObject->Init(
-				assetPath.c_str(),
-				data.position,
-				data.rotation,
-				data.scale
-			);
+			staticObject->Init(assetPath.c_str(), data.position, data.rotation, data.scale);
+
+			// ← ここでアルファ値を設定
+			if (data.ForwardMatchName(L"ground")) {
+				staticObject->SetDitherAlpha(DITHERING_ALPHA_GROUND);   // 床：透明にしない
+			}
+			else if (data.ForwardMatchName(L"fence")) {
+				staticObject->SetDitherAlpha(DITHERING_ALPHA_FENCE);   // フェンス：半透明
+			}
+			else if (data.ForwardMatchName(L"Tree")) {
+				staticObject->SetDitherAlpha(DITHERING_ALPHA_TREE);   // 木：やや透明
+			}
+
 			staticObjectList_.push_back(staticObject);
 		}
-
-		return true;
 	});
 }
 
