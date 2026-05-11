@@ -1,0 +1,58 @@
+{
+  "canvas": {
+    "elements": [
+      {
+        "comment": "ボタン：Y",
+        "type": "UIIcon",
+        "name": "buttonY",
+        "asset": "Assets/ui/keyConfigOption/keyButton/Y.DDS",
+        "width": 110,
+        "height": 110,
+        "position": [0, 0, 0],
+        "scale": [1, 1, 1],
+        "rotation": 0,
+        "color": [1, 1, 1, 1],
+        "isDraw": false
+      },
+      {
+        "comment": "ボタン：B",
+        "type": "UIIcon",
+        "name": "buttonB",
+        "asset": "Assets/ui/keyConfigOption/keyButton/B.DDS",
+        "width": 110,
+        "height": 110,
+        "position": [0, 0, 0],
+        "scale": [1, 1, 1],
+        "rotation": 0,
+        "color": [1, 1, 1, 1],
+        "isDraw": false
+      },
+      {
+        "comment": "ボタン：A",
+        "type": "UIIcon",
+        "name": "buttonA",
+        "asset": "Assets/ui/keyConfigOption/keyButton/A.DDS",
+        "width": 110,
+        "height": 110,
+        "position": [0, 0, 0],
+        "scale": [1, 1, 1],
+        "rotation": 0,
+        "color": [1, 1, 1, 1],
+        "isDraw": false
+      },
+      {
+        "comment": "ボタン：X",
+        "type": "UIIcon",
+        "name": "buttonX",
+        "asset": "Assets/ui/keyConfigOption/keyButton/X.DDS",
+        "width": 110,
+        "height": 110,
+        "position": [0, 0, 0],
+        "scale": [1, 1, 1],
+        "rotation": 0,
+        "color": [1, 1, 1, 1],
+        "isDraw": false
+      }
+    ]
+  }
+}
