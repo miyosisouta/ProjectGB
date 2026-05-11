@@ -301,6 +301,7 @@
     <ClCompile Include="src\UI\TitleMenu.cpp" />
     <ClCompile Include="src\UI\UIAnimation.cpp" />
     <ClCompile Include="src\UI\UIParts.cpp" />
+    <ClCompile Include="src\UI\UIManager.cpp" />
     <ClCompile Include="src\UI\UIScreenManager.cpp" />
     <ClCompile Include="src\Util\Curve.cpp" />
     <ClCompile Include="src\Util\GameTimer.cpp" />
@@ -404,6 +405,7 @@
     <ClInclude Include="src\UI\UIAnimationFactory.h" />
     <ClInclude Include="src\UI\UIAnimationParameter.h" />
     <ClInclude Include="src\UI\UIParts.h" />
+    <ClInclude Include="src\UI\UIManager.h" />
     <ClInclude Include="src\UI\UIScreenManager.h" />
     <ClInclude Include="src\Util\Crc32.h" />
     <ClInclude Include="src\Util\Curve.h" />

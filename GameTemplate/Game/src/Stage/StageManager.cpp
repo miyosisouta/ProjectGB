@@ -176,6 +176,7 @@ bool StageManagerObject::Start()
 
 void StageManagerObject::Update()
 {
+	if (!isUpdate_) return;
 	StageManager::Get().Update();
 }
 
