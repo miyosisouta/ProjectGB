@@ -1,72 +1,25 @@
 {
   "canvas": {
     "elements": [
-      {
-        "type": "UIIcon",
-        "name": "BackgroundA",
-        "asset": "Assets/ui/SoundOption/haikei/back.DDS",
-        "width": 1920,
-        "height": 1080,
+       {
+        "comment": "オプションの背景",
+        "type": "UIPrefab",
+        "name": "optionBack",
+        "source": "Assets/ui/layout/optionBack.json",
         "position": [0, 0, 0],
-        "scale": [1, 1, 1],
-        "rotation": 0,
-        "color": [1, 1, 1, 1]
+        "scale": [1, 1, 1]
       },
+      
 
 
       {
+        "comment": "タイトル",
         "type": "UIIcon",
-        "name": "nikukyu1",
-        "asset": "Assets/ui/SoundOption/haikei/nikukyu.DDS",
-        "width": 280,
-        "height": 240,
-        "position": [500, -500, 0],
-        "scale": [1, 1, 1],
-        "rotation": 0,
-        "color": [1, 1, 1, 0]
-      },
-      {
-        "type": "UIIcon",
-        "name": "nikukyu2",
-        "asset": "Assets/ui/SoundOption/haikei/nikukyu.DDS",
-        "width": 280,
-        "height": 240,
-        "position": [800, -250, 0],
-        "scale": [1, 1, 1],
-        "rotation": 0,
-        "color": [1, 1, 1, 0]
-      },
-      {
-        "type": "UIIcon",
-        "name": "nikukyu3",
-        "asset": "Assets/ui/SoundOption/haikei/nikukyu.DDS",
-        "width": 280,
-        "height": 240,
-        "position": [600, 100, 0],
-        "scale": [1, 1, 1],
-        "rotation": 0,
-        "color": [1, 1, 1, 0]
-      },
-      {
-        "type": "UIIcon",
-        "name": "nikukyu4",
-        "asset": "Assets/ui/SoundOption/haikei/nikukyu.DDS",
-        "width": 280,
-        "height": 240,
-        "position": [1000, 350, 0],
-        "scale": [1, 1, 1],
-        "rotation": 0,
-        "color": [1, 1, 1, 0]
-      },
-
-
-      {
-        "type": "UIIcon",
-        "name": "Background_obi",
-        "asset": "Assets/ui/SoundOption/haikei/obi.DDS",
-        "width": 1920,
-        "height": 250,
-        "position": [0, 500, 0],
+        "name": ",word1",
+        "asset": "Assets/ui/SoundOption/title/soundoption.DDS",
+        "width": 520,
+        "height": 100,
+        "position": [-480, 450, 0],
         "scale": [1, 1, 1],
         "rotation": 0,
         "color": [1, 1, 1, 1]
@@ -74,7 +27,7 @@
       {
         "type": "UIIcon",
         "name": "Gear",
-        "asset": "Assets/ui/SoundOption/tab/haguruma.DDS",
+        "asset": "Assets/ui/SoundOption/title/haguruma.DDS",
         "width": 150,
         "height": 150,
         "position": [-850, 460, 0],
@@ -85,11 +38,12 @@
 
 
       {
+        "comment": "選択中の黄色の背景",
         "type": "UIIcon",
         "name": "flame",
-        "asset": "Assets/ui/SoundOption/tab/waku.DDS",
-        "width": 1850,
-        "height": 90,
+        "asset": "Assets/ui/option/button/waku.DDS",
+        "width": 1790,
+        "height": 72,
         "position": [0, 250, 0],
         "scale": [1, 2, 1],
         "rotation": 0,
@@ -98,9 +52,10 @@
 
 
       {
+        "comment": "白色の帯(サウンドの数分ある)",
         "type": "UIIcon",
         "name": "FadeA",
-        "asset": "Assets/ui/SoundOption/haikei/fade.DDS",
+        "asset": "Assets/ui/option/button/fade2.DDS",
         "width": 1800,
         "height": 150,
         "position": [0, 250, 0],
@@ -111,7 +66,7 @@
       {
         "type": "UIIcon",
         "name": "FadeB",
-        "asset": "Assets/ui/SoundOption/haikei/fade.DDS",
+        "asset": "Assets/ui/option/button/fade2.DDS",
         "width": 1800,
         "height": 150,
         "position": [0, 25, 0],
@@ -122,7 +77,7 @@
       {
         "type": "UIIcon",
         "name": "FadeC",
-        "asset": "Assets/ui/SoundOption/haikei/fade.DDS",
+        "asset": "Assets/ui/option/button/fade2.DDS",
         "width": 1800,
         "height": 150,
         "position": [0, -200, 0],
@@ -131,19 +86,24 @@
         "color": [1, 1, 1, 1]
       },
 
-      
+
       {
+        "comment": "選択中の緑色の枠",
         "type": "UIIcon",
-        "name": ",word1",
-        "asset": "Assets/ui/SoundOption/moji/option.DDS",
-        "width": 500,
-        "height": 90,
-        "position": [-480, 450, 0],
-        "scale": [1, 1, 1],
+        "name": "flame2",
+        "asset": "Assets/ui/option/button/walu.DDS",
+        "width": 1800,
+        "height": 75,
+        "position": [0, 250, 0],
+        "scale": [1, 2, 1],
         "rotation": 0,
         "color": [1, 1, 1, 1]
       },
+
+      
+      
       {
+        "comment": "各サウンドの文字",
         "type": "UIIcon",
         "name": ",word2",
         "asset": "Assets/ui/SoundOption/moji/master.DDS",
@@ -176,33 +136,10 @@
         "rotation": 0,
         "color": [1, 1, 1, 1]
       },
-      {
-        "type": "UIIcon",
-        "name": ",word6",
-        "asset": "Assets/ui/SoundOption/moji/back_button.DDS",
-        "width": 250,
-        "height": 40,
-        "position": [850, -500, 0],
-        "scale": [1, 1, 1],
-        "rotation": 0,
-        "color": [1, 1, 1, 1]
-      },
-
+     
 
       {
-        "type": "UIIcon",
-        "name": "ButtonB",
-        "asset": "Assets/ui/SoundOption/tab/b_button.DDS",
-        "width": 50,
-        "height": 50,
-        "position": [740, -500, 0],
-        "scale": [1, 1, 1],
-        "rotation": 0,
-        "color": [1, 1, 1, 1]
-      },
-
-
-      {
+        "comment": "サウンドのバー1",
         "type": "UIIcon",
         "name": "Ber_back1",
         "asset": "Assets/ui/SoundOption/bar/ber_back.DDS",
@@ -326,6 +263,7 @@
 
 
       {
+        "comment": "サウンドのバー2",
         "type": "UIIcon",
         "name": "Ber_back2",
         "asset": "Assets/ui/SoundOption/bar/ber_back.DDS",
@@ -449,6 +387,7 @@
 
 
       {
+        "comment": "サウンドのバー3",
         "type": "UIIcon",
         "name": "Ber_back3",
         "asset": "Assets/ui/SoundOption/bar/ber_back.DDS",
@@ -570,12 +509,33 @@
         "color": [1, 1, 1, 1]
       },
 
+
+
+
+
+     
       {
         "comment": "デフォルトサウンドアイコン",
         "type": "UIPrefab",
         "name": "DefaultSoundIcon",
-        "source": "Assets/ui/layout/SoundDefaultButton.json",
-        "position": [0, -410, 0],
+        "source": "Assets/ui/layout/DefaultButton.json",
+        "position": [0, -420, 0],
+        "scale": [1, 1, 1]
+      },
+      {
+        "comment": "戻るボタンアイコン",
+        "type": "UIPrefab",
+        "name": "returnIcon",
+        "source": "Assets/ui/layout/RetrunButton.json",
+        "position": [790, -500, 0],
+        "scale": [1, 1, 1]
+      },
+      {
+        "comment": "決定ボタンアイコン",
+        "type": "UIPrefab",
+        "name": "decisionIcon",
+        "source": "Assets/ui/layout/DecisionButton.json",
+        "position": [560, -500, 0],
         "scale": [1, 1, 1]
       }
     ]

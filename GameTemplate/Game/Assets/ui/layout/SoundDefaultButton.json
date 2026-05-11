@@ -5,7 +5,7 @@
         "comment": "サウンドをデフォルトに戻すボタン(背景)",
         "type": "UIIcon",
         "name": "Button_Default_back",
-        "asset": "Assets/ui/SoundOption/tab/default_back.DDS",
+        "asset": "Assets/ui/option/default/default_back.DDS",
         "width": 490,
         "height": 110,
         "position": [0, 0, 0],
@@ -17,7 +17,7 @@
         "comment": "サウンドをデフォルトに戻すボタン(枠)",
         "type": "UIIcon",
         "name": "Button_Default_flame",
-        "asset": "Assets/ui/SoundOption/tab/default_flame.DDS",
+        "asset": "Assets/ui/option/default/default_flame.DDS",
         "width": 500,
         "height": 120,
         "position": [0, 0, 0],
@@ -29,7 +29,7 @@
         "comment": "サウンドをデフォルトに戻すボタン(文字)",
         "type": "UIIcon",
         "name": "Button_Default_word",
-        "asset": "Assets/ui/SoundOption/tab/default.DDS",
+        "asset": "Assets/ui/option/default/default.DDS",
         "width": 300,
         "height": 50,
         "position": [0, 0, 0],
@@ -54,6 +54,22 @@
         "position": [0, 0, 0],
         "scale": [0, 0, 0],
         "color": [0.50, 0.77, 0.78, 1]
+      },
+      {
+        "comment": "ダミー(デフォルトボタン選択中の枠カラー取得用)",
+        "type": "UIDummy",
+        "name": "FlameSelectColorDummy",
+        "position": [0, 0, 0],
+        "scale": [0, 0, 0],
+        "color": [0.06, 0.30, 0.31, 1]
+      },
+      {
+        "comment": "ダミー(デフォルトボタンの枠カラー取得用)",
+        "type": "UIDummy",
+        "name": "FlameNormalColorDummy",
+        "position": [0, 0, 0],
+        "scale": [0, 0, 0],
+        "color": [1, 1, 1, 1]
       }
     ]
   }
