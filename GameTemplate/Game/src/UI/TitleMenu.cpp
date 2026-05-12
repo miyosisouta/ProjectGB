@@ -21,7 +21,7 @@ void TitleMenu::Update()
 	
 
 	auto* startPositionDummy = GetUI<UIDummy>(Hash32("StartPositionDummy"));
-	auto* soundPositionDummy = GetUI<UIDummy>(Hash32("SoundPositionDummy"));
+	auto* OptionPositionDummy = GetUI<UIDummy>(Hash32("OptionPositionDummy"));
 	auto* exitPositionDummy = GetUI<UIDummy>(Hash32("ExitPositionDummy"));
 	
 	auto* selectIcon = GetUI<UIIcon>(Hash32("Title_nikukyu_button"));
@@ -29,7 +29,7 @@ void TitleMenu::Update()
 		const int selectIndex = selector_->GetValue();
 		Vector3 selectPositionList[] = {
 			startPositionDummy->transform.position,
-			soundPositionDummy->transform.position,
+			OptionPositionDummy->transform.position,
 			exitPositionDummy->transform.position
 		};
 		selectIcon->transform.localPosition = selectPositionList[selectIndex];
@@ -55,7 +55,7 @@ void TitleMenu::Update()
 			start->isDraw = true;
 
 			// 非表示 サウンド
-			auto* sound = GetUI<UIIcon>(Hash32("Title_sound"));
+			auto* sound = GetUI<UIIcon>(Hash32("Title_option"));
 			sound->isDraw = true;
 
 			// 非表示 おわる
@@ -170,9 +170,9 @@ void TitleMenu::InitializeLogic()
 	auto* start = GetUI<UIIcon>(Hash32("Title_start"));
 	start->isDraw = false;
 
-	// 非表示 サウンド
-	auto* sound = GetUI<UIIcon>(Hash32("Title_sound"));
-	sound->isDraw = false;
+	// 非表示 設定
+	auto* option = GetUI<UIIcon>(Hash32("Title_option"));
+	option->isDraw = false;
 
 	// 非表示 おわる
 	auto* exit = GetUI<UIIcon>(Hash32("Title_exit"));
@@ -193,7 +193,7 @@ bool TitleMenu::IsSelectStat() const
 
 bool TitleMenu::IsSelectSound() const
 {
-	// 1は「さうんど」なので
+	// 1は「設定」なので
 	return selector_->GetValue() == 1;
 }
 

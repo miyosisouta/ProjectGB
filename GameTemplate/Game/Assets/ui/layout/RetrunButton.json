@@ -1,0 +1,30 @@
+{
+  "canvas": {
+    "elements": [
+       {
+        "comment": "Bぼたん",
+        "type": "UIIcon",
+        "name": ",returnButton",
+        "asset": "Assets/ui/option/return/b_button.DDS",
+        "width": 53,
+        "height": 53,
+        "position": [0, 0, 0],
+        "scale": [1, 1, 1],
+        "rotation": 0,
+        "color": [1, 1, 1, 1]
+      },
+      {
+        "comment": "Bぼたんの文字",
+        "type": "UIIcon",
+        "name": ",returnWard",
+        "asset": "Assets/ui/option/return/ward.DDS",
+        "width": 120,
+        "height": 40,
+        "position": [90, 0, 0],
+        "scale": [1, 1, 1],
+        "rotation": 0,
+        "color": [1, 1, 1, 1]
+      }
+    ]
+}
+}

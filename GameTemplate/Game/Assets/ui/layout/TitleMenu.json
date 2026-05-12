@@ -5,7 +5,7 @@
         "coment": "タイトルの背景",
         "type": "UIIcon",
         "name": "title_back",
-        "asset": "Assets/ui/soundOption/haikei/back.DDS",
+        "asset": "Assets/ui/titleUI/back.DDS",
         "width": 1920,
         "height": 1080,
         "position": [0, 0, 0],
@@ -74,12 +74,12 @@
         "color": [1, 1, 1, 1]
       },
       {
-        "coment": "タイトルメニュー:サウンド",
+        "coment": "タイトルメニュー:設定",
         "type": "UIIcon",
-        "name": "Title_sound",
-        "asset": "Assets/ui/titleUI/sound.DDS",
-        "width": 300,
-        "height": 50,
+        "name": "Title_option",
+        "asset": "Assets/ui/titleUI/option.DDS",
+        "width": 150,
+        "height": 70,
         "position": [0, -300, 0],
         "scale": [1, 1, 1],
         "rotation": 0,
@@ -106,10 +106,10 @@
         "position": [-210, -180, 0]
       },
       {
-        "comment": "ダミー(サウンド座標取得用)",
+        "comment": "ダミー(設定座標取得用)",
         "type": "UIDummy",
-        "name": "SoundPositionDummy",
-        "position": [-210, -300, 0]
+        "name": "OptionPositionDummy",
+        "position": [-135, -300, 0]
       },
       {
         "comment": "ダミー(おわる座標取得用)",

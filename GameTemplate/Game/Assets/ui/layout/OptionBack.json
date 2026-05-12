@@ -1,0 +1,82 @@
+{
+  "canvas": {
+    "elements": [
+       {
+        "comment": "背景",
+        "type": "UIIcon",
+        "name": "BackgroundA",
+        "asset": "Assets/ui/option/back/back.DDS",
+        "width": 1920,
+        "height": 1080,
+        "position": [0, 0, 0],
+        "scale": [1, 1, 1],
+        "rotation": 0,
+        "color": [1, 1, 1, 1]
+      },
+
+
+      {
+        "comment": "背景：肉球",
+        "type": "UIIcon",
+        "name": "nikukyu1",
+        "asset": "Assets/ui/option/back/nikukyu.DDS",
+        "width": 280,
+        "height": 240,
+        "position": [500, -500, 0],
+        "scale": [1, 1, 1],
+        "rotation": 0,
+        "color": [1, 1, 1, 0]
+      },
+      {
+        "comment": "背景：肉球",
+        "type": "UIIcon",
+        "name": "nikukyu2",
+        "asset": "Assets/ui/option/back/nikukyu.DDS",
+        "width": 280,
+        "height": 240,
+        "position": [800, -250, 0],
+        "scale": [1, 1, 1],
+        "rotation": 0,
+        "color": [1, 1, 1, 0]
+      },
+      {
+        "comment": "背景：肉球",
+        "type": "UIIcon",
+        "name": "nikukyu3",
+        "asset": "Assets/ui/option/back/nikukyu.DDS",
+        "width": 280,
+        "height": 240,
+        "position": [600, 100, 0],
+        "scale": [1, 1, 1],
+        "rotation": 0,
+        "color": [1, 1, 1, 0]
+      },
+      {
+        "comment": "背景：肉球",
+        "type": "UIIcon",
+        "name": "nikukyu4",
+        "asset": "Assets/ui/option/back/nikukyu.DDS",
+        "width": 280,
+        "height": 240,
+        "position": [1000, 350, 0],
+        "scale": [1, 1, 1],
+        "rotation": 0,
+        "color": [1, 1, 1, 0]
+      },
+
+
+      {
+        "comment": "小見出しの帯",
+        "type": "UIIcon",
+        "name": "Background_obi",
+        "asset": "Assets/ui/option/back/obi.DDS",
+        "width": 1920,
+        "height": 250,
+        "position": [0, 500, 0],
+        "scale": [1, 1, 1],
+        "rotation": 0,
+        "color": [1, 1, 1, 1]
+      }
+    ]
+}
+}

@@ -92,6 +92,8 @@
     <ClCompile Include="src\Battle\MissionCondition.cpp" />
     <ClCompile Include="src\UI\TimerMenu.cpp" />
     <ClCompile Include="src\Core\KeyConfig.cpp" />
+    <ClCompile Include="src\UI\KeyConfigOptionMenu.cpp" />
+    <ClCompile Include="src\UI\OptionMenu.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Game.h" />
@@ -193,5 +195,7 @@
     <ClInclude Include="src\Battle\MissionCondition.h" />
     <ClInclude Include="src\UI\TimerMenu.h" />
     <ClInclude Include="src\Core\KeyConfig.h" />
+    <ClInclude Include="src\UI\KeyConfigOptionMenu.h" />
+    <ClInclude Include="src\UI\OptionMenu.h" />
   </ItemGroup>
 </Project>
