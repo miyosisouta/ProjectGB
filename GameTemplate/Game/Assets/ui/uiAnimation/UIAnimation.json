@@ -21,6 +21,16 @@
             "loop": "Once"
         },
         {
+            "comment": "サウンドオプション：歯車を回す",
+            "key": "gear_rotation",
+            "valueType": "float",
+            "startValue": 0.0,
+            "endValue":   180.0,
+            "duration": 7.0,
+            "easing": "Linear",
+            "loop": "Loop"
+        },
+        {
             "comment": "タイトル画面：Aボタン押してね",
             "key": "pushAbutton_fadeout",
             "valueType": "Vector4",
@@ -187,6 +197,31 @@
             "easing": "EaseOut",
             "loop": "Once"
         },
+
+
+
+
+        {
+            "comment": "アビリティアイコン：通常から拡大",
+            "key": "SkillReadyScaleUp",
+            "valueType": "Vector3",
+            "startValue": { "x": 1.0, "y": 1.0, "z": 0.0 },
+            "endValue":   { "x": 1.2, "y": 1.2, "z": 0.0 },
+            "duration": 0.1,
+            "easing": "EaseOut",
+            "loop": "Once"
+        },
+        {
+            "comment": "アビリティアイコン：拡大から通常",
+            "key": "SkillReadyScaleDown",
+            "valueType": "Vector3",
+            "startValue": { "x": 1.2, "y": 1.2, "z": 0.0 },
+            "endValue":   { "x": 1.0, "y": 1.0, "z": 0.0 },
+            "duration": 0.1,
+            "easing": "EaseOut",
+            "loop": "Once"
+        },
+
 
 
 
@@ -405,6 +440,135 @@
             "duration": 0.8,
             "easing": "EaseOut",
             "loop": "Once"
+        },
+
+
+
+        {
+            "comment": "設定画面：アイコン拡大",
+            "key": "Option_soundIcon_scaleUp",
+            "valueType": "Vector3",
+            "startValue": { "x": 1.0, "y": 1.0, "z": 1.0},
+            "endValue":   { "x": 1.2, "y": 1.2, "z": 1.0},
+            "duration": 0.3,
+            "easing": "EaseIn",
+            "loop": "Once"
+        },
+        {
+            "comment": "サウンドオプション：音符が揺れる",
+            "key": "sound_rotation",
+            "valueType": "float",
+            "startValue": 0.0,
+            "endValue":  -10.0,
+            "duration": 0.5,
+            "easing": "Linear",
+            "loop": "PingPong"
+        },
+
+
+
+        {
+            "comment": "設定画面：アイコン拡大",
+            "key": "Option_controllerIcon_scaleUp",
+            "valueType": "Vector3",
+            "startValue": { "x": 1.0, "y": 1.0, "z": 1.0},
+            "endValue":   { "x": 1.2, "y": 1.2, "z": 1.0},
+            "duration": 0.3,
+            "easing": "EaseIn",
+            "loop": "Once"
+        },
+        {
+            "comment": "コントローラーオプション：上に飛ぶ",
+            "key": "controller_posYUp",
+            "valueType": "Vector3",
+            "startValue": { "x": 0.0, "y": 0.0, "z": 0.0},
+            "endValue":   { "x": 0.0, "y": 50.0, "z": 0.0},
+            "duration": 0.3,
+            "easing": "EaseOut",
+            "loop": "Once"
+        },
+        {
+            "comment": "コントローラーオプション：下に落ちる",
+            "key": "controller_posYDown",
+            "valueType": "Vector3",
+            "startValue": { "x": 0.0, "y": 50.0, "z": 0.0},
+            "endValue":   { "x": 0.0, "y": 0.0, "z": 0.0},
+            "duration": 0.3,
+            "easing": "EaseIn",
+            "loop": "Once"
+        },
+        {
+            "comment": "コントローラーオプション：落ちた時に縮小",
+            "key": "controller_scaleDown",
+            "valueType": "Vector3",
+            "startValue": { "x": 1.2, "y": 1.2, "z": 1.0},
+            "endValue":   { "x": 1.2, "y": 0.8, "z": 1.0},
+            "duration": 0.4,
+            "easing": "EaseIn",
+            "loop": "Once"
+        },
+        {
+            "comment": "コントローラーオプション：通常サイズに戻る",
+            "key": "controller_default",
+            "valueType": "Vector3",
+            "startValue": { "x": 1.2, "y": 0.8, "z": 1.0},
+            "endValue":   { "x": 1.2, "y": 1.2, "z": 1.0},
+            "duration": 0.3,
+            "easing": "EaseOut",
+            "loop": "Once"
+        },
+
+
+
+        {
+            "comment": "カメラ：アイコン拡大",
+            "key": "Option_cameraIcon_scaleUp",
+            "valueType": "Vector3",
+            "startValue": { "x": 1.0, "y": 1.0, "z": 1.0},
+            "endValue":   { "x": 1.2, "y": 1.2, "z": 1.0},
+            "duration": 0.3,
+            "easing": "EaseIn",
+            "loop": "Once"
+        },
+        {
+            "comment": "歯車1：アイコン拡大",
+            "key": "Option_gearIcon_scaleUp",
+            "valueType": "Vector3",
+            "startValue": { "x": 1.0, "y": 1.0, "z": 1.0},
+            "endValue":   { "x": 1.2, "y": 1.2, "z": 1.0},
+            "duration": 0.3,
+            "easing": "EaseIn",
+            "loop": "Once"
+        },
+        {
+            "comment": "歯車2：アイコン拡大",
+            "key": "Option_gear2Icon_scaleUp",
+            "valueType": "Vector3",
+            "startValue": { "x": 1.0, "y": 1.0, "z": 1.0},
+            "endValue":   { "x": 1.2, "y": 1.2, "z": 1.0},
+            "duration": 0.3,
+            "easing": "EaseIn",
+            "loop": "Once"
+        },
+        {
+            "comment": "歯車1：左回り",
+            "key": "gear_rotation_Left",
+            "valueType": "float",
+            "startValue": 0.0,
+            "endValue":  -180.0,
+            "duration": 2.0,
+            "easing": "Linear",
+            "loop": "Loop"
+        },
+        {
+            "comment": "歯車2：右回り",
+            "key": "sound_rotation_Right",
+            "valueType": "float",
+            "startValue": 0.0,
+            "endValue":  180.0,
+            "duration": 2.0,
+            "easing": "Linear",
+            "loop": "Loop"
         }
     ]
 }

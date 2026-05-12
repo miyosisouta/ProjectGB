@@ -291,10 +291,12 @@
     <ClCompile Include="src\UI\GameOverMenu.cpp" />
     <ClCompile Include="src\UI\GameStartMenu.cpp" />
     <ClCompile Include="src\UI\InGameMenu.cpp" />
+    <ClCompile Include="src\UI\KeyConfigOptionMenu.cpp" />
     <ClCompile Include="src\UI\Layout.cpp" />
     <ClCompile Include="src\UI\LoadingMenu.cpp" />
     <ClCompile Include="src\UI\Menu.cpp" />
     <ClCompile Include="src\UI\MissionMenu.cpp" />
+    <ClCompile Include="src\UI\OptionMenu.cpp" />
     <ClCompile Include="src\UI\PauseMenu.cpp" />
     <ClCompile Include="src\UI\SoundOptionMenu.cpp" />
     <ClCompile Include="src\UI\TimerMenu.cpp" />
@@ -393,10 +395,12 @@
     <ClInclude Include="src\UI\GameOverMenu.h" />
     <ClInclude Include="src\UI\GameStartMenu.h" />
     <ClInclude Include="src\UI\InGameMenu.h" />
+    <ClInclude Include="src\UI\KeyConfigOptionMenu.h" />
     <ClInclude Include="src\UI\Layout.h" />
     <ClInclude Include="src\UI\LoadingMenu.h" />
     <ClInclude Include="src\UI\Menu.h" />
     <ClInclude Include="src\UI\MissionMenu.h" />
+    <ClInclude Include="src\UI\OptionMenu.h" />
     <ClInclude Include="src\UI\PauseMenu.h" />
     <ClInclude Include="src\UI\SoundOptionMenu.h" />
     <ClInclude Include="src\UI\TimerMenu.h" />

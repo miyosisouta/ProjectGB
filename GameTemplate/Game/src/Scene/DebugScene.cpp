@@ -12,13 +12,7 @@
 #include "src/Util/TaskSchedulerSystem.h"
 
 #include "src/UI/Layout.h"
-#include "src/UI/TimerMenu.h"
-
-
-namespace
-{
-	float ONE_LAP = 360.0f;
-}
+#include "src/UI/OptionMenu.h"
 
 
 DebugScene::DebugScene()
@@ -35,7 +29,7 @@ DebugScene::~DebugScene()
 bool DebugScene::Start()
 {
 	layout_ = new Layout;
-	layout_->Initialize<TimerMenu>("Assets/ui/Layout/TimerMenu.json");
+	layout_->Initialize<OptionMenu>("Assets/ui/Layout/OptionMenu.json");
 
 	return true;
 }
@@ -43,17 +37,10 @@ bool DebugScene::Start()
 
 void DebugScene::Update()
 {
-	TimerMenu* menu = static_cast<TimerMenu*>(layout_->GetMenu());
-	//menu->SetCurrentTimer();
-	//menu->SetMaxTimer(180.0f);
-
+	OptionMenu* menu = static_cast<OptionMenu*>(layout_->GetMenu());
 	
 
-
 	layout_->Update();
-
-	//時間
-	layout_->GetMenu();
 }
 
 

@@ -1,0 +1,30 @@
+{
+  "canvas": {
+    "elements": [
+       {
+        "comment": "Aボタン",
+        "type": "UIIcon",
+        "name": ",decisionButton",
+        "asset": "Assets/ui/option/decision/a_button.DDS",
+        "width": 53,
+        "height": 53,
+        "position": [0, 0, 0],
+        "scale": [1, 1, 1],
+        "rotation": 0,
+        "color": [1, 1, 1, 1]
+      },
+      {
+        "comment": "Aボタンの文字",
+        "type": "UIIcon",
+        "name": "decisionWard",
+        "asset": "Assets/ui/option/decision/ward.DDS",
+        "width": 150,
+        "height": 40,
+        "position": [105, 0, 0],
+        "scale": [1, 1, 1],
+        "rotation": 0,
+        "color": [1, 1, 1, 1]
+      }
+    ]
+}
+}

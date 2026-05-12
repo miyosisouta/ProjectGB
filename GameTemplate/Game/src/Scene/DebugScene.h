@@ -23,11 +23,6 @@ private:
 
 	std::unique_ptr<TaskSchedulerSystem> taskScheduler_ = nullptr;
 
-	/** 今の時間 */
-	float currentTimer_ = 0.0f;
-	/** 全体の時間 */
-	float maxTimer_ = 0.0f;
-
 public:
 	DebugScene();
 	~DebugScene();
