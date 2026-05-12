@@ -1,61 +1,60 @@
-#pragma once
+ï»¿#pragma once
 #include <cstdint>
 
-/** ƒQ[ƒ€ƒIƒuƒWƒFƒNƒg‚Ì—Dæ“xipriorityj */
+/** å„ªå…ˆåº¦ */
 enum GameObjectPriority {
-    enLoadScreen = 100 //!< ƒ[ƒh‰æ–Ê
+    enLoadScreen = 100 //!< ãƒ­ãƒ¼ãƒ‰
 };
 
-/*========================================*/
-/* ƒvƒŒƒCƒ„[‚ÌƒXƒLƒ‹î•ñ */
-/*========================================*/
+/**=====================================*/
+/** æ”»æ’ƒ */
+/**=====================================*/
 
-/* ’ÊíUŒ‚ƒ^ƒCƒv */
+/** é€šå¸¸æ”»æ’ƒ */
 enum class NormalAttackType {
-    enNone, //!< ‰½‚à‚È‚¢
-    enBite  //!< ‚©‚İ‚Â‚«
+    enNone, //!< ç‰¹ã«ãªã—
+    enBite  //!< å™›ã¿ã¤ã
 };
 
-/* “Áê”\—Íƒ^ƒCƒv */
+/** ç‰¹æ®Šæ”»æ’ƒ */
 enum class AbilityType {
-    enNone,     //!< ‰½‚à‚È‚¢
-    enDefault,  //!< ƒfƒtƒHƒ‹ƒgƒAƒrƒŠƒeƒB                                        
-    enFireMagic,//!< –‚–@ŠÖ˜A
-    enLandmine, //!< ”š’eŠÖ˜A
+    enNone,     //!< ç‰¹ã«ãªã—
+    enDefault,  //!< ãƒ‡ãƒ•ã‚©ãƒ«ãƒˆ                                        
+    enFireMagic,//!< ç«
+    enLandmine, //!< åœ°é›·
 };
 
-/* ”Ä—pƒXƒLƒ‹ƒ^ƒCƒv */
+/** æ±ç”¨æ”»æ’ƒ */
 enum class UtilityType {
-    enNone,       //!< ‰½‚à‚È‚¢
-    enAvoid   //!< ‰ñ”ğ
+    enNone,   //!< ç‰¹ã«ãªã—
+    enAvoid   //!< å›é¿
 };
 
 /*========================================*/
-/* ƒ{ƒX‚Ìî•ñ */
+/* ã‚¹ãƒ†ãƒ¼ã‚¸ */
 /*========================================*/
 
-/* ƒ{ƒX‚Ìí—Ş */
+/* ãƒœã‚¹ã®ç¨®é¡ */
 enum class BossType 
 {
-    enNone = 0xFFFFFFFF, //!< ‰½‚à‚È‚¢
-    enGorilla,  //!< ƒSƒŠƒ‰
-    enKangaroo, //!< ƒJƒ“ƒKƒ‹[
-    enTurtle,   //!< ƒJƒ
+    enNone = 0xFFFFFFFF, //!< ä½•ã‚‚ãªã—
+    enGorilla,  //!< ã‚´ãƒªãƒ©
+    enTurtle,   //!< ã‚«ãƒ¡
     enBossType_Max
 };
 
-/* ƒXƒe[ƒW‚Ìƒ‚[ƒh */
+/** ã‚²ãƒ¼ãƒ é›£æ˜“åº¦ */
 enum class GameModeType
 {
-    enNone,         //!< ‰½‚à‚È‚¢
-    enNormal,       //!< ’Êíƒ‚[ƒh
-    enHighAttack,   //!< UŒ‚—Í“Á‰»ƒ‚[ƒh
-    enTimeAttack    //!< –hŒä—Í“Á‰»iƒ^ƒCƒ€ƒAƒ^ƒbƒNjƒ‚[ƒh
+    enNone,         //!< ç‰¹ã«ãªã—
+    enNormal,       //!< é€šå¸¸ãƒ¢ãƒ¼ãƒ‰
+    enHighAttack,   //!< æ”»æ’ƒåŠ›ãŒé«˜ã„ãƒ¢ãƒ¼ãƒ‰
+    enTimeAttack    //!< HPãŒé«˜ã„
 };
 
-/* ƒAƒjƒ[ƒVƒ‡ƒ“‚ÌIDi”z—ñ‚Ì”Ô†‚Æ‚µ‚Äg‚¤j */
+/** ãƒœã‚¹ã®ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ */
 enum BossAnimID {
-    enNone = -1,// ‰½‚à‚È‚¢
+    enNone = -1,// ä½•ã‚‚ãªã—
     enAnimIdle = 0,
     enAnimRun,
     enAnimJump,
@@ -65,47 +64,47 @@ enum BossAnimID {
     enAnimSpin,
     enAnimClicked,
     enAnimAntic,
-    enAnimNum  //!< ƒAƒjƒ[ƒVƒ‡ƒ“‚Ì‘”i©“®“I‚É7‚É‚È‚éj
+    enAnimNum  //!<ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ã®æœ€å¤§æ•°
 };
 
-/* 1‚Â‚ÌƒAƒjƒ[ƒVƒ‡ƒ“‚ÌuƒpƒXv‚Æuƒ‹[ƒvİ’èv‚ğ‚Ü‚Æ‚ß‚é */
+/* ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ã®ã‚»ãƒƒãƒ†ã‚£ãƒ³ã‚°ã«å¿…è¦ãªãƒ‡ãƒ¼ã‚¿ã®æ§‹é€ ä½“ */
 struct AnimSetting 
 {
-    std::string filePath = "";
-    bool isLoop = false;
+    std::string filePath = "";  //!< ãƒ•ã‚¡ã‚¤ãƒ«ãƒ‘ã‚¹
+    bool isLoop = false;        //!< ãƒ«ãƒ¼ãƒ—ã•ã›ã‚‹ã‹
 };
 
-/* ƒ{ƒX‚É•K—v‚Èƒpƒ‰ƒ[ƒ^ */
+/** ãƒœã‚¹ã®ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿ã®æ§‹é€ ä½“ */
 struct BossParam
 {
-    /* ƒXƒe[ƒW‘I‘ğ‚Å‘I‚Î‚ê‚½“à—e */
+    /** ã‚¹ãƒ†ãƒ¼ã‚¸ãƒ‡ãƒ¼ã‚¿ */
     BossType stageType_ = BossType::enNone;
     GameModeType mode_ = GameModeType::enNone;
     
-    /* ƒ‚ƒfƒ‹ */
+    /** ãƒ¢ãƒ‡ãƒ«ã«å¿…è¦ãªãƒ‡ãƒ¼ã‚¿ */
     std::string characterKey_ = "Turtle";
     std::string modelPath_ = "";
     AnimSetting anims[enAnimNum];
     EnModelUpAxis modelAxis_ = EnModelUpAxis::enModelUpAxisZ;
 
-    /* ƒRƒŠƒWƒ‡ƒ“ */
-    float colliderRadius = 10.0f; //!< “–‚½‚è”»’èiƒJƒvƒZƒ‹‚âƒXƒtƒBƒAj‚Ì”¼Œa
-    float colliderHeight = 20.0f; //!< “–‚½‚è”»’è‚Ì‚‚³
+    /** ã‚³ãƒªã‚¸ãƒ§ãƒ³ã® */
+    float colliderRadius = 10.0f; //!< åŠå¾„
+    float colliderHeight = 20.0f; //!< é«˜ã•
 
-    /* ƒXƒe[ƒ^ƒX */
+    /* ã‚­ãƒ£ãƒ©ã‚¯ã‚¿ãƒ¼ã®ã‚¹ãƒ†ãƒ¼ã‚¿ã‚¹ */
     int maxHp_ = 0;
     int attack_ = 0;
 };
 
 
-// “®‚©‚·‚à‚Ì‚ğw’è‚·‚é 1‚È‚ç“®‚­
-namespace UpdateGroup 
+// æ›´æ–°ãƒ»æç”»å¯¾è±¡ã‚°ãƒ«ãƒ¼ãƒ— (1ãƒ“ãƒƒãƒˆ=å‹•ã/æãã€0=æ­¢ã¾ã‚‹/éš ã‚Œã‚‹)
+namespace UpdateGroup
 {
-	constexpr uint32_t None = 0;		//!< 0000 0000 0000 0000
-	constexpr uint32_t Player = 1 << 0;	//!< 0000 0000 0000 0001
-	constexpr uint32_t Boss = 1 << 1;	//!< 0000 0000 0000 0010
-	constexpr uint32_t UI = 1 << 2;		//!< 0000 0000 0000 0100
-	constexpr uint32_t CAMERA = 1 << 3;		//!< 0000 0000 0000 0100
-
-	constexpr uint32_t All = 0xFFFFFFFF; // ‘Sƒrƒbƒg1 : ‚·‚×‚Ä“®‚­‚æ‚¤‚É‚È‚é
+	constexpr uint32_t None   = 0;          //!< 0000 0000 (å…¨åœæ­¢)
+	constexpr uint32_t Player = 1 << 0;     //!< 0000 0001
+	constexpr uint32_t Boss   = 1 << 1;     //!< 0000 0010
+	constexpr uint32_t UI     = 1 << 2;     //!< 0000 0100
+	constexpr uint32_t Camera = 1 << 3;     //!< 0000 1000
+	constexpr uint32_t Stage  = 1 << 4;     //!< 0001 0000
+	constexpr uint32_t All    = 0xFFFFFFFF; //!< å…¨ãƒ“ãƒƒãƒˆ1 : å…¨ã‚°ãƒ«ãƒ¼ãƒ—æœ‰åŠ¹
 }

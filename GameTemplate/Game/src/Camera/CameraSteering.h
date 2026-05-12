@@ -1,4 +1,4 @@
-/**
+﻿/**
  * CameraSteering.h
  * カメラ操縦処理群
  */
@@ -24,7 +24,7 @@ private:
 
 public:
 	/** 更新のグループを取得 */
-	inline const uint32_t GetUpdateGroup() const { return UpdateGroup::CAMERA; }
+	inline const uint32_t GetUpdateGroup() const { return UpdateGroup::Camera; }
 
 public:
 	/** カメラの動作パラメータをまとめた構造体 */

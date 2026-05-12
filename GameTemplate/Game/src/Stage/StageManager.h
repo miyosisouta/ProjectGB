@@ -59,6 +59,9 @@ public:
 
 class StageManagerObject : public IGameObject
 {
+private:
+	bool isUpdate_ = true;  //!< 更新するか否か
+
 public:
     StageManagerObject();
     ~StageManagerObject();
@@ -66,4 +69,7 @@ public:
     bool Start();
     void Update();
     void Render(RenderContext& rc);
+
+	/** 更新の可否を設定する */
+	void SetUpdate(const bool flg) { isUpdate_ = flg; }
 };

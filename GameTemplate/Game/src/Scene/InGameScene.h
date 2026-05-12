@@ -17,7 +17,7 @@ private:
 	PouseMenu* pouseMenu_ = nullptr;
 
 
-	/** 現在動かす対象（player,UI,etc,,,) */
+	/** 現在動かす対象（player,UI,Stage,Boss) */
 	uint32_t activeTarget_ = 0;
 	/** ポーズメニューの開閉状態 */
 	bool isOpenPauseMenu_ = false;

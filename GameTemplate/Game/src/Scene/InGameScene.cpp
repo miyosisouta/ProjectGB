@@ -65,7 +65,7 @@ void InGameScene::Update()
 
 				// 更新対象をUIのみに切り替える
 				activeTarget_ = UpdateGroup::UI;
-				BattleManager::Get().SetActiveTarget(activeTarget_);
+				BattleManager::Get().SetGroupMask(activeTarget_, UpdateGroup::All);
 
 				// 時間を停止させる
 				BattleManager::Get().SetPouse(true);
@@ -76,7 +76,7 @@ void InGameScene::Update()
 			else {
 				// 更新対象を全てに切り替える
 				activeTarget_ = UpdateGroup::All;
-				BattleManager::Get().SetActiveTarget(activeTarget_);
+				BattleManager::Get().SetGroupMask(UpdateGroup::All);
 				BattleManager::Get().SetPouse(false);
 
 				// ポーズメニューを閉じる
