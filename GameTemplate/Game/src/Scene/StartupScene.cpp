@@ -7,6 +7,7 @@
 #include "stdafx.h"
 #include "StartupScene.h"
 #include "DebugScene.h"
+#include "DebugGrassScene.h"
 #include "BootScene.h"
 #include "TitleScene.h"
 #include "InGameScene.h"
@@ -38,6 +39,7 @@ namespace {
 		SelectSceneInformation(L"タイトル", Vector3(0.0f,100.0f,0.0f), TitleScene::ID()),
 		SelectSceneInformation(L"ゲーム", Vector3(0.0f,0.0f,0.0f), InGameScene::ID()),
 		SelectSceneInformation(L"デバック", Vector3(0.0f,-100.0f,0.0f), DebugScene::ID()),
+		SelectSceneInformation(L"デバック_Grass", Vector3(0.0f,-200.0f,0.0f), DebugGrassScene::ID()),
 	};
 	
 	static const Vector3 SELECTOR_POSITION_LIST[enSceneKind_Max] =
@@ -45,7 +47,8 @@ namespace {
 		Vector3(-50.0f,190.0f,0.0f),
 		Vector3(-50.0f,80.0f,0.0f),
 		Vector3(-50.0f,-20.0f,0.0f),
-		Vector3(-50.0f,-100.0f,0.0f),
+		Vector3(-50.0f,-120.0f,0.0f),
+		Vector3(-50.0f,-220.0f,0.0f),
 	};
 }
 

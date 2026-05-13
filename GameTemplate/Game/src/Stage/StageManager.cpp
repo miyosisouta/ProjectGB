@@ -62,6 +62,13 @@ void StageManager::StageTKLLoader(const char* path)
 			return true;
 		}
 
+#ifdef _DEBUG
+		// 草の名前が一致したとき座標を保存
+		// 二つ保存ができたその二つの範囲からランダムで特定の数だけ草を生やす
+#endif
+		
+		//生やした情報をjsonにて読み込み、
+
 
 		if (!assetPath.empty()) {
 			auto* staticObject = new StaticObject();

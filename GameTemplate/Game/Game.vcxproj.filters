@@ -94,6 +94,8 @@
     <ClCompile Include="src\Core\KeyConfig.cpp" />
     <ClCompile Include="src\UI\KeyConfigOptionMenu.cpp" />
     <ClCompile Include="src\UI\OptionMenu.cpp" />
+    <ClCompile Include="src\UI\UIManager.cpp" />
+    <ClCompile Include="src\Scene\DebugGrassScene.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Game.h" />
@@ -197,5 +199,7 @@
     <ClInclude Include="src\Core\KeyConfig.h" />
     <ClInclude Include="src\UI\KeyConfigOptionMenu.h" />
     <ClInclude Include="src\UI\OptionMenu.h" />
+    <ClInclude Include="src\UI\UIManager.h" />
+    <ClInclude Include="src\Scene\DebugGrassScene.h" />
   </ItemGroup>
 </Project>
