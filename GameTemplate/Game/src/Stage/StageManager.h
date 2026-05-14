@@ -13,11 +13,23 @@
 class StageManager
 {
 private:
-    std::vector<StaticObject*> staticObjectList_;
-    std::vector<PhysicalBody*> collisionList_;
+    std::vector<StaticObject*> staticObjectList_; // 静的オブジェクトのリスト
+    std::vector<StaticObject*> grassObjectList_; // 草の静的オブジェクトリスト
+    std::vector<PhysicalBody*> collisionList_; // コリジョン用のリスト
 
-    std::unique_ptr<StageCullingSystem> stageCullingSystem_;
+    std::unique_ptr<StageCullingSystem> stageCullingSystem_; // ステージのカリングシステム
 
+#if defined(_DEBUG)
+    bool isDisableGlass = false;
+#endif
+
+
+private:
+    Vector3 grassAreaPos_[2]; //!< 草を生成する範囲を計算するために必要な座標の配列
+
+public:
+    /** 草を生成する範囲を計算するために必要な座標を取得 */
+    Vector3 GetGrassAreaPos(int index) const { return grassAreaPos_[index]; }
 
 public:
 	/** tklファイルの読み込みとオブジェクト生成 */
@@ -31,6 +43,10 @@ public:
 	bool Start();
 	void Update();
 	void Render(RenderContext& rc);
+
+#if defined(_DEBUG)
+    void DisableGlass() { isDisableGlass = false; }
+#endif
 
 /**
  * シングルトン関連

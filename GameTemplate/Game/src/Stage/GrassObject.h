@@ -1,10 +1,10 @@
 ﻿#pragma once
 /**
- * StaticObject.h
- * 動かないオブジェクト
+ * GrassObject.h
+ * 草オブジェクト専用クラス
  */
 
-class StaticObject
+class GrassObject
 {
 private:
 	/** 当たり判定用のモデル */
@@ -12,7 +12,7 @@ private:
 	Transform transform_;
 
 private:
-	bool isDraw_ = true; //!< 描画するか
+	bool isDraw_ = false; //!< 描画するか
     float ditherAlpha_ = 1.0f; //!< ディザリングの透明度
 
 public:
@@ -20,6 +20,7 @@ public:
 	ModelRender* GetModel() { return &model_; }
 	/** トランスフォームの取得 */
 	inline Transform* GetTransform() { return &transform_; }
+	const Transform* GetTransform() const { return &transform_; }
 	/** 描画設定 */
 	void SetDraw(const bool isDraw) { isDraw_ = isDraw; }
 	/** ディザーアルファの設定 (0.0=完全透明, 1.0=不透明) */
@@ -32,8 +33,9 @@ public:
 
 
 public:
-	StaticObject();
-	~StaticObject();
+	GrassObject();
+	~GrassObject();
 	
+	void Update();
 	void Render(RenderContext& rc);
 };

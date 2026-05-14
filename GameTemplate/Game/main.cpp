@@ -45,6 +45,10 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 	// ここから初期化を行うコードを記述する。
 	//////////////////////////////////////
 
+	// @todo for test
+	g_renderingEngine->DisableRaytracing();
+	g_renderingEngine->DisableTonemap();
+
 	// コリジョン
 	CollisionHitManager::Initialize();
 	GhostBodyManager::Initialize();

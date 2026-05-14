@@ -96,6 +96,7 @@
     <ClCompile Include="src\UI\OptionMenu.cpp" />
     <ClCompile Include="src\UI\UIManager.cpp" />
     <ClCompile Include="src\Scene\DebugGrassScene.cpp" />
+    <ClCompile Include="src\Stage\GrassObject.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Game.h" />
@@ -201,5 +202,6 @@
     <ClInclude Include="src\UI\OptionMenu.h" />
     <ClInclude Include="src\UI\UIManager.h" />
     <ClInclude Include="src\Scene\DebugGrassScene.h" />
+    <ClInclude Include="src\Stage\GrassObject.h" />
   </ItemGroup>
 </Project>

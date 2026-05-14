@@ -62,12 +62,14 @@ void StageManager::StageTKLLoader(const char* path)
 			return true;
 		}
 
-#ifdef _DEBUG
-		// 草の名前が一致したとき座標を保存
-		// 二つ保存ができたその二つの範囲からランダムで特定の数だけ草を生やす
-#endif
-		
-		//生やした情報をjsonにて読み込み、
+		else if (data.ForwardMatchName(L"GrassArea")) {
+			if (data.EqualObjectName(L"GrassArea01")) {
+				grassAreaPos_[0] = data.position;
+			}
+			else if (data.EqualObjectName(L"GrassArea02")) {
+				grassAreaPos_[1] = data.position;
+			}
+		}
 
 
 		if (!assetPath.empty()) {
@@ -107,6 +109,13 @@ StageManager::~StageManager()
 		delete obj;
 	}
 	collisionList_.clear();
+
+	// 草のオブジェクトを削除
+	for (auto* obj : grassObjectList_) {
+		delete obj;
+	}
+	grassObjectList_.clear();
+
 }
 
 
@@ -138,6 +147,14 @@ bool StageManager::Start()
 
 	stageCullingSystem_ = std::make_unique<StageCullingSystem>();
 
+#if defined(_DEBUG)
+	if (!isDisableGlass)
+#endif
+	{
+		// json読み込み
+		// 草をnewgo
+	}
+
 	return true;
 }
 
@@ -151,6 +168,10 @@ void StageManager::Update()
 void StageManager::Render(RenderContext& rc)
 {
 	for (auto* object : staticObjectList_) 
+	{
+		object->Render(rc);
+	}
+	for (auto* object : grassObjectList_)
 	{
 		object->Render(rc);
 	}

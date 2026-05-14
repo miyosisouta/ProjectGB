@@ -95,23 +95,23 @@ SPSOut PSMainCore(SPSIn psIn, int isShadowReciever)
         15.0 / 16.0, 7.0 / 16.0, 13.0 / 16.0, 5.0 / 16.0
     };
 
-    float3 cameraPos = g_cameraPos;
+    //float3 cameraPos = g_cameraPos;
 
-    if (g_ditherdValue > 0.5f)
-    {
-        float dist = length(cameraPos - psIn.worldPos);
-        float distStrength = 1.0f - saturate(
-            (dist - g_ditherNear) / max(g_ditherFar - g_ditherNear, 0.001f)
-        );
-        float ditherStrength = distStrength * (1.0f - g_ditherAlpha);
+    //if (g_ditherdValue > 0.5f)
+    //{
+    //    float dist = length(cameraPos - psIn.worldPos);
+    //    float distStrength = 1.0f - saturate(
+    //        (dist - g_ditherNear) / max(g_ditherFar - g_ditherNear, 0.001f)
+    //    );
+    //    float ditherStrength = distStrength * (1.0f - g_ditherAlpha);
 
-        uint px = (uint) psIn.pos.x % 4;
-        uint py = (uint) psIn.pos.y % 4;
-        if (BayerMatrix[py * 4 + px] < ditherStrength)
-        {
-            discard;
-        }
-    }
+    //    uint px = (uint) psIn.pos.x % 4;
+    //    uint py = (uint) psIn.pos.y % 4;
+    //    if (BayerMatrix[py * 4 + px] < ditherStrength)
+    //    {
+    //        discard;
+    //    }
+    //}
    
     
     SPSOut psOut;
