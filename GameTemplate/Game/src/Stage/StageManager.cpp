@@ -8,6 +8,7 @@
 #include <fstream>
 #include "StageManager.h"
 #include "StaticObject.h"
+#include "GrassBendManager.h"
 #include "src/CharacterDataBase.h"
 #include "src/collision/PhysicalBody.h"
 
@@ -26,8 +27,17 @@ namespace
 	constexpr float COLLISION_UP = 600.0f;
 	constexpr float METER_TO_CENTIMETER = 100.0f;
 
-	/* 草のモデルパス */
-	const char* GRASS_MODEL_PATH = "Assets/Objects/Stage/Forest/ObjectData/grass.tkm";
+	/* 草のLODモデルパス [0]=near [1]=mid [2]=far */
+	const char* GRASS_LOD_MODEL_PATHS[StageManager::GRASS_LOD_COUNT] = {
+		"Assets/Objects/Stage/Forest/ObjectData/grass.tkm",
+		"Assets/Objects/Stage/Forest/ObjectData/grassLOD1.tkm",
+		"Assets/Objects/Stage/Forest/ObjectData/grassLOD2.tkm",
+	};
+
+	/* 草LODの切り替え距離 (ワールド単位) */
+	constexpr float GRASS_LOD0_MAX_DIST = 1900.0f; // これ以下 → LOD0 (grass,   near)
+	constexpr float GRASS_LOD1_MAX_DIST = 2500.0f; // これ以下 → LOD1 (grassLOD1, mid)
+	                                                // これより遠い → LOD2 (grassLOD2, far)
 
 	/* 草の配置JSONパス */
 	const char* GRASS_JSON_PATH = "Assets/Objects/Stage/Forest/ObjectData/grass_placement.json";
@@ -116,14 +126,22 @@ void StageManager::LoadGrassFromJson(const char* path)
 	const int count = (int)arr.size();
 	if (count == 0) { return; }
 
-	// インスタンシングレンダラーを草の数で初期化
-	grassRenderer_.Init(GRASS_MODEL_PATH, nullptr, 0, enModelUpAxisZ, true, count);
+	// LOD0 (near) と LOD1 (mid) は草曲げシェーダーを適用
+	// LOD2 (far) は遠すぎるためデフォルトシェーダーで描画
+	for (int lod = 0; lod < GRASS_LOD_COUNT; lod++)
+	{
+		if (lod < 2 && GrassBendManager::IsInitialized())
+		{
+			grassRenderer_[lod].SetGBufferFxOverride("Assets/shader/grass.fx");
+			grassRenderer_[lod].SetVSEntryOverride("VSGrass");
+			grassRenderer_[lod].SetExtraGBufferSRV(0, &GrassBendManager::Get().GetStructuredBuffer());
+		}
+		grassRenderer_[lod].Init(GRASS_LOD_MODEL_PATHS[lod], nullptr, 0, enModelUpAxisZ, true, count);
+		grassRenderer_[lod].SetDitherAlpha(1.0f);
+	}
 
-	// カリング用ローカルAABBを1回だけ計算
-	grassTemplateBounds_.Compute(grassRenderer_.GetModel());
-
-	// ディザリング設定
-	grassRenderer_.SetDitherAlpha(1.0f);
+	// カリング用ローカルAABBをLOD0から計算
+	grassTemplateBounds_.Compute(grassRenderer_[0].GetModel());
 
 	grassTransforms_.reserve(count);
 	for (int i = 0; i < count; i++)
@@ -142,7 +160,13 @@ void StageManager::LoadGrassFromJson(const char* path)
 		t.scale = Vector3(s[0].get<float>(), s[1].get<float>(), s[2].get<float>());
 
 		grassTransforms_.push_back(t);
-		grassRenderer_.UpdateInstancingData(i, t.position, t.rotation, t.scale);
+
+		// 初期値: LOD0をアクティブ、LOD1/2はscale=0
+		grassRenderer_[0].UpdateInstancingData(i, t.position, t.rotation, t.scale);
+		for (int lod = 1; lod < GRASS_LOD_COUNT; lod++)
+		{
+			grassRenderer_[lod].UpdateInstancingData(i, t.position, t.rotation, Vector3::Zero);
+		}
 	}
 }
 
@@ -212,11 +236,15 @@ void StageManager::Update()
 {
 	stageCullingSystem_->Update(staticObjectList_);
 
-	// 草のフラスタムカリング + インスタンシングデータ更新
+	// 草のフラスタムカリング + LOD選択 + インスタンシングデータ更新
 	if (!grassTransforms_.empty())
 	{
 		Frustum frustum;
 		frustum.BuildFromViewProjectionMatrix(g_camera3D->GetViewProjectionMatrix());
+		const Vector3 camPos = g_camera3D->GetPosition();
+
+		const float dist0Sq = GRASS_LOD0_MAX_DIST * GRASS_LOD0_MAX_DIST;
+		const float dist1Sq = GRASS_LOD1_MAX_DIST * GRASS_LOD1_MAX_DIST;
 
 		for (int i = 0; i < (int)grassTransforms_.size(); i++)
 		{
@@ -226,14 +254,30 @@ void StageManager::Update()
 			wb.minPoint = grassTemplateBounds_.minPoint + t.position;
 			wb.maxPoint = grassTemplateBounds_.maxPoint + t.position;
 
-			if (frustum.IsVisible(wb))
+			// フラスタム外はすべてのLODを非表示
+			if (!frustum.IsVisible(wb))
 			{
-				grassRenderer_.UpdateInstancingData(i, t.position, t.rotation, t.scale);
+				for (int lod = 0; lod < GRASS_LOD_COUNT; lod++)
+				{
+					grassRenderer_[lod].UpdateInstancingData(i, t.position, t.rotation, Vector3::Zero);
+				}
+				continue;
 			}
-			else
+
+			// カメラとの距離でアクティブなLODを決定
+			float distSq = (Vector3(t.position.x - camPos.x, 0.0f, t.position.z - camPos.z)).LengthSq();
+			int activeLod;
+			if      (distSq < dist0Sq) { activeLod = 0; }
+			else if (distSq < dist1Sq) { activeLod = 1; }
+			else                       { activeLod = 2; }
+
+			// アクティブなLODに実スケール、他はscale=0
+			for (int lod = 0; lod < GRASS_LOD_COUNT; lod++)
 			{
-				// スケール0で不可視化（m_numInstanceを維持するため全スロット更新する）
-				grassRenderer_.UpdateInstancingData(i, t.position, t.rotation, Vector3::Zero);
+				grassRenderer_[lod].UpdateInstancingData(
+					i, t.position, t.rotation,
+					(lod == activeLod) ? t.scale : Vector3::Zero
+				);
 			}
 		}
 	}
@@ -249,7 +293,10 @@ void StageManager::Render(RenderContext& rc)
 
 	if (!grassTransforms_.empty())
 	{
-		grassRenderer_.Draw(rc);
+		for (int lod = 0; lod < GRASS_LOD_COUNT; lod++)
+		{
+			grassRenderer_[lod].Draw(rc);
+		}
 	}
 }
 

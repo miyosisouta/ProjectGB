@@ -28,7 +28,7 @@ namespace
 	constexpr float CREATE_GRASS_TIME = 1.0f;
 
 	/* 作った際のy座標の位置 */
-	constexpr float CREATE_INIT_POS_Y = 10.0f;
+	constexpr float CREATE_INIT_POS_Y = 5.0f;
 }
 
 
@@ -156,6 +156,7 @@ DebugGrassScene::DebugGrassScene()
 
 DebugGrassScene::~DebugGrassScene()
 {
+	GrassBendManager::Finalize();
 	DeleteGO(stage_);
 }
 
@@ -174,6 +175,14 @@ bool DebugGrassScene::Start()
 	// タスクスケジューラを作成
 	task_ = std::make_unique<TaskSchedulerSystem>();
 
+	// 草曲げマネージャーを生成 (grassRenderer_.Init() より前に呼ぶこと)
+	GrassBendManager::Initialize();
+
+	// 草用カスタムシェーダーと曲げデータSRVを設定
+	grassRenderer_.SetGBufferFxOverride("Assets/shader/grass.fx");
+	grassRenderer_.SetVSEntryOverride("VSGrass");
+	grassRenderer_.SetExtraGBufferSRV(0, &GrassBendManager::Get().GetStructuredBuffer());
+
 	// 草のインスタンシングレンダラーを初期化
 	grassRenderer_.Init(
 		"Assets/Objects/Stage/Forest/ObjectData/grass.tkm",
@@ -187,8 +196,13 @@ bool DebugGrassScene::Start()
 
 void DebugGrassScene::Update()
 {
+	const float dt = g_gameTime->GetFrameDeltaTime();
+
 	// タスクスケジューラの時間を進める
-	if (task_) { task_->Update(g_gameTime->GetFrameDeltaTime()); }
+	if (task_) { task_->Update(dt); }
+
+	// 草曲げマネージャーを毎フレーム更新
+	GrassBendManager::Get().Update(dt);
 
 	// Aボタンを押したら草を再生成
 	if (g_pad[0]->IsTrigger(enButtonA))
@@ -200,6 +214,21 @@ void DebugGrassScene::Update()
 	else if (g_pad[0]->IsTrigger(enButtonB))
 	{
 		ExportJson();
+	}
+
+	// Xボタン: テスト用ベンドソースをシーン中央に追加
+	if (g_pad[0]->IsTrigger(enButtonX))
+	{
+		Vector3 areaMin = StageManager::Get().GetGrassAreaPos(0);
+		Vector3 areaMax = StageManager::Get().GetGrassAreaPos(1);
+		Vector3 center  = (areaMin + areaMax) * 0.5f;
+
+		GrassBendManager::AttackParams params;
+		params.force         = 500.0f;   // 曲げの強さ
+		params.radius        = 1000.0f;  // 影響半径
+		params.duration      = 1.2f;    // 持続秒数
+		params.recoverySpeed = 1.5f;
+		GrassBendManager::Get().AddSource(center, params);
 	}
 
 	// 草のインスタンシングデータを更新

@@ -6,6 +6,7 @@
 
 #pragma once
 #include "IScene.h"
+#include "src/Stage/GrassBendManager.h"
 
 
 class StageManagerObject;

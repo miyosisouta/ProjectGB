@@ -2,6 +2,7 @@
 #include "BossState.h"
 #include "BossCharacter.h"
 #include "src/Actor/AttackObjectManager.h"
+#include "src/Stage/GrassBendManager.h"
 #include <time.h>
 
 namespace
@@ -235,6 +236,16 @@ void BossAttackState::Enter()
 			// コリジョンの座標を設定
 			attackHitbox_->SetPosition(collisionTargetPos);
 
+			// 草を曲げる
+			if (GrassBendManager::IsInitialized())
+			{
+				if (const auto* gp = ParameterManager::Get().GetGrassBendParam("NormalAttack"))
+				{
+					GrassBendManager::AttackParams params{ gp->force, gp->radius, gp->duration, gp->recoverySpeed };
+					GrassBendManager::Get().AddSource(collisionTargetPos, params);
+				}
+			}
+
 			// エフェクトのPRSを決め
 			Vector3 collisionTargetScal = ATTACK_NORMAL_COLLISION_SIZE * EFFECT_SCALE_FACTOR_DAMAGE_LING;
 			bossRot.AddRotationDegY(BOSS_ROTATE_MAX);
@@ -418,6 +429,16 @@ void HitStampState::Update()
 			attackHitbox_->SetPosition(fixedAttackPos_);
 			boss_->SetMoveVelocity(Vector3::Zero);
 			createAttackCollision_ = true;
+
+			// 草を曲げる
+			if (GrassBendManager::IsInitialized())
+			{
+				if (const auto* gp = ParameterManager::Get().GetGrassBendParam("HitStamp"))
+				{
+					GrassBendManager::AttackParams params{ gp->force, gp->radius, gp->duration, gp->recoverySpeed };
+					GrassBendManager::Get().AddSource(fixedAttackPos_, params);
+				}
+			}
 		}
 		break;
 	}
@@ -536,10 +557,11 @@ void SpinState::Enter()
 			attackHitbox_ = std::make_unique<GhostBody>();
 			attackHitbox_->CreateSphere(boss_, CharacterID::BossSpinAtkID(), 200.0f, ghost::CollisionAttribute::BossAtk, ghost::CollisionAttributeMask::BossAtk);
 			isAttackStart_ = true;
+			// 草曲げは Update() で毎フレーム SetSource を呼ぶ
 
 			// SEの再生
 			const int id = taskScheduler_->CreateLoopSequence(BOSS_SPIN_SE_LOOP_SEQUENCE);
-			taskScheduler_->AddLoopTimer(id, FLOAT_ZERO, [&](void) {
+			taskScheduler_->AddLoopTimer(id, FLOAT_ZERO, [&]() {
 				SoundManager::Get().PlaySE(enSoundKind_Boss_Spin);
 				});
 			});
@@ -573,6 +595,16 @@ void SpinState::Update()
 		boss_->SetMoveVelocity(moveVelocity);
 
 		if (attackHitbox_) { attackHitbox_->SetPosition(boss_->GetTransformPosition()); }
+
+		// ボスの現在位置で草を曲げ続ける (elapsed をリセットすることで攻撃中は常に全力維持)
+		if (GrassBendManager::IsInitialized())
+		{
+			if (const auto* gp = ParameterManager::Get().GetGrassBendParam("SpinAttack"))
+			{
+				GrassBendManager::AttackParams params{ gp->force, gp->radius, gp->duration, gp->recoverySpeed };
+				GrassBendManager::Get().SetSource(GrassBendManager::SPIN_ATTACK_SLOT, boss_->GetTransformPosition(), params);
+			}
+		}
 
 		if (moveVelocity.LengthSq() < MOVE_EPSILON)
 		{
@@ -862,6 +894,17 @@ void LaserState::Enter()
 				);
 				// コリジョンの座標設定
 				attackHitbox_->SetPosition(targetPos_);
+
+				// 草を曲げる
+				if (GrassBendManager::IsInitialized())
+				{
+					const std::string bendKey = (mode_ == Mode::enCharge) ? "LaserStrong" : "LaserWeak";
+					if (const auto* gp = ParameterManager::Get().GetGrassBendParam(bendKey))
+					{
+						GrassBendManager::AttackParams params{ gp->force, gp->radius, gp->duration, gp->recoverySpeed };
+						GrassBendManager::Get().AddSource(targetPos_, params);
+					}
+				}
 			});
 
 		/* 発射後 */

@@ -64,6 +64,7 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 	ParameterManager::Get().LoadPlayerSkillStatusData("Assets/Objects/CharacterData/PlayerSkillStatus.json");
 	ParameterManager::Get().LoadBossSkillStatusData("Assets/Objects/CharacterData/BossSkillStatus.json");
 	ParameterManager::Get().LoadBattleCommonParamData("Assets/Parameter/BattleCommonParameter.json");
+	ParameterManager::Get().LoadGrassBendParamData("Assets/Objects/Stage/Forest/ObjectData/grass_attack_params.json");
 
 	// キーコンフィグ
 	KeyConfig::CreateInstance();

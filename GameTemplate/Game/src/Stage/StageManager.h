@@ -26,9 +26,13 @@ private:
 
     std::unique_ptr<StageCullingSystem> stageCullingSystem_; // ステージのカリングシステム
 
-    ModelRender                  grassRenderer_;       // 草インスタンシングレンダラー
-    std::vector<GrassTransform>  grassTransforms_;    // 草トランスフォームリスト
-    Bounds                       grassTemplateBounds_; // 草モデルのローカルAABB（カリング用）
+public:
+    static constexpr int GRASS_LOD_COUNT = 3;
+
+private:
+    ModelRender                  grassRenderer_[GRASS_LOD_COUNT]; // 草LODレンダラー [0]=near [1]=mid [2]=far
+    std::vector<GrassTransform>  grassTransforms_;                // 草トランスフォームリスト
+    Bounds                       grassTemplateBounds_;            // 草モデルのローカルAABB（カリング用）
 
 #if defined(_DEBUG)
     bool isDisableGlass = false;

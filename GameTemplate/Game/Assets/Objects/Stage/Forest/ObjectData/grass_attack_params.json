@@ -1,0 +1,11 @@
+{
+    "attacks": [
+        { "key": "NormalAttack",  "force": 150.0, "radius": 280.0, "duration": 0.3, "recoverySpeed": 3.0 },
+        { "key": "HitStamp",      "force": 250.0, "radius": 650.0, "duration": 1.2, "recoverySpeed": 1.5 },
+        { "key": "SpinAttack",    "force": 180.0, "radius": 420.0, "duration": 1.0, "recoverySpeed": 2.0 },
+        { "key": "ThrowRock",     "force": 150.0, "radius": 380.0, "duration": 0.5, "recoverySpeed": 2.5 },
+        { "key": "LaserWeak",     "force": 180.0, "radius": 200.0, "duration": 0.3, "recoverySpeed": 3.0 },
+        { "key": "LaserStrong",   "force": 220.0, "radius": 480.0, "duration": 1.0, "recoverySpeed": 2.0 },
+        { "key": "Landmine",      "force": 200.0, "radius": 700.0, "duration": 1.5, "recoverySpeed": 1.0 }
+    ]
+}
