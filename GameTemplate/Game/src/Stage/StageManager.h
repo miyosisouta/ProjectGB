@@ -9,15 +9,26 @@
 #include "src/Stage/StageBase.h"
 #include "src/Stage/StaticObject.h"
 #include "src/Stage/StageCullingSystem.h"
+#include "src/collision/BoundingVolume.h"
 
 class StageManager
 {
 private:
-    std::vector<StaticObject*> staticObjectList_; // 静的オブジェクトのリスト
-    std::vector<StaticObject*> grassObjectList_; // 草の静的オブジェクトリスト
-    std::vector<PhysicalBody*> collisionList_; // コリジョン用のリスト
+    struct GrassTransform
+    {
+        Vector3    position = Vector3::Zero;
+        Quaternion rotation = Quaternion::Identity;
+        Vector3    scale    = Vector3::One;
+    };
+
+    std::vector<StaticObject*>   staticObjectList_;  // 静的オブジェクトのリスト
+    std::vector<PhysicalBody*>   collisionList_;     // コリジョン用のリスト
 
     std::unique_ptr<StageCullingSystem> stageCullingSystem_; // ステージのカリングシステム
+
+    ModelRender                  grassRenderer_;       // 草インスタンシングレンダラー
+    std::vector<GrassTransform>  grassTransforms_;    // 草トランスフォームリスト
+    Bounds                       grassTemplateBounds_; // 草モデルのローカルAABB（カリング用）
 
 #if defined(_DEBUG)
     bool isDisableGlass = false;
@@ -26,6 +37,9 @@ private:
 
 private:
     Vector3 grassAreaPos_[2]; //!< 草を生成する範囲を計算するために必要な座標の配列
+
+    /** JSONファイルから草を読み込んでインスタンシングデータを構築 */
+    void LoadGrassFromJson(const char* path);
 
 public:
     /** 草を生成する範囲を計算するために必要な座標を取得 */
@@ -53,6 +67,11 @@ public:
  */
 private:
     static StageManager* instance_;
+    static bool          s_disableGrassLoad_; //!< trueのとき草JSONを読み込まない
+
+public:
+    /** 草のJSON読み込みを無効化する（Start()より前に呼ぶこと） */
+    static void SetDisableGrassLoad(bool v) { s_disableGrassLoad_ = v; }
 
 
 public:

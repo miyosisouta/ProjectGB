@@ -5,15 +5,17 @@
 
 
 #include "stdafx.h"
+#include <fstream>
 #include "StageManager.h"
 #include "StaticObject.h"
 #include "src/CharacterDataBase.h"
 #include "src/collision/PhysicalBody.h"
 
-StageManager* StageManager::instance_ = nullptr;
+StageManager* StageManager::instance_        = nullptr;
+bool          StageManager::s_disableGrassLoad_ = false;
 
 
-namespace 
+namespace
 {
 	/* ディザリング時の透明度 */
 	constexpr float DITHERING_ALPHA_GROUND = 1.0f;
@@ -23,6 +25,12 @@ namespace
 	/* その他 */
 	constexpr float COLLISION_UP = 600.0f;
 	constexpr float METER_TO_CENTIMETER = 100.0f;
+
+	/* 草のモデルパス */
+	const char* GRASS_MODEL_PATH = "Assets/Objects/Stage/Forest/ObjectData/grass.tkm";
+
+	/* 草の配置JSONパス */
+	const char* GRASS_JSON_PATH = "Assets/Objects/Stage/Forest/ObjectData/grass_placement.json";
 }
 
 void StageManager::StageTKLLoader(const char* path)
@@ -93,6 +101,52 @@ void StageManager::StageTKLLoader(const char* path)
 }
 
 
+void StageManager::LoadGrassFromJson(const char* path)
+{
+	std::ifstream ifs(path);
+	if (!ifs.is_open()) { return; }
+
+	nlohmann::json root;
+	try { ifs >> root; }
+	catch (...) { return; }
+
+	if (!root.contains("grass")) { return; }
+
+	const auto& arr = root["grass"];
+	const int count = (int)arr.size();
+	if (count == 0) { return; }
+
+	// インスタンシングレンダラーを草の数で初期化
+	grassRenderer_.Init(GRASS_MODEL_PATH, nullptr, 0, enModelUpAxisZ, true, count);
+
+	// カリング用ローカルAABBを1回だけ計算
+	grassTemplateBounds_.Compute(grassRenderer_.GetModel());
+
+	// ディザリング設定
+	grassRenderer_.SetDitherAlpha(1.0f);
+
+	grassTransforms_.reserve(count);
+	for (int i = 0; i < count; i++)
+	{
+		const auto& e = arr[i];
+
+		GrassTransform t;
+
+		const auto& p = e["position"];
+		t.position = Vector3(p[0].get<float>(), p[1].get<float>(), p[2].get<float>());
+
+		const auto& r = e["rotation"];
+		t.rotation = Quaternion(r[0].get<float>(), r[1].get<float>(), r[2].get<float>(), r[3].get<float>());
+
+		const auto& s = e["scale"];
+		t.scale = Vector3(s[0].get<float>(), s[1].get<float>(), s[2].get<float>());
+
+		grassTransforms_.push_back(t);
+		grassRenderer_.UpdateInstancingData(i, t.position, t.rotation, t.scale);
+	}
+}
+
+
 StageManager::StageManager()
 {
 }
@@ -109,13 +163,6 @@ StageManager::~StageManager()
 		delete obj;
 	}
 	collisionList_.clear();
-
-	// 草のオブジェクトを削除
-	for (auto* obj : grassObjectList_) {
-		delete obj;
-	}
-	grassObjectList_.clear();
-
 }
 
 
@@ -147,12 +194,14 @@ bool StageManager::Start()
 
 	stageCullingSystem_ = std::make_unique<StageCullingSystem>();
 
-#if defined(_DEBUG)
-	if (!isDisableGlass)
-#endif
+	if (!s_disableGrassLoad_)
 	{
-		// json読み込み
-		// 草をnewgo
+#if defined(_DEBUG)
+		if (!isDisableGlass)
+#endif
+		{
+			LoadGrassFromJson(GRASS_JSON_PATH);
+		}
 	}
 
 	return true;
@@ -162,18 +211,45 @@ bool StageManager::Start()
 void StageManager::Update()
 {
 	stageCullingSystem_->Update(staticObjectList_);
+
+	// 草のフラスタムカリング + インスタンシングデータ更新
+	if (!grassTransforms_.empty())
+	{
+		Frustum frustum;
+		frustum.BuildFromViewProjectionMatrix(g_camera3D->GetViewProjectionMatrix());
+
+		for (int i = 0; i < (int)grassTransforms_.size(); i++)
+		{
+			const auto& t = grassTransforms_[i];
+
+			Bounds wb;
+			wb.minPoint = grassTemplateBounds_.minPoint + t.position;
+			wb.maxPoint = grassTemplateBounds_.maxPoint + t.position;
+
+			if (frustum.IsVisible(wb))
+			{
+				grassRenderer_.UpdateInstancingData(i, t.position, t.rotation, t.scale);
+			}
+			else
+			{
+				// スケール0で不可視化（m_numInstanceを維持するため全スロット更新する）
+				grassRenderer_.UpdateInstancingData(i, t.position, t.rotation, Vector3::Zero);
+			}
+		}
+	}
 }
 
 
 void StageManager::Render(RenderContext& rc)
 {
-	for (auto* object : staticObjectList_) 
+	for (auto* object : staticObjectList_)
 	{
 		object->Render(rc);
 	}
-	for (auto* object : grassObjectList_)
+
+	if (!grassTransforms_.empty())
 	{
-		object->Render(rc);
+		grassRenderer_.Draw(rc);
 	}
 }
 
@@ -195,7 +271,7 @@ bool StageManagerObject::Start()
 	StageManager::Get().Start();
 
 	// TODO : 当たり判定の可視化
-#ifdef K2_DEBUG 
+#ifdef K2_DEBUG
 	//PhysicsWorld::Get().EnableDrawDebugWireFrame();
 #endif
 

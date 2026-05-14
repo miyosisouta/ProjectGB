@@ -51,7 +51,7 @@ namespace nsK2EngineLow {
 			//エフェクトエンジンの初期化。
 			EffectEngine::CreateInstance();
 		}
-#ifdef K2_DEBUG
+#ifdef ENABLE_FPS_RENDER
 	if (m_graphicsEngine) {
 			m_fpsFont = std::make_unique<Font>();
 			m_fpsFontShadow = std::make_unique<Font>();
@@ -72,7 +72,7 @@ namespace nsK2EngineLow {
 	}
 	void K2EngineLow::EndFrame()
 	{
-#ifdef K2_DEBUG
+#ifdef ENABLE_FPS_RENDER
 		m_fpsFont->Begin(g_graphicsEngine->GetRenderContext());
 		float time = g_gameTime->GetFrameDeltaTime();
 		wchar_t text[256];

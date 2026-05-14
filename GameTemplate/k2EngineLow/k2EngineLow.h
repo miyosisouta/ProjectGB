@@ -209,7 +209,7 @@ namespace nsK2EngineLow {
 		}
 		
 	private:
-#ifdef K2_DEBUG
+#ifdef ENABLE_FPS_RENDER
 		std::unique_ptr<Font> m_fpsFont;
 		std::unique_ptr<Font> m_fpsFontShadow;
 #endif

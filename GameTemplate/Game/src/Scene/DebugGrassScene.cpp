@@ -22,7 +22,7 @@ namespace
 	constexpr uint8_t AREA_MAX_POS_ARRAY_NUM = 1;
 
 	/* 草を作る個数 */
-	constexpr int CREATE_GRASS_NUM = 400;
+	constexpr int CREATE_GRASS_NUM = 300;
 
 	/* 草を削除する時間の猶予 : 草を作り始めるまでの時間 */
 	constexpr float CREATE_GRASS_TIME = 1.0f;
@@ -164,6 +164,9 @@ bool DebugGrassScene::Start()
 {
 	// パラメータの取得
 	const auto* param = ParameterManager::Get().GetParameter<MasterBattleCommonParameter>(0);
+
+	// DebugGrassSceneでは草JSONを読み込まない
+	StageManager::SetDisableGrassLoad(true);
 
 	// ステージ
 	stage_ = NewGO<StageManagerObject>(PRIORITY_STAGE, "stage");
