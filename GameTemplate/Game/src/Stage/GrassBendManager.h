@@ -6,12 +6,7 @@
  * 攻撃や移動などによって「ベンドソース」を追加し、
  * 毎フレーム経過時間を進めて不要になったものを削除する。
  *
- * 使い方:
- *   1. GrassBendManager::Initialize() で生成（草レンダラーの Init() より前に呼ぶこと）
- *   2. ModelRender に Get().GetStructuredBuffer() を SetExtraGBufferSRV で渡す
- *   3. 毎フレーム Get().Update(dt) を呼ぶ
- *   4. 攻撃時など任意のタイミングで Get().AddSource(pos, params) を呼ぶ
- *   5. シーン終了時に GrassBendManager::Finalize() を呼ぶ
+ * 使い方 : 曲げたいときに、Get().AddSource(pos, params) を呼ぶ
  */
 class GrassBendManager
 {

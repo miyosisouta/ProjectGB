@@ -9,7 +9,6 @@
 #include <fstream>
 #include "DebugGrassScene.h"
 #include "src/Stage/StageManager.h"
-#include "src/Stage/GrassObject.h"
 #include "src/collision/BoundingVolume.h"
 
 namespace
@@ -63,9 +62,9 @@ void DebugGrassScene::GenarateGrass()
 			// モデルのローカルAABBをテンプレートとして1回だけ計算
 			Bounds templateBounds;
 			{
-				GrassObject tempGrass;
-				tempGrass.Init(assetPath.c_str(), Vector3::Zero, Quaternion::Identity, Vector3::One);
-				templateBounds.Compute(tempGrass.GetModel()->GetModel());
+				ModelRender tempModel;
+				tempModel.Init(assetPath.c_str());
+				templateBounds.Compute(tempModel.GetModel());
 			}
 
 			// 配置済みワールドAABBのリスト

@@ -1,92 +1,70 @@
-﻿/**
- * Stage.h
+/**
+ * StageManager.h
  *
- * ステージの描画を行う
+ * ステージ全体の管理（静的オブジェクト・コリジョン・草）。
+ * 草のLOD/ディザリング処理は GrassObject に委譲している。
  */
-
 
 #pragma once
 #include "src/Stage/StageBase.h"
 #include "src/Stage/StaticObject.h"
 #include "src/Stage/StageCullingSystem.h"
-#include "src/collision/BoundingVolume.h"
+#include "src/Stage/GrassObject.h"
+#include "src/collision/PhysicalBody.h"
 
 class StageManager
 {
 private:
-    struct GrassTransform
-    {
-        Vector3    position = Vector3::Zero;
-        Quaternion rotation = Quaternion::Identity;
-        Vector3    scale    = Vector3::One;
-    };
+    std::vector<StaticObject*>          staticObjectList_;
+    std::vector<PhysicalBody*>          collisionList_;
+    std::unique_ptr<StageCullingSystem> stageCullingSystem_;
+    std::unique_ptr<GrassObject>        grassObject_;
 
-    std::vector<StaticObject*>   staticObjectList_;  // 静的オブジェクトのリスト
-    std::vector<PhysicalBody*>   collisionList_;     // コリジョン用のリスト
-
-    std::unique_ptr<StageCullingSystem> stageCullingSystem_; // ステージのカリングシステム
-
-public:
-    static constexpr int GRASS_LOD_COUNT = 3;
-
-private:
-    ModelRender                  grassRenderer_[GRASS_LOD_COUNT]; // 草LODレンダラー [0]=near [1]=mid [2]=far
-    std::vector<GrassTransform>  grassTransforms_;                // 草トランスフォームリスト
-    Bounds                       grassTemplateBounds_;            // 草モデルのローカルAABB（カリング用）
+    Vector3 grassAreaPos_[2]; //!< 草生成範囲の座標（外部から参照される）
 
 #if defined(_DEBUG)
     bool isDisableGlass = false;
 #endif
 
-
-private:
-    Vector3 grassAreaPos_[2]; //!< 草を生成する範囲を計算するために必要な座標の配列
-
-    /** JSONファイルから草を読み込んでインスタンシングデータを構築 */
-    void LoadGrassFromJson(const char* path);
+    void StageTKLLoader(const char* path);
 
 public:
-    /** 草を生成する範囲を計算するために必要な座標を取得 */
+    /** 草生成範囲の座標を取得 */
     Vector3 GetGrassAreaPos(int index) const { return grassAreaPos_[index]; }
 
+    /** 草のLOD切り替えの有効/無効 */
+    void SetGrassLodEnabled(bool v)    { if (grassObject_) grassObject_->SetLodEnabled(v);    }
+    /** 草LOD遷移ディザリングの有効/無効 */
+    void SetGrassDitherEnabled(bool v) { if (grassObject_) grassObject_->SetDitherEnabled(v); }
+
 public:
-	/** tklファイルの読み込みとオブジェクト生成 */
-	void StageTKLLoader(const char* path);
+    StageManager();
+    ~StageManager();
 
-
-public:
-	StageManager();
-	~StageManager();
-
-	bool Start();
-	void Update();
-	void Render(RenderContext& rc);
+    bool Start();
+    void Update();
+    void Render(RenderContext& rc);
 
 #if defined(_DEBUG)
-    void DisableGlass() { isDisableGlass = false; }
+    void DisableGlass() { isDisableGlass = true; }
 #endif
 
 /**
- * シングルトン関連
+ * シングルトン
  */
 private:
     static StageManager* instance_;
-    static bool          s_disableGrassLoad_; //!< trueのとき草JSONを読み込まない
+    static bool          s_disableGrassLoad_;
 
 public:
-    /** 草のJSON読み込みを無効化する（Start()より前に呼ぶこと） */
     static void SetDisableGrassLoad(bool v) { s_disableGrassLoad_ = v; }
 
-
-public:
     static void Initialize()
     {
-        if (instance_ == nullptr) {
+        if (instance_ == nullptr)
             instance_ = new StageManager();
-        }
     }
     static StageManager& Get() { return *instance_; }
-
     static void Finalize()
     {
         if (instance_ != nullptr) {
@@ -96,10 +74,11 @@ public:
     }
 };
 
+
 class StageManagerObject : public IGameObject
 {
 private:
-	bool isUpdate_ = true;  //!< 更新するか否か
+    bool isUpdate_ = true;
 
 public:
     StageManagerObject();
@@ -109,6 +88,5 @@ public:
     void Update();
     void Render(RenderContext& rc);
 
-	/** 更新の可否を設定する */
-	void SetUpdate(const bool flg) { isUpdate_ = flg; }
+    void SetUpdate(const bool flg) { isUpdate_ = flg; }
 };
