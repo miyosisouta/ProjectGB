@@ -1,186 +1,170 @@
-﻿/**
- * Stage.cpp
- * ステージの描画を行う
+/**
+ * StageManager.cpp
+ * ステージ全体の管理。草の詳細処理は GrassObject に委譲している。
  */
-
 
 #include "stdafx.h"
 #include "StageManager.h"
-#include "StaticObject.h"
+#include "GrassBendManager.h"
 #include "src/CharacterDataBase.h"
 #include "src/collision/PhysicalBody.h"
 
-StageManager* StageManager::instance_ = nullptr;
+StageManager* StageManager::instance_        = nullptr;
+bool          StageManager::s_disableGrassLoad_ = false;
 
 
-namespace 
+namespace
 {
-	/* ディザリング時の透明度 */
-	constexpr float DITHERING_ALPHA_GROUND = 1.0f;
-	constexpr float DITHERING_ALPHA_FENCE = 0.5f;
-	constexpr float DITHERING_ALPHA_TREE = 0.2f;
+    /* ディザリング時の透明度 */
+    constexpr float DITHERING_ALPHA_GROUND = 1.0f; // 地面
+    constexpr float DITHERING_ALPHA_FENCE  = 0.5f; // 柵
+    constexpr float DITHERING_ALPHA_TREE   = 0.2f; // 木
 
-	/* その他 */
-	constexpr float COLLISION_UP = 600.0f;
-	constexpr float METER_TO_CENTIMETER = 100.0f;
+    /* その他 */
+    constexpr float COLLISION_UP        = 600.0f; // コリジョンの高さ
+    constexpr float METER_TO_CENTIMETER = 100.0f; // メートル
+
+    /* 草の配置JSONパス */
+    const char* GRASS_JSON_PATH = "Assets/Objects/Stage/Forest/ObjectData/grass_placement.json";
 }
+
 
 void StageManager::StageTKLLoader(const char* path)
 {
-	LevelRender stage;
+    LevelRender stage;
+    stage.Init(path, [&](LevelObjectData& data)
+    {
+        std::string assetPath;
 
-	stage.Init(path, [&](LevelObjectData& data)
-	{
-		// ファイルパス
-		std::string assetPath;
+        if (data.ForwardMatchName(L"ground")) {
+            assetPath = "Assets/Objects/Stage/Forest/ObjectData/ground.tkm";
+        }
+        else if (data.ForwardMatchName(L"fence")) {
+            assetPath = "Assets/Objects/Stage/Forest/ObjectData/fence.tkm";
+        }
+        else if (data.ForwardMatchName(L"Tree")) {
+            assetPath = "Assets/Objects/Stage/Forest/ObjectData/tree.tkm";
+        }
+        else if (data.ForwardMatchName(L"collisionBox")) {
+            auto collision = new PhysicalBody();
+            Vector3 pos = Vector3(data.position.x, data.position.y + COLLISION_UP, data.position.z);
+            collision->CreateBox(data.scale * METER_TO_CENTIMETER, pos, enCollisionAttr_Ground);
+            collisionList_.push_back(collision);
+            return true;
+        }
+        else if (data.ForwardMatchName(L"GrassArea")) {
+            if      (data.EqualObjectName(L"GrassArea01")) grassAreaPos_[0] = data.position;
+            else if (data.EqualObjectName(L"GrassArea02")) grassAreaPos_[1] = data.position;
+        }
 
-		/** ここで名前に応じたファイルパスを取得・設定 */
-		if (data.ForwardMatchName(L"ground")){
-			assetPath = "Assets/Objects/Stage/Forest/ObjectData/ground.tkm";
-		}
+        if (!assetPath.empty()) {
+            auto* obj = new StaticObject();
+            obj->Init(assetPath.c_str(), data.position, data.rotation, data.scale);
 
-		else if (data.ForwardMatchName(L"fence")){
-			assetPath = "Assets/Objects/Stage/Forest/ObjectData/fence.tkm";
-		}
+            if      (data.ForwardMatchName(L"ground")) obj->SetDitherAlpha(DITHERING_ALPHA_GROUND);
+            else if (data.ForwardMatchName(L"fence"))  obj->SetDitherAlpha(DITHERING_ALPHA_FENCE);
+            else if (data.ForwardMatchName(L"Tree"))   obj->SetDitherAlpha(DITHERING_ALPHA_TREE);
 
-		else if (data.ForwardMatchName(L"Tree")){
-			assetPath = "Assets/Objects/Stage/Forest/ObjectData/tree.tkm";
-		}
-
-		else if (data.ForwardMatchName(L"collisionBox")) {
-			auto collision = new PhysicalBody();
-			// collisionの位置をcollisionの大きさによって上げる
-			Vector3 pos = Vector3(data.position.x, data.position.y + COLLISION_UP, data.position.z);
-			// コリジョンの作成
-			collision->CreateBox(
-				data.scale * METER_TO_CENTIMETER,
-				pos,
-				enCollisionAttr_Ground
-			);
-			collisionList_.push_back(collision);
-			// 見た目のオブジェクトを作る必要がないので処理をか
-			return true;
-		}
-
-
-		if (!assetPath.empty()) {
-			auto* staticObject = new StaticObject();
-			staticObject->Init(assetPath.c_str(), data.position, data.rotation, data.scale);
-
-			// ← ここでアルファ値を設定
-			if (data.ForwardMatchName(L"ground")) {
-				staticObject->SetDitherAlpha(DITHERING_ALPHA_GROUND);   // 床：透明にしない
-			}
-			else if (data.ForwardMatchName(L"fence")) {
-				staticObject->SetDitherAlpha(DITHERING_ALPHA_FENCE);   // フェンス：半透明
-			}
-			else if (data.ForwardMatchName(L"Tree")) {
-				staticObject->SetDitherAlpha(DITHERING_ALPHA_TREE);   // 木：やや透明
-			}
-
-			staticObjectList_.push_back(staticObject);
-		}
-	});
+            staticObjectList_.push_back(obj);
+        }
+    });
 }
 
 
-StageManager::StageManager()
-{
-}
+StageManager::StageManager() {}
+
 StageManager::~StageManager()
 {
-	// 見た目のあるオブジェクトの削除
-	for (auto* obj : staticObjectList_) {
-		delete obj;
-	}
-	staticObjectList_.clear();
-
-	// コリジョンの削除
-	for (auto* obj : collisionList_) {
-		delete obj;
-	}
-	collisionList_.clear();
+    for (auto* obj : staticObjectList_) delete obj;
+    staticObjectList_.clear();
+    for (auto* obj : collisionList_) delete obj;
+    collisionList_.clear();
 }
 
 
 bool StageManager::Start()
 {
-	// 選択されたボスを取得
-	//BossType stageKind = CharacterDataBase::Get().GetGameParam().stageType_;
-	BossType stageKind = BossType::enGorilla;
+    // 選択されたボスを取得
+    //BossType stageKind = CharacterDataBase::Get().GetGameParam().stageType_;
+    BossType stageKind = BossType::enGorilla;
 
-	// ボスによってステージを作成
-	switch (stageKind)
-	{
-	case BossType::enGorilla:
-	{
-		StageTKLLoader("Assets/Objects/Stage/Forest/tkl/Stage_Gollira.tkl");
-		break;
-	}
+    switch (stageKind)
+    {
+    case BossType::enGorilla:
+        StageTKLLoader("Assets/Objects/Stage/Forest/tkl/Stage_Gollira.tkl");
+        break;
+    case BossType::enTurtle:
+        StageTKLLoader("Assets/Objects/Stage/Forest/tkl/Stage_Turtle.tkl");
+        break;
+    default:
+        K2_ASSERT(true, "ボスタイプが設定されていません");
+        break;
+    }
 
-	case BossType::enTurtle:
-	{
-		StageTKLLoader("Assets/Objects/Stage/Forest/tkl/Stage_Turtle.tkl");
-		break;
-	}
+    stageCullingSystem_ = std::make_unique<StageCullingSystem>();
 
-	default:
-		K2_ASSERT(true,"ボスタイプが設定されていません");
-		break;
-	}
+    if (!s_disableGrassLoad_)
+    {
+#if defined(_DEBUG)
+        if (!isDisableGlass)
+#endif
+        {
+            // グラスオブジェクトを作成
+            grassObject_ = std::make_unique<GrassObject>();
+            grassObject_->Init(
+                GRASS_JSON_PATH,
+                GrassBendManager::IsInitialized() ? &GrassBendManager::Get() : nullptr
+            );
+        }
+    }
 
-	stageCullingSystem_ = std::make_unique<StageCullingSystem>();
-
-	return true;
+    return true;
 }
 
 
 void StageManager::Update()
 {
-	stageCullingSystem_->Update(staticObjectList_);
+    stageCullingSystem_->Update(staticObjectList_);
+    if (grassObject_) grassObject_->Update();
 }
 
 
 void StageManager::Render(RenderContext& rc)
 {
-	for (auto* object : staticObjectList_) 
-	{
-		object->Render(rc);
-	}
+    for (auto* obj : staticObjectList_) obj->Render(rc);
+    if (grassObject_) grassObject_->Draw(rc);
 }
 
 
-/******************* ステージマネージャーオブジェクト ********************************/
+/******************* StageManagerObject ********************************/
 
-StageManagerObject::StageManagerObject()
-{
-}
+StageManagerObject::StageManagerObject() {}
 
 StageManagerObject::~StageManagerObject()
 {
-	StageManager::Get().Finalize();
+    StageManager::Get().Finalize();
 }
 
 bool StageManagerObject::Start()
 {
-	StageManager::Initialize();
-	StageManager::Get().Start();
+    StageManager::Initialize();
+    StageManager::Get().Start();
 
-	// TODO : 当たり判定の可視化
-#ifdef K2_DEBUG 
-	//PhysicsWorld::Get().EnableDrawDebugWireFrame();
+    // TODO : 当たり判定の可視化
+#ifdef K2_DEBUG
+    //PhysicsWorld::Get().EnableDrawDebugWireFrame();
 #endif
 
-	return true;
+    return true;
 }
 
 void StageManagerObject::Update()
 {
-	if (!isUpdate_) return;
-	StageManager::Get().Update();
+    if (!isUpdate_) return;
+    StageManager::Get().Update();
 }
 
 void StageManagerObject::Render(RenderContext& rc)
 {
-	StageManager::Get().Render(rc);
+    StageManager::Get().Render(rc);
 }

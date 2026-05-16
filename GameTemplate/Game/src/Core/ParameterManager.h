@@ -128,6 +128,21 @@ struct MasterBattleCommonParameter : public IMasterParameter
 
 };
 
+/**
+ * 草曲げパラメーター
+ * grass_attack_params.json の "attacks" 配列から読み込む
+ */
+struct MasterGrassBendParameter : public IMasterParameter
+{
+	appParameter(MasterGrassBendParameter);
+
+	std::string key;          //!< 攻撃種別キー (例: "NormalAttack", "ThrowRock")
+	float       force;        //!< 最大曲げ量 (ワールド単位)
+	float       radius;       //!< 影響半径 (ワールド単位)
+	float       duration;     //!< 曲げ持続時間 (秒)
+	float       recoverySpeed;//!< 将来の回復速度拡張用
+};
+
 /** defineの使用終了 */
 #undef appParameter
 
@@ -157,6 +172,7 @@ public:
 	void LoadPlayerSkillStatusData(const char* path);
 	void LoadBossSkillStatusData(const char* path);
 	void LoadBattleCommonParamData(const char* path);
+	void LoadGrassBendParamData(const char* path);
 
 public:
 	/**
@@ -360,6 +376,16 @@ public:
 	{
 		return FindParameter<MasterBattleCommonParameter>(
 			[&key](const MasterBattleCommonParameter& p) {
+				return p.key == key;
+			}
+		);
+	}
+
+	/** keyで草曲げパラメーターを取得するショートカット */
+	const MasterGrassBendParameter* GetGrassBendParam(const std::string& key)
+	{
+		return FindParameter<MasterGrassBendParameter>(
+			[&key](const MasterGrassBendParameter& p) {
 				return p.key == key;
 			}
 		);

@@ -21,6 +21,7 @@
 #include "src/collision/GhostBodyManager.h"
 #include "src/collision/CollisionHitManager.h"
 
+#include "src/Stage/GrassBendManager.h"
 #include "src/UI/Menu.h"
 #include "src/UI/GameClearMenu.h"
 #include "src/UI/GameOverMenu.h"
@@ -134,6 +135,7 @@ BattleManager::BattleManager()
 
 		MissionManager::CreateInstance();
 		MissionManager::Get().InitByBossType(CharacterDataBase::Get().GetStageType());
+		GrassBendManager::Initialize();
 	}
 }
 
@@ -153,6 +155,7 @@ BattleManager::~BattleManager()
 	}
 
 	MissionManager::Get().DestroyInstance();
+	GrassBendManager::Finalize();
 }
 
 
@@ -186,6 +189,7 @@ void BattleManager::Update()
 		{
 			gameTimer_.Update();
 			boss_->Update();
+			GrassBendManager::Get().Update(g_gameTime->GetFrameDeltaTime());
 			MissionManager::Get().Update();
 
 			// ディザリング設定

@@ -264,6 +264,7 @@
     <ClCompile Include="src\Math\Transform.cpp" />
     <ClCompile Include="src\Memory\Array.cpp" />
     <ClCompile Include="src\Scene\BootScene.cpp" />
+    <ClCompile Include="src\Scene\DebugGrassScene.cpp" />
     <ClCompile Include="src\Scene\DebugScene.cpp" />
     <ClCompile Include="src\Scene\InGameScene.cpp" />
     <ClCompile Include="src\Scene\IScene.cpp" />
@@ -282,6 +283,8 @@
     <ClCompile Include="src\Skill\SpecialAbility\Magic.cpp" />
     <ClCompile Include="src\Skill\Utility\Utility.cpp" />
     <ClCompile Include="src\Sound\SoundManager.cpp" />
+    <ClCompile Include="src\Stage\GrassBendManager.cpp" />
+    <ClCompile Include="src\Stage\GrassObject.cpp" />
     <ClCompile Include="src\Stage\StageCullingSystem.cpp" />
     <ClCompile Include="src\Stage\StaticObject.cpp" />
     <ClCompile Include="src\Stage\StageBase.cpp" />
@@ -366,6 +369,7 @@
     <ClInclude Include="src\Math\Transform.h" />
     <ClInclude Include="src\Memory\Array.h" />
     <ClInclude Include="src\Scene\BootScene.h" />
+    <ClInclude Include="src\Scene\DebugGrassScene.h" />
     <ClInclude Include="src\Scene\DebugScene.h" />
     <ClInclude Include="src\Scene\InGameScene.h" />
     <ClInclude Include="src\Scene\IScene.h" />
@@ -385,6 +389,8 @@
     <ClInclude Include="src\Skill\Utility\Utility.h" />
     <ClInclude Include="src\Sound\SoundManager.h" />
     <ClInclude Include="src\Sound\Types.h" />
+    <ClInclude Include="src\Stage\GrassBendManager.h" />
+    <ClInclude Include="src\Stage\GrassObject.h" />
     <ClInclude Include="src\Stage\StageCullingSystem.h" />
     <ClInclude Include="src\Stage\StaticObject.h" />
     <ClInclude Include="src\Stage\StageBase.h" />

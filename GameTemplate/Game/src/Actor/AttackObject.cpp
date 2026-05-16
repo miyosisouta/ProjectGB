@@ -2,6 +2,7 @@
 #include "AttackObject.h"
 #include "src/Actor/Character.h"
 #include "src/Actor/BossCharacter.h"
+#include "src/Stage/GrassBendManager.h"
 
 namespace {
     /** Landmine */
@@ -108,13 +109,23 @@ bool ThrowRockObject::Start()
     // コリジョンの作成
     attackHitBox_ = std::make_unique<GhostBody>();
     attackHitBox_->CreateSphere(
-        boss_, 
+        boss_,
         CharacterID::BossThrowRockAtkID(),
         collisionSize_,
         ghost::CollisionAttribute::BossAtk, // 自分の属性
         ghost::CollisionAttributeMask::BossAtk // 当たる相手の属性
     );
     attackHitBox_->SetPosition(transform_.position);
+
+    // 草を曲げる
+    if (GrassBendManager::IsInitialized())
+    {
+        if (const auto* gp = ParameterManager::Get().GetGrassBendParam("ThrowRock"))
+        {
+            GrassBendManager::AttackParams params{ gp->force, gp->radius, gp->duration, gp->recoverySpeed };
+            GrassBendManager::Get().AddSource(transform_.position, params);
+        }
+    }
 
     model_.Update();
 	return true;
@@ -215,6 +226,16 @@ bool LandmineObject::Start()
             ghost::CollisionAttributeMask::CharacterAtk // キャラクター全員ダメージを受ける
         );
         attackHitBox_->SetPosition(transform_.position);
+
+        // 草を曲げる
+        if (GrassBendManager::IsInitialized())
+        {
+            if (const auto* gp = ParameterManager::Get().GetGrassBendParam("Landmine"))
+            {
+                GrassBendManager::AttackParams params{ gp->force, gp->radius, gp->duration, gp->recoverySpeed };
+                GrassBendManager::Get().AddSource(transform_.position, params);
+            }
+        }
 
         phase_ = Phase::enExpload;
         });

@@ -29,13 +29,17 @@ struct SPSOut
 // ディザリング用定数バッファ
 cbuffer DitherCB : register(b1)
 {
-    float3 g_playerPos; // 12バイト  ← playerWorldPos
-    float g_ditherNear; // 4バイト   ← ditherNear
-    float3 g_cameraPos; // 12バイト  ← cameraWorldPos
-    float g_ditherFar; // 4バイト   ← ditherFar
-    float g_ditherdValue; // 4バイト   ← isEnable
-    float g_ditherAlpha;  // 4バイト   ← ditherAlpha (per-objectの透明度ディザ, 0.0=完全透明 1.0=不透明)
-    float2 g_ditherPad;   // 8バイト   ← padding1, padding2
+    float3 g_playerPos;               // 12  row0
+    float  g_ditherNear;              //  4
+    float3 g_cameraPos;               // 12  row1
+    float  g_ditherFar;               //  4
+    float  g_ditherdValue;            //  4  row2
+    float  g_ditherAlpha;             //  4  per-objectの透明度ディザ(0.0=完全透明, 1.0=不透明)
+    float  g_grassLodDitherStartDist; //  4  草LODディザ開始距離
+    float  g_grassLodDitherAlphaMin;  //  4  草LODディザ最小アルファ
+    float  g_isGrassLodDither;        //  4  row3 草LODディザ有効フラグ
+    float  g_grassLodDitherEndDist;   //  4  草LODディザ終了距離
+    float2 g_pad2;                    //  8
 };
 ///////////////////////////////////////
 // シェーダーリソース
@@ -95,25 +99,37 @@ SPSOut PSMainCore(SPSIn psIn, int isShadowReciever)
         15.0 / 16.0, 7.0 / 16.0, 13.0 / 16.0, 5.0 / 16.0
     };
 
-    float3 cameraPos = g_cameraPos;
-
+    // プレイヤー近接ディザ（既存）
     if (g_ditherdValue > 0.5f)
     {
-        float dist = length(cameraPos - psIn.worldPos);
+        float dist = length(g_cameraPos - psIn.worldPos);
         float distStrength = 1.0f - saturate(
             (dist - g_ditherNear) / max(g_ditherFar - g_ditherNear, 0.001f)
         );
         float ditherStrength = distStrength * (1.0f - g_ditherAlpha);
 
-        uint px = (uint) psIn.pos.x % 4;
-        uint py = (uint) psIn.pos.y % 4;
+        uint px = (uint)psIn.pos.x % 4;
+        uint py = (uint)psIn.pos.y % 4;
         if (BayerMatrix[py * 4 + px] < ditherStrength)
-        {
             discard;
-        }
     }
-   
-    
+
+    // 草LOD遷移ディザ: XZ距離でインスタンスごとにGPU側計算
+    if (g_isGrassLodDither > 0.5f)
+    {
+        float2 camDiff = psIn.worldPos.xz - g_cameraPos.xz;
+        float  dist    = length(camDiff);
+        float  t       = saturate((dist - g_grassLodDitherStartDist)
+                       / max(g_grassLodDitherEndDist - g_grassLodDitherStartDist, 0.001f));
+        float  alpha   = lerp(1.0f, g_grassLodDitherAlphaMin, t);
+
+        uint px = (uint)psIn.pos.x % 4;
+        uint py = (uint)psIn.pos.y % 4;
+        if (BayerMatrix[py * 4 + px] < (1.0f - alpha))
+            discard;
+    }
+
+
     SPSOut psOut;
     psOut.albedo = g_albedo.Sample(g_sampler, psIn.uv);
     clip(psOut.albedo.a - 0.2f);

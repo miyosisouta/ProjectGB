@@ -1,4 +1,4 @@
-ï»¿#include "k2EnginePreCompile.h"
+#include "k2EnginePreCompile.h"
 #include "ModelRender.h"
 #include "RenderingEngine.h"
 #include "DitherCBData.h"
@@ -19,7 +19,7 @@ namespace nsK2Engine {
 		if (g_renderingEngine != nullptr) {
 			g_renderingEngine->RemoveEventListener(this);
 			for (auto& geomData : m_geometryDatas) {
-				// ï¿½ï¿½ï¿½ï¿½ï¿½_ï¿½ï¿½ï¿½ï¿½ï¿½Oï¿½Gï¿½ï¿½ï¿½Wï¿½ï¿½ï¿½ï¿½ï¿½ï¿½oï¿½^ï¿½ï¿½ï¿½ï¿½
+				// E½E½E½E½E½_E½E½E½E½E½OE½GE½E½E½WE½E½E½E½E½E½oE½^E½E½E½E½
 				g_renderingEngine->UnregisterGeometryData(&geomData);
 			}
 			if (m_addRaytracingWorldModel) {
@@ -32,12 +32,12 @@ namespace nsK2Engine {
 		if (enEvent == RenderingEngine::enEventReInitIBLTexture
 			&& m_translucentModel.IsInited()
 		) {
-			// IBLï¿½eï¿½Nï¿½Xï¿½`ï¿½ï¿½ï¿½ï¿½ï¿½Xï¿½Vï¿½ï¿½ï¿½ê‚½ï¿½Ì‚ÅAPBRï¿½Vï¿½Fï¿½[ï¿½_ï¿½[ï¿½ğ—˜—pï¿½ï¿½ï¿½Ä‚ï¿½ï¿½ï¿½
-			// ï¿½tï¿½Hï¿½ï¿½ï¿½[ï¿½hï¿½ï¿½ï¿½ï¿½ï¿½_ï¿½ï¿½ï¿½ï¿½ï¿½Oï¿½Ìê‡ï¿½ÍAï¿½fï¿½Bï¿½Xï¿½Nï¿½ï¿½ï¿½vï¿½^ï¿½qï¿½[ï¿½vï¿½ï¿½ï¿½Äï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½B
-			// (IBLï¿½eï¿½Nï¿½Xï¿½`ï¿½ï¿½ï¿½ï¿½ï¿½gï¿½ï¿½ï¿½Ä‚ï¿½ï¿½ï¿½Ì‚ÅB)
+			// IBLE½eE½NE½XE½`E½E½E½E½E½XE½VE½E½E½ê‚½E½Ì‚ÅAPBRE½VE½FE½[E½_E½[E½ğ—EpE½E½E½Ä‚ï¿½E½E½
+			// E½tE½HE½E½E½[E½hE½E½E½E½E½_E½E½E½E½E½OE½Ìê‡E½ÍAE½fE½BE½XE½NE½E½E½vE½^E½qE½[E½vE½E½E½Äï¿½E½E½E½E½E½E½E½E½B
+			// (IBLE½eE½NE½XE½`E½E½E½E½E½gE½E½E½Ä‚ï¿½E½E½Ì‚ÅB)
 			MaterialReInitData matReInitData;
 			if(m_isEnableInstancingDraw) {
-				// ï¿½Cï¿½ï¿½ï¿½Xï¿½^ï¿½ï¿½ï¿½Vï¿½ï¿½ï¿½Oï¿½`ï¿½ï¿½ï¿½ï¿½sï¿½ï¿½ï¿½ê‡ï¿½ÍAï¿½gï¿½ï¿½SRVï¿½ÉƒCï¿½ï¿½ï¿½Xï¿½^ï¿½ï¿½ï¿½Vï¿½ï¿½ï¿½Oï¿½`ï¿½ï¿½pï¿½Ìƒfï¿½[ï¿½^ï¿½ï¿½İ’è‚·ï¿½ï¿½B
+				// E½CE½E½E½XE½^E½E½E½VE½E½E½OE½`E½E½E½E½sE½E½E½êE¿½ÍAE½gE½E½SRVE½ÉƒCE½E½E½XE½^E½E½E½VE½E½E½OE½`E½E½pE½ÌƒfE½[E½^E½E½İ’è‚·E½E½B
 				matReInitData.m_expandShaderResoruceView[0] = &m_worldMatrixArraySB;
 			}
 			matReInitData.m_expandShaderResoruceView[1] = &g_renderingEngine->GetIBLTexture();
@@ -50,7 +50,7 @@ namespace nsK2Engine {
 		modelInitData.m_vsEntryPointFunc = "VSMainUsePreComputedVertexBuffer";
 		
 		if (m_animationClips != nullptr) {
-			// ï¿½Aï¿½jï¿½ï¿½ï¿½[ï¿½Vï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½B
+			// E½AE½jE½E½E½[E½VE½E½E½E½E½E½E½E½B
 			modelInitData.m_vsSkinEntryPointFunc = "VSMainSkinUsePreComputedVertexBuffer";
 		}
 	}
@@ -63,55 +63,55 @@ namespace nsK2Engine {
 		int maxInstance,
 		bool isFrontCullingOnDrawShadowMap)
 	{
-		//ï¿½Cï¿½ï¿½ï¿½Xï¿½^ï¿½ï¿½ï¿½Vï¿½ï¿½ï¿½Oï¿½`ï¿½ï¿½pï¿½Ìƒfï¿½[ï¿½^ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½B
+		//E½CE½E½E½XE½^E½E½E½VE½E½E½OE½`E½E½pE½ÌƒfE½[E½^E½E½E½E½E½E½E½E½E½B
 		InitInstancingDraw(maxInstance);
-		//ï¿½Xï¿½Pï¿½ï¿½ï¿½gï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½B
+		//E½XE½PE½E½E½gE½E½E½E½E½E½E½E½E½E½E½B
 		InitSkeleton(filePath);
-		//ï¿½Aï¿½jï¿½ï¿½ï¿½[ï¿½Vï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½B
+		//E½AE½jE½E½E½[E½VE½E½E½E½E½E½E½E½E½E½E½E½E½B
 		InitAnimation(animationClips, numAnimationClips, enModelUpAxis);
-		// ï¿½Aï¿½jï¿½ï¿½ï¿½[ï¿½Vï¿½ï¿½ï¿½ï¿½ï¿½Ï‚İ’ï¿½ï¿½_ï¿½oï¿½bï¿½tï¿½@ï¿½ÌŒvï¿½Zï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½B
+		// E½AE½jE½E½E½[E½VE½E½E½E½E½Ï‚İ’ï¿½E½_E½oE½bE½tE½@E½ÌŒvE½ZE½E½E½E½E½E½E½E½E½E½E½E½E½B
 		InitComputeAnimatoinVertexBuffer(filePath, enModelUpAxis);
-		//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Iï¿½uï¿½Wï¿½Fï¿½Nï¿½gï¿½`ï¿½ï¿½pï¿½Xï¿½Ågï¿½pï¿½ï¿½ï¿½ï¿½éƒ‚ï¿½fï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½B
+		//E½E½E½E½E½E½E½IE½uE½WE½FE½NE½gE½`E½E½pE½XE½ÅgE½pE½E½E½E½éƒ‚ï¿½fE½E½E½E½E½E½E½E½E½E½E½B
 		InitModelOnTranslucent(*g_renderingEngine, filePath, enModelUpAxis, isShadowReciever);
-		//ZPrepassï¿½`ï¿½ï¿½pï¿½Ìƒï¿½ï¿½fï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½B
+		//ZPrepassE½`E½E½pE½ÌE¿½E½fE½E½E½E½E½E½E½E½E½E½E½B
 		// InitModelOnZprepass(*g_renderingEngine, filePath, enModelUpAxis);
-		//ï¿½Vï¿½ï¿½ï¿½hï¿½Eï¿½}ï¿½bï¿½vï¿½`ï¿½ï¿½pï¿½Ìƒï¿½ï¿½fï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½B
+		//E½VE½E½E½hE½EE½}E½bE½vE½`E½E½pE½ÌE¿½E½fE½E½E½E½E½E½E½E½E½E½E½B
 		InitModelOnShadowMap(*g_renderingEngine, filePath, enModelUpAxis, isFrontCullingOnDrawShadowMap);
-		// ï¿½ô‰½Šwï¿½fï¿½[ï¿½^ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½B
+		// E½ô‰½ŠwE½fE½[E½^E½E½E½E½E½E½E½E½E½B
 		InitGeometryDatas(maxInstance);
 		if (m_isRaytracingWorld) {
-			// ï¿½ï¿½ï¿½Cï¿½gï¿½ï¿½ï¿½ï¿½ï¿½[ï¿½ï¿½ï¿½hï¿½É’Ç‰ï¿½ï¿½B
+			// E½E½E½CE½gE½E½E½E½E½[E½E½E½hE½É’Ç‰ï¿½E½B
 			g_renderingEngine->AddModelToRaytracingWorld(m_translucentModel);
 			m_addRaytracingWorldModel = &m_translucentModel;
 		}
 		
-		// ï¿½eï¿½íƒï¿½[ï¿½ï¿½ï¿½hï¿½sï¿½ï¿½ï¿½ï¿½Xï¿½Vï¿½ï¿½ï¿½ï¿½B
+		// E½eE½úŸï¿½[E½E½E½hE½sE½E½E½E½XE½VE½E½E½E½B
 		UpdateWorldMatrixInModes();
 
 	}
 
 	void ModelRender::InitForwardRendering(ModelInitData& initData)
 	{
-		//ï¿½Cï¿½ï¿½ï¿½Xï¿½^ï¿½ï¿½ï¿½Vï¿½ï¿½ï¿½Oï¿½`ï¿½ï¿½pï¿½Ìƒfï¿½[ï¿½^ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½B
+		//E½CE½E½E½XE½^E½E½E½VE½E½E½OE½`E½E½pE½ÌƒfE½[E½^E½E½E½E½E½E½E½E½E½B
 		InitInstancingDraw(1);
 		InitSkeleton(initData.m_tkmFilePath);
 
-		// todo ï¿½Aï¿½jï¿½ï¿½ï¿½[ï¿½Vï¿½ï¿½ï¿½ï¿½ï¿½Ï‚İ’ï¿½ï¿½_ï¿½oï¿½bï¿½tï¿½@ï¿½ÌŒvï¿½Zï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½B
+		// todo E½AE½jE½E½E½[E½VE½E½E½E½E½Ï‚İ’ï¿½E½_E½oE½bE½tE½@E½ÌŒvE½ZE½E½E½E½E½E½E½E½E½E½E½E½E½B
 		InitComputeAnimatoinVertexBuffer(initData.m_tkmFilePath, initData.m_modelUpAxis);
 
 		initData.m_colorBufferFormat[0] = DXGI_FORMAT_R16G16B16A16_FLOAT;
-		//ï¿½ì¬ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½fï¿½[ï¿½^ï¿½ï¿½ï¿½ï¿½ï¿½Æ‚Éƒï¿½ï¿½fï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½B
+		//E½E¬E½E½E½E½E½E½E½E½E½E½E½fE½[E½^E½E½E½E½E½Æ‚ÉE¿½E½fE½E½E½E½E½E½E½E½E½E½E½E½E½E½B
 		m_forwardRenderModel.Init(initData);
-		//ZPrepassï¿½`ï¿½ï¿½pï¿½Ìƒï¿½ï¿½fï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½B
+		//ZPrepassE½`E½E½pE½ÌE¿½E½fE½E½E½E½E½E½E½E½E½E½E½B
 		//InitModelOnZprepass(*g_renderingEngine, initData.m_tkmFilePath, initData.m_modelUpAxis);
-		//ï¿½Vï¿½ï¿½ï¿½hï¿½Eï¿½}ï¿½bï¿½vï¿½`ï¿½ï¿½pï¿½Ìƒï¿½ï¿½fï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½B
+		//E½VE½E½E½hE½EE½}E½bE½vE½`E½E½pE½ÌE¿½E½fE½E½E½E½E½E½E½E½E½E½E½B
 		InitModelOnShadowMap(*g_renderingEngine, initData.m_tkmFilePath, initData.m_modelUpAxis, false);
-		// ï¿½ô‰½Šwï¿½fï¿½[ï¿½^ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½B
+		// E½ô‰½ŠwE½fE½[E½^E½E½E½E½E½E½E½E½E½B
 		InitGeometryDatas(1);
-		// ï¿½ï¿½ï¿½Cï¿½gï¿½ï¿½ï¿½ï¿½ï¿½[ï¿½ï¿½ï¿½hï¿½É’Ç‰ï¿½ï¿½B
+		// E½E½E½CE½gE½E½E½E½E½[E½E½E½hE½É’Ç‰ï¿½E½B
 		// g_renderingEngine->AddModelToRaytracingWorld(m_forwardRenderModel);
 		// m_addRaytracingWorldModel = &m_forwardRenderModel;
-		// ï¿½eï¿½íƒï¿½[ï¿½ï¿½ï¿½hï¿½sï¿½ï¿½ï¿½ï¿½Xï¿½Vï¿½ï¿½ï¿½ï¿½B
+		// E½eE½úŸï¿½[E½E½E½hE½sE½E½E½E½XE½VE½E½E½E½B
 		UpdateWorldMatrixInModes();
 	}
 
@@ -123,27 +123,27 @@ namespace nsK2Engine {
 		int maxInstance,
 		bool isFrontCullingOnDrawShadowMap)
 	{
-		// ï¿½Cï¿½ï¿½ï¿½Xï¿½^ï¿½ï¿½ï¿½Vï¿½ï¿½ï¿½Oï¿½`ï¿½ï¿½pï¿½Ìƒfï¿½[ï¿½^ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½B
+		// E½CE½E½E½XE½^E½E½E½VE½E½E½OE½`E½E½pE½ÌƒfE½[E½^E½E½E½E½E½E½E½E½E½B
 		InitInstancingDraw(maxInstance);
-		// ï¿½Xï¿½Pï¿½ï¿½ï¿½gï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½B
+		// E½XE½PE½E½E½gE½E½E½E½E½E½E½E½E½E½E½B
 		InitSkeleton(filePath);
-		// ï¿½Aï¿½jï¿½ï¿½ï¿½[ï¿½Vï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½B
+		// E½AE½jE½E½E½[E½VE½E½E½E½E½E½E½E½E½E½E½E½E½B
 		InitAnimation(animationClips, numAnimationClips, enModelUpAxis);
-		// ï¿½Aï¿½jï¿½ï¿½ï¿½[ï¿½Vï¿½ï¿½ï¿½ï¿½ï¿½Ï‚İ’ï¿½ï¿½_ï¿½oï¿½bï¿½tï¿½@ï¿½ÌŒvï¿½Zï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½B
+		// E½AE½jE½E½E½[E½VE½E½E½E½E½Ï‚İ’ï¿½E½_E½oE½bE½tE½@E½ÌŒvE½ZE½E½E½E½E½E½E½E½E½E½E½E½E½B
 		InitComputeAnimatoinVertexBuffer(filePath, enModelUpAxis);
-		// GBufferï¿½`ï¿½ï¿½pï¿½Ìƒï¿½ï¿½fï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½B
+		// GBufferE½`E½E½pE½ÌE¿½E½fE½E½E½E½E½E½E½E½E½E½E½B
 		InitModelOnRenderGBuffer(*g_renderingEngine, filePath, enModelUpAxis, isShadowReciever);
-		// ZPrepassï¿½`ï¿½ï¿½pï¿½Ìƒï¿½ï¿½fï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½B
+		// ZPrepassE½`E½E½pE½ÌE¿½E½fE½E½E½E½E½E½E½E½E½E½E½B
 		InitModelOnZprepass(*g_renderingEngine, filePath, enModelUpAxis);
-		// ï¿½Vï¿½ï¿½ï¿½hï¿½Eï¿½}ï¿½bï¿½vï¿½`ï¿½ï¿½pï¿½Ìƒï¿½ï¿½fï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½B
+		// E½VE½E½E½hE½EE½}E½bE½vE½`E½E½pE½ÌE¿½E½fE½E½E½E½E½E½E½E½E½E½E½B
 		InitModelOnShadowMap(*g_renderingEngine, filePath, enModelUpAxis, isFrontCullingOnDrawShadowMap);
-		// ï¿½ô‰½Šwï¿½fï¿½[ï¿½^ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½B
+		// E½ô‰½ŠwE½fE½[E½^E½E½E½E½E½E½E½E½E½B
 		InitGeometryDatas(maxInstance);
-		// ï¿½eï¿½íƒï¿½[ï¿½ï¿½ï¿½hï¿½sï¿½ï¿½ï¿½ï¿½Xï¿½Vï¿½ï¿½ï¿½ï¿½B
+		// E½eE½úŸï¿½[E½E½E½hE½sE½E½E½E½XE½VE½E½E½E½B
 		UpdateWorldMatrixInModes();
 		
 		if (m_isRaytracingWorld) {
-			// ï¿½ï¿½ï¿½Cï¿½gï¿½ï¿½ï¿½ï¿½ï¿½[ï¿½ï¿½ï¿½hï¿½É’Ç‰ï¿½ï¿½B
+			// E½E½E½CE½gE½E½E½E½E½[E½E½E½hE½É’Ç‰ï¿½E½B
 			g_renderingEngine->AddModelToRaytracingWorld(m_renderToGBufferModel);
 			m_addRaytracingWorldModel = &m_renderToGBufferModel;
 		}
@@ -155,14 +155,14 @@ namespace nsK2Engine {
 		int instanceId = 0;
 		for (auto& geomData : m_geometryDatas) {
 			geomData.Init(this, instanceId);
-			// ï¿½ï¿½ï¿½ï¿½ï¿½_ï¿½ï¿½ï¿½ï¿½ï¿½Oï¿½Gï¿½ï¿½ï¿½Wï¿½ï¿½ï¿½É“oï¿½^ï¿½B
+			// E½E½E½E½E½_E½E½E½E½E½OE½GE½E½E½WE½E½E½É“oE½^E½B
 			g_renderingEngine->RegisterGeometryData(&geomData);
 			instanceId++;
 		}
 	}
 	void ModelRender::InitSkeleton(const char* filePath)
 	{
-		//ï¿½Xï¿½Pï¿½ï¿½ï¿½gï¿½ï¿½ï¿½Ìƒfï¿½[ï¿½^ï¿½ï¿½Ç‚İï¿½ï¿½İB
+		//E½XE½PE½E½E½gE½E½E½ÌƒfE½[E½^E½E½Ç‚İï¿½E½İB
 		std::string skeletonFilePath = filePath;
 		int pos = (int)skeletonFilePath.find(".tkm");
 		skeletonFilePath.replace(pos, 4, ".tks");
@@ -184,18 +184,18 @@ namespace nsK2Engine {
 	{
 		m_maxInstance = maxInstance;
 		if (m_maxInstance > 1) {
-			// ï¿½Cï¿½ï¿½ï¿½Xï¿½^ï¿½ï¿½ï¿½Vï¿½ï¿½ï¿½Oï¿½`ï¿½ï¿½ï¿½ï¿½sï¿½ï¿½ï¿½Ì‚ÅA
-			// ï¿½ï¿½ï¿½ï¿½pï¿½Ìƒfï¿½[ï¿½^ï¿½ï¿½ï¿½\ï¿½zï¿½ï¿½ï¿½ï¿½B
-			// ï¿½ï¿½ï¿½[ï¿½ï¿½ï¿½hï¿½sï¿½ï¿½Ì”zï¿½ï¿½Ìƒï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½mï¿½Û‚ï¿½ï¿½ï¿½B
+			// E½CE½E½E½XE½^E½E½E½VE½E½E½OE½`E½E½E½E½sE½E½E½Ì‚ÅA
+			// E½E½E½E½pE½ÌƒfE½[E½^E½E½E½\E½zE½E½E½E½B
+			// E½E½E½[E½E½E½hE½sE½E½Ì”zE½E½ÌE¿½E½E½E½E½E½E½E½mE½Û‚ï¿½E½E½B
 			m_worldMatrixArray = std::make_unique<Matrix[]>(m_maxInstance);
-			// ï¿½ï¿½ï¿½[ï¿½ï¿½ï¿½hï¿½sï¿½ï¿½ï¿½GPUï¿½É“]ï¿½ï¿½ï¿½ï¿½ï¿½é‚½ï¿½ß‚ÌƒXï¿½gï¿½ï¿½ï¿½Nï¿½`ï¿½ï¿½ï¿½[ï¿½hï¿½oï¿½bï¿½tï¿½@ï¿½ï¿½ï¿½mï¿½ÛB
+			// E½E½E½[E½E½E½hE½sE½E½E½GPUE½É“]E½E½E½E½E½é‚½E½ß‚ÌƒXE½gE½E½E½NE½`E½E½E½[E½hE½oE½bE½tE½@E½E½E½mE½ÛB
 			m_worldMatrixArraySB.Init(
 				sizeof(Matrix),
 				m_maxInstance,
 				nullptr
 			);
 			m_isEnableInstancingDraw = true;
-			// ï¿½Cï¿½ï¿½ï¿½Xï¿½^ï¿½ï¿½ï¿½Xï¿½Ôï¿½ï¿½ï¿½ï¿½çƒï¿½[ï¿½ï¿½ï¿½hï¿½sï¿½ï¿½Ì”zï¿½ï¿½ÌƒCï¿½ï¿½ï¿½fï¿½bï¿½Nï¿½Xï¿½É•ÏŠï¿½ï¿½ï¿½ï¿½ï¿½eï¿½[ï¿½uï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½B
+			// E½CE½E½E½XE½^E½E½E½XE½Ôï¿½E½E½E½çƒï¿½[E½E½E½hE½sE½E½Ì”zE½E½ÌƒCE½E½E½fE½bE½NE½XE½É•ÏŠï¿½E½E½E½E½eE½[E½uE½E½E½E½E½E½E½E½E½E½E½E½E½E½B
 			m_instanceNoToWorldMatrixArrayIndexTable = std::make_unique<int[]>(m_maxInstance);
 			for (int instanceNo = 0; instanceNo < m_maxInstance; instanceNo++) {
 				m_instanceNoToWorldMatrixArrayIndexTable[instanceNo] = instanceNo;
@@ -211,24 +211,30 @@ namespace nsK2Engine {
 	)
 	{
 		ModelInitData modelInitData;
-		modelInitData.m_fxFilePath = "Assets/shader/preProcess/RenderToGBufferFor3DModel.fx";
+		modelInitData.m_fxFilePath = m_gBufferFxOverride
+			? m_gBufferFxOverride
+			: "Assets/shader/preProcess/RenderToGBufferFor3DModel.fx";
 
 		m_localDitherCBData = g_ditherCBData;
 		modelInitData.m_expandConstantBuffer = &m_localDitherCBData;
 		modelInitData.m_expandConstantBufferSize = sizeof(DitherCBData);
 
-		// ï¿½ï¿½ï¿½_ï¿½Vï¿½Fï¿½[ï¿½_ï¿½[ï¿½ÌƒGï¿½ï¿½ï¿½gï¿½ï¿½ï¿½[ï¿½|ï¿½Cï¿½ï¿½ï¿½gï¿½ï¿½ï¿½Zï¿½bï¿½gï¿½Aï¿½bï¿½vï¿½B
+		// E½E½E½_E½VE½FE½[E½_E½[E½ÌƒGE½E½E½gE½E½E½[E½|E½CE½E½E½gE½E½E½ZE½bE½gE½AE½bE½vE½B
 		SetupVertexShaderEntryPointFunc(modelInitData);
-		// ï¿½ï¿½ï¿½_ï¿½Ìï¿½ï¿½Oï¿½vï¿½Zï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½gï¿½ï¿½ï¿½B
+		if (m_vsEntryOverride) {
+			modelInitData.m_vsEntryPointFunc     = m_vsEntryOverride;
+			modelInitData.m_vsSkinEntryPointFunc = m_vsEntryOverride;
+		}
+		// E½E½E½_E½Ìï¿½E½OE½vE½ZE½E½E½E½E½E½E½gE½E½E½B
 		modelInitData.m_computedAnimationVertexBuffer = &m_computeAnimationVertexBuffer;
 		if (m_animationClips != nullptr) {
-			//ï¿½Xï¿½Pï¿½ï¿½ï¿½gï¿½ï¿½ï¿½ï¿½ï¿½wï¿½è‚·ï¿½ï¿½B
+			//E½XE½PE½E½E½gE½E½E½E½E½wE½è‚·E½E½B
 			modelInitData.m_skeleton = &m_skeleton;		}
 
 		if (isShadowReciever) {
 			modelInitData.m_psEntryPointFunc = "PSMainShadowReciever";
 		}
-		//ï¿½ï¿½ï¿½fï¿½ï¿½ï¿½Ìï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½wï¿½è‚·ï¿½ï¿½B
+		//E½E½E½fE½E½E½Ìï¿½E½E½E½E½E½E½wE½è‚·E½E½B
 		modelInitData.m_modelUpAxis = enModelUpAxis;
 
 		modelInitData.m_tkmFilePath = tkmFilePath;
@@ -237,8 +243,14 @@ namespace nsK2Engine {
 		modelInitData.m_colorBufferFormat[2] = DXGI_FORMAT_R8G8B8A8_UNORM;
 
 		if (m_isEnableInstancingDraw) {
-			// ï¿½Cï¿½ï¿½ï¿½Xï¿½^ï¿½ï¿½ï¿½Vï¿½ï¿½ï¿½Oï¿½`ï¿½ï¿½ï¿½ï¿½sï¿½ï¿½ï¿½ê‡ï¿½ÍAï¿½gï¿½ï¿½SRVï¿½ÉƒCï¿½ï¿½ï¿½Xï¿½^ï¿½ï¿½ï¿½Vï¿½ï¿½ï¿½Oï¿½`ï¿½ï¿½pï¿½Ìƒfï¿½[ï¿½^ï¿½ï¿½İ’è‚·ï¿½ï¿½B
+			// E½CE½E½E½XE½^E½E½E½VE½E½E½OE½`E½E½E½E½sE½E½E½êE¿½ÍAE½gE½E½SRVE½ÉƒCE½E½E½XE½^E½E½E½VE½E½E½OE½`E½E½pE½ÌƒfE½[E½^E½E½İ’è‚·E½E½B
 			modelInitData.m_expandShaderResoruceView[0] = &m_worldMatrixArraySB;
+		}
+		// extra SRVs (slot1=t11, ...) for custom shader
+		for (int i = 0; i < 4; i++) {
+			if (m_extraGBufferSRVs[i]) {
+				modelInitData.m_expandShaderResoruceView[1 + i] = m_extraGBufferSRVs[i];
+			}
 		}
 		m_renderToGBufferModel.Init(modelInitData);
 
@@ -271,13 +283,13 @@ namespace nsK2Engine {
 		ModelInitData modelInitData;
 		modelInitData.m_fxFilePath = "Assets/shader/model.fx";
 
-		// ï¿½ï¿½ï¿½_ï¿½Vï¿½Fï¿½[ï¿½_ï¿½[ï¿½ÌƒGï¿½ï¿½ï¿½gï¿½ï¿½ï¿½[ï¿½|ï¿½Cï¿½ï¿½ï¿½gï¿½ï¿½ï¿½Zï¿½bï¿½gï¿½Aï¿½bï¿½vï¿½B
+		// E½E½E½_E½VE½FE½[E½_E½[E½ÌƒGE½E½E½gE½E½E½[E½|E½CE½E½E½gE½E½E½ZE½bE½gE½AE½bE½vE½B
 		SetupVertexShaderEntryPointFunc(modelInitData);
-		// ï¿½ï¿½ï¿½_ï¿½Ìï¿½ï¿½Oï¿½vï¿½Zï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½gï¿½ï¿½ï¿½B
+		// E½E½E½_E½Ìï¿½E½OE½vE½ZE½E½E½E½E½E½E½gE½E½E½B
 		modelInitData.m_computedAnimationVertexBuffer = &m_computeAnimationVertexBuffer;
 
 		if (m_animationClips != nullptr) {
-			//ï¿½Xï¿½Pï¿½ï¿½ï¿½gï¿½ï¿½ï¿½ï¿½ï¿½wï¿½è‚·ï¿½ï¿½B
+			//E½XE½PE½E½E½gE½E½E½E½E½wE½è‚·E½E½B
 			modelInitData.m_skeleton = &m_skeleton;
 		}
 
@@ -287,7 +299,7 @@ namespace nsK2Engine {
 		else {
 			modelInitData.m_psEntryPointFunc = "PSMainHardShadow";
 		}
-		//ï¿½ï¿½ï¿½fï¿½ï¿½ï¿½Ìï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½wï¿½è‚·ï¿½ï¿½B
+		//E½E½E½fE½E½E½Ìï¿½E½E½E½E½E½E½wE½è‚·E½E½B
 		modelInitData.m_modelUpAxis = enModelUpAxis;
 		modelInitData.m_expandConstantBuffer = &g_renderingEngine->GetDeferredLightingCB();
 		modelInitData.m_expandConstantBufferSize = sizeof(g_renderingEngine->GetDeferredLightingCB());
@@ -297,7 +309,7 @@ namespace nsK2Engine {
 
 		int expandSRVNo = 0;
 		if (m_isEnableInstancingDraw) {
-			// ï¿½Cï¿½ï¿½ï¿½Xï¿½^ï¿½ï¿½ï¿½Vï¿½ï¿½ï¿½Oï¿½`ï¿½ï¿½ï¿½ï¿½sï¿½ï¿½ï¿½ê‡ï¿½ÍAï¿½gï¿½ï¿½SRVï¿½ÉƒCï¿½ï¿½ï¿½Xï¿½^ï¿½ï¿½ï¿½Vï¿½ï¿½ï¿½Oï¿½`ï¿½ï¿½pï¿½Ìƒfï¿½[ï¿½^ï¿½ï¿½İ’è‚·ï¿½ï¿½B
+			// E½CE½E½E½XE½^E½E½E½VE½E½E½OE½`E½E½E½E½sE½E½E½êE¿½ÍAE½gE½E½SRVE½ÉƒCE½E½E½XE½^E½E½E½VE½E½E½OE½`E½E½pE½ÌƒfE½[E½^E½E½İ’è‚·E½E½B
 			modelInitData.m_expandShaderResoruceView[expandSRVNo] = &m_worldMatrixArraySB;
 		}
 		expandSRVNo++;
@@ -321,14 +333,14 @@ namespace nsK2Engine {
 		modelInitData.m_tkmFilePath = tkmFilePath;
 		modelInitData.m_modelUpAxis = modelUpAxis;
 		modelInitData.m_cullMode = isFrontCullingOnDrawShadowMap ? D3D12_CULL_MODE_FRONT : D3D12_CULL_MODE_BACK;
-		// ï¿½ï¿½ï¿½_ï¿½Vï¿½Fï¿½[ï¿½_ï¿½[ï¿½ÌƒGï¿½ï¿½ï¿½gï¿½ï¿½ï¿½[ï¿½|ï¿½Cï¿½ï¿½ï¿½gï¿½ï¿½ï¿½Zï¿½bï¿½gï¿½Aï¿½bï¿½vï¿½B
+		// E½E½E½_E½VE½FE½[E½_E½[E½ÌƒGE½E½E½gE½E½E½[E½|E½CE½E½E½gE½E½E½ZE½bE½gE½AE½bE½vE½B
 		SetupVertexShaderEntryPointFunc(modelInitData);
 
-		// ï¿½ï¿½ï¿½_ï¿½Ìï¿½ï¿½Oï¿½vï¿½Zï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½gï¿½ï¿½ï¿½B
+		// E½E½E½_E½Ìï¿½E½OE½vE½ZE½E½E½E½E½E½E½gE½E½E½B
 		modelInitData.m_computedAnimationVertexBuffer = &m_computeAnimationVertexBuffer;
 
 		if (m_animationClips != nullptr) {
-			//ï¿½Xï¿½Pï¿½ï¿½ï¿½gï¿½ï¿½ï¿½ï¿½ï¿½wï¿½è‚·ï¿½ï¿½B
+			//E½XE½PE½E½E½gE½E½E½E½E½wE½è‚·E½E½B
 			modelInitData.m_skeleton = &m_skeleton;
 		}
 
@@ -341,7 +353,7 @@ namespace nsK2Engine {
 		}
 
 		if (m_isEnableInstancingDraw) {
-			// ï¿½Cï¿½ï¿½ï¿½Xï¿½^ï¿½ï¿½ï¿½Vï¿½ï¿½ï¿½Oï¿½`ï¿½ï¿½ï¿½ï¿½sï¿½ï¿½ï¿½ê‡ï¿½ÍAï¿½gï¿½ï¿½SRVï¿½ÉƒCï¿½ï¿½ï¿½Xï¿½^ï¿½ï¿½ï¿½Vï¿½ï¿½ï¿½Oï¿½`ï¿½ï¿½pï¿½Ìƒfï¿½[ï¿½^ï¿½ï¿½İ’è‚·ï¿½ï¿½B
+			// E½CE½E½E½XE½^E½E½E½VE½E½E½OE½`E½E½E½E½sE½E½E½êE¿½ÍAE½gE½E½SRVE½ÉƒCE½E½E½XE½^E½E½E½VE½E½E½OE½`E½E½pE½ÌƒfE½[E½^E½E½İ’è‚·E½E½B
 			modelInitData.m_expandShaderResoruceView[0] = &m_worldMatrixArraySB;
 		}
 
@@ -369,19 +381,19 @@ namespace nsK2Engine {
 		modelInitData.m_fxFilePath = "Assets/shader/preProcess/ZPrepass.fx";
 		modelInitData.m_modelUpAxis = modelUpAxis;
 
-		// ï¿½ï¿½ï¿½_ï¿½Vï¿½Fï¿½[ï¿½_ï¿½[ï¿½ÌƒGï¿½ï¿½ï¿½gï¿½ï¿½ï¿½[ï¿½|ï¿½Cï¿½ï¿½ï¿½gï¿½ï¿½ï¿½Zï¿½bï¿½gï¿½Aï¿½bï¿½vï¿½B
+		// E½E½E½_E½VE½FE½[E½_E½[E½ÌƒGE½E½E½gE½E½E½[E½|E½CE½E½E½gE½E½E½ZE½bE½gE½AE½bE½vE½B
 		SetupVertexShaderEntryPointFunc(modelInitData);
-		// ï¿½ï¿½ï¿½_ï¿½Ìï¿½ï¿½Oï¿½vï¿½Zï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½gï¿½ï¿½ï¿½B
+		// E½E½E½_E½Ìï¿½E½OE½vE½ZE½E½E½E½E½E½E½gE½E½E½B
 		modelInitData.m_computedAnimationVertexBuffer = &m_computeAnimationVertexBuffer;
 
 		if (m_animationClips != nullptr) {
-			//ï¿½Xï¿½Pï¿½ï¿½ï¿½gï¿½ï¿½ï¿½ï¿½ï¿½wï¿½è‚·ï¿½ï¿½B
+			//E½XE½PE½E½E½gE½E½E½E½E½wE½è‚·E½E½B
 			modelInitData.m_skeleton = &m_skeleton;
 		}
 
 		modelInitData.m_colorBufferFormat[0] = DXGI_FORMAT_R32G32B32A32_FLOAT;
 		if (m_isEnableInstancingDraw) {
-			// ï¿½Cï¿½ï¿½ï¿½Xï¿½^ï¿½ï¿½ï¿½Vï¿½ï¿½ï¿½Oï¿½`ï¿½ï¿½ï¿½ï¿½sï¿½ï¿½ï¿½ê‡ï¿½ÍAï¿½gï¿½ï¿½SRVï¿½ÉƒCï¿½ï¿½ï¿½Xï¿½^ï¿½ï¿½ï¿½Vï¿½ï¿½ï¿½Oï¿½`ï¿½ï¿½pï¿½Ìƒfï¿½[ï¿½^ï¿½ï¿½İ’è‚·ï¿½ï¿½B
+			// E½CE½E½E½XE½^E½E½E½VE½E½E½OE½`E½E½E½E½sE½E½E½êE¿½ÍAE½gE½E½SRVE½ÉƒCE½E½E½XE½^E½E½E½VE½E½E½OE½`E½E½pE½ÌƒfE½[E½^E½E½İ’è‚·E½E½B
 			modelInitData.m_expandShaderResoruceView[0] = &m_worldMatrixArraySB;
 		}
 
@@ -389,30 +401,30 @@ namespace nsK2Engine {
 	}
 	void ModelRender::UpdateInstancingData(int instanceNo, const Vector3& pos, const Quaternion& rot, const Vector3& scale)
 	{
-		K2_ASSERT(instanceNo < m_maxInstance, "ï¿½Cï¿½ï¿½ï¿½Xï¿½^ï¿½ï¿½ï¿½Xï¿½Ôï¿½ï¿½ï¿½ï¿½sï¿½ï¿½ï¿½Å‚ï¿½ï¿½B");
+		K2_ASSERT(instanceNo < m_maxInstance, "E½CE½E½E½XE½^E½E½E½XE½Ôï¿½E½E½E½sE½E½E½Å‚ï¿½E½B");
 		if (!m_isEnableInstancingDraw) {
 			return;
 		}
 		Matrix worldMatrix;
 		if (m_translucentModel.IsInited()) {
-			// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½fï¿½ï¿½ï¿½ï¿½ZPrepassï¿½ï¿½ï¿½fï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä‚ï¿½ï¿½È‚ï¿½ï¿½Ì‚ÅAï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½gï¿½ï¿½ï¿½B
+			// E½E½E½E½E½E½E½E½E½fE½E½E½E½ZPrepassE½E½E½fE½E½E½E½E½E½E½E½E½E½E½E½E½Ä‚ï¿½E½È‚ï¿½E½Ì‚ÅAE½E½E½E½E½E½E½E½gE½E½E½B
 			worldMatrix = m_translucentModel.CalcWorldMatrix(pos, rot, scale);
 		}
 		else {
 			worldMatrix = m_zprepassModel.CalcWorldMatrix(pos, rot, scale);
 		} 
-		// ï¿½Cï¿½ï¿½ï¿½Xï¿½^ï¿½ï¿½ï¿½Xï¿½Ôï¿½ï¿½ï¿½ï¿½ï¿½sï¿½ï¿½ÌƒCï¿½ï¿½ï¿½fï¿½bï¿½Nï¿½Xï¿½ï¿½ï¿½æ“¾ï¿½ï¿½ï¿½ï¿½B
+		// E½CE½E½E½XE½^E½E½E½XE½Ôï¿½E½E½E½E½sE½E½ÌƒCE½E½E½fE½bE½NE½XE½E½E½æ“¾E½E½E½E½B
 		int matrixArrayIndex = m_instanceNoToWorldMatrixArrayIndexTable[instanceNo];
-		// ï¿½Cï¿½ï¿½ï¿½Xï¿½^ï¿½ï¿½ï¿½Vï¿½ï¿½ï¿½Oï¿½`ï¿½ï¿½ï¿½ï¿½sï¿½ï¿½ï¿½B
+		// E½CE½E½E½XE½^E½E½E½VE½E½E½OE½`E½E½E½E½sE½E½E½B
 		m_worldMatrixArray[matrixArrayIndex] = worldMatrix;
 		if (m_numInstance == 0) {
-			//ï¿½Cï¿½ï¿½ï¿½Xï¿½^ï¿½ï¿½ï¿½Xï¿½ï¿½ï¿½ï¿½0ï¿½Ìê‡ï¿½Ì‚İƒAï¿½jï¿½ï¿½ï¿½[ï¿½Vï¿½ï¿½ï¿½ï¿½ï¿½ÖŒWï¿½ÌXï¿½Vï¿½ï¿½ï¿½sï¿½ï¿½ï¿½B
-			// ï¿½Xï¿½Pï¿½ï¿½ï¿½gï¿½ï¿½ï¿½ï¿½ï¿½Xï¿½Vï¿½B
-			// ï¿½eï¿½Cï¿½ï¿½ï¿½Xï¿½^ï¿½ï¿½ï¿½Xï¿½Ìƒï¿½ï¿½[ï¿½ï¿½ï¿½hï¿½ï¿½Ô‚Ö‚Ì•ÏŠï¿½ï¿½ÍA
-			// ï¿½Cï¿½ï¿½ï¿½Xï¿½^ï¿½ï¿½ï¿½Xï¿½ï¿½ï¿½Æ‚Ésï¿½ï¿½ï¿½Kï¿½vï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ì‚ÅAï¿½ï¿½ï¿½_ï¿½Vï¿½Fï¿½[ï¿½_ï¿½[ï¿½Åsï¿½ï¿½ï¿½B
-			// ï¿½È‚Ì‚ÅAï¿½Pï¿½Êsï¿½ï¿½ï¿½nï¿½ï¿½ï¿½ÄAï¿½ï¿½ï¿½fï¿½ï¿½ï¿½ï¿½Ô‚Åƒ{ï¿½[ï¿½ï¿½ï¿½sï¿½ï¿½ï¿½ï¿½\ï¿½zï¿½ï¿½ï¿½ï¿½B
+			//E½CE½E½E½XE½^E½E½E½XE½E½E½E½0E½Ìê‡E½Ì‚İƒAE½jE½E½E½[E½VE½E½E½E½E½ÖŒWE½ÌXE½VE½E½E½sE½E½E½B
+			// E½XE½PE½E½E½gE½E½E½E½E½XE½VE½B
+			// E½eE½CE½E½E½XE½^E½E½E½XE½ÌE¿½E½[E½E½E½hE½E½Ô‚Ö‚Ì•ÏŠï¿½E½ÍA
+			// E½CE½E½E½XE½^E½E½E½XE½E½E½Æ‚ÉsE½E½E½KE½vE½E½E½E½E½E½Ì‚ÅAE½E½E½_E½VE½FE½[E½_E½[E½ÅsE½E½E½B
+			// E½È‚Ì‚ÅAE½PE½ÊsE½E½E½nE½E½E½ÄAE½E½E½fE½E½E½E½Ô‚Åƒ{E½[E½E½E½sE½E½E½E½\E½zE½E½E½E½B
 			m_skeleton.Update(g_matIdentity);
-			//ï¿½Aï¿½jï¿½ï¿½ï¿½[ï¿½Vï¿½ï¿½ï¿½ï¿½ï¿½ï¿½iï¿½ß‚ï¿½B
+			//E½AE½jE½E½E½[E½VE½E½E½E½E½E½iE½ß‚ï¿½B
 			m_animation.Progress(g_gameTime->GetFrameDeltaTime() * m_animationSpeed);
 		}
 		m_numInstance++;
@@ -449,22 +461,22 @@ namespace nsK2Engine {
 			m_skeleton.Update(m_zprepassModel.GetWorldMatrix());
 		}
 
-		//ï¿½Aï¿½jï¿½ï¿½ï¿½[ï¿½Vï¿½ï¿½ï¿½ï¿½ï¿½ï¿½iï¿½ß‚ï¿½B
+		//E½AE½jE½E½E½[E½VE½E½E½E½E½E½iE½ß‚ï¿½B
 		m_animation.Progress(g_gameTime->GetFrameDeltaTime() * m_animationSpeed);
 
 	}
 	void ModelRender::Draw(RenderContext& rc)
 	{
 		if (m_isEnableInstancingDraw) {
-			// ï¿½Cï¿½ï¿½ï¿½Xï¿½^ï¿½ï¿½ï¿½Vï¿½ï¿½ï¿½Oï¿½`ï¿½ï¿½Íƒrï¿½ï¿½ï¿½[ï¿½tï¿½ï¿½ï¿½Xï¿½^ï¿½ï¿½ï¿½Jï¿½ï¿½ï¿½ï¿½ï¿½Oï¿½Ísï¿½ï¿½È‚ï¿½ï¿½B
+			// E½CE½E½E½XE½^E½E½E½VE½E½E½OE½`E½E½ÍƒrE½E½E½[E½tE½E½E½XE½^E½E½E½JE½E½E½E½E½OE½ÍsE½E½È‚ï¿½E½B
 			g_renderingEngine->AddRenderObject(this);
 			m_worldMatrixArraySB.Update(m_worldMatrixArray.get());
 			m_numInstance = 0;
 		}
 		else {
-			// ï¿½Êï¿½`ï¿½ï¿½
+			// E½Êï¿½`E½E½
 			if (m_geometryDatas.empty() || m_geometryDatas[0].IsInViewFrustum()) {
-				// ï¿½rï¿½ï¿½ï¿½[ï¿½tï¿½ï¿½ï¿½Xï¿½^ï¿½ï¿½ï¿½ÉŠÜ‚Ü‚ï¿½Ä‚ï¿½ï¿½ï¿½B
+				// E½rE½E½E½[E½tE½E½E½XE½^E½E½E½ÉŠÜ‚Ü‚ï¿½Ä‚ï¿½E½E½B
 				g_renderingEngine->AddRenderObject(this);
 			}
 		}
@@ -478,7 +490,7 @@ namespace nsK2Engine {
 	}
 	void ModelRender::OnComputeVertex(RenderContext& rc)
 	{
-		// ï¿½ï¿½ï¿½_ï¿½Ìï¿½ï¿½Oï¿½vï¿½Zï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½fï¿½Bï¿½Xï¿½pï¿½bï¿½`ï¿½ï¿½ï¿½ï¿½B
+		// E½E½E½_E½Ìï¿½E½OE½vE½ZE½E½E½E½E½E½E½fE½BE½XE½pE½bE½`E½E½E½E½B
 		if (m_isEnableInstancingDraw) {
 			m_computeAnimationVertexBuffer.Dispatch(rc, m_zprepassModel.GetWorldMatrix(), m_maxInstance);
 		}
@@ -516,7 +528,7 @@ namespace nsK2Engine {
 	void ModelRender::OnRenderToGBuffer(RenderContext& rc)
 	{
 		if (m_renderToGBufferModel.IsInited()) {
-			// alphaã ã‘ä¿æŒã—ã¦ã‚°ãƒ­ãƒ¼ãƒãƒ«ã®å€¤ï¼ˆã‚«ãƒ¡ãƒ©åº§æ¨™ãªã©ï¼‰ã‚’æ¯ãƒ•ãƒ¬ãƒ¼ãƒ ã‚³ãƒ”ãƒ¼
+			// alphaã ã‘ä¿æŒã—ã¦ã‚°ãƒ­ãƒ¼ãƒãƒ«ã®å€¤Eˆã‚«ãƒ¡ãƒ©åº§æ¨™ãªã©E‰ã‚’æ¯ãƒ•ãƒ¬ãƒ¼ãƒ ã‚³ãƒ”ãE
 			float savedAlpha = m_localDitherCBData.ditherAlpha;
 			m_localDitherCBData = g_ditherCBData;
 			m_localDitherCBData.ditherAlpha = savedAlpha;

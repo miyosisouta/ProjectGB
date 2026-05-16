@@ -12,7 +12,7 @@ private:
 	Transform transform_;
 
 private:
-	bool isDraw_ = false; //!< 描画するか
+	bool isDraw_ = true; //!< 描画するか
     float ditherAlpha_ = 1.0f; //!< ディザリングの透明度
 
 public:
