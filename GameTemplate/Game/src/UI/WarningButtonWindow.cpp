@@ -1,6 +1,6 @@
 ﻿/**
- * BootMenu.cpp
- * ブートメニュー
+ * WarningButtonWindow.cpp
+ * 同じボタンが割り当てられている場合に表示する警告ウィンドウ
  */
 #include "stdafx.h"
 #include "WarningButtonWindow.h"
