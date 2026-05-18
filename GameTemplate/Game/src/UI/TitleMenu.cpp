@@ -191,7 +191,7 @@ bool TitleMenu::IsSelectStat() const
 }
 
 
-bool TitleMenu::IsSelectSound() const
+bool TitleMenu::IsSelectOption() const
 {
 	// 1は「設定」なので
 	return selector_->GetValue() == 1;

@@ -1,7 +1,8 @@
 ﻿/**
- * GameClearMenu.cpp
- * ゲームクリア時の演出等用
- */
+* GameClearMenu.cpp
+* ゲームクリア時の演出等用
+*/
+
 #include "stdafx.h"
 #include "GameClearMenu.h"
 #include "UIAnimationFactory.h"
@@ -13,6 +14,7 @@ void GameClearMenu::Update()
 	taskSchedulerSystem_->Update(deltaTime);
 	//stampSequence_->Update(deltaTime);
 	gameClearSequence_->Update(deltaTime);
+
 
 	MenuBase::Update();
 }
@@ -41,7 +43,7 @@ void GameClearMenu::InitializeLogic()
 	UIAnimationFactory::Attach<UIScaleAnimation>(hankoIcon, Hash32("GameClearStampScale"));
 	stampSequence_ = std::make_unique<UIAnimationSequence>();
 	//stampSequence_->Add(Hash32("GameClearStampScale")).Add(Hash32("GameClearStampFadeIn"));
-	
+
 
 	// 演出アニメーションの時間設定
 	taskSchedulerSystem_ = std::make_unique<TaskSchedulerSystem>();

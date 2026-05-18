@@ -12,7 +12,7 @@
 #include "src/Util/TaskSchedulerSystem.h"
 
 #include "src/UI/Layout.h"
-#include "src/UI/OptionMenu.h"
+#include "src/UI/WarningButtonWindow.h"
 
 
 DebugScene::DebugScene()
@@ -29,7 +29,7 @@ DebugScene::~DebugScene()
 bool DebugScene::Start()
 {
 	layout_ = new Layout;
-	layout_->Initialize<OptionMenu>("Assets/ui/Layout/OptionMenu.json");
+	layout_->Initialize<WarningButtonWindow>("Assets/ui/Layout/WarningButtonWindow.json");
 
 	return true;
 }
@@ -37,7 +37,7 @@ bool DebugScene::Start()
 
 void DebugScene::Update()
 {
-	OptionMenu* menu = static_cast<OptionMenu*>(layout_->GetMenu());
+	WarningButtonWindow* menu = static_cast<WarningButtonWindow*>(layout_->GetMenu());
 	
 
 	layout_->Update();
