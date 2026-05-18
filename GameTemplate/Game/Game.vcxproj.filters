@@ -205,7 +205,6 @@
     <ClInclude Include="src\UI\OptionMenu.h" />
     <ClInclude Include="src\UI\UIManager.h" />
     <ClInclude Include="src\UI\WarningButtonWindow.h" />
-    <ClInclude Include="src\UI\WarningButtonWindow.h" />
     <ClInclude Include="src\Scene\DebugGrassScene.h" />
     <ClInclude Include="src\Stage\GrassObject.h" />
     <ClInclude Include="src\Stage\GrassBendManager.h" />
