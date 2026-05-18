@@ -22,10 +22,6 @@ private:
 	// 状態を選択中にしておく
 	KeyConfigState keyConfigState = KEY_CONFIG_STATE_SELECT;
 
-	// ボタンが押されるのを待っている
-	bool isWaiting = false;
-
-	
 
 private:
 	std::unique_ptr<TaskSchedulerSystem> taskScheduler = nullptr;
