@@ -309,7 +309,6 @@
     <ClCompile Include="src\UI\UIManager.cpp" />
     <ClCompile Include="src\UI\UIScreenManager.cpp" />
     <ClCompile Include="src\UI\WarningButtonWindow.cpp" />
-    <ClCompile Include="src\UI\WarningButtonWindow.cpp" />
     <ClCompile Include="src\Util\Curve.cpp" />
     <ClCompile Include="src\Util\GameTimer.cpp" />
     <ClCompile Include="src\Util\Selector.cpp" />
