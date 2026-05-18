@@ -253,7 +253,7 @@
         "type": "UIPrefab",
         "name": "AttackButton3",
         "source": "Assets/ui/layout/ButtonUI.json",
-        "position": [-160, -160, 0],
+        "position": [160, -160, 0],
         "scale": [1, 1, 1]
       },
       {
