@@ -107,7 +107,7 @@
         "coment": "文字：エラー",
         "type": "UIIcon",
         "name": "word_error",
-        "asset": "Assets/ui/keyConfigOption/window/word/erorr.DDS",
+        "asset": "Assets/ui/keyConfigOption/window/word/error.DDS",
         "width": 200,
         "height": 60,
         "position": [-270, 230, 0],
