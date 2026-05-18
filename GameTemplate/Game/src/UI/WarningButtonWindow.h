@@ -3,12 +3,10 @@
  * 同じボタンが設定された場合に出てくる警告ウィンドウ
  */
 #pragma once
-#include <memory>
 #include "Menu.h"
 
 
 class Layout;
-class RenderContext;
 class TaskSchedulerSystem;
 
 
