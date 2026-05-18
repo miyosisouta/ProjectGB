@@ -30,24 +30,9 @@
         "name": "title_ward",
         "asset": "Assets/ui/keyConfigOption/title/ward.DDS",
         "width": 520,
-        "height": 100,
-        "position": [-480, 450, 0],
+        "height": 120,
+        "position": [-480, 460, 0],
         "scale": [1, 1, 1],
-        "rotation": 0,
-        "color": [1, 1, 1, 1]
-      },
-
-
-
-      {
-        "comment": "選択中の黄色の背景",
-        "type": "UIIcon",
-        "name": "flame",
-        "asset": "Assets/ui/option/button/waku.DDS",
-        "width": 895,
-        "height": 70,
-        "position": [400, 200, 0],
-        "scale": [1, 2, 1],
         "rotation": 0,
         "color": [1, 1, 1, 1]
       },
@@ -105,23 +90,8 @@
       },
 
 
-      
-      {
-        "comment": "選択中の緑色の枠",
-        "type": "UIIcon",
-        "name": "flame2",
-        "asset": "Assets/ui/option/button/walu.DDS",
-        "width": 900,
-        "height": 73,
-        "position": [400, 200, 0],
-        "scale": [1, 2, 1],
-        "rotation": 0,
-        "color": [1, 1, 1, 1]
-      },
-      
-      
 
-       {
+      {
         "comment": "文字",
         "type": "UIIcon",
         "name": "ward1",
@@ -160,10 +130,29 @@
       
 
 
+      {
+        "comment": "選択中の青枠",
+        "type": "UIIcon",
+        "name": "flame",
+        "asset": "Assets/ui/KeyConfigOption/keyButton/flame.DDS",
+        "width": 900,
+        "height": 75,
+        "position": [400, 200, 0],
+        "scale": [1, 2, 1],
+        "rotation": 0,
+        "color": [1, 1, 1, 1]
+      },
 
+
+
+      {
+        "comment": "青枠の初期化",
+        "type": "UIDummy",
+        "name": "InitFlame",
+        "source": "Assets/ui/KeyConfigOption/keyButton/flame.DDS",
+        "color": [1, 1, 1, 1]
+      },
       
-
-
 
       {
         "comment": "デフォルトサウンドアイコン",
@@ -211,6 +200,14 @@
         "name": "AttackButton",
         "source": "Assets/ui/layout/ButtonUI.json",
         "position": [700, -200, 0],
+        "scale": [1, 1, 1]
+      },
+      {
+        "comment": "ウィンドウ：ボタン設定が同じ",
+        "type": "UIPrefab",
+        "name": "Window",
+        "source": "Assets/ui/layout/WarningButtonWindow.json",
+        "position": [0, 0, 0],
         "scale": [1, 1, 1]
       }
     ]

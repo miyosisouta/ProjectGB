@@ -1,0 +1,304 @@
+{
+  "canvas": {
+    "elements": [
+
+      {
+        "comment": "オプションの背景:後から消すやつ",
+        "type": "UIPrefab",
+        "name": "optionBack",
+        "source": "Assets/ui/layout/optionBack.json",
+        "position": [0, 0, 0],
+        "scale": [1, 1, 1]
+      },
+
+
+
+      {
+        "coment": "背景：フェード",
+        "type": "UIIcon",
+        "name": "fade",
+        "asset": "Assets/ui/keyConfigOption/window/back/fade.DDS",
+        "width": 1920,
+        "height": 1080,
+        "position": [0, 0, 0],
+        "scale": [1, 1, 1],
+        "rotation": 0,
+        "color": [1, 1, 1, 1]
+      },
+
+
+      {
+        "coment": "ウィンドウ",
+        "type": "UIIcon",
+        "name": "windou",
+        "asset": "Assets/ui/keyConfigOption/window/back/back.DDS",
+        "width": 1000,
+        "height": 600,
+        "position": [0, 0, 0],
+        "scale": [1, 1, 1],
+        "rotation": 0,
+        "color": [1, 1, 1, 1]
+      },
+      {
+        "coment": "帯",
+        "type": "UIIcon",
+        "name": "windouObi",
+        "asset": "Assets/ui/keyConfigOption/window/back/obi.DDS",
+        "width": 980,
+        "height": 100,
+        "position": [0, 230, 0],
+        "scale": [1, 1, 1],
+        "rotation": 0,
+        "color": [1, 1, 1, 1]
+      },
+      {
+        "coment": "危険マーク",
+        "type": "UIIcon",
+        "name": "error",
+        "asset": "Assets/ui/keyConfigOption/window/back/kiken.DDS",
+        "width": 80,
+        "height": 70,
+        "position": [-430, 230, 0],
+        "scale": [1, 1, 1],
+        "rotation": 0,
+        "color": [1, 1, 1, 1]
+      },
+      {
+        "coment": "やじるし",
+        "type": "UIIcon",
+        "name": "yajirushi",
+        "asset": "Assets/ui/keyConfigOption/window/back/sankaku.DDS",
+        "width": 80,
+        "height": 80,
+        "position": [0, -140, 0],
+        "scale": [1, 1, 1],
+        "rotation": 0,
+        "color": [1, 1, 1, 1]
+      },
+      {
+        "coment": "ボタン変更背景：左",
+        "type": "UIIcon",
+        "name": "buttonBackLeft",
+        "asset": "Assets/ui/keyConfigOption/window/back/button_back.DDS",
+        "width": 400,
+        "height": 200,
+        "position": [-265, -140, 0],
+        "scale": [1, 1, 1],
+        "rotation": 0,
+        "color": [1, 1, 1, 1]
+      },
+      {
+        "coment": "ボタン変更背景：右",
+        "type": "UIIcon",
+        "name": "buttonBackRight",
+        "asset": "Assets/ui/keyConfigOption/window/back/button_back.DDS",
+        "width": 400,
+        "height": 200,
+        "position": [265, -140, 0],
+        "scale": [1, 1, 1],
+        "rotation": 0,
+        "color": [1, 1, 1, 1]
+      },
+
+
+
+
+      {
+        "coment": "文字：エラー",
+        "type": "UIIcon",
+        "name": "word_error",
+        "asset": "Assets/ui/keyConfigOption/window/word/error.DDS",
+        "width": 200,
+        "height": 60,
+        "position": [-270, 230, 0],
+        "scale": [1, 1, 1],
+        "rotation": 0,
+        "color": [1, 1, 1, 1]
+      },
+      {
+        "coment": "文字：ボタン設定がかぶっている",
+        "type": "UIIcon",
+        "name": "word_word1",
+        "asset": "Assets/ui/keyConfigOption/window/word/word1.DDS",
+        "width": 710,
+        "height": 70,
+        "position": [0, 120, 0],
+        "scale": [1, 1, 1],
+        "rotation": 0,
+        "color": [1, 1, 1, 1]
+      },
+      {
+        "coment": "文字：ボタン設定をきりかえる？",
+        "type": "UIIcon",
+        "name": "word_word2",
+        "asset": "Assets/ui/keyConfigOption/window/word/word2.DDS",
+        "width": 490,
+        "height": 70,
+        "position": [0, 40, 0],
+        "scale": [1, 1, 1],
+        "rotation": 0,
+        "color": [1, 1, 1, 1]
+      },
+
+
+
+
+
+      {
+        "comment": "戻るボタンアイコン",
+        "type": "UIPrefab",
+        "name": "returnIcon",
+        "source": "Assets/ui/layout/RetrunButton.json",
+        "position": [790, -500, 0],
+        "scale": [1, 1, 1]
+      },
+      {
+        "comment": "決定ボタンアイコン",
+        "type": "UIPrefab",
+        "name": "decisionIcon",
+        "source": "Assets/ui/layout/DecisionButton.json",
+        "position": [560, -500, 0],
+        "scale": [1, 1, 1]
+      },
+
+
+      {
+        "comment": "キーボタンアイコン：スキル",
+        "type": "UIPrefab",
+        "name": "SkillButton",
+        "source": "Assets/ui/layout/ButtonUI.json",
+        "position": [-370, -160, 0],
+        "scale": [1, 1, 1]
+      },
+      {
+        "comment": "キーボタンアイコン：スキル2",
+        "type": "UIPrefab",
+        "name": "SkillButton2",
+        "source": "Assets/ui/layout/ButtonUI.json",
+        "position": [-160, -160, 0],
+        "scale": [1, 1, 1]
+      },
+      {
+        "comment": "キーボタンアイコン：スキル3",
+        "type": "UIPrefab",
+        "name": "SkillButton3",
+        "source": "Assets/ui/layout/ButtonUI.json",
+        "position": [160, -160, 0],
+        "scale": [1, 1, 1]
+      },
+      {
+        "comment": "キーボタンアイコン：スキル4",
+        "type": "UIPrefab",
+        "name": "SkillButton4",
+        "source": "Assets/ui/layout/ButtonUI.json",
+        "position": [370, -160, 0],
+        "scale": [1, 1, 1]
+      },
+
+
+
+      {
+        "comment": "キーボタンアイコン：回避",
+        "type": "UIPrefab",
+        "name": "RunButton1",
+        "source": "Assets/ui/layout/ButtonUI.json",
+        "position": [-370, -160, 0],
+        "scale": [1, 1, 1]
+      },
+      {
+        "comment": "キーボタンアイコン：回避2",
+        "type": "UIPrefab",
+        "name": "RunButton2",
+        "source": "Assets/ui/layout/ButtonUI.json",
+        "position": [-160, -160, 0],
+        "scale": [1, 1, 1]
+      },
+      {
+        "comment": "キーボタンアイコン：回避3",
+        "type": "UIPrefab",
+        "name": "RunButton3",
+        "source": "Assets/ui/layout/ButtonUI.json",
+        "position": [160, -160, 0],
+        "scale": [1, 1, 1]
+      },
+      {
+        "comment": "キーボタンアイコン：回避4",
+        "type": "UIPrefab",
+        "name": "RunButton4",
+        "source": "Assets/ui/layout/ButtonUI.json",
+        "position": [370, -160, 0],
+        "scale": [1, 1, 1]
+      },
+
+
+
+      {
+        "comment": "キーボタンアイコン：攻撃",
+        "type": "UIPrefab",
+        "name": "AttackButton1",
+        "source": "Assets/ui/layout/ButtonUI.json",
+        "position": [-370, -160, 0],
+        "scale": [1, 1, 1]
+      },
+      {
+        "comment": "キーボタンアイコン：攻撃",
+        "type": "UIPrefab",
+        "name": "AttackButton2",
+        "source": "Assets/ui/layout/ButtonUI.json",
+        "position": [-160, -160, 0],
+        "scale": [1, 1, 1]
+      },
+      {
+        "comment": "キーボタンアイコン：攻撃",
+        "type": "UIPrefab",
+        "name": "AttackButton3",
+        "source": "Assets/ui/layout/ButtonUI.json",
+        "position": [160, -160, 0],
+        "scale": [1, 1, 1]
+      },
+      {
+        "comment": "キーボタンアイコン：攻撃",
+        "type": "UIPrefab",
+        "name": "AttackButton4",
+        "source": "Assets/ui/layout/ButtonUI.json",
+        "position": [370, -160, 0],
+        "scale": [1, 1, 1]
+      },
+
+
+
+      {
+        "comment": "ボタンの種類文字1",
+        "type": "UIPrefab",
+        "name": "WordButton1",
+        "source": "Assets/ui/layout/ButtonWord.json",
+        "position": [-370, -80, 0],
+        "scale": [1, 1, 1]
+      },
+      {
+        "comment": "ボタンの種類文字2",
+        "type": "UIPrefab",
+        "name": "WordButton2",
+        "source": "Assets/ui/layout/ButtonWord.json",
+        "position": [-160, -80, 0],
+        "scale": [1, 1, 1]
+      },
+      {
+        "comment": "ボタンの種類文字3",
+        "type": "UIPrefab",
+        "name": "WordButton3",
+        "source": "Assets/ui/layout/ButtonWord.json",
+        "position": [160, -80, 0],
+        "scale": [1, 1, 1]
+      },
+      {
+        "comment": "ボタンの種類文字4",
+        "type": "UIPrefab",
+        "name": "WordButton4",
+        "source": "Assets/ui/layout/ButtonWord.json",
+        "position": [370, -80, 0],
+        "scale": [1, 1, 1]
+      }
+    ]
+}
+}

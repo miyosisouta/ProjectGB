@@ -89,28 +89,25 @@ void OptionMenu::Update()
 
 			switch (selectOptionType)
 			{
-				case SOUND_OPTION_TYPE:
-				{
-					SoundIconAnimation();
-					break;
-				}
-				case KEY_OPTION_TYPE:
-				{
-					ControllerIconAnimation();
-					break;
-				}
-				case CAMERA_OPTION_TYPE:
-				{
-					CameraIconAnimation();
-					break;
-				}
+			case SOUND_OPTION_TYPE:
+			{
+				SoundIconAnimation();
+				break;
+			}
+			case KEY_OPTION_TYPE:
+			{
+				ControllerIconAnimation();
+				break;
+			}
+			case CAMERA_OPTION_TYPE:
+			{
+				CameraIconAnimation();
+				break;
+			}
 			}
 			oldSelectOptionType = selectOptionType;
-		}
-		
-		
+		}		
 	}
-
 
 	MenuBase::Update();
 }
@@ -436,4 +433,28 @@ void OptionMenu::ResetIcon()
 	// 初期値
 	gear2->transform.localScale = gear2Init->transform.localScale;
 	gear2->transform.localRotation = gear2Init->transform.localRotation;
+}
+
+
+bool OptionMenu::IsSelectSound() const
+{
+	// 0は「サウンド」なので
+	//return selector_->GetValue() == 0;
+	return selectOptionType == SOUND_OPTION_TYPE;
+}
+
+
+bool OptionMenu::IsSelectKeyConfig() const
+{
+	// 1は「キー」なので
+	//return selector_->GetValue() == 1;
+	return selectOptionType == KEY_OPTION_TYPE;
+}
+
+
+bool OptionMenu::IsSelectCamera() const
+{
+	// 2は「カメラ」なので
+	//return selector_->GetValue() == 2;
+	return selectOptionType == CAMERA_OPTION_TYPE;
 }

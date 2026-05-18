@@ -95,6 +95,8 @@
     <ClCompile Include="src\UI\KeyConfigOptionMenu.cpp" />
     <ClCompile Include="src\UI\OptionMenu.cpp" />
     <ClCompile Include="src\UI\UIManager.cpp" />
+    <ClCompile Include="src\UI\WarningButtonWindow.cpp" />
+    <ClCompile Include="src\UI\WarningButtonWindow.cpp" />
     <ClCompile Include="src\Scene\DebugGrassScene.cpp" />
     <ClCompile Include="src\Stage\GrassObject.cpp" />
     <ClCompile Include="src\Stage\GrassBendManager.cpp" />
@@ -202,6 +204,7 @@
     <ClInclude Include="src\UI\KeyConfigOptionMenu.h" />
     <ClInclude Include="src\UI\OptionMenu.h" />
     <ClInclude Include="src\UI\UIManager.h" />
+    <ClInclude Include="src\UI\WarningButtonWindow.h" />
     <ClInclude Include="src\Scene\DebugGrassScene.h" />
     <ClInclude Include="src\Stage\GrassObject.h" />
     <ClInclude Include="src\Stage\GrassBendManager.h" />

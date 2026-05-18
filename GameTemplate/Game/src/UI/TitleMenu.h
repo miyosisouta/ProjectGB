@@ -25,8 +25,8 @@ public:
 
 	/** 「はじめる」を選んでいるか */
 	bool IsSelectStat() const;
-	/** 「サウンド」を選んでいるか */
-	bool IsSelectSound() const;
+	/** 「設定」を選んでいるか */
+	bool IsSelectOption() const;
 	/** 「おわり」を選んでいるか */
 	bool IsSelectExit() const;
 	/** Aボタンを押したかがされているか */
