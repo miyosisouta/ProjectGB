@@ -304,6 +304,22 @@ namespace nsK2Engine {
 		{
 			return m_localDitherCBData.ditherAlpha;
 		}
+		/// <summary>
+		/// GBufferパスで使うカスタムシェーダーのパスを設定する（Init()呼び出し前に設定すること）。
+		/// </summary>
+		void SetGBufferFxOverride(const char* fxPath) { m_gBufferFxOverride = fxPath; }
+		/// <summary>
+		/// GBufferパスの頂点シェーダーエントリーポイントを上書きする（Init()呼び出し前に設定すること）。
+		/// </summary>
+		void SetVSEntryOverride(const char* entry) { m_vsEntryOverride = entry; }
+		/// <summary>
+		/// GBufferパスに追加のSRVを渡す。index=0 → t11, index=1 → t12 ...（Init()呼び出し前に設定すること）。
+		/// </summary>
+		void SetExtraGBufferSRV(int index, StructuredBuffer* sb)
+		{
+			K2_ASSERT(index >= 0 && index < 4, "SetExtraGBufferSRV: index out of range");
+			m_extraGBufferSRVs[index] = sb;
+		}
 	private:
 		/// <summary>
 		/// �X�P���g���̏������B
@@ -470,6 +486,9 @@ namespace nsK2Engine {
 		std::vector< GemometryData > m_geometryDatas;					// �W�I���g�����B
 		std::unique_ptr<int[]>		m_instanceNoToWorldMatrixArrayIndexTable;	// �C���X�^���X�ԍ����烏�[���h�s��̔z��̃C���f�b�N�X�ɕϊ�����e�[�u���B
 		DitherCBData				m_localDitherCBData;						// per-object�̒萔�o�b�t�@(ditherAlpha�̓Z�b�^�[�ŕύX)
+		const char*					m_gBufferFxOverride = nullptr;				// GBufferパスのカスタムFXファイルパス
+		const char*					m_vsEntryOverride   = nullptr;				// GBufferパスのVSエントリー上書き
+		StructuredBuffer*			m_extraGBufferSRVs[4] = {};					// GBufferパスに追加するSRV (slot1=t11, slot2=t12, ...)
 
 	};
 }

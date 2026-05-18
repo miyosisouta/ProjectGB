@@ -150,6 +150,25 @@ void ParameterManager::LoadBossSkillStatusData(const char* path)
 	);
 }
 
+// ============================================================
+//  grass_attack_params.json 読み込みヘルパー
+// ============================================================
+void ParameterManager::LoadGrassBendParamData(const char* path)
+{
+	ParameterManager::Get().LoadParameterFromArray<MasterGrassBendParameter>(
+		path,
+		"attacks",
+		[](const nlohmann::json& j, MasterGrassBendParameter& p)
+		{
+			p.key          = j.value("key",           "");
+			p.force        = j.value("force",        0.0f);
+			p.radius       = j.value("radius",       0.0f);
+			p.duration     = j.value("duration",     0.0f);
+			p.recoverySpeed= j.value("recoverySpeed",1.0f);
+		}
+	);
+}
+
 void ParameterManager::LoadBattleCommonParamData(const char* path)
 {
 	ParameterManager::Get().LoadParameterFromArray<MasterBattleCommonParameter>(

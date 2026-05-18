@@ -46,6 +46,19 @@ void DebugCamera::Update()
 		cameraData_.position += direction;
 		cameraData_.target += direction;
 	}
+	
+	// カメラの上下
+	{
+		float up = 0.0f;
+		if (g_pad[0]->IsPress(enButtonDown)) up = -1.0f;  // 下
+		if (g_pad[0]->IsPress(enButtonUp)) up = 1.0f;  // 上（好みのボタンに変更）
+		// または右スティック押し込みなど
+
+		Vector3 upMove(0.0f, up * 10.0f, 0.0f);
+		cameraData_.position += upMove;
+		cameraData_.target += upMove;
+	}
+
 	// 右スティックで回転
 	{
 		float rotX = g_pad[0]->GetRStickXF() * 0.05f;

@@ -18,6 +18,7 @@ enum EnSceneKind
 	enSceneKind_Title,
 	enSceneKind_Game,
 	enSceneKind_Debug,
+	enScenekind_Debug_Grass,
 	enSceneKind_Max,
 };
 
