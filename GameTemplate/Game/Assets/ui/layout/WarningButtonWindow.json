@@ -78,7 +78,7 @@
       {
         "coment": "ボタン変更背景：左",
         "type": "UIIcon",
-        "name": "buttonBackKeft",
+        "name": "buttonBackLeft",
         "asset": "Assets/ui/keyConfigOption/window/back/button_back.DDS",
         "width": 400,
         "height": 200,
