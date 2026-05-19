@@ -4,17 +4,17 @@
 #include <format>
 
 namespace nsK2EngineLow {
-	
+
 	namespace {
 		struct SSmoothVertex {
 			Vector3 newNormal = g_vec3Zero;
 			TkmFile::SVertex* vertex = nullptr;
 		};
 	}
-	//�@���X���[�W���O�B
+	//法線スムージング。
 	class NormalSmoothing {
 	private:
-		
+
 		struct SFace {
 			Vector3 normal;
 			std::vector<int> vertexNos;
@@ -24,7 +24,7 @@ namespace nsK2EngineLow {
 		void Execute(TkmFile::SMesh& mesh, const IndexBuffer& indexBuffer, BSP& bsp)
 		{
 
-			//�X�e�b�v�P�ʖ@�����v�Z���Ă����B
+			//ステップ1　単位法線を計算しておく。
 			auto numPolygon = indexBuffer.indices.size() / 3;
 			std::vector< SFace> faces;
 			faces.reserve(numPolygon);
@@ -39,7 +39,7 @@ namespace nsK2EngineLow {
 				auto& vert_1 = mesh.vertexBuffer[vertNo_1];
 				auto& vert_2 = mesh.vertexBuffer[vertNo_2];
 
-				//�@�����v�Z����B
+				//法線を計算する。
 				Vector3 v0tov1 = vert_1.pos - vert_0.pos;
 				Vector3 v0tov2 = vert_2.pos - vert_0.pos;
 				Vector3 normal = Cross(v0tov1, v0tov2);
@@ -52,7 +52,7 @@ namespace nsK2EngineLow {
 				faces.push_back(face);
 			}
 
-			//�X�e�b�v�Q�@�@���̕��ω�
+			//ステップ2　法線の平均化
 			for (auto& face : faces) {
 				for (auto vertNo : face.vertexNos) {
 					auto& vert = mesh.vertexBuffer[vertNo];
@@ -65,49 +65,49 @@ namespace nsK2EngineLow {
 		}
 	};
 	/// <summary>
-	/// TKM�t�@�C���t�H�[�}�b�g�B
+	/// TKMファイルフォーマット。
 	/// </summary>
 	/// <remarks>
-	/// �����n�ɂ���Ă�1�o�C�g��8bit�łȂ����Ƃ�����A
-	/// int�^��short�^���K�������A4�o�C�g�A2�o�C�g�ł���Ƃ͌���Ȃ��B
-	/// ���̂��߁Astd::uint16_t��std::uint32_t�𗘗p���Ă���B
-	/// �����͒�`����Ă��鏈���n�ł���΁A�T�C�Y�͕K�������ł���B
+	/// 環境によっては1バイトが8bitでないことがあり、
+	/// int型やshort型が必ずしも4バイト、2バイトであるとは限らない。
+	/// そのため、std::uint16_tやstd::uint32_tを利用している。
+	/// ここで定義されている処理系であれば、サイズは必ず決まりである。
 	/// </remarks>
 	namespace tkmFileFormat {
-		//���݂�TKM�t�@�C���̃o�[�W�����B
+		//現在のTKMファイルのバージョン。
 		std::uint16_t VERSION = 100;
 		/// <summary>
-		/// �w�b�_�[�t�@�C���B
+		/// ヘッダーファイル。
 		/// </summary>
 		struct SHeader {
-			std::uint8_t	version;		//�o�[�W�����B
-			std::uint8_t	isFlatShading;	//�t���b�g�V�F�[�f�B���O�H
-			std::uint16_t	numMeshParts;	//���b�V���p�[�c�̐��B
+			std::uint8_t	version;		//バージョン。
+			std::uint8_t	isFlatShading;	//フラットシェーディング？
+			std::uint16_t	numMeshParts;	//メッシュパーツの数。
 		};
 		/// <summary>
-		/// ���b�V���p�[�c�w�b�_�[�B
+		/// メッシュパーツヘッダー。
 		/// </summary>
 		struct SMeshePartsHeader {
-			std::uint32_t numMaterial;		//�}�e���A���̐��B
-			std::uint32_t numVertex;		//���_���B
-			std::uint8_t indexSize;			//�C���f�b�N�X�̃T�C�Y�B2��4�B
-			std::uint8_t pad[3];			//�p�f�B���O�B
+			std::uint32_t numMaterial;		//マテリアルの数。
+			std::uint32_t numVertex;		//頂点数。
+			std::uint8_t indexSize;			//インデックスのサイズ。2か4。
+			std::uint8_t pad[3];			//パディング。
 		};
 		/// <summary>
-		/// ���_
+		/// 頂点
 		/// </summary>
 		struct SVertex {
-			float pos[3];					//���_���W�B
-			float normal[3];				//�@���B
-			float uv[2];					//UV���W�B
-			float weights[4];				//�X�L���E�F�C�g�B
-			std::int16_t indices[4];		//�X�L���C���f�b�N�X�B
+			float pos[3];					//頂点座標。
+			float normal[3];				//法線。
+			float uv[2];					//UV座標。
+			float weights[4];				//スキンウェイト。
+			std::int16_t indices[4];		//スキンインデックス。
 		};
 	};
 	template< class IndexBuffer>
 	void BuildTangentAndBiNormalImp(TkmFile::SMesh& mesh, const IndexBuffer& indexBuffer)
 	{
-		//���_�X���[�X�͋C�ɂ��Ȃ��B
+		//頂点スルースは気にしない。
 		auto numPolygon = indexBuffer.indices.size() / 3;
 		for (auto polyNo = 0; polyNo < numPolygon; polyNo++) {
 			auto no = polyNo * 3;
@@ -137,7 +137,7 @@ namespace nsK2EngineLow {
 				{ vert_2.pos.z, vert_2.uv.x, vert_2.uv.y}
 			};
 
-			// ���ʃp�����[�^����UV�����W�Z�o����B
+			// 各パラメータからUV座標を算出する。
 			Vector3 tangent, binormal;
 			for (int i = 0; i < 3; ++i) {
 				auto V1 = cp1[i] - cp0[i];
@@ -153,7 +153,7 @@ namespace nsK2EngineLow {
 					binormal.v[i] = -ABC.z / ABC.x;
 				}
 			}
-			
+
 			tangent.Normalize();
 			binormal.Normalize();
 
@@ -165,13 +165,13 @@ namespace nsK2EngineLow {
 			vert_1.binormal += binormal;
 			vert_2.binormal += binormal;
 		}
-		//�@���A�ڃx�N�g���A�]�x�N�g���𕽋ω�����B
+		//法線、接ベクトル、従ベクトルを平均化する。
 		for (auto& vert : mesh.vertexBuffer) {
 			vert.tangent.Normalize();
 			vert.binormal.Normalize();
 			if (vert.tangent.Length() < 0.001f) {
 				if (vert.normal.y > 0.998f) {
-					// �@�����ق�Y���������Ă���B
+					// 法線がほぼY軸に重なっている。
 					vert.tangent = g_vec3AxisX;
 				}
 				else {
@@ -191,7 +191,7 @@ namespace nsK2EngineLow {
 
 		if (fileNameLen > 0) {
 			char* localFileName = reinterpret_cast<char*>(malloc(fileNameLen + 1));
-			//�k�����������ǂݍ��ނ̂Ł{�P
+			//文字列の長さ分読み込むので+1
 			fread(localFileName, fileNameLen + 1, 1, fp);
 			fileName = localFileName;
 			free(localFileName);
@@ -206,27 +206,27 @@ namespace nsK2EngineLow {
 		for (int indexNo = 0; indexNo < numIndex; indexNo++) {
 			T index;
 			fread(&index, sizeof(index), 1, fp);
-			indices[indexNo] = index - 1;	//todo max�̃C���f�b�N�X��1����J�n���Ă���̂ŁA-1����B
-										//todo �G�N�X�|�[�^�[�Ō��炷�悤�ɂ��܂��傤�B
+			indices[indexNo] = index - 1;	//todo maxのインデックスは1から始まっているので、-1する。
+										//todo エクスポーターで直すようにしましょう。
 		}
 	}
 
 	void TkmFile::BuildMaterial(
-		SMaterial& tkmMat, 
-		FILE* fp, 
-		const char* filePath, 
-		bool isLoadTexture, 
+		SMaterial& tkmMat,
+		FILE* fp,
+		const char* filePath,
+		bool isLoadTexture,
 		bool isOutputErrorCodeTTY
 	){
-		//�A���x�h�̃t�@�C���������[�h�B
+		//アルベドのファイル名をロード。
 		tkmMat.albedoMapFileName = LoadTextureFileName(fp);
-		//�@���}�b�v�̃t�@�C���������[�h�B
+		//法線マップのファイル名をロード。
 		tkmMat.normalMapFileName = LoadTextureFileName(fp);
-		//�X�y�L�����}�b�v�̃t�@�C���������[�h�B
+		//スペキュラマップのファイル名をロード。
 		tkmMat.specularMapFileName = LoadTextureFileName(fp);
-		//���t���N�V�����}�b�v�̃t�@�C���������[�h�B
+		//リフレクションマップのファイル名をロード。
 		tkmMat.reflectionMapFileName = LoadTextureFileName(fp);
-		//���܃}�b�v�̃t�@�C���������[�h�B
+		//屈折マップのファイル名をロード。
 		tkmMat.refractionMapFileName = LoadTextureFileName(fp);
 
 		std::string texFilePath = filePath;
@@ -236,7 +236,7 @@ namespace nsK2EngineLow {
 			) {
 			int filePathLength = static_cast<int>(texFilePath.length());
 			if (texFileName.length() > 0) {
-				//���f���̃t�@�C���p�X���烉�X�g�̃t�H���_��؂��T���B
+				//モデルのファイルパスからラストのフォルダを切り探す。
 				auto replaseStartPos = texFilePath.find_last_of('/');
 				if (replaseStartPos == std::string::npos) {
 					replaseStartPos = texFilePath.find_last_of('\\');
@@ -244,19 +244,19 @@ namespace nsK2EngineLow {
 				replaseStartPos += 1;
 				auto replaceLen = filePathLength - replaseStartPos;
 				texFilePath.replace(replaseStartPos, replaceLen, texFileName);
-				//�g���q��dds�ɕύX����B
+				//拡張子をddsに変更する。
 				replaseStartPos = texFilePath.find_last_of('.') + 1;
 				replaceLen = texFilePath.length() - replaseStartPos;
 				texFilePath.replace(replaseStartPos, replaceLen, "dds");
 
-				// �e�N�X�`�������\�[�X�o���N����擾����B
+				// テクスチャをリソースバンクから取得する。
 				lowTexture = g_engine->GetLowTextureFromBank(texFilePath.c_str());
 				if (lowTexture == nullptr) {
 					lowTexture = new LowTexture();
-					// �o���N����擾�ł��Ȃ������̂ŁA�V�K�e�N�X�`���B
+					// バンクから取得できなかったので、新規テクスチャ。
 					FILE* texFileFp = fopen(texFilePath.c_str(), "rb");
 					if (texFileFp != nullptr) {
-						//�t�@�C���T�C�Y���擾�B
+						//ファイルサイズを取得。
 						fseek(texFileFp, 0L, SEEK_END);
 						lowTexture->dataSize = ftell(texFileFp);
 						fseek(texFileFp, 0L, SEEK_SET);
@@ -265,14 +265,14 @@ namespace nsK2EngineLow {
 						fread(lowTexture->data.get(), lowTexture->dataSize, 1, texFileFp);
 						fclose(texFileFp);
 						lowTexture->filePath = texFilePath;
-						// ���[�h�����e�N�X�`�����o���N�ɓo�^����B
+						// ロードしたテクスチャをバンクに登録する。
 						g_engine->RegistLowTextureToBank(lowTexture->filePath.c_str(), lowTexture);
 					}
 					else {
 						char errorMessage[256];
-						sprintf(errorMessage, "�e�N�X�`���̃��[�h�Ɏ��s���܂����B%s\n", texFilePath.c_str());
+						sprintf(errorMessage, "テクスチャのロードに失敗しました。%s\n", texFilePath.c_str());
 						if (isOutputErrorCodeTTY == false) {
-							MessageBoxA(nullptr, errorMessage, "�G���[", MB_OK);
+							MessageBoxA(nullptr, errorMessage, "エラー", MB_OK);
 						}
 						else {
 							printf(errorMessage);
@@ -282,14 +282,14 @@ namespace nsK2EngineLow {
 			}
 		};
 		if (isLoadTexture) {
-			// �e�N�X�`�������[�h�B
+			// テクスチャをロード。
 			loadTexture(tkmMat.albedoMapFileName, tkmMat.albedoMap);
 			loadTexture(tkmMat.normalMapFileName, tkmMat.normalMap);
 			loadTexture(tkmMat.specularMapFileName, tkmMat.specularMap);
 			loadTexture(tkmMat.reflectionMapFileName, tkmMat.reflectionMap);
 			loadTexture(tkmMat.refractionMapFileName, tkmMat.refractionMap);
 		}
-		// �}�e���A���̃��j�[�NID�𐶐�����B
+		// マテリアルのユニークIDを生成する。
 		std::string sourceName = tkmMat.albedoMapFileName;
 		if (!tkmMat.normalMapFileName.empty()) {
 			sourceName += tkmMat.normalMapFileName;
@@ -303,33 +303,33 @@ namespace nsK2EngineLow {
 		if (!tkmMat.refractionMapFileName.empty()) {
 			sourceName += tkmMat.refractionMapFileName;
 		}
-		// �e�N�X�`�������烆�j�[�NID�𐶐�����B
+		// テクスチャからユニークIDを生成する。
 		tkmMat.uniqID = MakeHash(sourceName.c_str());
 	}
-	
+
 	void TkmFile::BuildTangentAndBiNormal()
 	{
 		NormalSmoothing normalSmoothing;
-		// ���_�o�b�t�@�̓��b�V�����ƂɓƗ����Ă���̂ŁA�X���[�W���O���S�̃X���b�h�ŕ��S���čs�����Ƃ��ł���B
+		// 頂点バッファはメッシュごとに独立しているので、スムージングを全体のスレッドで分担して行うことができる。
 		for (auto& mesh : m_meshParts) {
 			for (auto& indexBuffer : mesh.indexBuffer16Array) {
 				normalSmoothing.Execute(mesh, indexBuffer, m_bpsOnVertexPosition);
-				
+
 			}
 			for (auto& indexBuffer : mesh.indexBuffer32Array) {
 				normalSmoothing.Execute(mesh, indexBuffer, m_bpsOnVertexPosition);
-				
+
 			}
 		}
 
 		if (m_meshParts[0].isFlatShading == false) {
-			// �t���b�g�V�F�[�f�B���O�łȂ��Ȃ�A���W�ƌ������������_�̖@���𕽋ω����Ă����B
-			// ���b�V���̑S���_���𒲂ׂ�B
+			// フラットシェーディングでないなら、座標と向きが一致している頂点の法線を平均化しておく。
+			// メッシュの全頂点数を調べる。
 			int vertNum = 0;
 			for (auto& mesh : m_meshParts) {
 				vertNum += (int)mesh.vertexBuffer.size();
 			}
-			// �X���[�W���O�Ώۂ̒��_���W�߂�B
+			// スムージング対象の頂点を集める。
 			std::vector<SSmoothVertex> smoothVertex;
 			smoothVertex.reserve(vertNum);
 			for (auto& mesh : m_meshParts) {
@@ -338,23 +338,23 @@ namespace nsK2EngineLow {
 				}
 			}
 
-			// ���v4�X���b�h���g���ăX���[�W���O���s���B
+			// 合計4スレッドを使ってスムージングを行う。
 			const int NUM_THREAD = 4;
 			int numVertexPerThread = static_cast<int>(smoothVertex.size());
-			// �X���[�W���O�֐��B
+			// スムージング関数。
 			auto smoothFunc = [&](int startIndex, int endIndex)
 			{
-				// �X���[�X���Ă����B
+				// 処理する。
 				for (int i = startIndex; i < endIndex; i++) {
 					auto& va = smoothVertex[i];
 					m_bpsOnVertexPosition.WalkTree(va.vertex->pos, [&](BSP::SLeaf* leaf) {
 						if (va.vertex->pos.x == leaf->position.x
 							&& va.vertex->pos.y == leaf->position.y
 							&& va.vertex->pos.z == leaf->position.z) {
-							//�������W�B
+							//同じ座標。
 							auto* leafVert = static_cast<SVertex*>(leaf->extraData);
 							if (va.vertex->normal.Dot(leafVert->normal) > 0.0f) {
-								//���������B
+								//法線が似ている。
 								va.newNormal += leafVert->normal;
 							}
 						}
@@ -362,7 +362,7 @@ namespace nsK2EngineLow {
 				}
 			};
 
-			// ��̃X���b�h������ɏ������s�����_�����v�Z����B
+			// 1スレッドあたりの頂点数を計算する。
 			int perVertexInOneThread = static_cast<int>(smoothVertex.size() / NUM_THREAD);
 			using namespace std;
 			using ThreadPtr = unique_ptr < thread >;
@@ -372,7 +372,7 @@ namespace nsK2EngineLow {
 			int startVertex = 0;
 			int endVertex = perVertexInOneThread;
 
-			// �X���b�h�𗧂Ă�B
+			// スレッドを立てる。
 			for (int i = 0; i < NUM_THREAD - 1; i++) {
 				smoothingThreadArray[i] = make_unique<thread>([&, startVertex, endVertex]() {
 					smoothFunc(startVertex, endVertex);
@@ -384,12 +384,12 @@ namespace nsK2EngineLow {
 			smoothingThreadArray[NUM_THREAD - 1] = make_unique<thread>([&, startVertex, endVertex]() {
 				smoothFunc(startVertex, endVertex);
 			});
-			
-			// �X���[�W���O�X���b�h���S�Ċ�������̂�҂B
+
+			// スムージングスレッドが全て完了するのを待つ。
 			for (int i = 0; i < NUM_THREAD; i++) {
 				smoothingThreadArray[i]->join();
 			}
-		
+
 			for (auto& va : smoothVertex) {
 				va.newNormal.Normalize();
 				va.vertex->normal = va.newNormal;
@@ -397,7 +397,7 @@ namespace nsK2EngineLow {
 
 		}
 
-		// �ڃx�N�g���Ə]�x�N�g�����v�Z����B
+		// 接ベクトルと従ベクトルを計算する。
 		for (auto& mesh : m_meshParts) {
 			for (auto& indexBuffer : mesh.indexBuffer16Array) {
 				BuildTangentAndBiNormalImp(mesh, indexBuffer);
@@ -407,7 +407,7 @@ namespace nsK2EngineLow {
 			}
 		}
 
-		// UV�V�[�����z���^�莞�ɓ������W�ŁA�ʃC���f�b�N�X�ƂȂ鱸_�̃^���W�F���g/�o�C�m�[�}�����BSP�ŕ��ω�����B
+		// UVシームを跨いだ際に同じ座標で、別インデックスとなる頂点のタンジェント/バイノーマルをBSPで平均化する。
 		if (m_meshParts[0].isFlatShading == false) {
 			struct STangentSmooth {
 				Vector3 newTangent  = g_vec3Zero;
@@ -459,33 +459,33 @@ namespace nsK2EngineLow {
 		FILE* fp = fopen(filePath, "rb");
 		if (fp == nullptr) {
 			char errorMessage[256];
-			sprintf(errorMessage, "tkm�t�@�C���̃I�[�v���Ɏ��s���܂����BfilePath = %s\n", filePath);
-			
+			sprintf(errorMessage, "tkmファイルのオープンに失敗しました。filePath = %s\n", filePath);
+
 			if (!isOutputErrorCodeTTY) {
-				MessageBoxA(nullptr, errorMessage, "�G���[", MB_OK);
+				MessageBoxA(nullptr, errorMessage, "エラー", MB_OK);
 			}
 			else {
 				printf(errorMessage);
 			}
-			// ���s�B
+			// 失敗。
 			return false;
 		}
-		//tkm�t�@�C���̃w�b�_�[��ǂݍ��݁B
+		//tkmファイルのヘッダーを読み込む。
 		tkmFileFormat::SHeader header;
 		fread(&header, sizeof(header), 1, fp);
 		if (header.version != tkmFileFormat::VERSION) {
-			std::string errorMessage = "tkm�t�@�C���̃o�[�W�������قȂ��Ă��܂��B";
+			std::string errorMessage = "tkmファイルのバージョンが異なっています。";
 			if (!isOutputErrorCodeTTY) {
-				//tkm�t�@�C���̃o�[�W�������Ⴄ�B
-				MessageBoxA(nullptr, errorMessage.c_str(), "�G���[", MB_OK);
+				//tkmファイルのバージョンが違う。
+				MessageBoxA(nullptr, errorMessage.c_str(), "エラー", MB_OK);
 			}
 			else {
 				printf(errorMessage.c_str());
 			}
 			return false;
 		}
-		
-		//���b�V���������[�h���Ă����B
+
+		//メッシュをロードしておく。
 		m_meshParts.resize(header.numMeshParts);
 		for (int meshPartsNo = 0; meshPartsNo < header.numMeshParts; meshPartsNo++) {
 
@@ -493,15 +493,15 @@ namespace nsK2EngineLow {
 			meshParts.isFlatShading = header.isFlatShading != 0;
 			tkmFileFormat::SMeshePartsHeader meshPartsHeader;
 			fread(&meshPartsHeader, sizeof(meshPartsHeader), 1, fp);
-			//�}�e���A�������L�^�ł���̈���m�ہB
+			//マテリアルが記録できる領域を確保。
 			meshParts.materials.resize(meshPartsHeader.numMaterial);
-			//�}�e���A�������\�z���Ă����B
+			//マテリアルを構築しておく。
 			for (unsigned int materialNo = 0; materialNo < meshPartsHeader.numMaterial; materialNo++) {
 				auto& material = meshParts.materials[materialNo];
 				BuildMaterial(material, fp, filePath, isLoadTexture, isOutputErrorCodeTTY);
 			}
 
-			//�����Ē��_�o�b�t�@�B
+			//続いて頂点バッファ。
 			meshParts.vertexBuffer.resize(meshPartsHeader.numVertex);
 			for (unsigned int vertNo = 0; vertNo < meshPartsHeader.numVertex; vertNo++) {
 				tkmFileFormat::SVertex vertexTmp;
@@ -522,22 +522,22 @@ namespace nsK2EngineLow {
 				m_bpsOnVertexPosition.AddLeaf(vertex.pos, &vertex);
 			}
 
-			//�����ăC���f�b�N�X�o�b�t�@�B
-			//�C���f�b�N�X�o�b�t�@�̓}�e���A���̐����������݂���񂶂��B
+			//続いてインデックスバッファ。
+			//インデックスバッファはマテリアルの数だけ存在している。
 			if (meshPartsHeader.indexSize == 2) {
-				//16bit�̃C���f�b�N�X�o�b�t�@�B
+				//16bitのインデックスバッファ。
 				meshParts.indexBuffer16Array.resize(meshPartsHeader.numMaterial);
 			}
 			else {
-				//32bit�̃C���f�b�N�X�o�b�t�@�B
+				//32bitのインデックスバッファ。
 				meshParts.indexBuffer32Array.resize(meshPartsHeader.numMaterial);
 			}
 
 			for (unsigned int materialNo = 0; materialNo < meshPartsHeader.numMaterial; materialNo++) {
-				//�|���S���������[�h�B
+				//ポリゴン数をロード。
 				int numPolygon;
 				fread(&numPolygon, sizeof(numPolygon), 1, fp);
-				//�g�|���W�[�̓g���C�A���O�����X�g�I�����[�Ȃ̂ŁA3����Z����ƃC���f�b�N�X�̐��ɂȂ�B
+				//トポロジーはトライアングルリストオンリーなので、3を掛け算するとインデックスの数になる。
 				int numIndex = numPolygon * 3;
 				if (meshPartsHeader.indexSize == 2) {
 					LoadIndexBuffer(
@@ -555,17 +555,17 @@ namespace nsK2EngineLow {
 				}
 			}
 		}
-		// �t�@�C�������B
+		// ファイルを閉じる。
 		fclose(fp);
 
-		// ���_�f�[�^��BSP�c���[���\�z����B
+		// 頂点データのBSPツリーを構築する。
 		m_bpsOnVertexPosition.Build();
 
-		// �ڃx�N�g���Ə]�x�N�g�����\�z����B
+		// 接ベクトルと従ベクトルを構築する。
 		BuildTangentAndBiNormal();
-		
+
 		if (isOptimize) {
-			// �œK�����s���B
+			// 最適化を行う。
 			Optimize();
 		}
 		return true;
@@ -574,35 +574,35 @@ namespace nsK2EngineLow {
 	{
 		FILE* fp = fopen(filePath, "wb");
 		if (fp == nullptr) {
-			printf("�o�͗p��tkm�t�@�C���̃I�[�v���Ɏ��s���܂����B%s\n", filePath);
+			printf("出力用のtkmファイルのオープンに失敗しました。%s\n", filePath);
 			return false;
 		}
 		if (m_meshParts.empty()) {
-			printf("�I���W�i����tkm�t�@�C�������[�h����Ă��܂���B%s\n", filePath);
+			printf("オリジナルのtkmファイルがロードされていません。%s\n", filePath);
 			return false;
 		}
-		// �w�b�_�[���̍\�z�B
+		// ヘッダーの構築。
 		tkmFileFormat::SHeader header;
 		header.isFlatShading = m_meshParts[0].isFlatShading ? 1 : 0;
 		header.numMeshParts = m_meshParts.size();
 		header.version = tkmFileFormat::VERSION;
 		fwrite(&header, sizeof(header), 1, fp);
 
-		// �����ă��b�V���p�[�c�{�̂̃f�[�^����������ł����B
+		// 続いてメッシュパーツ本体のデータを書き込んでいく。
 		for (int meshPartsNo = 0; meshPartsNo < header.numMeshParts; meshPartsNo++) {
 			tkmFileFormat::SMeshePartsHeader meshPartsHeader;
 			meshPartsHeader.numMaterial = m_meshParts[meshPartsNo].materials.size();
 			meshPartsHeader.numVertex = m_meshParts[meshPartsNo].vertexBuffer.size();
-			meshPartsHeader.indexSize = 4; // 32�r�b�g�Œ�B
+			meshPartsHeader.indexSize = 4; // 32ビット固定。
 			fwrite(&meshPartsHeader, sizeof(meshPartsHeader), 1, fp);
-			// �}�e���A��������������ł����B
+			// マテリアルを書き込んでいく。
 			for (int matNo = 0; matNo < m_meshParts[meshPartsNo].materials.size(); matNo++) {
 				SMaterial& mat = m_meshParts[meshPartsNo].materials[matNo];
-				// �e�N�X�`���̃t�@�C���������������ޓ����֐��B
+				// テクスチャのファイル名を書き込む共通の関数。
 				auto WriteTextureFileNameInfo = [&](const std::string& fineName)
 				{
 					std::uint32_t fileNameLen = fineName.length();
-					// �t�@�C���������������ށB
+					// ファイル名を書き込む。
 					if (fineName.empty()) {
 						fileNameLen = 0;
 						fwrite(&fileNameLen, sizeof(fileNameLen), 1, fp);
@@ -613,19 +613,19 @@ namespace nsK2EngineLow {
 						fwrite(fineName.c_str(), fileNameLen + 1, 1, fp);
 					}
 				};
-				// �A���x�h�e�N�X�`���̃t�@�C���������������ށB
+				// アルベドテクスチャのファイル名を書き込む。
 				WriteTextureFileNameInfo(mat.albedoMapFileName);
-				// �@���}�b�v
+				// 法線マップ
 				WriteTextureFileNameInfo(mat.normalMapFileName);
-				// �X�y�L�����}�b�v�̃t�@�C���������������ށB
+				// スペキュラマップのファイル名を書き込む。
 				WriteTextureFileNameInfo(mat.specularMapFileName);
-				// ���t���N�V�����}�b�v�B
+				// リフレクションマップ。
 				WriteTextureFileNameInfo(mat.reflectionMapFileName);
-				// ���܃}�b�v�B
+				// 屈折マップ。
 				WriteTextureFileNameInfo(mat.refractionMapFileName);
 
 			}
-			// �����Ē��_�o�b�t�@����������ł����B
+			// 続いて頂点バッファを書き込んでいく。
 			for( int vertNo = 0; vertNo < m_meshParts[meshPartsNo].vertexBuffer.size(); vertNo++){
 				tkmFileFormat::SVertex vertex;
 				auto& vertexTmp = m_meshParts[meshPartsNo].vertexBuffer[vertNo];
@@ -648,20 +648,20 @@ namespace nsK2EngineLow {
 				vertex.indices[1] = vertexTmp.indices[1];
 				vertex.indices[2] = vertexTmp.indices[2];
 				vertex.indices[3] = vertexTmp.indices[3];
-				
-				// ���_����������
+
+				// 頂点を書き込む
 				fwrite( &vertex, sizeof(vertex), 1, fp);
 			}
 
-			// �����ăC���f�b�N�X�o�b�t�@�B
-			// �œK�����32�r�b�g�����T�|�[�g���Ȃ��B
+			// 続いてインデックスバッファ。
+			// 最適化後は32ビットしかサポートしない。
 			for (int matNo = 0; matNo < meshPartsHeader.numMaterial; matNo++) {
 				std::uint32_t numPolygon = m_meshParts[meshPartsNo].indexBuffer32Array[matNo].indices.size() / 3;
 				fwrite(&numPolygon, sizeof(numPolygon), 1, fp);
 				const auto& indeces = m_meshParts[meshPartsNo].indexBuffer32Array[matNo].indices;
 				for (int i = 0; i < indeces.size(); i++) {
-					// �C���f�b�N�X�o�b�t�@����������
-					int index = indeces[i] + 1;	// 3dsMax����o�͂����ۂɁ{�P����Ă���̂ŁA����ɍ��킹�Ė߂��B
+					// インデックスバッファを書き込む
+					int index = indeces[i] + 1;	// 3dsMaxから出力した際に+1されているので、それに合わせて戻す。
 					fwrite(
 						&index,
 						sizeof(std::uint32_t),
@@ -677,30 +677,30 @@ namespace nsK2EngineLow {
 	}
 	void TkmFile::Optimize()
 	{
-		// �����}�e���A�����g���Ă��郁�b�V�����ЂƂ܂Ƃ߂ɂ���B
-		// �ň��̃P�[�X�Ń}�e���A���̐����������b�V�������݂���̂ŁA
-		// ���b�V���̍ő吔�𒲂ׂĂ����B
+		// 同じマテリアルを使っているメッシュをひとまとめにする。
+		// 最悪のケースでマテリアルの数だけメッシュが存在するので、
+		// メッシュの最大数を調べておく。
 		int maxMesh = 0;
 		for (SMesh& mesh : m_meshParts) {
 			maxMesh += mesh.materials.size();
 		}
 		std::vector< SMesh > optimizeMeshParts;
-		// �œK���ς݂̃��b�V�����L������̈���ň��̃P�[�X�Ŋm�ۂ��Ă����B
+		// 最適化済みのメッシュが入る領域を最悪のケースで確保しておく。
 		optimizeMeshParts.reserve(maxMesh);
-		
+
 		std::map<int, SMesh*> meshMap;
 		for (SMesh& mesh : m_meshParts) {
 			for (int matNo = 0; matNo < mesh.materials.size(); matNo++) {
 				int matId = mesh.materials[matNo].uniqID;
 				auto it = meshMap.find(matId);
 				if (it == meshMap.end()) {
-					// �V�K�}�e���A���B
+					// 新規マテリアル。
 					SMesh optMesh;
 					optMesh.materials.emplace_back(mesh.materials[matNo]);
 					optMesh.vertexBuffer = mesh.vertexBuffer;
 					optMesh.indexBuffer32Array.resize(1);
 					optMesh.isFlatShading = m_meshParts[0].isFlatShading;
-					// ����16bit�̃C0���f�b�N�X�o�b�t�@�͎g��Ȃ��B
+					// 最適化後は16bitのインデックスバッファは使わない。
 					if (mesh.indexBuffer32Array.size() != 0) {
 						for (int index : mesh.indexBuffer32Array[matNo].indices) {
 							optMesh.indexBuffer32Array[0].indices.emplace_back(index);
@@ -715,17 +715,17 @@ namespace nsK2EngineLow {
 					meshMap.insert(std::pair<int, SMesh*>(matId, &optimizeMeshParts.back()));
 				}
 				else {
-					// �d���}�e���A���Ȃ̂œ�������B
-					// ���_�o�b�t�@��A���B
+					// 重複マテリアルなので統合する。
+					// 頂点バッファを合流。
 					SMesh* optMesh = it->second;
 					int baseIndex = optMesh->vertexBuffer.size();
 					optMesh->vertexBuffer.insert(
-						optMesh->vertexBuffer.end(), 
+						optMesh->vertexBuffer.end(),
 						mesh.vertexBuffer.begin(),
 						mesh.vertexBuffer.end()
 					);
 
-					// �C���f�b�N�X�o�b�t�@��A���B
+					// インデックスバッファを合流。
 					if (mesh.indexBuffer32Array.size() != 0) {
 						for (int index : mesh.indexBuffer32Array[matNo].indices) {
 							optMesh->indexBuffer32Array[0].indices.emplace_back(index + baseIndex);
@@ -739,7 +739,7 @@ namespace nsK2EngineLow {
 				}
 			}
 		}
-		// �œK���ς݃��b�V���ɍ����ւ���B
+		// 最適化済みメッシュに差し替える。
 		m_meshParts = optimizeMeshParts;
 	}
 }

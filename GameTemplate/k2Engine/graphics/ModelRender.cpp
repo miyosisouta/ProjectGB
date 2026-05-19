@@ -19,7 +19,7 @@ namespace nsK2Engine {
 		if (g_renderingEngine != nullptr) {
 			g_renderingEngine->RemoveEventListener(this);
 			for (auto& geomData : m_geometryDatas) {
-				// �E��E��E��E��E�_�E��E��E��E��E�O�E�G�E��E��E�W�E��E��E��E��E��E�o�E�^�E��E��E��E�
+				// ジオメトリデータをレンダリングエンジンから登録解除する
 				g_renderingEngine->UnregisterGeometryData(&geomData);
 			}
 			if (m_addRaytracingWorldModel) {
@@ -32,12 +32,12 @@ namespace nsK2Engine {
 		if (enEvent == RenderingEngine::enEventReInitIBLTexture
 			&& m_translucentModel.IsInited()
 		) {
-			// IBL�E�e�E�N�E�X�E�`�E��E��E��E��E�X�E�V�E��E��E�ꂽ�E�̂ŁAPBR�E�V�E�F�E�[�E�_�E�[�E��Ep�E��E��E�Ă��E��E�
-			// �E�t�E�H�E��E��E�[�E�h�E��E��E��E��E�_�E��E��E��E��E�O�E�̏ꍇ�E�́A�E�f�E�B�E�X�E�N�E��E��E�v�E�^�E�q�E�[�E�v�E��E��E�ď��E��E��E��E��E��E��E��E�B
-			// (IBL�E�e�E�N�E�X�E�`�E��E��E��E��E�g�E��E��E�Ă��E��E�̂ŁB)
+			// IBLテクスチャが再初期化されたので、PBRシェーダーを使っているフォワードレンダリングの場合は
+			// ディスクリプタヒープを作り直す必要がある。
+			// (IBLテクスチャを使っているため。)
 			MaterialReInitData matReInitData;
 			if(m_isEnableInstancingDraw) {
-				// �E�C�E��E��E�X�E�^�E��E��E�V�E��E��E�O�E�`�E��E��E��E�s�E��E��E�ꍁE��́A�E�g�E��E�SRV�E�ɃC�E��E��E�X�E�^�E��E��E�V�E��E��E�O�E�`�E��E�p�E�̃f�E�[�E�^�E��E�ݒ肷�E��E�B
+				// インスタンシング描画が有効な場合は、追加SRVにインスタンシング描画用のデータを設定する。
 				matReInitData.m_expandShaderResoruceView[0] = &m_worldMatrixArraySB;
 			}
 			matReInitData.m_expandShaderResoruceView[1] = &g_renderingEngine->GetIBLTexture();
@@ -48,9 +48,9 @@ namespace nsK2Engine {
 	{
 		modelInitData.m_vsSkinEntryPointFunc = "VSMainUsePreComputedVertexBuffer";
 		modelInitData.m_vsEntryPointFunc = "VSMainUsePreComputedVertexBuffer";
-		
+
 		if (m_animationClips != nullptr) {
-			// �E�A�E�j�E��E��E�[�E�V�E��E��E��E��E��E��E��E�B
+			// アニメーションを使う場合。
 			modelInitData.m_vsSkinEntryPointFunc = "VSMainSkinUsePreComputedVertexBuffer";
 		}
 	}
@@ -63,55 +63,55 @@ namespace nsK2Engine {
 		int maxInstance,
 		bool isFrontCullingOnDrawShadowMap)
 	{
-		//�E�C�E��E��E�X�E�^�E��E��E�V�E��E��E�O�E�`�E��E�p�E�̃f�E�[�E�^�E��E��E��E��E��E��E��E��E�B
+		// インスタンシング描画用のデータを初期化する。
 		InitInstancingDraw(maxInstance);
-		//�E�X�E�P�E��E��E�g�E��E��E��E��E��E��E��E��E��E��E�B
+		// スケルトンを初期化する。
 		InitSkeleton(filePath);
-		//�E�A�E�j�E��E��E�[�E�V�E��E��E��E��E��E��E��E��E��E��E��E��E�B
+		// アニメーションを初期化する。
 		InitAnimation(animationClips, numAnimationClips, enModelUpAxis);
-		// �E�A�E�j�E��E��E�[�E�V�E��E��E��E��E�ςݒ��E�_�E�o�E�b�E�t�E�@�E�̌v�E�Z�E��E��E��E��E��E��E��E��E��E��E��E��E�B
+		// アニメーション済み頂点バッファの計算処理を初期化する。
 		InitComputeAnimatoinVertexBuffer(filePath, enModelUpAxis);
-		//�E��E��E��E��E��E��E�I�E�u�E�W�E�F�E�N�E�g�E�`�E��E�p�E�X�E�Ŏg�E�p�E��E��E��E�郂�f�E��E��E��E��E��E��E��E��E��E��E�B
+		// 半透明オブジェクト描画パスで使用するモデルを初期化する。
 		InitModelOnTranslucent(*g_renderingEngine, filePath, enModelUpAxis, isShadowReciever);
-		//ZPrepass�E�`�E��E�p�E�́E���E�f�E��E��E��E��E��E��E��E��E��E��E�B
+		//ZPrepass描画用のモデルを初期化する。
 		// InitModelOnZprepass(*g_renderingEngine, filePath, enModelUpAxis);
-		//�E�V�E��E��E�h�E�E�E�}�E�b�E�v�E�`�E��E�p�E�́E���E�f�E��E��E��E��E��E��E��E��E��E��E�B
+		//シャドウマップ描画用のモデルを初期化する。
 		InitModelOnShadowMap(*g_renderingEngine, filePath, enModelUpAxis, isFrontCullingOnDrawShadowMap);
-		// �E�􉽊w�E�f�E�[�E�^�E��E��E��E��E��E��E��E��E�B
+		// 幾何学データを初期化する。
 		InitGeometryDatas(maxInstance);
 		if (m_isRaytracingWorld) {
-			// �E��E��E�C�E�g�E��E��E��E��E�[�E��E��E�h�E�ɒǉ��E�B
+			// レイトレースワールドに追加。
 			g_renderingEngine->AddModelToRaytracingWorld(m_translucentModel);
 			m_addRaytracingWorldModel = &m_translucentModel;
 		}
-		
-		// �E�e�E�����[�E��E��E�h�E�s�E��E��E��E�X�E�V�E��E��E��E�B
+
+		// ワールド行列を更新する。
 		UpdateWorldMatrixInModes();
 
 	}
 
 	void ModelRender::InitForwardRendering(ModelInitData& initData)
 	{
-		//�E�C�E��E��E�X�E�^�E��E��E�V�E��E��E�O�E�`�E��E�p�E�̃f�E�[�E�^�E��E��E��E��E��E��E��E��E�B
+		// インスタンシング描画用のデータを初期化する。
 		InitInstancingDraw(1);
 		InitSkeleton(initData.m_tkmFilePath);
 
-		// todo �E�A�E�j�E��E��E�[�E�V�E��E��E��E��E�ςݒ��E�_�E�o�E�b�E�t�E�@�E�̌v�E�Z�E��E��E��E��E��E��E��E��E��E��E��E��E�B
+		// todo アニメーション済み頂点バッファの計算処理を初期化する。
 		InitComputeAnimatoinVertexBuffer(initData.m_tkmFilePath, initData.m_modelUpAxis);
 
 		initData.m_colorBufferFormat[0] = DXGI_FORMAT_R16G16B16A16_FLOAT;
-		//�E��E��E��E��E��E��E��E��E��E��E��E��E�f�E�[�E�^�E��E��E��E��E�ƂɁE���E�f�E��E��E��E��E��E��E��E��E��E��E��E��E��E�B
+		// 共通バッファフォーマットにデータを格納する際にモデルを初期化する。
 		m_forwardRenderModel.Init(initData);
-		//ZPrepass�E�`�E��E�p�E�́E���E�f�E��E��E��E��E��E��E��E��E��E��E�B
+		//ZPrepass描画用のモデルを初期化する。
 		//InitModelOnZprepass(*g_renderingEngine, initData.m_tkmFilePath, initData.m_modelUpAxis);
-		//�E�V�E��E��E�h�E�E�E�}�E�b�E�v�E�`�E��E�p�E�́E���E�f�E��E��E��E��E��E��E��E��E��E��E�B
+		//シャドウマップ描画用のモデルを初期化する。
 		InitModelOnShadowMap(*g_renderingEngine, initData.m_tkmFilePath, initData.m_modelUpAxis, false);
-		// �E�􉽊w�E�f�E�[�E�^�E��E��E��E��E��E��E��E��E�B
+		// 幾何学データを初期化する。
 		InitGeometryDatas(1);
-		// �E��E��E�C�E�g�E��E��E��E��E�[�E��E��E�h�E�ɒǉ��E�B
+		// レイトレースワールドに追加。
 		// g_renderingEngine->AddModelToRaytracingWorld(m_forwardRenderModel);
 		// m_addRaytracingWorldModel = &m_forwardRenderModel;
-		// �E�e�E�����[�E��E��E�h�E�s�E��E��E��E�X�E�V�E��E��E��E�B
+		// ワールド行列を更新する。
 		UpdateWorldMatrixInModes();
 	}
 
@@ -123,27 +123,27 @@ namespace nsK2Engine {
 		int maxInstance,
 		bool isFrontCullingOnDrawShadowMap)
 	{
-		// �E�C�E��E��E�X�E�^�E��E��E�V�E��E��E�O�E�`�E��E�p�E�̃f�E�[�E�^�E��E��E��E��E��E��E��E��E�B
+		// インスタンシング描画用のデータを初期化する。
 		InitInstancingDraw(maxInstance);
-		// �E�X�E�P�E��E��E�g�E��E��E��E��E��E��E��E��E��E��E�B
+		// スケルトンを初期化する。
 		InitSkeleton(filePath);
-		// �E�A�E�j�E��E��E�[�E�V�E��E��E��E��E��E��E��E��E��E��E��E��E�B
+		// アニメーションを初期化する。
 		InitAnimation(animationClips, numAnimationClips, enModelUpAxis);
-		// �E�A�E�j�E��E��E�[�E�V�E��E��E��E��E�ςݒ��E�_�E�o�E�b�E�t�E�@�E�̌v�E�Z�E��E��E��E��E��E��E��E��E��E��E��E��E�B
+		// アニメーション済み頂点バッファの計算処理を初期化する。
 		InitComputeAnimatoinVertexBuffer(filePath, enModelUpAxis);
-		// GBuffer�E�`�E��E�p�E�́E���E�f�E��E��E��E��E��E��E��E��E��E��E�B
+		// GBuffer描画用のモデルを初期化する。
 		InitModelOnRenderGBuffer(*g_renderingEngine, filePath, enModelUpAxis, isShadowReciever);
-		// ZPrepass�E�`�E��E�p�E�́E���E�f�E��E��E��E��E��E��E��E��E��E��E�B
+		// ZPrepass描画用のモデルを初期化する。
 		InitModelOnZprepass(*g_renderingEngine, filePath, enModelUpAxis);
-		// �E�V�E��E��E�h�E�E�E�}�E�b�E�v�E�`�E��E�p�E�́E���E�f�E��E��E��E��E��E��E��E��E��E��E�B
+		// シャドウマップ描画用のモデルを初期化する。
 		InitModelOnShadowMap(*g_renderingEngine, filePath, enModelUpAxis, isFrontCullingOnDrawShadowMap);
-		// �E�􉽊w�E�f�E�[�E�^�E��E��E��E��E��E��E��E��E�B
+		// 幾何学データを初期化する。
 		InitGeometryDatas(maxInstance);
-		// �E�e�E�����[�E��E��E�h�E�s�E��E��E��E�X�E�V�E��E��E��E�B
+		// ワールド行列を更新する。
 		UpdateWorldMatrixInModes();
-		
+
 		if (m_isRaytracingWorld) {
-			// �E��E��E�C�E�g�E��E��E��E��E�[�E��E��E�h�E�ɒǉ��E�B
+			// レイトレースワールドに追加。
 			g_renderingEngine->AddModelToRaytracingWorld(m_renderToGBufferModel);
 			m_addRaytracingWorldModel = &m_renderToGBufferModel;
 		}
@@ -155,14 +155,14 @@ namespace nsK2Engine {
 		int instanceId = 0;
 		for (auto& geomData : m_geometryDatas) {
 			geomData.Init(this, instanceId);
-			// �E��E��E��E��E�_�E��E��E��E��E�O�E�G�E��E��E�W�E��E��E�ɓo�E�^�E�B
+			// レンダリングエンジンに登録する。
 			g_renderingEngine->RegisterGeometryData(&geomData);
 			instanceId++;
 		}
 	}
 	void ModelRender::InitSkeleton(const char* filePath)
 	{
-		//�E�X�E�P�E��E��E�g�E��E��E�̃f�E�[�E�^�E��E�ǂݍ��E�݁B
+		// スケルトンのデータを読み込む。
 		std::string skeletonFilePath = filePath;
 		int pos = (int)skeletonFilePath.find(".tkm");
 		skeletonFilePath.replace(pos, 4, ".tks");
@@ -184,18 +184,17 @@ namespace nsK2Engine {
 	{
 		m_maxInstance = maxInstance;
 		if (m_maxInstance > 1) {
-			// �E�C�E��E��E�X�E�^�E��E��E�V�E��E��E�O�E�`�E��E��E��E�s�E��E��E�̂ŁA
-			// �E��E��E��E�p�E�̃f�E�[�E�^�E��E��E�\�E�z�E��E��E��E�B
-			// �E��E��E�[�E��E��E�h�E�s�E��E�̔z�E��E�́E���E��E��E��E��E��E��E�m�E�ۂ��E��E�B
+			// インスタンシング描画を行うので、共通データをデータ構造で初期化する。
+			// ワールド行列の配列はあらかじめメモリを確保する。
 			m_worldMatrixArray = std::make_unique<Matrix[]>(m_maxInstance);
-			// �E��E��E�[�E��E��E�h�E�s�E��E��E�GPU�E�ɓ]�E��E��E��E��E�邽�E�߂̃X�E�g�E��E��E�N�E�`�E��E��E�[�E�h�E�o�E�b�E�t�E�@�E��E��E�m�E�ہB
+			// ワールド行列をGPUに転送するためのストラクチャードバッファを確保。
 			m_worldMatrixArraySB.Init(
 				sizeof(Matrix),
 				m_maxInstance,
 				nullptr
 			);
 			m_isEnableInstancingDraw = true;
-			// �E�C�E��E��E�X�E�^�E��E��E�X�E�ԍ��E��E��E�烏�[�E��E��E�h�E�s�E��E�̔z�E��E�̃C�E��E��E�f�E�b�E�N�E�X�E�ɕϊ��E��E��E��E�e�E�[�E�u�E��E��E��E��E��E��E��E��E��E��E��E��E��E�B
+			// インスタンス番号からワールド行列の配列のインデックスに変換するテーブルを初期化する。
 			m_instanceNoToWorldMatrixArrayIndexTable = std::make_unique<int[]>(m_maxInstance);
 			for (int instanceNo = 0; instanceNo < m_maxInstance; instanceNo++) {
 				m_instanceNoToWorldMatrixArrayIndexTable[instanceNo] = instanceNo;
@@ -221,22 +220,22 @@ namespace nsK2Engine {
 		modelInitData.m_expandConstantBuffer2 = &m_splatColorCBData;
 		modelInitData.m_expandConstantBufferSize2 = sizeof(SplatColorCBData);
 
-		// �E��E��E�_�E�V�E�F�E�[�E�_�E�[�E�̃G�E��E��E�g�E��E��E�[�E�|�E�C�E��E��E�g�E��E��E�Z�E�b�E�g�E�A�E�b�E�v�E�B
+		// 頂点シェーダーのエントリーポイントをセットアップする。
 		SetupVertexShaderEntryPointFunc(modelInitData);
 		if (m_vsEntryOverride) {
 			modelInitData.m_vsEntryPointFunc     = m_vsEntryOverride;
 			modelInitData.m_vsSkinEntryPointFunc = m_vsEntryOverride;
 		}
-		// �E��E��E�_�E�̎��E�O�E�v�E�Z�E��E��E��E��E��E��E�g�E��E��E�B
+		// 頂点の事前計算済みバッファを使う。
 		modelInitData.m_computedAnimationVertexBuffer = &m_computeAnimationVertexBuffer;
 		if (m_animationClips != nullptr) {
-			//�E�X�E�P�E��E��E�g�E��E��E��E��E�w�E�肷�E��E�B
+			// スケルトンを指定する。
 			modelInitData.m_skeleton = &m_skeleton;		}
 
 		if (isShadowReciever) {
 			modelInitData.m_psEntryPointFunc = "PSMainShadowReciever";
 		}
-		//�E��E��E�f�E��E��E�̏��E��E��E��E��E��E�w�E�肷�E��E�B
+		// モデルの上方向を指定する。
 		modelInitData.m_modelUpAxis = enModelUpAxis;
 
 		modelInitData.m_tkmFilePath = tkmFilePath;
@@ -245,7 +244,7 @@ namespace nsK2Engine {
 		modelInitData.m_colorBufferFormat[2] = DXGI_FORMAT_R8G8B8A8_UNORM;
 
 		if (m_isEnableInstancingDraw) {
-			// �E�C�E��E��E�X�E�^�E��E��E�V�E��E��E�O�E�`�E��E��E��E�s�E��E��E�ꍁE��́A�E�g�E��E�SRV�E�ɃC�E��E��E�X�E�^�E��E��E�V�E��E��E�O�E�`�E��E�p�E�̃f�E�[�E�^�E��E�ݒ肷�E��E�B
+			// インスタンシング描画が有効な場合は、追加SRVにインスタンシング描画用のデータを設定する。
 			modelInitData.m_expandShaderResoruceView[0] = &m_worldMatrixArraySB;
 		}
 		// extra SRVs (slot1=t11, ...) for custom shader
@@ -265,9 +264,9 @@ namespace nsK2Engine {
 		if (m_isEnableInstancingDraw) {
 			worldMatrxiArraySB = &m_worldMatrixArraySB;
 		}
-		
+
 		m_computeAnimationVertexBuffer.Init(
-			tkmFilePath, 
+			tkmFilePath,
 			m_skeleton.GetNumBones(),
 			m_skeleton.GetBoneMatricesTopAddress(),
 			enModelUpAxis,
@@ -285,13 +284,13 @@ namespace nsK2Engine {
 		ModelInitData modelInitData;
 		modelInitData.m_fxFilePath = "Assets/shader/model.fx";
 
-		// �E��E��E�_�E�V�E�F�E�[�E�_�E�[�E�̃G�E��E��E�g�E��E��E�[�E�|�E�C�E��E��E�g�E��E��E�Z�E�b�E�g�E�A�E�b�E�v�E�B
+		// 頂点シェーダーのエントリーポイントをセットアップする。
 		SetupVertexShaderEntryPointFunc(modelInitData);
-		// �E��E��E�_�E�̎��E�O�E�v�E�Z�E��E��E��E��E��E��E�g�E��E��E�B
+		// 頂点の事前計算済みバッファを使う。
 		modelInitData.m_computedAnimationVertexBuffer = &m_computeAnimationVertexBuffer;
 
 		if (m_animationClips != nullptr) {
-			//�E�X�E�P�E��E��E�g�E��E��E��E��E�w�E�肷�E��E�B
+			// スケルトンを指定する。
 			modelInitData.m_skeleton = &m_skeleton;
 		}
 
@@ -301,7 +300,7 @@ namespace nsK2Engine {
 		else {
 			modelInitData.m_psEntryPointFunc = "PSMainHardShadow";
 		}
-		//�E��E��E�f�E��E��E�̏��E��E��E��E��E��E�w�E�肷�E��E�B
+		// モデルの上方向を指定する。
 		modelInitData.m_modelUpAxis = enModelUpAxis;
 		modelInitData.m_expandConstantBuffer = &g_renderingEngine->GetDeferredLightingCB();
 		modelInitData.m_expandConstantBufferSize = sizeof(g_renderingEngine->GetDeferredLightingCB());
@@ -311,7 +310,7 @@ namespace nsK2Engine {
 
 		int expandSRVNo = 0;
 		if (m_isEnableInstancingDraw) {
-			// �E�C�E��E��E�X�E�^�E��E��E�V�E��E��E�O�E�`�E��E��E��E�s�E��E��E�ꍁE��́A�E�g�E��E�SRV�E�ɃC�E��E��E�X�E�^�E��E��E�V�E��E��E�O�E�`�E��E�p�E�̃f�E�[�E�^�E��E�ݒ肷�E��E�B
+			// インスタンシング描画が有効な場合は、追加SRVにインスタンシング描画用のデータを設定する。
 			modelInitData.m_expandShaderResoruceView[expandSRVNo] = &m_worldMatrixArraySB;
 		}
 		expandSRVNo++;
@@ -335,14 +334,14 @@ namespace nsK2Engine {
 		modelInitData.m_tkmFilePath = tkmFilePath;
 		modelInitData.m_modelUpAxis = modelUpAxis;
 		modelInitData.m_cullMode = isFrontCullingOnDrawShadowMap ? D3D12_CULL_MODE_FRONT : D3D12_CULL_MODE_BACK;
-		// �E��E��E�_�E�V�E�F�E�[�E�_�E�[�E�̃G�E��E��E�g�E��E��E�[�E�|�E�C�E��E��E�g�E��E��E�Z�E�b�E�g�E�A�E�b�E�v�E�B
+		// 頂点シェーダーのエントリーポイントをセットアップする。
 		SetupVertexShaderEntryPointFunc(modelInitData);
 
-		// �E��E��E�_�E�̎��E�O�E�v�E�Z�E��E��E��E��E��E��E�g�E��E��E�B
+		// 頂点の事前計算済みバッファを使う。
 		modelInitData.m_computedAnimationVertexBuffer = &m_computeAnimationVertexBuffer;
 
 		if (m_animationClips != nullptr) {
-			//�E�X�E�P�E��E��E�g�E��E��E��E��E�w�E�肷�E��E�B
+			// スケルトンを指定する。
 			modelInitData.m_skeleton = &m_skeleton;
 		}
 
@@ -355,7 +354,7 @@ namespace nsK2Engine {
 		}
 
 		if (m_isEnableInstancingDraw) {
-			// �E�C�E��E��E�X�E�^�E��E��E�V�E��E��E�O�E�`�E��E��E��E�s�E��E��E�ꍁE��́A�E�g�E��E�SRV�E�ɃC�E��E��E�X�E�^�E��E��E�V�E��E��E�O�E�`�E��E�p�E�̃f�E�[�E�^�E��E�ݒ肷�E��E�B
+			// インスタンシング描画が有効な場合は、追加SRVにインスタンシング描画用のデータを設定する。
 			modelInitData.m_expandShaderResoruceView[0] = &m_worldMatrixArraySB;
 		}
 
@@ -383,19 +382,19 @@ namespace nsK2Engine {
 		modelInitData.m_fxFilePath = "Assets/shader/preProcess/ZPrepass.fx";
 		modelInitData.m_modelUpAxis = modelUpAxis;
 
-		// �E��E��E�_�E�V�E�F�E�[�E�_�E�[�E�̃G�E��E��E�g�E��E��E�[�E�|�E�C�E��E��E�g�E��E��E�Z�E�b�E�g�E�A�E�b�E�v�E�B
+		// 頂点シェーダーのエントリーポイントをセットアップする。
 		SetupVertexShaderEntryPointFunc(modelInitData);
-		// �E��E��E�_�E�̎��E�O�E�v�E�Z�E��E��E��E��E��E��E�g�E��E��E�B
+		// 頂点の事前計算済みバッファを使う。
 		modelInitData.m_computedAnimationVertexBuffer = &m_computeAnimationVertexBuffer;
 
 		if (m_animationClips != nullptr) {
-			//�E�X�E�P�E��E��E�g�E��E��E��E��E�w�E�肷�E��E�B
+			// スケルトンを指定する。
 			modelInitData.m_skeleton = &m_skeleton;
 		}
 
 		modelInitData.m_colorBufferFormat[0] = DXGI_FORMAT_R32G32B32A32_FLOAT;
 		if (m_isEnableInstancingDraw) {
-			// �E�C�E��E��E�X�E�^�E��E��E�V�E��E��E�O�E�`�E��E��E��E�s�E��E��E�ꍁE��́A�E�g�E��E�SRV�E�ɃC�E��E��E�X�E�^�E��E��E�V�E��E��E�O�E�`�E��E�p�E�̃f�E�[�E�^�E��E�ݒ肷�E��E�B
+			// インスタンシング描画が有効な場合は、追加SRVにインスタンシング描画用のデータを設定する。
 			modelInitData.m_expandShaderResoruceView[0] = &m_worldMatrixArraySB;
 		}
 
@@ -403,30 +402,29 @@ namespace nsK2Engine {
 	}
 	void ModelRender::UpdateInstancingData(int instanceNo, const Vector3& pos, const Quaternion& rot, const Vector3& scale)
 	{
-		K2_ASSERT(instanceNo < m_maxInstance, "�E�C�E��E��E�X�E�^�E��E��E�X�E�ԍ��E��E��E�s�E��E��E�ł��E�B");
+		K2_ASSERT(instanceNo < m_maxInstance, "インスタンス番号が不正です。");
 		if (!m_isEnableInstancingDraw) {
 			return;
 		}
 		Matrix worldMatrix;
 		if (m_translucentModel.IsInited()) {
-			// �E��E��E��E��E��E��E��E��E�f�E��E��E��E�ZPrepass�E��E��E�f�E��E��E��E��E��E��E��E��E��E��E��E��E�Ă��E�Ȃ��E�̂ŁA�E��E��E��E��E��E��E��E�g�E��E��E�B
+			// 半透明モデルとZPrepassモデルは初期化が分かれているため、半透明モデルを使う。
 			worldMatrix = m_translucentModel.CalcWorldMatrix(pos, rot, scale);
 		}
 		else {
 			worldMatrix = m_zprepassModel.CalcWorldMatrix(pos, rot, scale);
-		} 
-		// �E�C�E��E��E�X�E�^�E��E��E�X�E�ԍ��E��E��E��E�s�E��E�̃C�E��E��E�f�E�b�E�N�E�X�E��E��E�擾�E��E��E��E�B
+		}
+		// インスタンス番号からワールド行列の配列のインデックスを取得する。
 		int matrixArrayIndex = m_instanceNoToWorldMatrixArrayIndexTable[instanceNo];
-		// �E�C�E��E��E�X�E�^�E��E��E�V�E��E��E�O�E�`�E��E��E��E�s�E��E��E�B
+		// インスタンシング描画を実行する。
 		m_worldMatrixArray[matrixArrayIndex] = worldMatrix;
 		if (m_numInstance == 0) {
-			//�E�C�E��E��E�X�E�^�E��E��E�X�E��E��E��E�0�E�̏ꍇ�E�̂݃A�E�j�E��E��E�[�E�V�E��E��E��E��E�֌W�E�̍X�E�V�E��E��E�s�E��E��E�B
-			// �E�X�E�P�E��E��E�g�E��E��E��E��E�X�E�V�E�B
-			// �E�e�E�C�E��E��E�X�E�^�E��E��E�X�E�́E���E�[�E��E��E�h�E��E�Ԃւ̕ϊ��E�́A
-			// �E�C�E��E��E�X�E�^�E��E��E�X�E��E��E�Ƃɍs�E��E��E�K�E�v�E��E��E��E��E��E�̂ŁA�E��E��E�_�E�V�E�F�E�[�E�_�E�[�E�ōs�E��E��E�B
-			// �E�Ȃ̂ŁA�E�P�E�ʍs�E��E��E�n�E��E��E�āA�E��E��E�f�E��E��E��E�ԂŃ{�E�[�E��E��E�s�E��E��E��E�\�E�z�E��E��E��E�B
+			// インスタンス数が0の場合のみアニメーション関係の更新を行う。
+			// スケルトンを更新する。
+			// 各インスタンスのローカルからワールドへの変換は、インスタンスごとに行う必要があるので、
+			// 頂点シェーダーで行う。なので、単一の行列で初期化して、モデル内でボーン行列を構築できる。
 			m_skeleton.Update(g_matIdentity);
-			//�E�A�E�j�E��E��E�[�E�V�E��E��E��E��E��E�i�E�߂�B
+			// アニメーションを進める。
 			m_animation.Progress(g_gameTime->GetFrameDeltaTime() * m_animationSpeed);
 		}
 		m_numInstance++;
@@ -463,36 +461,36 @@ namespace nsK2Engine {
 			m_skeleton.Update(m_zprepassModel.GetWorldMatrix());
 		}
 
-		//�E�A�E�j�E��E��E�[�E�V�E��E��E��E��E��E�i�E�߂�B
+		// アニメーションを進める。
 		m_animation.Progress(g_gameTime->GetFrameDeltaTime() * m_animationSpeed);
 
 	}
 	void ModelRender::Draw(RenderContext& rc)
 	{
 		if (m_isEnableInstancingDraw) {
-			// �E�C�E��E��E�X�E�^�E��E��E�V�E��E��E�O�E�`�E��E�̓r�E��E��E�[�E�t�E��E��E�X�E�^�E��E��E�J�E��E��E��E��E�O�E�͍s�E��E�Ȃ��E�B
+			// インスタンシング描画はビューフラスタムカリングは行わない。
 			g_renderingEngine->AddRenderObject(this);
 			m_worldMatrixArraySB.Update(m_worldMatrixArray.get());
 			m_numInstance = 0;
 		}
 		else {
-			// �E�ʏ�`�E��E�
+			// 通常描画
 			if (m_geometryDatas.empty() || m_geometryDatas[0].IsInViewFrustum()) {
-				// �E�r�E��E��E�[�E�t�E��E��E�X�E�^�E��E��E�Ɋ܂܂�Ă��E��E�B
+				// ビューフラスタムに含まれている。
 				g_renderingEngine->AddRenderObject(this);
 			}
 		}
 	}
-	
+
 	void ModelRender::RemoveInstance(int instanceNo)
-	{		
+	{
 		int matrixIndex = m_instanceNoToWorldMatrixArrayIndexTable[instanceNo];
-		
-		m_worldMatrixArray[matrixIndex] = g_matZero;		
+
+		m_worldMatrixArray[matrixIndex] = g_matZero;
 	}
 	void ModelRender::OnComputeVertex(RenderContext& rc)
 	{
-		// �E��E��E�_�E�̎��E�O�E�v�E�Z�E��E��E��E��E��E��E�f�E�B�E�X�E�p�E�b�E�`�E��E��E��E�B
+		// 頂点の事前計算済みバッファをディスパッチする。
 		if (m_isEnableInstancingDraw) {
 			m_computeAnimationVertexBuffer.Dispatch(rc, m_zprepassModel.GetWorldMatrix(), m_maxInstance);
 		}

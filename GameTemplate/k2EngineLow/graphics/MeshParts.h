@@ -1,5 +1,5 @@
 /// <summary>
-/// ���b�V���p�[�c�N���X�B
+/// メッシュパーツクラス。
 /// </summary>
 
 #pragma once
@@ -17,45 +17,45 @@ namespace nsK2EngineLow {
 	struct MaterialReInitData;
 
 
-	const int MAX_MODEL_EXPAND_SRV = 32;	//�g��SRV�̍ő吔�B
+	const int MAX_MODEL_EXPAND_SRV = 32;	//拡張SRVの最大数。
 
 	/// <summary>
-	/// ���b�V��
+	/// メッシュ
 	/// </summary>
 	struct SMesh {
-		VertexBuffer m_vertexBuffer;							// ���_�o�b�t�@�B
-		std::vector< IndexBuffer* >		m_indexBufferArray;		// �C���f�b�N�X�o�b�t�@�B
-		std::vector< Material* >		m_materials;			// �}�e���A���B
-		std::vector<int>				skinFlags;				// �X�L���������Ă��邩�ǂ����̃t���O�B
+		VertexBuffer m_vertexBuffer;							// 頂点バッファ。
+		std::vector< IndexBuffer* >		m_indexBufferArray;		// インデックスバッファ。
+		std::vector< Material* >		m_materials;			// マテリアル。
+		std::vector<int>				skinFlags;				// スキンが設定されているかどうかのフラグ。
 	};
 
 	/// <summary>
-	/// ���b�V���p�[�c�B
+	/// メッシュパーツ。
 	/// </summary>
 	class MeshParts : public Noncopyable {
 	public:
 		/// <summary>
-		/// �f�X�g���N�^�B
+		/// デストラクタ。
 		/// </summary>
 		~MeshParts();
-		
+
 		/// <summary>
-		/// tkm�t�@�C�����珉����
+		/// tkmファイルから初期化
 		/// </summary>
-		/// <param name="tkmFile">tkm�t�@�C���̃t�@�C���p�X</param>
-		/// <param name="fxFilePath">�V�F�[�_�[�t�@�C���̃t�@�C���p�X</param>
-		/// <param name="vsEntryPointFunc">�X�L���Ȃ����_�V�F�[�_�[�̃G���g���[�|�C���g��</param>
-		/// <param name="vsSkinEntryPointFunc">�X�L�����蒸�_�V�F�[�_�[�̃G���g���[�|�C���g��</param>
-		/// <param name="psEntryPointFunc">�s�N�Z���V�F�[�_�[�̃G���g���[�|�C���g��</param>
-		/// <param name="expandData">�g���萔�o�b�t�@�Bb1�Ƀo�C���h����܂��B</param>
-		/// <param name="expandDataSize">�g���萔�o�b�t�@�̃T�C�Y</param>
-		/// <param name="expandShaderResourceView">�g���V�F�[�_�[���\�[�X�r���[�̔z��</param>
-		/// <param name="colorBufferFormat">�����_�����O�^�[�Q�b�g�̃J���[�o�b�t�@�t�H�[�}�b�g�̔z��B</param>
-		/// <param name="alphaBlendMode">�A���t�@�u�����f�B���O���[�h</param>
-		/// <param name="isDepthWrite">�[�x�o�b�t�@�ɏ������ނ��ǂ����̃t���O</param>
-		/// <param name="isDepthTest">�[�x�e�X�g���s�������ۂ̃t���O�B</param>
-		/// <param name="cullMode">�J�����O���[�h</param>
-		/// <param name="computedAnimationVertexBuffer">�A�j���[�V�����ςݒ��_�o�b�t�@���v�Z���鏈���B</param>
+		/// <param name="tkmFile">tkmファイルのファイルパス</param>
+		/// <param name="fxFilePath">シェーダーファイルのファイルパス</param>
+		/// <param name="vsEntryPointFunc">スキンなし頂点シェーダーのエントリーポイント名</param>
+		/// <param name="vsSkinEntryPointFunc">スキンあり頂点シェーダーのエントリーポイント名</param>
+		/// <param name="psEntryPointFunc">ピクセルシェーダーのエントリーポイント名</param>
+		/// <param name="expandData">拡張定数バッファ。b1にバインドされます。</param>
+		/// <param name="expandDataSize">拡張定数バッファのサイズ</param>
+		/// <param name="expandShaderResourceView">拡張シェーダーリソースビューの配列</param>
+		/// <param name="colorBufferFormat">レンダリングターゲットのカラーバッファフォーマットの配列。</param>
+		/// <param name="alphaBlendMode">アルファブレンディングモード</param>
+		/// <param name="isDepthWrite">深度バッファに書き込むかどうかのフラグ</param>
+		/// <param name="isDepthTest">深度テストを行う際のフラグ。</param>
+		/// <param name="cullMode">カリングモード</param>
+		/// <param name="computedAnimationVertexBuffer">アニメーション済み頂点バッファを計算する処理。</param>
 		void InitFromTkmFile(
 			const TkmFile& tkmFile,
 			const char* fxFilePath,
@@ -75,13 +75,13 @@ namespace nsK2EngineLow {
 			ComputeAnimationVertexBuffer* computedAnimationVertexBuffer
 		);
 		/// <summary>
-		/// �`��B
+		/// 描画。
 		/// </summary>
-		/// <param name="rc">�����_�����O�R���e�L�X�g</param>
-		/// <param name="mWorld">���[���h�s��</param>
-		/// <param name="mView">�r���[�s��</param>
-		/// <param name="mProj">�v���W�F�N�V�����s��</param>
-		/// <param name="numInstance">�C���X�^���X�̐�</param>
+		/// <param name="rc">レンダリングコンテキスト</param>
+		/// <param name="mWorld">ワールド行列</param>
+		/// <param name="mView">ビュー行列</param>
+		/// <param name="mProj">プロジェクション行列</param>
+		/// <param name="numInstance">インスタンスの数</param>
 		void Draw(
 			RenderContext& rc,
 			const Matrix& mWorld,
@@ -89,12 +89,12 @@ namespace nsK2EngineLow {
 			const Matrix& mProj,
 			int numInstance);
 		/// <summary>
-		/// �X�P���g�����֘A�t����B
+		/// スケルトンを関連付ける。
 		/// </summary>
-		/// <param name="skeleton">�X�P���g��</param>
+		/// <param name="skeleton">スケルトン</param>
 		void BindSkeleton(Skeleton& skeleton);
 		/// <summary>
-		/// �A�j���[�V�����ςݒ��_�o�b�t�@�̌v�Z�������s���Ă���H
+		/// アニメーション済み頂点バッファの計算処理を行っているか？
 		/// </summary>
 		/// <returns></returns>
 		bool IsComputedAnimationVertexBuffer() const
@@ -102,24 +102,24 @@ namespace nsK2EngineLow {
 			return m_computedAnimationVertexBuffer != nullptr;
 		}
 		/// <summary>
-		/// �A�j���[�V�����v�Z�ςݒ��_�o�b�t�@���擾�B
+		/// アニメーション計算済み頂点バッファを取得。
 		/// </summary>
-		/// <param name="meshNo">���b�V���̔ԍ�</param>
-		/// <returns>���_�o�b�t�@</returns>
+		/// <param name="meshNo">メッシュの番号</param>
+		/// <returns>頂点バッファ</returns>
 		const VertexBuffer& GetAnimatedVertexBuffer(int meshNo) const;
 		VertexBuffer& GetAnimatedVertexBuffer(int meshNo);
 		/// <summary>
-		/// ���O�v�Z�ς݃C���f�b�N�X�o�b�t�@���擾
+		/// 事前計算済みインデックスバッファを取得
 		/// </summary>
-		/// <param name="meshNo">���b�V���ԍ�</param>
-		/// <param name="matNo">�}�e���A���ԍ�</param>
+		/// <param name="meshNo">メッシュ番号</param>
+		/// <param name="matNo">マテリアル番号</param>
 		/// <returns></returns>
 		const IndexBuffer& GetAnimatedIndexBuffer(int meshNo, int matNo) const;
 		IndexBuffer& GetAnimatedIndexBuffer(int meshNo, int matNo);
 		/// <summary>
-		/// ���b�V���ɑ΂��Ė₢���킹���s���B
+		/// メッシュに対して問い合わせを行う。
 		/// </summary>
-		/// <param name="queryFunc">�N�G���֐�</param>
+		/// <param name="queryFunc">クエリ関数</param>
 		void QueryMeshs(std::function<void(const SMesh& mesh)> queryFunc)
 		{
 			for (const auto& mesh : m_meshs) {
@@ -133,18 +133,18 @@ namespace nsK2EngineLow {
 			}
 		}
 		/// <summary>
-		/// �f�B�X�N���v�^�q�[�v���쐬�B
+		/// ディスクリプタヒープを作成。
 		/// </summary>
 		void CreateDescriptorHeaps();
 		/// <summary>
-		/// �}�e���A�����ď������B
+		/// マテリアルを再初期化。
 		/// </summary>
 		void ReInitMaterials(const MaterialReInitData& reInitData);
 		/// <summary>
-		/// ���b�V�����擾�B
+		/// メッシュを取得。
 		/// </summary>
-		/// <param name="meshNo">���b�V���ԍ�</param>
-		/// <returns>���b�V��</returns>
+		/// <param name="meshNo">メッシュ番号</param>
+		/// <returns>メッシュ</returns>
 		const SMesh& GetMesh(int meshNo) const
 		{
 			return *m_meshs.at(meshNo);
@@ -155,20 +155,20 @@ namespace nsK2EngineLow {
 		}
 	private:
 		/// <summary>
-		/// tkm���b�V�����烁�b�V�����쐬�B
+		/// tkmメッシュからメッシュを作成。
 		/// </summary>
-		/// <param name="mesh">���b�V��</param>
-		/// <param name="meshNo">���b�V���ԍ�</param>
-		/// <param name="fxFilePath">fx�t�@�C���̃t�@�C���p�X</param>
-		/// <param name="vsEntryPointFunc">���_�V�F�[�_�[�̃G���g���[�|�C���g�̊֐���</param>
-		/// <param name="vsSkinEntryPointFunc">�X�L������}�e���A���p�̒��_�V�F�[�_�[�̃G���g���[�|�C���g�̊֐���</param>
-		/// <param name="psEntryPointFunc">�s�N�Z���V�F�[�_�[�̃G���g���[�|�C���g�̊֐���</param>
-		/// <param name="colorBufferFormat">���̃��f���������_�����O����J���[�o�b�t�@�̃t�H�[�}�b�g�̔z��</param>
-		/// <param name="alphaBlendMode">�A���t�@�u�����f�B���O���[�h</param>
-		/// <param name="isDepthWrite">�[�x�l��[�x�o�b�t�@�ɏ������ނ��̃t���O</param>
-		/// <param name="isDepthTest">�[�x�e�X�g���s�����ǂ����̃t���O</param>
-		/// <param name="cullMode">�J�����O���[�h</param>
-		/// <param name="computedAnimationVertexBuffer">�A�j���[�V�����ςݒ��_�o�b�t�@���v�Z���鏈���B</param>
+		/// <param name="mesh">メッシュ</param>
+		/// <param name="meshNo">メッシュ番号</param>
+		/// <param name="fxFilePath">fxファイルのファイルパス</param>
+		/// <param name="vsEntryPointFunc">頂点シェーダーのエントリーポイントの関数名</param>
+		/// <param name="vsSkinEntryPointFunc">スキンありマテリアル用の頂点シェーダーのエントリーポイントの関数名</param>
+		/// <param name="psEntryPointFunc">ピクセルシェーダーのエントリーポイントの関数名</param>
+		/// <param name="colorBufferFormat">このモデルをレンダリングするカラーバッファのフォーマットの配列</param>
+		/// <param name="alphaBlendMode">アルファブレンディングモード</param>
+		/// <param name="isDepthWrite">深度値を深度バッファに書き込む際のフラグ</param>
+		/// <param name="isDepthTest">深度テストを行うかどうかのフラグ</param>
+		/// <param name="cullMode">カリングモード</param>
+		/// <param name="computedAnimationVertexBuffer">アニメーション済み頂点バッファを計算する処理。</param>
 		void CreateMeshFromTkmMesh(
 			const TkmFile::SMesh& mesh,
 			int meshNo,
@@ -187,34 +187,34 @@ namespace nsK2EngineLow {
 
 
 	private:
-		//�g��SRV���ݒ肳��郌�W�X�^�̊J�n�ԍ��B
+		//拡張SRVが設定されるレジスタの開始番号。
 		const int EXPAND_SRV_REG__START_NO = 10;
-		//�P�̃}�e���A���Ŏg�p�����SRV�̐��B
+		//1つのマテリアルで使用されるSRVの数。
 		const int NUM_SRV_ONE_MATERIAL = EXPAND_SRV_REG__START_NO + MAX_MODEL_EXPAND_SRV;
-		//�P�̃}�e���A���Ŏg�p�����CBV�̐��B
+		//1つのマテリアルで使用されるCBVの数。
 		const int NUM_CBV_ONE_MATERIAL = 3;
 		/// <summary>
-		/// �萔�o�b�t�@�B
+		/// 定数バッファ。
 		/// </summary>
 		/// <remarks>
-		/// ���̍\���̂�ύX������ASimpleModel.fx��CB���ύX����悤�ɁB
+		/// この構造体を変更したら、SimpleModel.fxのCBを変更するように。
 		/// </remarks>
 		struct SConstantBuffer {
-			Matrix mWorld;		//���[���h�s��B
-			Matrix mView;		//�r���[�s��B
-			Matrix mProj;		//�v���W�F�N�V�����s��B
+			Matrix mWorld;		//ワールド行列。
+			Matrix mView;		//ビュー行列。
+			Matrix mProj;		//プロジェクション行列。
 		};
-		ConstantBuffer m_commonConstantBuffer;					// ���b�V�����ʂ̒萔�o�b�t�@�B
-		ConstantBuffer m_expandConstantBuffer;					// ���[�U�[�g���p�̒萔�o�b�t�@ (b1)
-		ConstantBuffer m_expandConstantBuffer2;					// ���[�U�[�g���p�̒萔�o�b�t�@2 (b2) �X�v���b�g�p
-		std::array<IShaderResource*, MAX_MODEL_EXPAND_SRV> m_expandShaderResourceView = { nullptr };	//���[�U�[�g���V�F�[�_�[���\�[�X�r���[�B
-		StructuredBuffer m_boneMatricesStructureBuffer;			// �{�[���s��̍\�����o�b�t�@�B
-		std::vector< SMesh* > m_meshs;							// ���b�V���B
-		//std::vector< DescriptorHeap > m_descriptorHeap;		// �f�B�X�N���v�^�q�[�v�B
-		DescriptorHeap m_descriptorHeap;						// �f�B�X�N���v�^�q�[�v�B
-		Skeleton* m_skeleton = nullptr;							// �X�P���g���B
-		void* m_expandData = nullptr;							// ���[�U�[�g���f�[�^�B (b1)
-		void* m_expandData2 = nullptr;							// ���[�U�[�g���f�[�^2 (b2)
-		ComputeAnimationVertexBuffer* m_computedAnimationVertexBuffer = nullptr;	// �A�j���[�V�����ςݒ��_�o�b�t�@���v�Z���鏈���B
+		ConstantBuffer m_commonConstantBuffer;					// メッシュ共通の定数バッファ。
+		ConstantBuffer m_expandConstantBuffer;					// ユーザー用の定数バッファ (b1)
+		ConstantBuffer m_expandConstantBuffer2;					// ユーザー用の定数バッファ2 (b2) スプラット用
+		std::array<IShaderResource*, MAX_MODEL_EXPAND_SRV> m_expandShaderResourceView = { nullptr };	//ユーザー用シェーダーリソースビュー。
+		StructuredBuffer m_boneMatricesStructureBuffer;			// ボーン行列の構造化バッファ。
+		std::vector< SMesh* > m_meshs;							// メッシュ。
+		//std::vector< DescriptorHeap > m_descriptorHeap;		// ディスクリプタヒープ。
+		DescriptorHeap m_descriptorHeap;						// ディスクリプタヒープ。
+		Skeleton* m_skeleton = nullptr;							// スケルトン。
+		void* m_expandData = nullptr;							// ユーザー用データ。 (b1)
+		void* m_expandData2 = nullptr;							// ユーザー用データ2 (b2)
+		ComputeAnimationVertexBuffer* m_computedAnimationVertexBuffer = nullptr;	// アニメーション済み頂点バッファを計算する処理。
 	};
 }
