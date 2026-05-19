@@ -22,7 +22,7 @@ namespace
 
     /* スプラットマップ */
     constexpr float SPLAT_MAP_GRASS_LUMINANCE = 1.0f;   // 草の明るさ
-    constexpr float SPLAT_MAP_CRAY_LUMINANCE = 1.0f;    // 土の明るさ
+    constexpr float SPLAT_MAP_CLAY_LUMINANCE = 1.0f;    // 土の明るさ
     constexpr float SPLAT_MAP_HUMUS_LUMINANCE = 1.0f;   // 腐葉土の明るさ
     constexpr float SPLAT_MAP_WHOLE_LUMINANCE = 3.0f;   // 全体の明るさ
     constexpr float SPLAT_MAP_SATURATION = 2.5f; // 彩度
