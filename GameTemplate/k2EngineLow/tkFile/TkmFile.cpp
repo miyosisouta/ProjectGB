@@ -11,7 +11,7 @@ namespace nsK2EngineLow {
 			TkmFile::SVertex* vertex = nullptr;
 		};
 	}
-	//–@üƒXƒ€[ƒWƒ“ƒOB
+	//ï¿½@ï¿½ï¿½ï¿½Xï¿½ï¿½ï¿½[ï¿½Wï¿½ï¿½ï¿½Oï¿½B
 	class NormalSmoothing {
 	private:
 		
@@ -24,7 +24,7 @@ namespace nsK2EngineLow {
 		void Execute(TkmFile::SMesh& mesh, const IndexBuffer& indexBuffer, BSP& bsp)
 		{
 
-			//ƒXƒeƒbƒv‚P–Ê–@ü‚ğŒvZ‚µ‚Ä‚¢‚­B
+			//ï¿½Xï¿½eï¿½bï¿½vï¿½Pï¿½Ê–@ï¿½ï¿½ï¿½ï¿½ï¿½vï¿½Zï¿½ï¿½ï¿½Ä‚ï¿½ï¿½ï¿½ï¿½B
 			auto numPolygon = indexBuffer.indices.size() / 3;
 			std::vector< SFace> faces;
 			faces.reserve(numPolygon);
@@ -39,7 +39,7 @@ namespace nsK2EngineLow {
 				auto& vert_1 = mesh.vertexBuffer[vertNo_1];
 				auto& vert_2 = mesh.vertexBuffer[vertNo_2];
 
-				//–@ü‚ğŒvZ‚·‚éB
+				//ï¿½@ï¿½ï¿½ï¿½ï¿½ï¿½vï¿½Zï¿½ï¿½ï¿½ï¿½B
 				Vector3 v0tov1 = vert_1.pos - vert_0.pos;
 				Vector3 v0tov2 = vert_2.pos - vert_0.pos;
 				Vector3 normal = Cross(v0tov1, v0tov2);
@@ -52,7 +52,7 @@ namespace nsK2EngineLow {
 				faces.push_back(face);
 			}
 
-			//ƒXƒeƒbƒv‚Q@–@ü‚Ì•½‹Ï‰»
+			//ï¿½Xï¿½eï¿½bï¿½vï¿½Qï¿½@ï¿½@ï¿½ï¿½ï¿½Ì•ï¿½ï¿½Ï‰ï¿½
 			for (auto& face : faces) {
 				for (auto vertNo : face.vertexNos) {
 					auto& vert = mesh.vertexBuffer[vertNo];
@@ -65,49 +65,49 @@ namespace nsK2EngineLow {
 		}
 	};
 	/// <summary>
-	/// TKMƒtƒ@ƒCƒ‹ƒtƒH[ƒ}ƒbƒgB
+	/// TKMï¿½tï¿½@ï¿½Cï¿½ï¿½ï¿½tï¿½Hï¿½[ï¿½}ï¿½bï¿½gï¿½B
 	/// </summary>
 	/// <remarks>
-	/// ˆ—Œn‚É‚æ‚Á‚Ä‚Í1ƒoƒCƒg‚ª8bit‚Å‚È‚¢‚±‚Æ‚ª‚ ‚èA
-	/// intŒ^‚âshortŒ^‚ª•K‚¸‚µ‚àA4ƒoƒCƒgA2ƒoƒCƒg‚Å‚ ‚é‚Æ‚ÍŒÀ‚ç‚È‚¢B
-	/// ‚»‚Ì‚½‚ßAstd::uint16_t‚âstd::uint32_t‚ğ—˜—p‚µ‚Ä‚¢‚éB
-	/// ‚±‚ê‚ç‚Í’è‹`‚³‚ê‚Ä‚¢‚éˆ—Œn‚Å‚ ‚ê‚ÎAƒTƒCƒY‚Í•K‚¸“¯‚¶‚Å‚ ‚éB
+	/// ï¿½ï¿½ï¿½ï¿½ï¿½nï¿½É‚ï¿½ï¿½ï¿½Ä‚ï¿½1ï¿½oï¿½Cï¿½gï¿½ï¿½8bitï¿½Å‚È‚ï¿½ï¿½ï¿½ï¿½Æ‚ï¿½ï¿½ï¿½ï¿½ï¿½A
+	/// intï¿½^ï¿½ï¿½shortï¿½^ï¿½ï¿½ï¿½Kï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½A4ï¿½oï¿½Cï¿½gï¿½A2ï¿½oï¿½Cï¿½gï¿½Å‚ï¿½ï¿½ï¿½Æ‚ÍŒï¿½ï¿½ï¿½È‚ï¿½ï¿½B
+	/// ï¿½ï¿½ï¿½Ì‚ï¿½ï¿½ßAstd::uint16_tï¿½ï¿½std::uint32_tï¿½ğ—˜—pï¿½ï¿½ï¿½Ä‚ï¿½ï¿½ï¿½B
+	/// ï¿½ï¿½ï¿½ï¿½ï¿½Í’ï¿½`ï¿½ï¿½ï¿½ï¿½Ä‚ï¿½ï¿½éˆï¿½ï¿½ï¿½nï¿½Å‚ï¿½ï¿½ï¿½ÎAï¿½Tï¿½Cï¿½Yï¿½Í•Kï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Å‚ï¿½ï¿½ï¿½B
 	/// </remarks>
 	namespace tkmFileFormat {
-		//Œ»İ‚ÌTKMƒtƒ@ƒCƒ‹‚Ìƒo[ƒWƒ‡ƒ“B
+		//ï¿½ï¿½ï¿½İ‚ï¿½TKMï¿½tï¿½@ï¿½Cï¿½ï¿½ï¿½Ìƒoï¿½[ï¿½Wï¿½ï¿½ï¿½ï¿½ï¿½B
 		std::uint16_t VERSION = 100;
 		/// <summary>
-		/// ƒwƒbƒ_[ƒtƒ@ƒCƒ‹B
+		/// ï¿½wï¿½bï¿½_ï¿½[ï¿½tï¿½@ï¿½Cï¿½ï¿½ï¿½B
 		/// </summary>
 		struct SHeader {
-			std::uint8_t	version;		//ƒo[ƒWƒ‡ƒ“B
-			std::uint8_t	isFlatShading;	//ƒtƒ‰ƒbƒgƒVƒF[ƒfƒBƒ“ƒOH
-			std::uint16_t	numMeshParts;	//ƒƒbƒVƒ…ƒp[ƒc‚Ì”B
+			std::uint8_t	version;		//ï¿½oï¿½[ï¿½Wï¿½ï¿½ï¿½ï¿½ï¿½B
+			std::uint8_t	isFlatShading;	//ï¿½tï¿½ï¿½ï¿½bï¿½gï¿½Vï¿½Fï¿½[ï¿½fï¿½Bï¿½ï¿½ï¿½Oï¿½H
+			std::uint16_t	numMeshParts;	//ï¿½ï¿½ï¿½bï¿½Vï¿½ï¿½ï¿½pï¿½[ï¿½cï¿½Ìï¿½ï¿½B
 		};
 		/// <summary>
-		/// ƒƒbƒVƒ…ƒp[ƒcƒwƒbƒ_[B
+		/// ï¿½ï¿½ï¿½bï¿½Vï¿½ï¿½ï¿½pï¿½[ï¿½cï¿½wï¿½bï¿½_ï¿½[ï¿½B
 		/// </summary>
 		struct SMeshePartsHeader {
-			std::uint32_t numMaterial;		//ƒ}ƒeƒŠƒAƒ‹‚Ì”B
-			std::uint32_t numVertex;		//’¸“_”B
-			std::uint8_t indexSize;			//ƒCƒ“ƒfƒbƒNƒX‚ÌƒTƒCƒYB2‚©4B
-			std::uint8_t pad[3];			//ƒpƒfƒBƒ“ƒOB
+			std::uint32_t numMaterial;		//ï¿½}ï¿½eï¿½ï¿½ï¿½Aï¿½ï¿½ï¿½Ìï¿½ï¿½B
+			std::uint32_t numVertex;		//ï¿½ï¿½ï¿½_ï¿½ï¿½ï¿½B
+			std::uint8_t indexSize;			//ï¿½Cï¿½ï¿½ï¿½fï¿½bï¿½Nï¿½Xï¿½ÌƒTï¿½Cï¿½Yï¿½B2ï¿½ï¿½4ï¿½B
+			std::uint8_t pad[3];			//ï¿½pï¿½fï¿½Bï¿½ï¿½ï¿½Oï¿½B
 		};
 		/// <summary>
-		/// ’¸“_
+		/// ï¿½ï¿½ï¿½_
 		/// </summary>
 		struct SVertex {
-			float pos[3];					//’¸“_À•WB
-			float normal[3];				//–@üB
-			float uv[2];					//UVÀ•WB
-			float weights[4];				//ƒXƒLƒ“ƒEƒFƒCƒgB
-			std::int16_t indices[4];		//ƒXƒLƒ“ƒCƒ“ƒfƒbƒNƒXB
+			float pos[3];					//ï¿½ï¿½ï¿½_ï¿½ï¿½ï¿½Wï¿½B
+			float normal[3];				//ï¿½@ï¿½ï¿½ï¿½B
+			float uv[2];					//UVï¿½ï¿½ï¿½Wï¿½B
+			float weights[4];				//ï¿½Xï¿½Lï¿½ï¿½ï¿½Eï¿½Fï¿½Cï¿½gï¿½B
+			std::int16_t indices[4];		//ï¿½Xï¿½Lï¿½ï¿½ï¿½Cï¿½ï¿½ï¿½fï¿½bï¿½Nï¿½Xï¿½B
 		};
 	};
 	template< class IndexBuffer>
 	void BuildTangentAndBiNormalImp(TkmFile::SMesh& mesh, const IndexBuffer& indexBuffer)
 	{
-		//’¸“_ƒXƒ€[ƒX‚Í‹C‚É‚µ‚È‚¢B
+		//ï¿½ï¿½ï¿½_ï¿½Xï¿½ï¿½ï¿½[ï¿½Xï¿½Í‹Cï¿½É‚ï¿½ï¿½È‚ï¿½ï¿½B
 		auto numPolygon = indexBuffer.indices.size() / 3;
 		for (auto polyNo = 0; polyNo < numPolygon; polyNo++) {
 			auto no = polyNo * 3;
@@ -137,7 +137,7 @@ namespace nsK2EngineLow {
 				{ vert_2.pos.z, vert_2.uv.x, vert_2.uv.y}
 			};
 
-			// •½–Êƒpƒ‰ƒ[ƒ^‚©‚çUV²À•WZo‚·‚éB
+			// ï¿½ï¿½ï¿½Êƒpï¿½ï¿½ï¿½ï¿½ï¿½[ï¿½^ï¿½ï¿½ï¿½ï¿½UVï¿½ï¿½ï¿½ï¿½ï¿½Wï¿½Zï¿½oï¿½ï¿½ï¿½ï¿½B
 			Vector3 tangent, binormal;
 			for (int i = 0; i < 3; ++i) {
 				auto V1 = cp1[i] - cp0[i];
@@ -165,13 +165,13 @@ namespace nsK2EngineLow {
 			vert_1.binormal += binormal;
 			vert_2.binormal += binormal;
 		}
-		//–@üAÚƒxƒNƒgƒ‹A]ƒxƒNƒgƒ‹‚ğ•½‹Ï‰»‚·‚éB
+		//ï¿½@ï¿½ï¿½ï¿½Aï¿½Úƒxï¿½Nï¿½gï¿½ï¿½ï¿½Aï¿½]ï¿½xï¿½Nï¿½gï¿½ï¿½ï¿½ğ•½‹Ï‰ï¿½ï¿½ï¿½ï¿½ï¿½B
 		for (auto& vert : mesh.vertexBuffer) {
 			vert.tangent.Normalize();
 			vert.binormal.Normalize();
 			if (vert.tangent.Length() < 0.001f) {
 				if (vert.normal.y > 0.998f) {
-					// –@ü‚ª‚Ù‚ÚY²‚ğŒü‚¢‚Ä‚¢‚éB
+					// ï¿½@ï¿½ï¿½ï¿½ï¿½ï¿½Ù‚ï¿½Yï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä‚ï¿½ï¿½ï¿½B
 					vert.tangent = g_vec3AxisX;
 				}
 				else {
@@ -191,7 +191,7 @@ namespace nsK2EngineLow {
 
 		if (fileNameLen > 0) {
 			char* localFileName = reinterpret_cast<char*>(malloc(fileNameLen + 1));
-			//ƒkƒ‹•¶š•ª‚à“Ç‚İ‚Ş‚Ì‚Å{‚P
+			//ï¿½kï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ç‚İï¿½ï¿½Ş‚Ì‚Å{ï¿½P
 			fread(localFileName, fileNameLen + 1, 1, fp);
 			fileName = localFileName;
 			free(localFileName);
@@ -206,8 +206,8 @@ namespace nsK2EngineLow {
 		for (int indexNo = 0; indexNo < numIndex; indexNo++) {
 			T index;
 			fread(&index, sizeof(index), 1, fp);
-			indices[indexNo] = index - 1;	//todo max‚ÌƒCƒ“ƒfƒbƒNƒX‚Í1‚©‚çŠJn‚µ‚Ä‚¢‚é‚Ì‚ÅA-1‚·‚éB
-										//todo ƒGƒNƒXƒ|[ƒ^[‚ÅŒ¸‚ç‚·‚æ‚¤‚É‚µ‚Ü‚µ‚å‚¤B
+			indices[indexNo] = index - 1;	//todo maxï¿½ÌƒCï¿½ï¿½ï¿½fï¿½bï¿½Nï¿½Xï¿½ï¿½1ï¿½ï¿½ï¿½ï¿½Jï¿½nï¿½ï¿½ï¿½Ä‚ï¿½ï¿½ï¿½Ì‚ÅA-1ï¿½ï¿½ï¿½ï¿½B
+										//todo ï¿½Gï¿½Nï¿½Xï¿½|ï¿½[ï¿½^ï¿½[ï¿½ÅŒï¿½ï¿½ç‚·ï¿½æ‚¤ï¿½É‚ï¿½ï¿½Ü‚ï¿½ï¿½å‚¤ï¿½B
 		}
 	}
 
@@ -218,15 +218,15 @@ namespace nsK2EngineLow {
 		bool isLoadTexture, 
 		bool isOutputErrorCodeTTY
 	){
-		//ƒAƒ‹ƒxƒh‚Ìƒtƒ@ƒCƒ‹–¼‚ğƒ[ƒhB
+		//ï¿½Aï¿½ï¿½ï¿½xï¿½hï¿½Ìƒtï¿½@ï¿½Cï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½[ï¿½hï¿½B
 		tkmMat.albedoMapFileName = LoadTextureFileName(fp);
-		//–@üƒ}ƒbƒv‚Ìƒtƒ@ƒCƒ‹–¼‚ğƒ[ƒhB
+		//ï¿½@ï¿½ï¿½ï¿½}ï¿½bï¿½vï¿½Ìƒtï¿½@ï¿½Cï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½[ï¿½hï¿½B
 		tkmMat.normalMapFileName = LoadTextureFileName(fp);
-		//ƒXƒyƒLƒ…ƒ‰ƒ}ƒbƒv‚Ìƒtƒ@ƒCƒ‹–¼‚ğƒ[ƒhB
+		//ï¿½Xï¿½yï¿½Lï¿½ï¿½ï¿½ï¿½ï¿½}ï¿½bï¿½vï¿½Ìƒtï¿½@ï¿½Cï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½[ï¿½hï¿½B
 		tkmMat.specularMapFileName = LoadTextureFileName(fp);
-		//ƒŠƒtƒŒƒNƒVƒ‡ƒ“ƒ}ƒbƒv‚Ìƒtƒ@ƒCƒ‹–¼‚ğƒ[ƒhB
+		//ï¿½ï¿½ï¿½tï¿½ï¿½ï¿½Nï¿½Vï¿½ï¿½ï¿½ï¿½ï¿½}ï¿½bï¿½vï¿½Ìƒtï¿½@ï¿½Cï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½[ï¿½hï¿½B
 		tkmMat.reflectionMapFileName = LoadTextureFileName(fp);
-		//‹üÜƒ}ƒbƒv‚Ìƒtƒ@ƒCƒ‹–¼‚ğƒ[ƒhB
+		//ï¿½ï¿½ï¿½Üƒ}ï¿½bï¿½vï¿½Ìƒtï¿½@ï¿½Cï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½[ï¿½hï¿½B
 		tkmMat.refractionMapFileName = LoadTextureFileName(fp);
 
 		std::string texFilePath = filePath;
@@ -236,7 +236,7 @@ namespace nsK2EngineLow {
 			) {
 			int filePathLength = static_cast<int>(texFilePath.length());
 			if (texFileName.length() > 0) {
-				//ƒ‚ƒfƒ‹‚Ìƒtƒ@ƒCƒ‹ƒpƒX‚©‚çƒ‰ƒXƒg‚ÌƒtƒHƒ‹ƒ_‹æØ‚è‚ğ’T‚·B
+				//ï¿½ï¿½ï¿½fï¿½ï¿½ï¿½Ìƒtï¿½@ï¿½Cï¿½ï¿½ï¿½pï¿½Xï¿½ï¿½ï¿½çƒ‰ï¿½Xï¿½gï¿½Ìƒtï¿½Hï¿½ï¿½ï¿½_ï¿½ï¿½Ø‚ï¿½ï¿½Tï¿½ï¿½ï¿½B
 				auto replaseStartPos = texFilePath.find_last_of('/');
 				if (replaseStartPos == std::string::npos) {
 					replaseStartPos = texFilePath.find_last_of('\\');
@@ -244,19 +244,19 @@ namespace nsK2EngineLow {
 				replaseStartPos += 1;
 				auto replaceLen = filePathLength - replaseStartPos;
 				texFilePath.replace(replaseStartPos, replaceLen, texFileName);
-				//Šg’£q‚ğdds‚É•ÏX‚·‚éB
+				//ï¿½gï¿½ï¿½ï¿½qï¿½ï¿½ddsï¿½É•ÏXï¿½ï¿½ï¿½ï¿½B
 				replaseStartPos = texFilePath.find_last_of('.') + 1;
 				replaceLen = texFilePath.length() - replaseStartPos;
 				texFilePath.replace(replaseStartPos, replaceLen, "dds");
 
-				// ƒeƒNƒXƒ`ƒƒ‚ğƒŠƒ\[ƒXƒoƒ“ƒN‚©‚çæ“¾‚·‚éB
+				// ï¿½eï¿½Nï¿½Xï¿½`ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½\ï¿½[ï¿½Xï¿½oï¿½ï¿½ï¿½Nï¿½ï¿½ï¿½ï¿½æ“¾ï¿½ï¿½ï¿½ï¿½B
 				lowTexture = g_engine->GetLowTextureFromBank(texFilePath.c_str());
 				if (lowTexture == nullptr) {
 					lowTexture = new LowTexture();
-					// ƒoƒ“ƒN‚©‚çæ“¾‚Å‚«‚È‚©‚Á‚½‚Ì‚ÅAV‹KƒeƒNƒXƒ`ƒƒB
+					// ï¿½oï¿½ï¿½ï¿½Nï¿½ï¿½ï¿½ï¿½æ“¾ï¿½Å‚ï¿½ï¿½È‚ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ì‚ÅAï¿½Vï¿½Kï¿½eï¿½Nï¿½Xï¿½`ï¿½ï¿½ï¿½B
 					FILE* texFileFp = fopen(texFilePath.c_str(), "rb");
 					if (texFileFp != nullptr) {
-						//ƒtƒ@ƒCƒ‹ƒTƒCƒY‚ğæ“¾B
+						//ï¿½tï¿½@ï¿½Cï¿½ï¿½ï¿½Tï¿½Cï¿½Yï¿½ï¿½ï¿½æ“¾ï¿½B
 						fseek(texFileFp, 0L, SEEK_END);
 						lowTexture->dataSize = ftell(texFileFp);
 						fseek(texFileFp, 0L, SEEK_SET);
@@ -265,14 +265,14 @@ namespace nsK2EngineLow {
 						fread(lowTexture->data.get(), lowTexture->dataSize, 1, texFileFp);
 						fclose(texFileFp);
 						lowTexture->filePath = texFilePath;
-						// ƒ[ƒh‚µ‚½ƒeƒNƒXƒ`ƒƒ‚ğƒoƒ“ƒN‚É“o˜^‚·‚éB
+						// ï¿½ï¿½ï¿½[ï¿½hï¿½ï¿½ï¿½ï¿½ï¿½eï¿½Nï¿½Xï¿½`ï¿½ï¿½ï¿½ï¿½ï¿½oï¿½ï¿½ï¿½Nï¿½É“oï¿½^ï¿½ï¿½ï¿½ï¿½B
 						g_engine->RegistLowTextureToBank(lowTexture->filePath.c_str(), lowTexture);
 					}
 					else {
 						char errorMessage[256];
-						sprintf(errorMessage, "ƒeƒNƒXƒ`ƒƒ‚Ìƒ[ƒh‚É¸”s‚µ‚Ü‚µ‚½B%s\n", texFilePath.c_str());
+						sprintf(errorMessage, "ï¿½eï¿½Nï¿½Xï¿½`ï¿½ï¿½ï¿½Ìƒï¿½ï¿½[ï¿½hï¿½Éï¿½ï¿½sï¿½ï¿½ï¿½Ü‚ï¿½ï¿½ï¿½ï¿½B%s\n", texFilePath.c_str());
 						if (isOutputErrorCodeTTY == false) {
-							MessageBoxA(nullptr, errorMessage, "ƒGƒ‰[", MB_OK);
+							MessageBoxA(nullptr, errorMessage, "ï¿½Gï¿½ï¿½ï¿½[", MB_OK);
 						}
 						else {
 							printf(errorMessage);
@@ -282,14 +282,14 @@ namespace nsK2EngineLow {
 			}
 		};
 		if (isLoadTexture) {
-			// ƒeƒNƒXƒ`ƒƒ‚ğƒ[ƒhB
+			// ï¿½eï¿½Nï¿½Xï¿½`ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½[ï¿½hï¿½B
 			loadTexture(tkmMat.albedoMapFileName, tkmMat.albedoMap);
 			loadTexture(tkmMat.normalMapFileName, tkmMat.normalMap);
 			loadTexture(tkmMat.specularMapFileName, tkmMat.specularMap);
 			loadTexture(tkmMat.reflectionMapFileName, tkmMat.reflectionMap);
 			loadTexture(tkmMat.refractionMapFileName, tkmMat.refractionMap);
 		}
-		// ƒ}ƒeƒŠƒAƒ‹‚Ìƒ†ƒj[ƒNID‚ğ¶¬‚·‚éB
+		// ï¿½}ï¿½eï¿½ï¿½ï¿½Aï¿½ï¿½ï¿½Ìƒï¿½ï¿½jï¿½[ï¿½NIDï¿½ğ¶ï¿½ï¿½ï¿½ï¿½ï¿½B
 		std::string sourceName = tkmMat.albedoMapFileName;
 		if (!tkmMat.normalMapFileName.empty()) {
 			sourceName += tkmMat.normalMapFileName;
@@ -303,14 +303,14 @@ namespace nsK2EngineLow {
 		if (!tkmMat.refractionMapFileName.empty()) {
 			sourceName += tkmMat.refractionMapFileName;
 		}
-		// ƒeƒNƒXƒ`ƒƒ–¼‚©‚çƒ†ƒj[ƒNID‚ğ¶¬‚·‚éB
+		// ï¿½eï¿½Nï¿½Xï¿½`ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½çƒ†ï¿½jï¿½[ï¿½NIDï¿½ğ¶ï¿½ï¿½ï¿½ï¿½ï¿½B
 		tkmMat.uniqID = MakeHash(sourceName.c_str());
 	}
 	
 	void TkmFile::BuildTangentAndBiNormal()
 	{
 		NormalSmoothing normalSmoothing;
-		// ’¸“_ƒoƒbƒtƒ@‚ÍƒƒbƒVƒ…‚²‚Æ‚É“Æ—§‚µ‚Ä‚¢‚é‚Ì‚ÅAƒXƒ€[ƒWƒ“ƒO‚ğ‚S‚Â‚ÌƒXƒŒƒbƒh‚Å•ª’S‚µ‚Äs‚¤‚±‚Æ‚ª‚Å‚«‚éB
+		// ï¿½ï¿½ï¿½_ï¿½oï¿½bï¿½tï¿½@ï¿½Íƒï¿½ï¿½bï¿½Vï¿½ï¿½ï¿½ï¿½ï¿½Æ‚É“Æ—ï¿½ï¿½ï¿½ï¿½Ä‚ï¿½ï¿½ï¿½Ì‚ÅAï¿½Xï¿½ï¿½ï¿½[ï¿½Wï¿½ï¿½ï¿½Oï¿½ï¿½ï¿½Sï¿½Â‚ÌƒXï¿½ï¿½ï¿½bï¿½hï¿½Å•ï¿½ï¿½Sï¿½ï¿½ï¿½Äsï¿½ï¿½ï¿½ï¿½ï¿½Æ‚ï¿½ï¿½Å‚ï¿½ï¿½ï¿½B
 		for (auto& mesh : m_meshParts) {
 			for (auto& indexBuffer : mesh.indexBuffer16Array) {
 				normalSmoothing.Execute(mesh, indexBuffer, m_bpsOnVertexPosition);
@@ -323,13 +323,13 @@ namespace nsK2EngineLow {
 		}
 
 		if (m_meshParts[0].isFlatShading == false) {
-			// ƒtƒ‰ƒbƒgƒVƒF[ƒfƒBƒ“ƒO‚Å‚È‚¢‚È‚çAÀ•W‚ÆŒü‚«‚ª“¯‚¶’¸“_‚Ì–@ü‚ğ•½‹Ï‰»‚µ‚Ä‚¢‚­B
-			// ƒƒbƒVƒ…‚Ì‘S’¸“_”‚ğ’²‚×‚éB
+			// ï¿½tï¿½ï¿½ï¿½bï¿½gï¿½Vï¿½Fï¿½[ï¿½fï¿½Bï¿½ï¿½ï¿½Oï¿½Å‚È‚ï¿½ï¿½È‚ï¿½Aï¿½ï¿½ï¿½Wï¿½ÆŒï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½_ï¿½Ì–@ï¿½ï¿½ï¿½ğ•½‹Ï‰ï¿½ï¿½ï¿½ï¿½Ä‚ï¿½ï¿½ï¿½ï¿½B
+			// ï¿½ï¿½ï¿½bï¿½Vï¿½ï¿½ï¿½Ì‘Sï¿½ï¿½ï¿½_ï¿½ï¿½ï¿½ğ’²‚×‚ï¿½B
 			int vertNum = 0;
 			for (auto& mesh : m_meshParts) {
 				vertNum += (int)mesh.vertexBuffer.size();
 			}
-			// ƒXƒ€[ƒWƒ“ƒO‘ÎÛ‚Ì’¸“_‚ğW‚ß‚éB
+			// ï¿½Xï¿½ï¿½ï¿½[ï¿½Wï¿½ï¿½ï¿½Oï¿½ÎÛ‚Ì’ï¿½ï¿½_ï¿½ï¿½ï¿½Wï¿½ß‚ï¿½B
 			std::vector<SSmoothVertex> smoothVertex;
 			smoothVertex.reserve(vertNum);
 			for (auto& mesh : m_meshParts) {
@@ -338,31 +338,31 @@ namespace nsK2EngineLow {
 				}
 			}
 
-			// ‡Œv4ƒXƒŒƒbƒh‚ğg‚Á‚ÄƒXƒ€[ƒWƒ“ƒO‚ğs‚¤B
+			// ï¿½ï¿½ï¿½v4ï¿½Xï¿½ï¿½ï¿½bï¿½hï¿½ï¿½ï¿½gï¿½ï¿½ï¿½ÄƒXï¿½ï¿½ï¿½[ï¿½Wï¿½ï¿½ï¿½Oï¿½ï¿½ï¿½sï¿½ï¿½ï¿½B
 			const int NUM_THREAD = 4;
 			int numVertexPerThread = static_cast<int>(smoothVertex.size());
-			// ƒXƒ€[ƒWƒ“ƒOŠÖ”B
+			// ï¿½Xï¿½ï¿½ï¿½[ï¿½Wï¿½ï¿½ï¿½Oï¿½Öï¿½ï¿½B
 			auto smoothFunc = [&](int startIndex, int endIndex)
 			{
-				// ƒXƒ€[ƒX‚µ‚Ä‚¢‚­B
+				// ï¿½Xï¿½ï¿½ï¿½[ï¿½Xï¿½ï¿½ï¿½Ä‚ï¿½ï¿½ï¿½ï¿½B
 				for (int i = startIndex; i < endIndex; i++) {
 					auto& va = smoothVertex[i];
 					m_bpsOnVertexPosition.WalkTree(va.vertex->pos, [&](BSP::SLeaf* leaf) {
 						if (va.vertex->pos.x == leaf->position.x
 							&& va.vertex->pos.y == leaf->position.y
 							&& va.vertex->pos.z == leaf->position.z) {
-							//“¯‚¶À•WB
-							auto* normal = static_cast<Vector3*>(leaf->extraData);
-							if (va.vertex->normal.Dot(*normal) > 0.0f) {
-								//“¯‚¶Œü‚«B
-								va.newNormal += *normal;
+							//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Wï¿½B
+							auto* leafVert = static_cast<SVertex*>(leaf->extraData);
+							if (va.vertex->normal.Dot(leafVert->normal) > 0.0f) {
+								//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½B
+								va.newNormal += leafVert->normal;
 							}
 						}
 					});
 				}
 			};
 
-			// ˆêŒÂ‚ÌƒXƒŒƒbƒh‚ ‚½‚è‚Éˆ—‚ğs‚¤’¸“_”‚ğŒvZ‚·‚éB
+			// ï¿½ï¿½Â‚ÌƒXï¿½ï¿½ï¿½bï¿½hï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Éï¿½ï¿½ï¿½ï¿½ï¿½ï¿½sï¿½ï¿½ï¿½ï¿½ï¿½_ï¿½ï¿½ï¿½ï¿½ï¿½vï¿½Zï¿½ï¿½ï¿½ï¿½B
 			int perVertexInOneThread = static_cast<int>(smoothVertex.size() / NUM_THREAD);
 			using namespace std;
 			using ThreadPtr = unique_ptr < thread >;
@@ -372,7 +372,7 @@ namespace nsK2EngineLow {
 			int startVertex = 0;
 			int endVertex = perVertexInOneThread;
 
-			// ƒXƒŒƒbƒh‚ğ—§‚Ä‚éB
+			// ï¿½Xï¿½ï¿½ï¿½bï¿½hï¿½ğ—§‚Ä‚ï¿½B
 			for (int i = 0; i < NUM_THREAD - 1; i++) {
 				smoothingThreadArray[i] = make_unique<thread>([&, startVertex, endVertex]() {
 					smoothFunc(startVertex, endVertex);
@@ -385,7 +385,7 @@ namespace nsK2EngineLow {
 				smoothFunc(startVertex, endVertex);
 			});
 			
-			// ƒXƒ€[ƒWƒ“ƒOƒXƒŒƒbƒh‚ª‘S‚ÄŠ®—¹‚·‚é‚Ì‚ğ‘Ò‚ÂB
+			// ï¿½Xï¿½ï¿½ï¿½[ï¿½Wï¿½ï¿½ï¿½Oï¿½Xï¿½ï¿½ï¿½bï¿½hï¿½ï¿½ï¿½Sï¿½ÄŠï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ì‚ï¿½Ò‚ÂB
 			for (int i = 0; i < NUM_THREAD; i++) {
 				smoothingThreadArray[i]->join();
 			}
@@ -397,7 +397,7 @@ namespace nsK2EngineLow {
 
 		}
 
-		// ÚƒxƒNƒgƒ‹‚Æ]ƒxƒNƒgƒ‹‚ğŒvZ‚·‚éB
+		// ï¿½Úƒxï¿½Nï¿½gï¿½ï¿½ï¿½Æ]ï¿½xï¿½Nï¿½gï¿½ï¿½ï¿½ï¿½ï¿½vï¿½Zï¿½ï¿½ï¿½ï¿½B
 		for (auto& mesh : m_meshParts) {
 			for (auto& indexBuffer : mesh.indexBuffer16Array) {
 				BuildTangentAndBiNormalImp(mesh, indexBuffer);
@@ -406,31 +406,78 @@ namespace nsK2EngineLow {
 				BuildTangentAndBiNormalImp(mesh, indexBuffer);
 			}
 		}
+
+		// UVï¿½Vï¿½[ï¿½ï¿½ï¿½ï¿½ï¿½zï¿½ï¿½ï¿½^ï¿½èï¿½É“ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Wï¿½ÅAï¿½ÊƒCï¿½ï¿½ï¿½fï¿½bï¿½Nï¿½Xï¿½Æ‚È‚é±¸_ï¿½Ìƒ^ï¿½ï¿½ï¿½Wï¿½Fï¿½ï¿½ï¿½g/ï¿½oï¿½Cï¿½mï¿½[ï¿½}ï¿½ï¿½ï¿½ï¿½ï¿½BSPï¿½Å•ï¿½ï¿½Ï‰ï¿½ï¿½ï¿½ï¿½ï¿½B
+		if (m_meshParts[0].isFlatShading == false) {
+			struct STangentSmooth {
+				Vector3 newTangent  = g_vec3Zero;
+				Vector3 newBinormal = g_vec3Zero;
+				SVertex* vertex = nullptr;
+			};
+
+			int vertNum = 0;
+			for (auto& mesh : m_meshParts) vertNum += (int)mesh.vertexBuffer.size();
+
+			std::vector<STangentSmooth> smoothTangent;
+			smoothTangent.reserve(vertNum);
+			for (auto& mesh : m_meshParts) {
+				for (auto& v : mesh.vertexBuffer) {
+					STangentSmooth st;
+					st.vertex = &v;
+					smoothTangent.push_back(st);
+				}
+			}
+
+			for (auto& st : smoothTangent) {
+				m_bpsOnVertexPosition.WalkTree(st.vertex->pos, [&](BSP::SLeaf* leaf) {
+					if (st.vertex->pos.x == leaf->position.x
+						&& st.vertex->pos.y == leaf->position.y
+						&& st.vertex->pos.z == leaf->position.z) {
+						auto* leafVert = static_cast<SVertex*>(leaf->extraData);
+						if (st.vertex->tangent.Dot(leafVert->tangent) > 0.0f) {
+							st.newTangent  += leafVert->tangent;
+							st.newBinormal += leafVert->binormal;
+						}
+					}
+				});
+			}
+
+			for (auto& st : smoothTangent) {
+				if (st.newTangent.Length() > 0.001f) {
+					st.newTangent.Normalize();
+					st.vertex->tangent = st.newTangent;
+				}
+				if (st.newBinormal.Length() > 0.001f) {
+					st.newBinormal.Normalize();
+					st.vertex->binormal = st.newBinormal;
+				}
+			}
+		}
 	}
 	bool TkmFile::Load(const char* filePath, bool isOptimize, bool isLoadTexture, bool isOutputErrorCodeTTY)
 	{
 		FILE* fp = fopen(filePath, "rb");
 		if (fp == nullptr) {
 			char errorMessage[256];
-			sprintf(errorMessage, "tkmƒtƒ@ƒCƒ‹‚ÌƒI[ƒvƒ“‚É¸”s‚µ‚Ü‚µ‚½BfilePath = %s\n", filePath);
+			sprintf(errorMessage, "tkmï¿½tï¿½@ï¿½Cï¿½ï¿½ï¿½ÌƒIï¿½[ï¿½vï¿½ï¿½ï¿½Éï¿½ï¿½sï¿½ï¿½ï¿½Ü‚ï¿½ï¿½ï¿½ï¿½BfilePath = %s\n", filePath);
 			
 			if (!isOutputErrorCodeTTY) {
-				MessageBoxA(nullptr, errorMessage, "ƒGƒ‰[", MB_OK);
+				MessageBoxA(nullptr, errorMessage, "ï¿½Gï¿½ï¿½ï¿½[", MB_OK);
 			}
 			else {
 				printf(errorMessage);
 			}
-			// ¸”sB
+			// ï¿½ï¿½ï¿½sï¿½B
 			return false;
 		}
-		//tkmƒtƒ@ƒCƒ‹‚Ìƒwƒbƒ_[‚ğ“Ç‚İ‚İB
+		//tkmï¿½tï¿½@ï¿½Cï¿½ï¿½ï¿½Ìƒwï¿½bï¿½_ï¿½[ï¿½ï¿½Ç‚İï¿½ï¿½İB
 		tkmFileFormat::SHeader header;
 		fread(&header, sizeof(header), 1, fp);
 		if (header.version != tkmFileFormat::VERSION) {
-			std::string errorMessage = "tkmƒtƒ@ƒCƒ‹‚Ìƒo[ƒWƒ‡ƒ“‚ªˆÙ‚È‚Á‚Ä‚¢‚Ü‚·B";
+			std::string errorMessage = "tkmï¿½tï¿½@ï¿½Cï¿½ï¿½ï¿½Ìƒoï¿½[ï¿½Wï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ù‚È‚ï¿½ï¿½Ä‚ï¿½ï¿½Ü‚ï¿½ï¿½B";
 			if (!isOutputErrorCodeTTY) {
-				//tkmƒtƒ@ƒCƒ‹‚Ìƒo[ƒWƒ‡ƒ“‚ªˆá‚¤B
-				MessageBoxA(nullptr, errorMessage.c_str(), "ƒGƒ‰[", MB_OK);
+				//tkmï¿½tï¿½@ï¿½Cï¿½ï¿½ï¿½Ìƒoï¿½[ï¿½Wï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½á‚¤ï¿½B
+				MessageBoxA(nullptr, errorMessage.c_str(), "ï¿½Gï¿½ï¿½ï¿½[", MB_OK);
 			}
 			else {
 				printf(errorMessage.c_str());
@@ -438,7 +485,7 @@ namespace nsK2EngineLow {
 			return false;
 		}
 		
-		//ƒƒbƒVƒ…î•ñ‚ğƒ[ƒh‚µ‚Ä‚¢‚­B
+		//ï¿½ï¿½ï¿½bï¿½Vï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½[ï¿½hï¿½ï¿½ï¿½Ä‚ï¿½ï¿½ï¿½ï¿½B
 		m_meshParts.resize(header.numMeshParts);
 		for (int meshPartsNo = 0; meshPartsNo < header.numMeshParts; meshPartsNo++) {
 
@@ -446,15 +493,15 @@ namespace nsK2EngineLow {
 			meshParts.isFlatShading = header.isFlatShading != 0;
 			tkmFileFormat::SMeshePartsHeader meshPartsHeader;
 			fread(&meshPartsHeader, sizeof(meshPartsHeader), 1, fp);
-			//ƒ}ƒeƒŠƒAƒ‹î•ñ‚ğ‹L˜^‚Å‚«‚é—Ìˆæ‚ğŠm•ÛB
+			//ï¿½}ï¿½eï¿½ï¿½ï¿½Aï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Lï¿½^ï¿½Å‚ï¿½ï¿½ï¿½Ìˆï¿½ï¿½ï¿½mï¿½ÛB
 			meshParts.materials.resize(meshPartsHeader.numMaterial);
-			//ƒ}ƒeƒŠƒAƒ‹î•ñ‚ğ\’z‚µ‚Ä‚¢‚­B
+			//ï¿½}ï¿½eï¿½ï¿½ï¿½Aï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½\ï¿½zï¿½ï¿½ï¿½Ä‚ï¿½ï¿½ï¿½ï¿½B
 			for (unsigned int materialNo = 0; materialNo < meshPartsHeader.numMaterial; materialNo++) {
 				auto& material = meshParts.materials[materialNo];
 				BuildMaterial(material, fp, filePath, isLoadTexture, isOutputErrorCodeTTY);
 			}
 
-			//‘±‚¢‚Ä’¸“_ƒoƒbƒtƒ@B
+			//ï¿½ï¿½ï¿½ï¿½ï¿½Ä’ï¿½ï¿½_ï¿½oï¿½bï¿½tï¿½@ï¿½B
 			meshParts.vertexBuffer.resize(meshPartsHeader.numVertex);
 			for (unsigned int vertNo = 0; vertNo < meshPartsHeader.numVertex; vertNo++) {
 				tkmFileFormat::SVertex vertexTmp;
@@ -472,25 +519,25 @@ namespace nsK2EngineLow {
 				vertex.indices[2] = vertexTmp.indices[2];
 				vertex.indices[3] = vertexTmp.indices[3];
 
-				m_bpsOnVertexPosition.AddLeaf(vertex.pos, &vertex.normal);
+				m_bpsOnVertexPosition.AddLeaf(vertex.pos, &vertex);
 			}
 
-			//‘±‚¢‚ÄƒCƒ“ƒfƒbƒNƒXƒoƒbƒtƒ@B
-			//ƒCƒ“ƒfƒbƒNƒXƒoƒbƒtƒ@‚Íƒ}ƒeƒŠƒAƒ‹‚Ì”•ª‚¾‚¯‘¶İ‚·‚é‚ñ‚¶‚á‚æB
+			//ï¿½ï¿½ï¿½ï¿½ï¿½ÄƒCï¿½ï¿½ï¿½fï¿½bï¿½Nï¿½Xï¿½oï¿½bï¿½tï¿½@ï¿½B
+			//ï¿½Cï¿½ï¿½ï¿½fï¿½bï¿½Nï¿½Xï¿½oï¿½bï¿½tï¿½@ï¿½Íƒ}ï¿½eï¿½ï¿½ï¿½Aï¿½ï¿½ï¿½Ìï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½İ‚ï¿½ï¿½ï¿½ñ‚¶‚ï¿½ï¿½B
 			if (meshPartsHeader.indexSize == 2) {
-				//16bit‚ÌƒCƒ“ƒfƒbƒNƒXƒoƒbƒtƒ@B
+				//16bitï¿½ÌƒCï¿½ï¿½ï¿½fï¿½bï¿½Nï¿½Xï¿½oï¿½bï¿½tï¿½@ï¿½B
 				meshParts.indexBuffer16Array.resize(meshPartsHeader.numMaterial);
 			}
 			else {
-				//32bit‚ÌƒCƒ“ƒfƒbƒNƒXƒoƒbƒtƒ@B
+				//32bitï¿½ÌƒCï¿½ï¿½ï¿½fï¿½bï¿½Nï¿½Xï¿½oï¿½bï¿½tï¿½@ï¿½B
 				meshParts.indexBuffer32Array.resize(meshPartsHeader.numMaterial);
 			}
 
 			for (unsigned int materialNo = 0; materialNo < meshPartsHeader.numMaterial; materialNo++) {
-				//ƒ|ƒŠƒSƒ“”‚ğƒ[ƒhB
+				//ï¿½|ï¿½ï¿½ï¿½Sï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½[ï¿½hï¿½B
 				int numPolygon;
 				fread(&numPolygon, sizeof(numPolygon), 1, fp);
-				//ƒgƒ|ƒƒW[‚Íƒgƒ‰ƒCƒAƒ“ƒOƒ‹ƒŠƒXƒgƒIƒ“ƒŠ[‚È‚Ì‚ÅA3‚ğæZ‚·‚é‚ÆƒCƒ“ƒfƒbƒNƒX‚Ì”‚É‚È‚éB
+				//ï¿½gï¿½|ï¿½ï¿½ï¿½Wï¿½[ï¿½Íƒgï¿½ï¿½ï¿½Cï¿½Aï¿½ï¿½ï¿½Oï¿½ï¿½ï¿½ï¿½ï¿½Xï¿½gï¿½Iï¿½ï¿½ï¿½ï¿½ï¿½[ï¿½È‚Ì‚ÅA3ï¿½ï¿½ï¿½ï¿½Zï¿½ï¿½ï¿½ï¿½ÆƒCï¿½ï¿½ï¿½fï¿½bï¿½Nï¿½Xï¿½Ìï¿½ï¿½É‚È‚ï¿½B
 				int numIndex = numPolygon * 3;
 				if (meshPartsHeader.indexSize == 2) {
 					LoadIndexBuffer(
@@ -508,17 +555,17 @@ namespace nsK2EngineLow {
 				}
 			}
 		}
-		// ƒtƒ@ƒCƒ‹‚ğ•Â‚¶‚éB
+		// ï¿½tï¿½@ï¿½Cï¿½ï¿½ï¿½ï¿½Â‚ï¿½ï¿½ï¿½B
 		fclose(fp);
 
-		// ’¸“_ƒf[ƒ^‚ÌBSPƒcƒŠ[‚ğ\’z‚·‚éB
+		// ï¿½ï¿½ï¿½_ï¿½fï¿½[ï¿½^ï¿½ï¿½BSPï¿½cï¿½ï¿½ï¿½[ï¿½ï¿½ï¿½\ï¿½zï¿½ï¿½ï¿½ï¿½B
 		m_bpsOnVertexPosition.Build();
 
-		// ÚƒxƒNƒgƒ‹‚Æ]ƒxƒNƒgƒ‹‚ğ\’z‚·‚éB
+		// ï¿½Úƒxï¿½Nï¿½gï¿½ï¿½ï¿½Æ]ï¿½xï¿½Nï¿½gï¿½ï¿½ï¿½ï¿½ï¿½\ï¿½zï¿½ï¿½ï¿½ï¿½B
 		BuildTangentAndBiNormal();
 		
 		if (isOptimize) {
-			// Å“K‰»‚ğs‚¤B
+			// ï¿½Å“Kï¿½ï¿½ï¿½ï¿½ï¿½sï¿½ï¿½ï¿½B
 			Optimize();
 		}
 		return true;
@@ -527,35 +574,35 @@ namespace nsK2EngineLow {
 	{
 		FILE* fp = fopen(filePath, "wb");
 		if (fp == nullptr) {
-			printf("o—Í—p‚Ìtkmƒtƒ@ƒCƒ‹‚ÌƒI[ƒvƒ“‚É¸”s‚µ‚Ü‚µ‚½B%s\n", filePath);
+			printf("ï¿½oï¿½Í—pï¿½ï¿½tkmï¿½tï¿½@ï¿½Cï¿½ï¿½ï¿½ÌƒIï¿½[ï¿½vï¿½ï¿½ï¿½Éï¿½ï¿½sï¿½ï¿½ï¿½Ü‚ï¿½ï¿½ï¿½ï¿½B%s\n", filePath);
 			return false;
 		}
 		if (m_meshParts.empty()) {
-			printf("ƒIƒŠƒWƒiƒ‹‚Ìtkmƒtƒ@ƒCƒ‹‚ªƒ[ƒh‚³‚ê‚Ä‚¢‚Ü‚¹‚ñB%s\n", filePath);
+			printf("ï¿½Iï¿½ï¿½ï¿½Wï¿½iï¿½ï¿½ï¿½ï¿½tkmï¿½tï¿½@ï¿½Cï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½[ï¿½hï¿½ï¿½ï¿½ï¿½Ä‚ï¿½ï¿½Ü‚ï¿½ï¿½ï¿½B%s\n", filePath);
 			return false;
 		}
-		// ƒwƒbƒ_[î•ñ‚Ì\’zB
+		// ï¿½wï¿½bï¿½_ï¿½[ï¿½ï¿½ï¿½Ì\ï¿½zï¿½B
 		tkmFileFormat::SHeader header;
 		header.isFlatShading = m_meshParts[0].isFlatShading ? 1 : 0;
 		header.numMeshParts = m_meshParts.size();
 		header.version = tkmFileFormat::VERSION;
 		fwrite(&header, sizeof(header), 1, fp);
 
-		// ‘±‚¢‚ÄƒƒbƒVƒ…ƒp[ƒc–{‘Ì‚Ìƒf[ƒ^‚ğ‘‚«‚ñ‚Å‚¢‚­B
+		// ï¿½ï¿½ï¿½ï¿½ï¿½Äƒï¿½ï¿½bï¿½Vï¿½ï¿½ï¿½pï¿½[ï¿½cï¿½{ï¿½Ì‚Ìƒfï¿½[ï¿½^ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Å‚ï¿½ï¿½ï¿½ï¿½B
 		for (int meshPartsNo = 0; meshPartsNo < header.numMeshParts; meshPartsNo++) {
 			tkmFileFormat::SMeshePartsHeader meshPartsHeader;
 			meshPartsHeader.numMaterial = m_meshParts[meshPartsNo].materials.size();
 			meshPartsHeader.numVertex = m_meshParts[meshPartsNo].vertexBuffer.size();
-			meshPartsHeader.indexSize = 4; // 32ƒrƒbƒgŒÅ’èB
+			meshPartsHeader.indexSize = 4; // 32ï¿½rï¿½bï¿½gï¿½Å’ï¿½B
 			fwrite(&meshPartsHeader, sizeof(meshPartsHeader), 1, fp);
-			// ƒ}ƒeƒŠƒAƒ‹î•ñ‚ğ‘‚«‚ñ‚Å‚¢‚­B
+			// ï¿½}ï¿½eï¿½ï¿½ï¿½Aï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Å‚ï¿½ï¿½ï¿½ï¿½B
 			for (int matNo = 0; matNo < m_meshParts[meshPartsNo].materials.size(); matNo++) {
 				SMaterial& mat = m_meshParts[meshPartsNo].materials[matNo];
-				// ƒeƒNƒXƒ`ƒƒ‚Ìƒtƒ@ƒCƒ‹–¼î•ñ‚ğ‘‚«‚Ş“½–¼ŠÖ”B
+				// ï¿½eï¿½Nï¿½Xï¿½`ï¿½ï¿½ï¿½Ìƒtï¿½@ï¿½Cï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ş“ï¿½ï¿½ï¿½ï¿½Öï¿½ï¿½B
 				auto WriteTextureFileNameInfo = [&](const std::string& fineName)
 				{
 					std::uint32_t fileNameLen = fineName.length();
-					// ƒtƒ@ƒCƒ‹–¼î•ñ‚ğ‘‚«‚ŞB
+					// ï¿½tï¿½@ï¿½Cï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ŞB
 					if (fineName.empty()) {
 						fileNameLen = 0;
 						fwrite(&fileNameLen, sizeof(fileNameLen), 1, fp);
@@ -566,19 +613,19 @@ namespace nsK2EngineLow {
 						fwrite(fineName.c_str(), fileNameLen + 1, 1, fp);
 					}
 				};
-				// ƒAƒ‹ƒxƒhƒeƒNƒXƒ`ƒƒ‚Ìƒtƒ@ƒCƒ‹–¼î•ñ‚ğ‘‚«‚ŞB
+				// ï¿½Aï¿½ï¿½ï¿½xï¿½hï¿½eï¿½Nï¿½Xï¿½`ï¿½ï¿½ï¿½Ìƒtï¿½@ï¿½Cï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ŞB
 				WriteTextureFileNameInfo(mat.albedoMapFileName);
-				// –@üƒ}ƒbƒv
+				// ï¿½@ï¿½ï¿½ï¿½}ï¿½bï¿½v
 				WriteTextureFileNameInfo(mat.normalMapFileName);
-				// ƒXƒyƒLƒ…ƒ‰ƒ}ƒbƒv‚Ìƒtƒ@ƒCƒ‹–¼î•ñ‚ğ‘‚«‚ŞB
+				// ï¿½Xï¿½yï¿½Lï¿½ï¿½ï¿½ï¿½ï¿½}ï¿½bï¿½vï¿½Ìƒtï¿½@ï¿½Cï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ŞB
 				WriteTextureFileNameInfo(mat.specularMapFileName);
-				// ƒŠƒtƒŒƒNƒVƒ‡ƒ“ƒ}ƒbƒvB
+				// ï¿½ï¿½ï¿½tï¿½ï¿½ï¿½Nï¿½Vï¿½ï¿½ï¿½ï¿½ï¿½}ï¿½bï¿½vï¿½B
 				WriteTextureFileNameInfo(mat.reflectionMapFileName);
-				// ‹üÜƒ}ƒbƒvB
+				// ï¿½ï¿½ï¿½Üƒ}ï¿½bï¿½vï¿½B
 				WriteTextureFileNameInfo(mat.refractionMapFileName);
 
 			}
-			// ‘±‚¢‚Ä’¸“_ƒoƒbƒtƒ@‚ğ‘‚«‚ñ‚Å‚¢‚­B
+			// ï¿½ï¿½ï¿½ï¿½ï¿½Ä’ï¿½ï¿½_ï¿½oï¿½bï¿½tï¿½@ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Å‚ï¿½ï¿½ï¿½ï¿½B
 			for( int vertNo = 0; vertNo < m_meshParts[meshPartsNo].vertexBuffer.size(); vertNo++){
 				tkmFileFormat::SVertex vertex;
 				auto& vertexTmp = m_meshParts[meshPartsNo].vertexBuffer[vertNo];
@@ -602,19 +649,19 @@ namespace nsK2EngineLow {
 				vertex.indices[2] = vertexTmp.indices[2];
 				vertex.indices[3] = vertexTmp.indices[3];
 				
-				// ’¸“_‚ğ‘‚«‚Ş
+				// ï¿½ï¿½ï¿½_ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 				fwrite( &vertex, sizeof(vertex), 1, fp);
 			}
 
-			// ‘±‚¢‚ÄƒCƒ“ƒfƒbƒNƒXƒoƒbƒtƒ@B
-			// Å“K‰»Œã‚Í32ƒrƒbƒg‚µ‚©ƒTƒ|[ƒg‚µ‚È‚¢B
+			// ï¿½ï¿½ï¿½ï¿½ï¿½ÄƒCï¿½ï¿½ï¿½fï¿½bï¿½Nï¿½Xï¿½oï¿½bï¿½tï¿½@ï¿½B
+			// ï¿½Å“Kï¿½ï¿½ï¿½ï¿½ï¿½32ï¿½rï¿½bï¿½gï¿½ï¿½ï¿½ï¿½ï¿½Tï¿½|ï¿½[ï¿½gï¿½ï¿½ï¿½È‚ï¿½ï¿½B
 			for (int matNo = 0; matNo < meshPartsHeader.numMaterial; matNo++) {
 				std::uint32_t numPolygon = m_meshParts[meshPartsNo].indexBuffer32Array[matNo].indices.size() / 3;
 				fwrite(&numPolygon, sizeof(numPolygon), 1, fp);
 				const auto& indeces = m_meshParts[meshPartsNo].indexBuffer32Array[matNo].indices;
 				for (int i = 0; i < indeces.size(); i++) {
-					// ƒCƒ“ƒfƒbƒNƒXƒoƒbƒtƒ@‚ğ‘‚«‚Ş
-					int index = indeces[i] + 1;	// 3dsMax‚©‚ço—Í‚³‚ê‚éÛ‚É{‚P‚³‚ê‚Ä‚¢‚é‚Ì‚ÅA‚»‚ê‚É‡‚í‚¹‚Ä–ß‚·B
+					// ï¿½Cï¿½ï¿½ï¿½fï¿½bï¿½Nï¿½Xï¿½oï¿½bï¿½tï¿½@ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+					int index = indeces[i] + 1;	// 3dsMaxï¿½ï¿½ï¿½ï¿½oï¿½Í‚ï¿½ï¿½ï¿½ï¿½Û‚É{ï¿½Pï¿½ï¿½ï¿½ï¿½Ä‚ï¿½ï¿½ï¿½Ì‚ÅAï¿½ï¿½ï¿½ï¿½Éï¿½ï¿½í‚¹ï¿½Ä–ß‚ï¿½ï¿½B
 					fwrite(
 						&index,
 						sizeof(std::uint32_t),
@@ -630,15 +677,15 @@ namespace nsK2EngineLow {
 	}
 	void TkmFile::Optimize()
 	{
-		// “¯‚¶ƒ}ƒeƒŠƒAƒ‹‚ğg‚Á‚Ä‚¢‚éƒƒbƒVƒ…‚ğ‚Ğ‚Æ‚Ü‚Æ‚ß‚É‚·‚éB
-		// Åˆ«‚ÌƒP[ƒX‚Åƒ}ƒeƒŠƒAƒ‹‚Ì”•ª‚¾‚¯ƒƒbƒVƒ…‚ª‘¶İ‚·‚é‚Ì‚ÅA
-		// ƒƒbƒVƒ…‚ÌÅ‘å”‚ğ’²‚×‚Ä‚¨‚­B
+		// ï¿½ï¿½ï¿½ï¿½ï¿½}ï¿½eï¿½ï¿½ï¿½Aï¿½ï¿½ï¿½ï¿½ï¿½gï¿½ï¿½ï¿½Ä‚ï¿½ï¿½éƒï¿½bï¿½Vï¿½ï¿½ï¿½ï¿½ï¿½Ğ‚Æ‚Ü‚Æ‚ß‚É‚ï¿½ï¿½ï¿½B
+		// ï¿½Åˆï¿½ï¿½ÌƒPï¿½[ï¿½Xï¿½Åƒ}ï¿½eï¿½ï¿½ï¿½Aï¿½ï¿½ï¿½Ìï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½bï¿½Vï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½İ‚ï¿½ï¿½ï¿½Ì‚ÅA
+		// ï¿½ï¿½ï¿½bï¿½Vï¿½ï¿½ï¿½ÌÅ‘å”ï¿½ğ’²‚×‚Ä‚ï¿½ï¿½ï¿½ï¿½B
 		int maxMesh = 0;
 		for (SMesh& mesh : m_meshParts) {
 			maxMesh += mesh.materials.size();
 		}
 		std::vector< SMesh > optimizeMeshParts;
-		// Å“K‰»Ï‚İ‚ÌƒƒbƒVƒ…‚ğ‹L‰¯‚·‚é—Ìˆæ‚ğÅˆ«‚ÌƒP[ƒX‚ÅŠm•Û‚µ‚Ä‚¨‚­B
+		// ï¿½Å“Kï¿½ï¿½ï¿½Ï‚İ‚Ìƒï¿½ï¿½bï¿½Vï¿½ï¿½ï¿½ï¿½ï¿½Lï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ìˆï¿½ï¿½ï¿½Åˆï¿½ï¿½ÌƒPï¿½[ï¿½Xï¿½ÅŠmï¿½Û‚ï¿½ï¿½Ä‚ï¿½ï¿½ï¿½ï¿½B
 		optimizeMeshParts.reserve(maxMesh);
 		
 		std::map<int, SMesh*> meshMap;
@@ -647,13 +694,13 @@ namespace nsK2EngineLow {
 				int matId = mesh.materials[matNo].uniqID;
 				auto it = meshMap.find(matId);
 				if (it == meshMap.end()) {
-					// V‹Kƒ}ƒeƒŠƒAƒ‹B
+					// ï¿½Vï¿½Kï¿½}ï¿½eï¿½ï¿½ï¿½Aï¿½ï¿½ï¿½B
 					SMesh optMesh;
 					optMesh.materials.emplace_back(mesh.materials[matNo]);
 					optMesh.vertexBuffer = mesh.vertexBuffer;
 					optMesh.indexBuffer32Array.resize(1);
 					optMesh.isFlatShading = m_meshParts[0].isFlatShading;
-					// ‚à‚¤16bit‚ÌƒC0ƒ“ƒfƒbƒNƒXƒoƒbƒtƒ@‚Íg‚í‚È‚¢B
+					// ï¿½ï¿½ï¿½ï¿½16bitï¿½ÌƒC0ï¿½ï¿½ï¿½fï¿½bï¿½Nï¿½Xï¿½oï¿½bï¿½tï¿½@ï¿½Ígï¿½ï¿½È‚ï¿½ï¿½B
 					if (mesh.indexBuffer32Array.size() != 0) {
 						for (int index : mesh.indexBuffer32Array[matNo].indices) {
 							optMesh.indexBuffer32Array[0].indices.emplace_back(index);
@@ -668,8 +715,8 @@ namespace nsK2EngineLow {
 					meshMap.insert(std::pair<int, SMesh*>(matId, &optimizeMeshParts.back()));
 				}
 				else {
-					// d•¡ƒ}ƒeƒŠƒAƒ‹‚È‚Ì‚Å“‡‚·‚éB
-					// ’¸“_ƒoƒbƒtƒ@‚ğ˜AŒ‹B
+					// ï¿½dï¿½ï¿½ï¿½}ï¿½eï¿½ï¿½ï¿½Aï¿½ï¿½ï¿½È‚Ì‚Å“ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½B
+					// ï¿½ï¿½ï¿½_ï¿½oï¿½bï¿½tï¿½@ï¿½ï¿½Aï¿½ï¿½ï¿½B
 					SMesh* optMesh = it->second;
 					int baseIndex = optMesh->vertexBuffer.size();
 					optMesh->vertexBuffer.insert(
@@ -678,7 +725,7 @@ namespace nsK2EngineLow {
 						mesh.vertexBuffer.end()
 					);
 
-					// ƒCƒ“ƒfƒbƒNƒXƒoƒbƒtƒ@‚ğ˜AŒ‹B
+					// ï¿½Cï¿½ï¿½ï¿½fï¿½bï¿½Nï¿½Xï¿½oï¿½bï¿½tï¿½@ï¿½ï¿½Aï¿½ï¿½ï¿½B
 					if (mesh.indexBuffer32Array.size() != 0) {
 						for (int index : mesh.indexBuffer32Array[matNo].indices) {
 							optMesh->indexBuffer32Array[0].indices.emplace_back(index + baseIndex);
@@ -692,7 +739,7 @@ namespace nsK2EngineLow {
 				}
 			}
 		}
-		// Å“K‰»Ï‚İƒƒbƒVƒ…‚É·‚µ‘Ö‚¦‚éB
+		// ï¿½Å“Kï¿½ï¿½ï¿½Ï‚İƒï¿½ï¿½bï¿½Vï¿½ï¿½ï¿½Éï¿½ï¿½ï¿½ï¿½Ö‚ï¿½ï¿½ï¿½B
 		m_meshParts = optimizeMeshParts;
 	}
 }

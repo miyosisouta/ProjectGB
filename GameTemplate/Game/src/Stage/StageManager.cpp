@@ -20,6 +20,13 @@ namespace
     constexpr float DITHERING_ALPHA_FENCE  = 0.5f; // 柵
     constexpr float DITHERING_ALPHA_TREE   = 0.2f; // 木
 
+    /* スプラットマップ */
+    constexpr float SPLAT_MAP_GRASS_LUMINANCE = 1.0f;   // 草の明るさ
+    constexpr float SPLAT_MAP_CRAY_LUMINANCE = 1.0f;    // 土の明るさ
+    constexpr float SPLAT_MAP_HUMUS_LUMINANCE = 1.0f;   // 腐葉土の明るさ
+    constexpr float SPLAT_MAP_WHOLE_LUMINANCE = 3.0f;   // 全体の明るさ
+    constexpr float SPLAT_MAP_SATURATION = 2.5f; // 彩度
+
     /* その他 */
     constexpr float COLLISION_UP        = 600.0f; // コリジョンの高さ
     constexpr float METER_TO_CENTIMETER = 100.0f; // メートル
@@ -59,11 +66,31 @@ void StageManager::StageTKLLoader(const char* path)
 
         if (!assetPath.empty()) {
             auto* obj = new StaticObject();
+
+            // スプラットシェーダーは Init() より前にセットアップする必要がある
+            if (data.ForwardMatchName(L"ground")) {
+                obj->SetupSplatShader(&splatTex_, &kusaTex_, &tuthiTex_, &fuyoudoTex_);
+            }
+
             obj->Init(assetPath.c_str(), data.position, data.rotation, data.scale);
 
-            if      (data.ForwardMatchName(L"ground")) obj->SetDitherAlpha(DITHERING_ALPHA_GROUND);
-            else if (data.ForwardMatchName(L"fence"))  obj->SetDitherAlpha(DITHERING_ALPHA_FENCE);
-            else if (data.ForwardMatchName(L"Tree"))   obj->SetDitherAlpha(DITHERING_ALPHA_TREE);
+            // 固有値の設定
+            if (data.ForwardMatchName(L"ground")) {
+                obj->SetDitherAlpha(DITHERING_ALPHA_GROUND); // ディザのアルファ値
+                obj->SetName("ground"); // 名前
+                // スプラットカラー調整 (p0=草, p1=岩土, p2=腐葉土の明るさ倍率, p3=全体HSV明るさ)
+                obj->SetSplatColorParams(SPLAT_MAP_GRASS_LUMINANCE, SPLAT_MAP_CRAY_LUMINANCE, SPLAT_MAP_HUMUS_LUMINANCE, SPLAT_MAP_WHOLE_LUMINANCE);
+                // スプラット彩度調整 (1.0=変化なし, 1.5=鮮やか)
+                obj->SetSplatSaturation(SPLAT_MAP_SATURATION);
+            }
+            else if (data.ForwardMatchName(L"fence")) {
+                obj->SetDitherAlpha(DITHERING_ALPHA_FENCE); // ディザのアルファ値
+                obj->SetName("fence"); // 名前
+            }
+            else if (data.ForwardMatchName(L"Tree")) {
+                obj->SetDitherAlpha(DITHERING_ALPHA_TREE); // ディザのアルファ値
+                obj->SetName("Tree"); // 名前
+            }
 
             staticObjectList_.push_back(obj);
         }
@@ -84,6 +111,13 @@ StageManager::~StageManager()
 
 bool StageManager::Start()
 {
+    // 地面スプラットシェーダー用テクスチャをロード (StageTKLLoader より前に行う)
+    // splat_map の各チャンネル: R=草, G=岩土, B=腐葉土
+    // miniRed.DDS (R=1,G=0,B=0) をプレースホルダーとして使用 → 草テクスチャのみ表示
+    splatTex_.InitFromDDSFile(L"Assets/Objects/Stage/Forest/ObjectData/SplatMap.DDS");
+    kusaTex_.InitFromDDSFile(L"Assets/Objects/Stage/Forest/ObjectData/kusaGround.DDS");
+    tuthiTex_.InitFromDDSFile(L"Assets/Objects/Stage/Forest/ObjectData/tuthi_ground.DDS");
+    fuyoudoTex_.InitFromDDSFile(L"Assets/Objects/Stage/Forest/ObjectData/fuyoudo_ground.DDS");
     // 選択されたボスを取得
     //BossType stageKind = CharacterDataBase::Get().GetGameParam().stageType_;
     BossType stageKind = BossType::enGorilla;
