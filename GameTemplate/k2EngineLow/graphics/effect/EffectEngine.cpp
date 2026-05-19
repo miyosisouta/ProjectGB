@@ -75,7 +75,9 @@ namespace nsK2EngineLow {
 		EffekseerRendererDX12::BeginCommandList(m_commandList[backBufferNo], g_graphicsEngine->GetCommandList());
 		m_renderer[backBufferNo]->SetCommandList(m_commandList[backBufferNo]);
 
-		m_manager->Update();
+		if (!m_isPaused) {
+			m_manager->Update();
+		}
 
 		//レンダラーにカメラ行列を設定。
 		m_renderer[backBufferNo]->SetCameraMatrix(*(const Effekseer::Matrix44*)&g_camera3D->GetViewMatrix());

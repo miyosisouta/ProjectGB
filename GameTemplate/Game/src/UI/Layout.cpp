@@ -200,8 +200,16 @@ void Layout::Update()
 }
 
 
+#ifdef K2_DEBUG
+bool Layout::s_isDrawPaused = false;
+#endif
+
+
 void Layout::Render(RenderContext& rc)
 {
+#ifdef K2_DEBUG
+    if (s_isDrawPaused) { return; }
+#endif
     menu_->Render(rc);
 }
 

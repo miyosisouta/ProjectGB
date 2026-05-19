@@ -116,3 +116,15 @@ void EffectManagerObject::Update()
 {
 	EffectManager::Get().Update();
 }
+
+#ifdef K2_DEBUG
+void EffectManagerObject::SetUpdatePaused(bool isPaused)
+{
+	EffectEngine::GetInstance()->SetPaused(isPaused);
+}
+
+bool EffectManagerObject::IsUpdatePaused()
+{
+	return EffectEngine::GetInstance()->IsPaused();
+}
+#endif

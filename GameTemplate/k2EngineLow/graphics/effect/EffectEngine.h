@@ -14,7 +14,10 @@ namespace nsK2EngineLow {
 		Effekseer::RefPtr<EffekseerRenderer::CommandList> m_commandList[2];			//コマンドリスト。
 		Effekseer::ManagerRef m_manager;
 		std::map< int, Effekseer::EffectRef > m_effectMap;
+		bool m_isPaused = false;
 	public:
+		void SetPaused(bool isPaused) { m_isPaused = isPaused; }
+		bool IsPaused() const { return m_isPaused; }
 		/// <summary>
 		/// インスタンスの作成。
 		/// </summary>

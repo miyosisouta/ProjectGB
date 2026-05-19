@@ -12,6 +12,10 @@
 
 SoundManager* SoundManager::myInstance_ = nullptr; //初期化
 
+#ifdef K2_DEBUG
+bool SoundManagerObject::s_isUpdatePaused = false;
+#endif
+
 
 SoundManager::SoundManager()
 {
@@ -120,6 +124,24 @@ void SoundManager::StopSE(const SoundHandle handle)
 	se->Stop();
 }
 
+#ifdef K2_DEBUG
+void SoundManager::PauseAll()
+{
+	if (bgm_) bgm_->Pause();
+	for (auto& it : seList_) {
+		it.second->Pause();
+	}
+}
+
+void SoundManager::ResumeAll()
+{
+	if (bgm_) bgm_->Resume();
+	for (auto& it : seList_) {
+		it.second->Resume();
+	}
+}
+#endif
+
 
 /******************************************************************************/
 
@@ -144,5 +166,8 @@ bool SoundManagerObject::Start()
 
 void SoundManagerObject::Update()
 {
+#ifdef K2_DEBUG
+	if (s_isUpdatePaused) { return; }
+#endif
 	SoundManager::Get().Update();
 }	
