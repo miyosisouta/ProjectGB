@@ -1,4 +1,4 @@
-#include "k2EnginePreCompile.h"
+ï»¿#include "k2EnginePreCompile.h"
 #include "geometry/SceneGeometryData.h"
 
 namespace nsK2Engine {
@@ -8,10 +8,10 @@ namespace nsK2Engine {
         m_shadowCasterMaxPositionInViewFrustum = { -FLT_MIN, -FLT_MIN, -FLT_MIN };
         m_shadowCasterMinPositionInViewFrustum = { FLT_MAX,  FLT_MAX,  FLT_MAX };
 
-        // ƒV[ƒ“‚ÌƒWƒIƒƒgƒŠî•ñ‚ðXVB
+        // ã‚·ãƒ¼ãƒ³ã®ã‚¸ã‚ªãƒ¡ãƒˆãƒªæƒ…å ±ã‚’æ›´æ–°ã€‚
         for (auto& geomData : m_geometryDatas) {
             geomData->Update();
-            // ƒrƒ…[ƒtƒ‰ƒXƒ^ƒ€‚É“ü‚Á‚Ä‚¢‚éƒVƒƒƒhƒEƒLƒƒƒXƒ^[‚ÌAABB‚ÌÅ‘åÀ•W‚ÆÅ¬À•W‚ðXV
+            // ãƒ“ãƒ¥ãƒ¼ãƒ•ãƒ©ã‚¹ã‚¿ãƒ ã«å…¥ã£ã¦ã„ã‚‹ã‚·ãƒ£ãƒ‰ã‚¦ã‚­ãƒ£ã‚¹ã‚¿ãƒ¼ã®AABBã®æœ€å¤§åº§æ¨™ã¨æœ€å°åº§æ¨™ã‚’æ›´æ–°
             if (geomData->IsShadowCaster()
                 && geomData->IsInViewFrustum()
                 ) {

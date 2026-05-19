@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 
 #include "graphics/postEffect/PostEffectComponentBase.h"
 
@@ -9,13 +9,13 @@ namespace nsK2Engine {
 		ToneMap();
 		~ToneMap();
 		/// <summary>
-		/// •`‰æB
+		/// æç”»ã€‚
 		/// </summary>
-		/// <param name="rc">ƒŒƒ“ƒ_\ƒRƒ“ƒeƒLƒXƒgB</param>
-		/// <param name="mainRenderTarget">ƒƒCƒ“ƒŒƒ“ƒ_\ƒ^[ƒQƒbƒgB</param>
+		/// <param name="rc">ãƒ¬ãƒ³ãƒ€â€•ã‚³ãƒ³ãƒ†ã‚­ã‚¹ãƒˆã€‚</param>
+		/// <param name="mainRenderTarget">ãƒ¡ã‚¤ãƒ³ãƒ¬ãƒ³ãƒ€â€•ã‚¿ãƒ¼ã‚²ãƒƒãƒˆã€‚</param>
 		void OnRender(RenderContext& rc, RenderTarget& mainRenderTarget) override;
 		/// <summary>
-		/// ‰Šú‰»B
+		/// åˆæœŸåŒ–ã€‚
 		/// </summary>
 		void OnInit(
 			RenderTarget& mainRenderTarget,
@@ -24,7 +24,7 @@ namespace nsK2Engine {
 			RenderTarget& metallicSmoothRenderTarget,
 			RenderTarget& albedoRenderTarget) override;
 		/// <summary>
-		/// ƒ|ƒXƒgƒGƒtƒFƒNƒg‚ğÀs‚µ‚½Œ‹‰Ê‚Æ‚È‚éƒeƒNƒXƒ`ƒƒ‚ğæ“¾B
+		/// ãƒã‚¹ãƒˆã‚¨ãƒ•ã‚§ã‚¯ãƒˆã‚’å®Ÿè¡Œã—ãŸçµæœã¨ãªã‚‹ãƒ†ã‚¯ã‚¹ãƒãƒ£ã‚’å–å¾—ã€‚
 		/// </summary>
 		/// <returns></returns>
 		Texture& GetResultTexture() override
@@ -32,7 +32,7 @@ namespace nsK2Engine {
 			return m_finalRt.GetRenderTargetTexture();
 		}
 		/// <summary>
-		/// ƒ|ƒXƒg‚ÌŒ‹‰Ê‚Ì‰æ‘œ‚ğƒƒCƒ“ƒŒƒ“ƒ_ƒŠƒ“ƒOƒ^[ƒQƒbƒg‚ÉƒRƒs[‚·‚éH
+		/// ãƒã‚¹ãƒˆã®çµæœã®ç”»åƒã‚’ãƒ¡ã‚¤ãƒ³ãƒ¬ãƒ³ãƒ€ãƒªãƒ³ã‚°ã‚¿ãƒ¼ã‚²ãƒƒãƒˆã«ã‚³ãƒ”ãƒ¼ã™ã‚‹ï¼Ÿ
 		/// </summary>
 		/// <returns></returns>
 		bool IsCopyResultTextureToMainRenderTarget() const override
@@ -41,7 +41,7 @@ namespace nsK2Engine {
 		}
 		
 		/// <summary>
-		/// ƒV[ƒ“‚Ì–¾‚é‚³‚ÌŠî€’l‚ğİ’è‚·‚éB
+		/// ã‚·ãƒ¼ãƒ³ã®æ˜ã‚‹ã•ã®åŸºæº–å€¤ã‚’è¨­å®šã™ã‚‹ã€‚
 		/// </summary>
 		/// <param name="middlegray"></param>
 		void SetMiddlegray(float middlegray)
@@ -49,7 +49,7 @@ namespace nsK2Engine {
 			m_cb1.midddleGray = middlegray;
 		}
 		/// <summary>
-		/// ƒV[ƒ“‚Ì–¾‚é‚³‚ÌŠî€’l‚ğæ“¾‚·‚éB
+		/// ã‚·ãƒ¼ãƒ³ã®æ˜ã‚‹ã•ã®åŸºæº–å€¤ã‚’å–å¾—ã™ã‚‹ã€‚
 		/// </summary>
 		/// <param name="middlegray"></param>
 		float GetMiddlegray() const
@@ -62,8 +62,8 @@ namespace nsK2Engine {
 		struct SCB_1 {
 			float midddleGray;
 		};
-		Sprite m_finalSprite;							// ÅI‡¬—p‚ÌƒXƒvƒ‰ƒCƒgB
-		RenderTarget m_finalRt;							// ÅI‡¬ƒŒƒ“ƒ_ƒŠƒ“ƒOƒ^[ƒQƒbƒgB
+		Sprite m_finalSprite;							// æœ€çµ‚åˆæˆç”¨ã®ã‚¹ãƒ—ãƒ©ã‚¤ãƒˆã€‚
+		RenderTarget m_finalRt;							// æœ€çµ‚åˆæˆãƒ¬ãƒ³ãƒ€ãƒªãƒ³ã‚°ã‚¿ãƒ¼ã‚²ãƒƒãƒˆã€‚
 		SCB_1 m_cb1;
 	};
 }

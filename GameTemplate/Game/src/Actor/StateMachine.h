@@ -1,95 +1,95 @@
-#pragma once
+ï»¿#pragma once
 #include "IState.h"
 
-/* ƒvƒŒƒCƒ„[‚Ìó‘Ô */
+/* ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®çŠ¶æ…‹ */
 enum class PlayerStateID
 {
-	/* Šî–{ƒXƒe[ƒg */
+	/* åŸºæœ¬ã‚¹ãƒ†ãƒ¼ãƒˆ */
 	None,
-	Idle,	//!< ‘Ò‹@
-	Walk,	//!< •à‚­
-	Run,	//!< ‘–‚é
+	Idle,	//!< å¾…æ©Ÿ
+	Walk,	//!< æ­©ã
+	Run,	//!< èµ°ã‚‹
 
 
-	/* ’ÊíUŒ‚ */
-	Bite,	//!< ’ÊíUŒ‚
+	/* é€šå¸¸æ”»æ’ƒ */
+	Bite,	//!< é€šå¸¸æ”»æ’ƒ
 
 
-	/* ƒXƒLƒ‹UŒ‚ */
-	DefaultAttack,	//!< ƒfƒtƒHƒ‹ƒgƒXƒLƒ‹UŒ‚
-	Landmine,		//!< ’n—‹UŒ‚
-	FireMagic,		//!< ‰Î–‚–@UŒ‚
+	/* ã‚¹ã‚­ãƒ«æ”»æ’ƒ */
+	DefaultAttack,	//!< ãƒ‡ãƒ•ã‚©ãƒ«ãƒˆã‚¹ã‚­ãƒ«æ”»æ’ƒ
+	Landmine,		//!< åœ°é›·æ”»æ’ƒ
+	FireMagic,		//!< ç«é­”æ³•æ”»æ’ƒ
 
 
-	/* ”Ä—pƒXƒLƒ‹ */
-	Avoid, //!< ‰ñ”ğ
+	/* æ±ç”¨ã‚¹ã‚­ãƒ« */
+	Avoid, //!< å›é¿
 
 
-	/* ‹­§ƒXƒe[ƒg */
+	/* å¼·åˆ¶ã‚¹ãƒ†ãƒ¼ãƒˆ */
 	Dead
 };
 
-// ó‘Ô‘JˆÚ‚ÉŠÖ‚·‚é•Ï”‚Ì\‘¢‘Ì
+// çŠ¶æ…‹é·ç§»ã«é–¢ã™ã‚‹å¤‰æ•°ã®æ§‹é€ ä½“
 struct Transition
 {
-	std::function<bool()> condition; //!< ‘JˆÚ‚·‚éğŒ
-	PlayerStateID nextState;               //!< ğŒ‚ğ–‚½‚µ‚½‚Ì‘JˆÚæ
+	std::function<bool()> condition; //!< é·ç§»ã™ã‚‹æ¡ä»¶
+	PlayerStateID nextState;               //!< æ¡ä»¶ã‚’æº€ãŸã—ãŸæ™‚ã®é·ç§»å…ˆ
 };
 
 
 /*
- * ”Ä—pŒ^ƒXƒe[ƒgƒ}ƒV[ƒ“(Œp³‚¹‚¸‚ÉÀ‘Ì‚Æ‚µ‚Äg‚¤)
+ * æ±ç”¨å‹ã‚¹ãƒ†ãƒ¼ãƒˆãƒã‚·ãƒ¼ãƒ³(ç¶™æ‰¿ã›ãšã«å®Ÿä½“ã¨ã—ã¦ä½¿ã†)
  */
 class StateMachine : public Noncopyable
 {
 private:
 	/*
-	 * std::unordered_map : ƒL[‚Æ’l‚ğ•Û‘¶‚·‚é‚½‚ß‚ÌƒRƒ“ƒeƒiBƒnƒbƒVƒ…ƒe[ƒuƒ‹‚ğg‚¤B
-	 * ƒnƒbƒVƒ…ƒe[ƒuƒ‹ : w’è‚µ‚½ID‚ÌƒXƒe[ƒg‚ğŒŸõ‚·‚é‘¬“x‚ª”ñí‚É‘¬‚¢
+	 * std::unordered_map : ã‚­ãƒ¼ã¨å€¤ã‚’ä¿å­˜ã™ã‚‹ãŸã‚ã®ã‚³ãƒ³ãƒ†ãƒŠã€‚ãƒãƒƒã‚·ãƒ¥ãƒ†ãƒ¼ãƒ–ãƒ«ã‚’ä½¿ã†ã€‚
+	 * ãƒãƒƒã‚·ãƒ¥ãƒ†ãƒ¼ãƒ–ãƒ« : æŒ‡å®šã—ãŸIDã®ã‚¹ãƒ†ãƒ¼ãƒˆã‚’æ¤œç´¢ã™ã‚‹é€Ÿåº¦ãŒéå¸¸ã«é€Ÿã„
 	 */ 
-	std::unordered_map<PlayerStateID, std::unique_ptr<IState>> stateMap_; //!< ó‘Ô‚ğŠÇ—‚·‚é‚½‚ß‚Ì‚à‚Ì
+	std::unordered_map<PlayerStateID, std::unique_ptr<IState>> stateMap_; //!< çŠ¶æ…‹ã‚’ç®¡ç†ã™ã‚‹ãŸã‚ã®ã‚‚ã®
 
-	/* ‘JˆÚƒ‹[ƒ‹‚ÌƒŠƒXƒg‚ğ’Ç‰Á */
-	std::vector<Transition> globalTransitions_;								//!< —Dæ‚³‚ê‚é‘JˆÚƒ‹[ƒ‹‚ÌƒŠƒXƒg(—á:€‚Êƒtƒ‰ƒO,ƒ_ƒ[ƒWƒŠƒAƒNƒVƒ‡ƒ“)
-	std::unordered_map<PlayerStateID, std::vector<Transition>> stateTransitions_;	//!< ‘JˆÚƒ‹[ƒ‹‚ÌƒŠƒXƒg(—á:‘Ò‹@,•à‚«,‘–‚è)
+	/* é·ç§»ãƒ«ãƒ¼ãƒ«ã®ãƒªã‚¹ãƒˆã‚’è¿½åŠ  */
+	std::vector<Transition> globalTransitions_;								//!< å„ªå…ˆã•ã‚Œã‚‹é·ç§»ãƒ«ãƒ¼ãƒ«ã®ãƒªã‚¹ãƒˆ(ä¾‹:æ­»ã¬ãƒ•ãƒ©ã‚°,ãƒ€ãƒ¡ãƒ¼ã‚¸ãƒªã‚¢ã‚¯ã‚·ãƒ§ãƒ³)
+	std::unordered_map<PlayerStateID, std::vector<Transition>> stateTransitions_;	//!< é·ç§»ãƒ«ãƒ¼ãƒ«ã®ãƒªã‚¹ãƒˆ(ä¾‹:å¾…æ©Ÿ,æ­©ã,èµ°ã‚Š)
 
-	/* ó‘Ô‚ÌƒXƒe[ƒg */
-	IState* currentState_ = nullptr;		 //!< Œ»İ‚ÌƒXƒe[ƒg
-	PlayerStateID currentStateId_ = PlayerStateID::None; //!< Œ»İ‚ÌƒXƒe[ƒg‚Ìid
-	PlayerStateID nextStateId_ = PlayerStateID::None;	 //!< Ÿ‚ÌƒXƒe[ƒg‚Ìid
+	/* çŠ¶æ…‹ã®ã‚¹ãƒ†ãƒ¼ãƒˆ */
+	IState* currentState_ = nullptr;		 //!< ç¾åœ¨ã®ã‚¹ãƒ†ãƒ¼ãƒˆ
+	PlayerStateID currentStateId_ = PlayerStateID::None; //!< ç¾åœ¨ã®ã‚¹ãƒ†ãƒ¼ãƒˆã®id
+	PlayerStateID nextStateId_ = PlayerStateID::None;	 //!< æ¬¡ã®ã‚¹ãƒ†ãƒ¼ãƒˆã®id
 
 private:
-	Quaternion rotation_ = Quaternion::Identity; //!< ‰ñ“]Fƒ‚ƒfƒ‹‚ğ‚Ç‚¿‚ç‚ÉŒü‚¯‚é‚©
-	Vector3 direction_ = Vector3::Zero; //!< •ûŒüFƒJƒƒ‰Šî€‚Å‚Ç‚¿‚ç‚ğŒü‚­‚©
-	float stickLAmount_ = 0.0f; //!< ¶ƒXƒeƒBƒbƒN‚Ì“ü—Í—ÊFƒLƒƒƒ‰ƒNƒ^[‚ªˆÚ“®‚µ‚Ä‚¢‚é‚©‚í‚©‚é
-	bool actionButtonA_ = false; //!< ’·‰Ÿ‚µ‚Åƒ_ƒbƒVƒ…‚·‚é‚©A’Z‰Ÿ‚µ‚Å‰ñ”ğ‚·‚é‚©
-	bool actionButtonB_ = false; //!< Bƒ{ƒ^ƒ“‚ğ‰Ÿ‚µ‚½‚©
-	bool actionButtonX_ = false; //!< Xƒ{ƒ^ƒ“‚ğ‰Ÿ‚µ‚½‚©
-	bool actionButtonY_ = false; //!< Yƒ{ƒ^ƒ“‚ğ‰Ÿ‚µ‚½‚©
-	bool avoidRequested_ = false; //!< ‰ñ”ğ‚ğ‚·‚é‚©
+	Quaternion rotation_ = Quaternion::Identity; //!< å›è»¢ï¼šãƒ¢ãƒ‡ãƒ«ã‚’ã©ã¡ã‚‰ã«å‘ã‘ã‚‹ã‹
+	Vector3 direction_ = Vector3::Zero; //!< æ–¹å‘ï¼šã‚«ãƒ¡ãƒ©åŸºæº–ã§ã©ã¡ã‚‰ã‚’å‘ãã‹
+	float stickLAmount_ = 0.0f; //!< å·¦ã‚¹ãƒ†ã‚£ãƒƒã‚¯ã®å…¥åŠ›é‡ï¼šã‚­ãƒ£ãƒ©ã‚¯ã‚¿ãƒ¼ãŒç§»å‹•ã—ã¦ã„ã‚‹ã‹ã‚ã‹ã‚‹
+	bool actionButtonA_ = false; //!< é•·æŠ¼ã—ã§ãƒ€ãƒƒã‚·ãƒ¥ã™ã‚‹ã‹ã€çŸ­æŠ¼ã—ã§å›é¿ã™ã‚‹ã‹
+	bool actionButtonB_ = false; //!< Bãƒœã‚¿ãƒ³ã‚’æŠ¼ã—ãŸã‹
+	bool actionButtonX_ = false; //!< Xãƒœã‚¿ãƒ³ã‚’æŠ¼ã—ãŸã‹
+	bool actionButtonY_ = false; //!< Yãƒœã‚¿ãƒ³ã‚’æŠ¼ã—ãŸã‹
+	bool avoidRequested_ = false; //!< å›é¿ã‚’ã™ã‚‹ã‹
 
 
 
 public:
-	inline Quaternion GetRotation() { return rotation_; }				//!< ‰ñ“]‚Ìæ“¾
-	inline void SetRotation(const Quaternion rot) { rotation_ = rot; }	//!< ‰ñ“]‚Ìİ’è
-	inline const Vector3& GetDirection() { return direction_; }			//!< •ûŒü‚Ìæ“¾
-	inline void SetDirection(const Vector3& dir) { direction_ = dir; }	//!< •ûŒü‚Ìİ’è
-	inline float GetStickLAmount() { return stickLAmount_; }			//!< “ü—Í‚³‚ê‚Ä‚¢‚é‚©
-	inline void SetStickLAmount(const float stickLAmount) { stickLAmount_ = stickLAmount; } //!< “ü—Í—Ê‚ğİ’è
-	inline bool IsDash() { return actionButtonA_; }								//!< Aƒ{ƒ^ƒ“‚³‚ê‚Ä‚¢‚é‚©
-	inline void ActionButtonA(const bool flg) { actionButtonA_ = flg; }			//!< Aƒ{ƒ^ƒ“‚Ìİ’è
-	inline bool IsActionButtonB() { return actionButtonB_; }			//!< Bƒ{ƒ^ƒ“‚³‚ê‚Ä‚¢‚é‚©
-	inline void ActionButtonB(const bool flg) { actionButtonB_ = flg; }	//!< Bƒ{ƒ^ƒ“‚Ìİ’è
-	inline bool IsActionButtonY() { return actionButtonY_; }			//!< Yƒ{ƒ^ƒ“‚³‚ê‚Ä‚¢‚é‚©
-	inline void ActionButtonY(const bool flg) { actionButtonY_ = flg; }	//!< Yƒ{ƒ^ƒ“‚Ìİ’è
-	inline bool IsActionButtonX() { return actionButtonX_; }			//!< Xƒ{ƒ^ƒ“‚³‚ê‚Ä‚¢‚é‚©
-	inline void ActionButtonX(const bool flg) { actionButtonX_ = flg; }	//!< Xƒ{ƒ^ƒ“‚Ìİ’è
+	inline Quaternion GetRotation() { return rotation_; }				//!< å›è»¢ã®å–å¾—
+	inline void SetRotation(const Quaternion rot) { rotation_ = rot; }	//!< å›è»¢ã®è¨­å®š
+	inline const Vector3& GetDirection() { return direction_; }			//!< æ–¹å‘ã®å–å¾—
+	inline void SetDirection(const Vector3& dir) { direction_ = dir; }	//!< æ–¹å‘ã®è¨­å®š
+	inline float GetStickLAmount() { return stickLAmount_; }			//!< å…¥åŠ›ã•ã‚Œã¦ã„ã‚‹ã‹
+	inline void SetStickLAmount(const float stickLAmount) { stickLAmount_ = stickLAmount; } //!< å…¥åŠ›é‡ã‚’è¨­å®š
+	inline bool IsDash() { return actionButtonA_; }								//!< Aãƒœã‚¿ãƒ³ã•ã‚Œã¦ã„ã‚‹ã‹
+	inline void ActionButtonA(const bool flg) { actionButtonA_ = flg; }			//!< Aãƒœã‚¿ãƒ³ã®è¨­å®š
+	inline bool IsActionButtonB() { return actionButtonB_; }			//!< Bãƒœã‚¿ãƒ³ã•ã‚Œã¦ã„ã‚‹ã‹
+	inline void ActionButtonB(const bool flg) { actionButtonB_ = flg; }	//!< Bãƒœã‚¿ãƒ³ã®è¨­å®š
+	inline bool IsActionButtonY() { return actionButtonY_; }			//!< Yãƒœã‚¿ãƒ³ã•ã‚Œã¦ã„ã‚‹ã‹
+	inline void ActionButtonY(const bool flg) { actionButtonY_ = flg; }	//!< Yãƒœã‚¿ãƒ³ã®è¨­å®š
+	inline bool IsActionButtonX() { return actionButtonX_; }			//!< Xãƒœã‚¿ãƒ³ã•ã‚Œã¦ã„ã‚‹ã‹
+	inline void ActionButtonX(const bool flg) { actionButtonX_ = flg; }	//!< Xãƒœã‚¿ãƒ³ã®è¨­å®š
 
 
 	inline IState* GetCurrentState() const{ return currentState_; }
 
-	/** ‰ñ”ğƒXƒe[ƒgÀs’†‚ÍV‚½‚È‰ñ”ğ“ü—Í‚ğó‚¯•t‚¯‚È‚¢ */
+	/** å›é¿ã‚¹ãƒ†ãƒ¼ãƒˆå®Ÿè¡Œä¸­ã¯æ–°ãŸãªå›é¿å…¥åŠ›ã‚’å—ã‘ä»˜ã‘ãªã„ */
 	inline void SetAvoidRequested(bool flg) {
 		if (flg && currentStateId_ == PlayerStateID::Avoid) { return; }
 		avoidRequested_ = flg;
@@ -98,39 +98,39 @@ public:
 	inline void ClearAvoidRequest() { avoidRequested_ = false; }
 
 public:
-	/* ƒRƒ“ƒXƒgƒ‰ƒNƒ^ */
+	/* ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿ */
 	StateMachine() {}
-	/* ƒfƒXƒgƒ‰ƒNƒ^ */
+	/* ãƒ‡ã‚¹ãƒˆãƒ©ã‚¯ã‚¿ */
 	virtual ~StateMachine() = default;
 
-	/* XVˆ— */
+	/* æ›´æ–°å‡¦ç† */
 	virtual void Update();
-	/* ƒXƒe[ƒg‚ÌØ‚è‘Ö‚¦‚ÆXV */
+	/* ã‚¹ãƒ†ãƒ¼ãƒˆã®åˆ‡ã‚Šæ›¿ãˆã¨æ›´æ–° */
 	void UpdateState();
 
 /*================================================================*/
-/** ƒXƒe[ƒgŠÖŒW */
+/** ã‚¹ãƒ†ãƒ¼ãƒˆé–¢ä¿‚ */
 /*================================================================*/
 
 public:
-	/* V‚µ‚¢ƒXƒe[ƒg‚Ì“o˜^‚ğs‚¤ */
+	/* æ–°ã—ã„ã‚¹ãƒ†ãƒ¼ãƒˆã®ç™»éŒ²ã‚’è¡Œã† */
 	void AddState(PlayerStateID id,IState* state)
 	{
 		stateMap_.emplace(id, std::unique_ptr<IState>(state));
 	}
 
-	/* ID‚ğƒZƒbƒg */
+	/* IDã‚’ã‚»ãƒƒãƒˆ */
 	void InitialState(PlayerStateID id)
 	{
 		nextStateId_ = id;
 	}
 
 	/* 
-	 * ‚Ç‚Ìó‘Ô‚©‚ç‚Å‚à‘JˆÚ‚Å‚«‚éuƒOƒ[ƒoƒ‹‘JˆÚƒ‹[ƒ‹v‚ğ“o˜^ 
-	 * Œ»İ‚ÌƒAƒNƒVƒ‡ƒ“‚ğ‹­§ƒLƒƒƒ“ƒZƒ‹AŠ„‚è‚Ş‚±‚Æ‚ª‚Å‚«‚é
-	 * —áF€–SAƒ_ƒ[ƒWƒŠƒAƒNƒVƒ‡ƒ“‚È‚Ç
-	 * @param condition ‘JˆÚğŒ‚ğ–‚½‚µ‚½‚©‚ğ”»’è‚·‚éƒR[ƒ‹ƒoƒbƒNŠÖ”itrue‚ğ•Ô‚·‚Æ‘JˆÚ‚ğÀsj
-	 * @param nextState ğŒ‚ğ–‚½‚µ‚½Û‚Ì‘JˆÚæ‚ÌƒXƒe[ƒgID
+	 * ã©ã®çŠ¶æ…‹ã‹ã‚‰ã§ã‚‚é·ç§»ã§ãã‚‹ã€Œã‚°ãƒ­ãƒ¼ãƒãƒ«é·ç§»ãƒ«ãƒ¼ãƒ«ã€ã‚’ç™»éŒ² 
+	 * ç¾åœ¨ã®ã‚¢ã‚¯ã‚·ãƒ§ãƒ³ã‚’å¼·åˆ¶ã‚­ãƒ£ãƒ³ã‚»ãƒ«ã€å‰²ã‚Šè¾¼ã‚€ã“ã¨ãŒã§ãã‚‹
+	 * ä¾‹ï¼šæ­»äº¡æ™‚ã€ãƒ€ãƒ¡ãƒ¼ã‚¸ãƒªã‚¢ã‚¯ã‚·ãƒ§ãƒ³ãªã©
+	 * @param condition é·ç§»æ¡ä»¶ã‚’æº€ãŸã—ãŸã‹ã‚’åˆ¤å®šã™ã‚‹ã‚³ãƒ¼ãƒ«ãƒãƒƒã‚¯é–¢æ•°ï¼ˆtrueã‚’è¿”ã™ã¨é·ç§»ã‚’å®Ÿè¡Œï¼‰
+	 * @param nextState æ¡ä»¶ã‚’æº€ãŸã—ãŸéš›ã®é·ç§»å…ˆã®ã‚¹ãƒ†ãƒ¼ãƒˆID
 	 */
 	void AddGlobalTransition(std::function<bool()> condition, PlayerStateID nextState)
 	{
@@ -138,11 +138,11 @@ public:
 	}
 
 	/* 
-	 * “Á’è‚ÌƒXƒe[ƒg‚É‚¢‚é‚Ì‚İ—LŒø‚É‚È‚éuŒÂ•Ê‚Ì‘JˆÚƒ‹[ƒ‹v‚ğ“o˜^ 
-	 * ƒOƒ[ƒoƒ‹‘JˆÚƒ‹[ƒ‹‚ÌğŒ‚ğ–‚½‚µ‚Ä‚¢‚È‚¢ê‡‚Ì‚İƒ`ƒFƒbƒN‚³‚ê‚Ü‚·B
-	 * @param state ‘JˆÚ‘O‚ÌƒXƒe[ƒgID
-	 * @param nextState ‘JˆÚæ‚ÌƒXƒe[ƒgID, 
-	 * @param condition ‘JˆÚğŒ‚ğ–‚½‚µ‚½‚©‚ğ”»’è‚·‚éƒR[ƒ‹ƒoƒbƒNŠÖ”itrue‚ğ•Ô‚·‚Æ‘JˆÚ‚ğÀsj
+	 * ç‰¹å®šã®ã‚¹ãƒ†ãƒ¼ãƒˆã«ã„ã‚‹æ™‚ã®ã¿æœ‰åŠ¹ã«ãªã‚‹ã€Œå€‹åˆ¥ã®é·ç§»ãƒ«ãƒ¼ãƒ«ã€ã‚’ç™»éŒ² 
+	 * ã‚°ãƒ­ãƒ¼ãƒãƒ«é·ç§»ãƒ«ãƒ¼ãƒ«ã®æ¡ä»¶ã‚’æº€ãŸã—ã¦ã„ãªã„å ´åˆã®ã¿ãƒã‚§ãƒƒã‚¯ã•ã‚Œã¾ã™ã€‚
+	 * @param state é·ç§»å‰ã®ã‚¹ãƒ†ãƒ¼ãƒˆID
+	 * @param nextState é·ç§»å…ˆã®ã‚¹ãƒ†ãƒ¼ãƒˆID, 
+	 * @param condition é·ç§»æ¡ä»¶ã‚’æº€ãŸã—ãŸã‹ã‚’åˆ¤å®šã™ã‚‹ã‚³ãƒ¼ãƒ«ãƒãƒƒã‚¯é–¢æ•°ï¼ˆtrueã‚’è¿”ã™ã¨é·ç§»ã‚’å®Ÿè¡Œï¼‰
 	 */
 	void AddTransition(PlayerStateID state, PlayerStateID nextState, std::function<bool()> condition)
 	{
@@ -150,7 +150,7 @@ public:
 	}
 
 private:
-	/* ƒXƒe[ƒg‚ğŒ©‚Â‚¯‚é */ 
+	/* ã‚¹ãƒ†ãƒ¼ãƒˆã‚’è¦‹ã¤ã‘ã‚‹ */ 
 	IState* FindState(const PlayerStateID id)
 	{
 		auto it = stateMap_.find(id);

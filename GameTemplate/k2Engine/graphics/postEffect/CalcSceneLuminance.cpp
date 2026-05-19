@@ -1,4 +1,4 @@
-#include "k2EnginePreCompile.h"
+ï»¿#include "k2EnginePreCompile.h"
 #include "graphics/postEffect/CalcSceneLuminance.h"
 
 namespace nsK2Engine {
@@ -42,7 +42,7 @@ namespace nsK2Engine {
 		RenderTarget& metallicSmoothRenderTarget,
 		RenderTarget& albedoRenderTarget
 	) {
-		// •½‹Ï‹P“xŒvZ—p‚ÌƒŒƒ“ƒ_ƒŠƒ“ƒOƒ^[ƒQƒbƒg‚ğì¬B
+		// å¹³å‡è¼åº¦è¨ˆç®—ç”¨ã®ãƒ¬ãƒ³ãƒ€ãƒªãƒ³ã‚°ã‚¿ãƒ¼ã‚²ãƒƒãƒˆã‚’ä½œæˆã€‚
 		for (int i = 0; i < enNumCalcAvgSprite; i++) {
 			int rtSize = 1 << (2 * (enNumCalcAvgSprite - i - 1));
 			m_calcAvgRt[i].Create(
@@ -54,7 +54,7 @@ namespace nsK2Engine {
 				DXGI_FORMAT_UNKNOWN
 			);
 		}
-		// ÅI“I‚Éƒg[ƒ“ƒ}ƒbƒv‚Åg—p‚·‚é•½‹Ï‹P“x‚ğ‘‚«‚±‚ŞƒŒƒ“ƒ_ƒŠƒ“ƒOƒ^[ƒQƒbƒg‚ğì¬B
+		// æœ€çµ‚çš„ã«ãƒˆãƒ¼ãƒ³ãƒãƒƒãƒ—ã§ä½¿ç”¨ã™ã‚‹å¹³å‡è¼åº¦ã‚’æ›¸ãã“ã‚€ãƒ¬ãƒ³ãƒ€ãƒªãƒ³ã‚°ã‚¿ãƒ¼ã‚²ãƒƒãƒˆã‚’ä½œæˆã€‚
 		m_luminanceAvgInTonemapRt.Create(
 			1,
 			1,
@@ -63,7 +63,7 @@ namespace nsK2Engine {
 			DXGI_FORMAT_R16_FLOAT,
 			DXGI_FORMAT_UNKNOWN
 		);
-		// 1ƒtƒŒ[ƒ€‘O‚Ì•½‹Ï‹P“x‚ğ‘‚«‚ŞƒŒƒ“ƒ_ƒŠƒ“ƒOƒ^[ƒQƒbƒg‚ğì¬B
+		// 1ãƒ•ãƒ¬ãƒ¼ãƒ å‰ã®å¹³å‡è¼åº¦ã‚’æ›¸ãè¾¼ã‚€ãƒ¬ãƒ³ãƒ€ãƒªãƒ³ã‚°ã‚¿ãƒ¼ã‚²ãƒƒãƒˆã‚’ä½œæˆã€‚
 		m_luminanceAvgInTonemapLastFrameRt.Create(
 			1,
 			1,
@@ -74,7 +74,7 @@ namespace nsK2Engine {
 		);
 
 		m_cb1.deltaTime = 1.0f / 60.0f;
-		// ‘Î”•½‹Ï‚ğ‚Æ‚éƒXƒvƒ‰ƒCƒg‚ğ‰Šú‰»B
+		// å¯¾æ•°å¹³å‡ã‚’ã¨ã‚‹ã‚¹ãƒ—ãƒ©ã‚¤ãƒˆã‚’åˆæœŸåŒ–ã€‚
 		int curRtNo = 0;
 		{
 			SpriteInitData initData;
@@ -88,7 +88,7 @@ namespace nsK2Engine {
 			initData.m_textures[0] = &mainRenderTarget.GetRenderTargetTexture();
 			m_calcAvgSprites[enCalcAvgLog].Init(initData);
 		}
-		// •½‹Ï‚ğ‚Æ‚éƒXƒvƒ‰ƒCƒg‚ğ‰Šú‰»B
+		// å¹³å‡ã‚’ã¨ã‚‹ã‚¹ãƒ—ãƒ©ã‚¤ãƒˆã‚’åˆæœŸåŒ–ã€‚
 		curRtNo++;
 		int calsAvgSpriteNo = enCalcAvg_Start;
 		while (curRtNo < enCalcAvg_End) {
@@ -105,7 +105,7 @@ namespace nsK2Engine {
 			calsAvgSpriteNo++;
 			curRtNo++;
 		}
-		// expŠÖ”‚ğ—p‚¢‚ÄÅI•½‹Ï‚ğ‹‚ß‚éB
+		// expé–¢æ•°ã‚’ç”¨ã„ã¦æœ€çµ‚å¹³å‡ã‚’æ±‚ã‚ã‚‹ã€‚
 		{
 			SpriteInitData initData;
 			initData.m_width = m_calcAvgRt[curRtNo].GetWidth();
@@ -118,7 +118,7 @@ namespace nsK2Engine {
 			initData.m_textures[0] = &m_calcAvgRt[curRtNo - 1].GetRenderTargetTexture();
 			m_calcAvgSprites[curRtNo].Init(initData);
 		}
-		// –¾ˆÃ‡‰
+		// æ˜æš—é †å¿œ
 		{
 			SpriteInitData initData;
 			initData.m_width = 1;
@@ -159,12 +159,12 @@ namespace nsK2Engine {
 	}
 	void CalcSceneLuminance::CalcLuminanceAvarage(RenderContext& rc)
 	{
-		// ƒV[ƒ“‚Ì‹P“x‚Ì•½‹Ï‚ğŒvZ‚µ‚Ä‚¢‚­B
+		// ã‚·ãƒ¼ãƒ³ã®è¼åº¦ã®å¹³å‡ã‚’è¨ˆç®—ã—ã¦ã„ãã€‚
 		for (int spriteNo = 0; spriteNo < enNumCalcAvgSprite; spriteNo++) {
 
-			// ƒŒƒ“ƒ_ƒŠƒ“ƒOƒ^[ƒQƒbƒg‚Æ‚µ‚Ä—˜—p‚Å‚«‚é‚Ü‚Å‘Ò‚Â
+			// ãƒ¬ãƒ³ãƒ€ãƒªãƒ³ã‚°ã‚¿ãƒ¼ã‚²ãƒƒãƒˆã¨ã—ã¦åˆ©ç”¨ã§ãã‚‹ã¾ã§å¾…ã¤
 			rc.WaitUntilToPossibleSetRenderTarget(m_calcAvgRt[spriteNo]);
-			// ƒŒƒ“ƒ_ƒŠƒ“ƒOƒ^[ƒQƒbƒg‚ğİ’è
+			// ãƒ¬ãƒ³ãƒ€ãƒªãƒ³ã‚°ã‚¿ãƒ¼ã‚²ãƒƒãƒˆã‚’è¨­å®š
 			rc.SetRenderTargetAndViewport(m_calcAvgRt[spriteNo]);
 			rc.ClearRenderTargetView(m_calcAvgRt[spriteNo]);
 
@@ -176,7 +176,7 @@ namespace nsK2Engine {
 
 			m_calcAvgSprites[spriteNo].Draw(rc);
 
-			// ƒŒƒ“ƒ_ƒŠƒ“ƒOƒ^[ƒQƒbƒg‚Ö‚Ì‘‚«‚İI—¹‘Ò‚¿
+			// ãƒ¬ãƒ³ãƒ€ãƒªãƒ³ã‚°ã‚¿ãƒ¼ã‚²ãƒƒãƒˆã¸ã®æ›¸ãè¾¼ã¿çµ‚äº†å¾…ã¡
 			rc.WaitUntilFinishDrawingToRenderTarget(m_calcAvgRt[spriteNo]);
 		}
 	}
@@ -186,16 +186,16 @@ namespace nsK2Engine {
 
 		CalcLuminanceAvarage(rc);
 
-		// –¾ˆÃ‡‰
+		// æ˜æš—é †å¿œ
 		m_cb1.deltaTime = g_gameTime->GetFrameDeltaTime();
 		rc.WaitUntilToPossibleSetRenderTarget(m_luminanceAvgInTonemapRt);
-		// ƒŒƒ“ƒ_ƒŠƒ“ƒOƒ^[ƒQƒbƒg‚ğİ’è
+		// ãƒ¬ãƒ³ãƒ€ãƒªãƒ³ã‚°ã‚¿ãƒ¼ã‚²ãƒƒãƒˆã‚’è¨­å®š
 		rc.SetRenderTargetAndViewport(m_luminanceAvgInTonemapRt);
 
 		if (m_isFirstWhenChangeScene) {
 			m_changeSceneTimer -= g_gameTime->GetFrameDeltaTime();
 			if (m_changeSceneTimer > 0.0f) {
-				// ƒV[ƒ“Ø‚è‘Ö‚¦I—¹B
+				// ã‚·ãƒ¼ãƒ³åˆ‡ã‚Šæ›¿ãˆçµ‚äº†ã€‚
 				m_isFirstWhenChangeScene = false;
 			}
 			m_calcAdapteredLuminanceFisrtSprite.Draw(rc);
@@ -204,17 +204,17 @@ namespace nsK2Engine {
 			m_calcAdapteredLuminanceSprite.Draw(rc);
 		}
 
-		// ƒŒƒ“ƒ_ƒŠƒ“ƒOƒ^[ƒQƒbƒg‚Ö‚Ì‘‚«‚İI—¹‘Ò‚¿
+		// ãƒ¬ãƒ³ãƒ€ãƒªãƒ³ã‚°ã‚¿ãƒ¼ã‚²ãƒƒãƒˆã¸ã®æ›¸ãè¾¼ã¿çµ‚äº†å¾…ã¡
 		rc.WaitUntilFinishDrawingToRenderTarget(m_luminanceAvgInTonemapRt);
 
 		
-		// ƒg[ƒ“ƒ}ƒbƒv‚Åg—p‚µ‚½•½‹Ï‹P“x‚ğ•Û‘¶‚·‚éB
-		// ƒŒƒ“ƒ_ƒŠƒ“ƒOƒ^[ƒQƒbƒg‚ªg—p‰Â”\‚É‚È‚é‚Ü‚Å‘Ò‚ÂB
+		// ãƒˆãƒ¼ãƒ³ãƒãƒƒãƒ—ã§ä½¿ç”¨ã—ãŸå¹³å‡è¼åº¦ã‚’ä¿å­˜ã™ã‚‹ã€‚
+		// ãƒ¬ãƒ³ãƒ€ãƒªãƒ³ã‚°ã‚¿ãƒ¼ã‚²ãƒƒãƒˆãŒä½¿ç”¨å¯èƒ½ã«ãªã‚‹ã¾ã§å¾…ã¤ã€‚
 		rc.WaitUntilToPossibleSetRenderTarget(m_luminanceAvgInTonemapLastFrameRt);
-		// ƒŒƒ“ƒ_ƒŠƒ“ƒOƒ^[ƒQƒbƒg‚ğİ’è
+		// ãƒ¬ãƒ³ãƒ€ãƒªãƒ³ã‚°ã‚¿ãƒ¼ã‚²ãƒƒãƒˆã‚’è¨­å®š
 		rc.SetRenderTargetAndViewport(m_luminanceAvgInTonemapLastFrameRt);
 		m_copyLuminanceAvgInTonemapSprite.Draw(rc);
-		// ƒŒƒ“ƒ_ƒŠƒ“ƒOƒ^[ƒQƒbƒg‚Ö‚Ì‘‚«‚İI—¹‘Ò‚¿
+		// ãƒ¬ãƒ³ãƒ€ãƒªãƒ³ã‚°ã‚¿ãƒ¼ã‚²ãƒƒãƒˆã¸ã®æ›¸ãè¾¼ã¿çµ‚äº†å¾…ã¡
 		rc.WaitUntilFinishDrawingToRenderTarget(m_luminanceAvgInTonemapLastFrameRt);
 
 		g_graphicsEngine->EndGPUEvent();

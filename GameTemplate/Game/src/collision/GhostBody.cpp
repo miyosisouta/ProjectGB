@@ -1,4 +1,4 @@
-#include "stdafx.h"
+ï»¿#include "stdafx.h"
 #include "GhostBody.h"
 #include "GhostBodyManager.h"
 
@@ -56,7 +56,7 @@ void GhostBody::SetPosition(const Vector3& pos)
 	if (!position_.IsEqual(pos)) {
 		position_ = pos;
 		isDirty_ = true;
-		// BulletObject‚à“¯Šú
+		// BulletObjectã‚‚åŒæœŸ
 		if (bulletObject_) {
 			bulletObject_->setWorldTransform(GetBtTransform());
 		}
@@ -101,6 +101,6 @@ void GhostBody::RebuildBulletObject()
 	bulletObject_->setCollisionShape(bulletShape_.get());
 	bulletObject_->setCollisionShape(bulletShape_.get());
 	bulletObject_->setWorldTransform(GetBtTransform());
-	// Bullet‘¤‚ÅCollision‚Ìƒtƒ‰ƒO‚ª•K—v‚È‚ç‚±‚±‚ÅÝ’è
+	// Bulletå´ã§Collisionã®ãƒ•ãƒ©ã‚°ãŒå¿…è¦ãªã‚‰ã“ã“ã§è¨­å®š
 	// m_bulletObject->setCollisionFlags(m_bulletObject->getCollisionFlags() | btCollisionObject::CF_NO_CONTACT_RESPONSE);
 }

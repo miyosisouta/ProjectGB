@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 struct DitherCBData
 {
     Vector3 playerWorldPos = Vector3::Zero;      // 12バイト

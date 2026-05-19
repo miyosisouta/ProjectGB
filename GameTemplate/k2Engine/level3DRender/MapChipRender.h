@@ -1,5 +1,5 @@
-/*!
- *@brief	ƒ}ƒbƒvƒ`ƒbƒv
+ï»¿/*!
+ *@brief	ãƒãƒƒãƒ—ãƒãƒƒãƒ—
  */
 
 #pragma once
@@ -9,14 +9,14 @@ namespace nsK2Engine {
 
 	struct MapChipData
 	{
-		Vector3				position;				//À•WB
-		Vector3				scale;					//‘å‚«‚³B
-		Quaternion			rotation;				//‰ñ“]B
-		//std::unique_ptr<PhysicsStaticObject> physicsStaticObject;	//Ã“I•¨—ƒIƒuƒWƒFƒNƒgB
+		Vector3				position;				//åº§æ¨™ã€‚
+		Vector3				scale;					//å¤§ãã•ã€‚
+		Quaternion			rotation;				//å›è»¢ã€‚
+		//std::unique_ptr<PhysicsStaticObject> physicsStaticObject;	//é™çš„ç‰©ç†ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã€‚
 	};
 
 	/// <summary>
-	/// ƒ}ƒbƒvƒ`ƒbƒvƒŒƒ“ƒ_[B
+	/// ãƒãƒƒãƒ—ãƒãƒƒãƒ—ãƒ¬ãƒ³ãƒ€ãƒ¼ã€‚
 	/// </summary>
 	class MapChipRender : public Noncopyable
 	{
@@ -26,25 +26,25 @@ namespace nsK2Engine {
 		{
 		}
 		/// <summary>
-		/// ƒ}ƒbƒvƒ`ƒbƒvƒf[ƒ^‚ğ’Ç‰ÁB
+		/// ãƒãƒƒãƒ—ãƒãƒƒãƒ—ãƒ‡ãƒ¼ã‚¿ã‚’è¿½åŠ ã€‚
 		/// </summary>
-		/// <param name="objData">ƒ}ƒbƒvƒ`ƒbƒvƒf[ƒ^B</param>
+		/// <param name="objData">ãƒãƒƒãƒ—ãƒãƒƒãƒ—ãƒ‡ãƒ¼ã‚¿ã€‚</param>
 		void AddMapChipData(const LevelObjectData& objData);
 		/// <summary>
-		/// ‰Šú‰»B
+		/// åˆæœŸåŒ–ã€‚
 		/// </summary>
 		void Init();
 		/// <summary>
-		/// ƒ‚ƒfƒ‹‚ğXVB
+		/// ãƒ¢ãƒ‡ãƒ«ã‚’æ›´æ–°ã€‚
 		/// </summary>
 		void Update();
 		/// <summary>
-		/// ƒ‚ƒfƒ‹‚ğ•`‰æB
+		/// ãƒ¢ãƒ‡ãƒ«ã‚’æç”»ã€‚
 		/// </summary>
-		/// <param name="rc">ƒŒƒ“ƒ_[ƒRƒ“ƒeƒLƒXƒgB</param>
+		/// <param name="rc">ãƒ¬ãƒ³ãƒ€ãƒ¼ã‚³ãƒ³ãƒ†ã‚­ã‚¹ãƒˆã€‚</param>
 		void Draw(RenderContext& rc);
 		/// <summary>
-		/// ƒ‚ƒfƒ‹ƒŒƒ“ƒ_ƒ‰[‚ğæ“¾B
+		/// ãƒ¢ãƒ‡ãƒ«ãƒ¬ãƒ³ãƒ€ãƒ©ãƒ¼ã‚’å–å¾—ã€‚
 		/// </summary>
 		/// <returns></returns>
 		ModelRender& GetSkinModelRender()
@@ -52,10 +52,10 @@ namespace nsK2Engine {
 			return m_modelRender;
 		}
 	private:
-		ModelRender											m_modelRender;					//ƒ‚ƒfƒ‹ƒŒƒ“ƒ_[B
-		std::vector<MapChipData>							m_mapChipDataVector;			//ƒ}ƒbƒvƒ`ƒbƒvƒf[ƒ^‚ÌƒŠƒXƒgB
-		std::unique_ptr<const char*>						m_filePath;						//tkmƒtƒ@ƒCƒ‹ƒpƒXB
-		std::vector<std::unique_ptr<PhysicsStaticObject>>	m_physicsStaticObjectPtrVector;	//PhysicsStaticObject‚ÌƒXƒ}[ƒgƒ|ƒCƒ“ƒ^‚Ì”z—ñB
-		int													m_mapChipDataNum;				//ƒ}ƒbƒvƒ`ƒbƒvƒf[ƒ^‚Ì”B
+		ModelRender											m_modelRender;					//ãƒ¢ãƒ‡ãƒ«ãƒ¬ãƒ³ãƒ€ãƒ¼ã€‚
+		std::vector<MapChipData>							m_mapChipDataVector;			//ãƒãƒƒãƒ—ãƒãƒƒãƒ—ãƒ‡ãƒ¼ã‚¿ã®ãƒªã‚¹ãƒˆã€‚
+		std::unique_ptr<const char*>						m_filePath;						//tkmãƒ•ã‚¡ã‚¤ãƒ«ãƒ‘ã‚¹ã€‚
+		std::vector<std::unique_ptr<PhysicsStaticObject>>	m_physicsStaticObjectPtrVector;	//PhysicsStaticObjectã®ã‚¹ãƒãƒ¼ãƒˆãƒã‚¤ãƒ³ã‚¿ã®é…åˆ—ã€‚
+		int													m_mapChipDataNum;				//ãƒãƒƒãƒ—ãƒãƒƒãƒ—ãƒ‡ãƒ¼ã‚¿ã®æ•°ã€‚
 	};
 }

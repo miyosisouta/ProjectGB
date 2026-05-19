@@ -1,18 +1,18 @@
-#pragma once
+ï»¿#pragma once
 
 namespace nsK2Engine {
 	/// <summary>
-	/// ƒ‰ƒCƒgƒJƒŠƒ“ƒOB
+	/// ãƒ©ã‚¤ãƒˆã‚«ãƒªãƒ³ã‚°ã€‚
 	/// </summary>
 	class LightCulling : public Noncopyable{
 	public:
 		/// <summary>
-		/// ‰Šú‰»B
+		/// åˆæœŸåŒ–ã€‚
 		/// </summary>
-		/// <param name="depthTexture">ƒV[ƒ“‚Ì[“x’l‚ª‘‚«‚Ü‚ê‚éƒeƒNƒXƒ`ƒƒ</param>
-		/// <param name="lightCb">ƒ‰ƒCƒgƒf[ƒ^‚Ì’è”ƒoƒbƒtƒ@B</param>
-		/// <param name="pointLightNoListInTileUAV">ƒ^ƒCƒ‹‚²‚Æ‚Ìƒ|ƒCƒ“ƒgƒ‰ƒCƒg‚ÌƒŠƒXƒg‚ğo—Í‚·‚é‚½‚ß‚ÌUAVB</param>
-		/// <param name="spotLightNoListInTileUAV">ƒ^ƒCƒ‹‚²‚Æ‚ÌƒXƒ|ƒbƒgƒ‰ƒCƒg‚ÌƒŠƒXƒg‚ğo—Í‚·‚é‚½‚ß‚ÌUAVB</param>
+		/// <param name="depthTexture">ã‚·ãƒ¼ãƒ³ã®æ·±åº¦å€¤ãŒæ›¸ãè¾¼ã¾ã‚Œã‚‹ãƒ†ã‚¯ã‚¹ãƒãƒ£</param>
+		/// <param name="lightCb">ãƒ©ã‚¤ãƒˆãƒ‡ãƒ¼ã‚¿ã®å®šæ•°ãƒãƒƒãƒ•ã‚¡ã€‚</param>
+		/// <param name="pointLightNoListInTileUAV">ã‚¿ã‚¤ãƒ«ã”ã¨ã®ãƒã‚¤ãƒ³ãƒˆãƒ©ã‚¤ãƒˆã®ãƒªã‚¹ãƒˆã‚’å‡ºåŠ›ã™ã‚‹ãŸã‚ã®UAVã€‚</param>
+		/// <param name="spotLightNoListInTileUAV">ã‚¿ã‚¤ãƒ«ã”ã¨ã®ã‚¹ãƒãƒƒãƒˆãƒ©ã‚¤ãƒˆã®ãƒªã‚¹ãƒˆã‚’å‡ºåŠ›ã™ã‚‹ãŸã‚ã®UAVã€‚</param>
 		void Init(
 			Texture& depthTexture, 
 			ConstantBuffer& lightCB, 
@@ -21,25 +21,25 @@ namespace nsK2Engine {
 		);
 
 		/// <summary>
-		/// ƒ‰ƒCƒgƒJƒŠƒ“ƒO‚ğÀsB
+		/// ãƒ©ã‚¤ãƒˆã‚«ãƒªãƒ³ã‚°ã‚’å®Ÿè¡Œã€‚
 		/// </summary>
-		/// <param name="rc">ƒŒƒ“ƒ_ƒŠƒ“ƒOƒRƒ“ƒeƒLƒXƒg</param>
+		/// <param name="rc">ãƒ¬ãƒ³ãƒ€ãƒªãƒ³ã‚°ã‚³ãƒ³ãƒ†ã‚­ã‚¹ãƒˆ</param>
 		void Execute(RenderContext& rc);
 	private:
-		// ƒ‰ƒCƒgƒJƒŠƒ“ƒO‚Åg—p‚·‚éƒJƒƒ‰î•ñ
+		// ãƒ©ã‚¤ãƒˆã‚«ãƒªãƒ³ã‚°ã§ä½¿ç”¨ã™ã‚‹ã‚«ãƒ¡ãƒ©æƒ…å ±
 		struct CameraData
 		{
-			Matrix mProj;           // ƒvƒƒWƒFƒNƒVƒ‡ƒ“s—ñ
-			Matrix mProjInv;        // ƒvƒƒWƒFƒNƒVƒ‡ƒ“s—ñ‚Ì‹ts—ñ
-			Matrix mCameraRot;      // ƒJƒƒ‰‚Ì‰ñ“]s—ñ
-			Vector4 screenParam;    // ƒXƒNƒŠ[ƒ“î•ñ
+			Matrix mProj;           // ãƒ—ãƒ­ã‚¸ã‚§ã‚¯ã‚·ãƒ§ãƒ³è¡Œåˆ—
+			Matrix mProjInv;        // ãƒ—ãƒ­ã‚¸ã‚§ã‚¯ã‚·ãƒ§ãƒ³è¡Œåˆ—ã®é€†è¡Œåˆ—
+			Matrix mCameraRot;      // ã‚«ãƒ¡ãƒ©ã®å›è»¢è¡Œåˆ—
+			Vector4 screenParam;    // ã‚¹ã‚¯ãƒªãƒ¼ãƒ³æƒ…å ±
 		};
-		RootSignature m_rootSignature;					// ƒ‹[ƒgƒVƒOƒlƒ`ƒƒB
-		ConstantBuffer m_cameraDataCB;					// ƒJƒƒ‰ƒf[ƒ^‚Ì’è”ƒoƒbƒtƒ@
-		PipelineState m_pipelineState;					// ƒpƒCƒvƒ‰ƒCƒ“ƒXƒe[ƒgB
-		Shader m_shader;								// ƒ‰ƒCƒgƒJƒŠƒ“ƒOƒVƒF[ƒ_[B
-		DescriptorHeap m_descriptorHeap;				// ƒfƒBƒXƒNƒŠƒvƒ^ƒq[ƒvB
-		RWStructuredBuffer* m_pointLightNoListInTileUAV = nullptr;	// ƒ^ƒCƒ‹‚²‚Æ‚Ìƒ|ƒCƒ“ƒgƒ‰ƒCƒg‚ÌƒŠƒXƒg‚ÌUAVB
-		RWStructuredBuffer* m_spotLightNoListInTileUAV = nullptr;	// ƒ^ƒCƒ‹‚²‚Æ‚ÌƒXƒ|ƒbƒgƒ‰ƒCƒg‚ÌƒŠƒXƒg‚ÌUAVB
+		RootSignature m_rootSignature;					// ãƒ«ãƒ¼ãƒˆã‚·ã‚°ãƒãƒãƒ£ã€‚
+		ConstantBuffer m_cameraDataCB;					// ã‚«ãƒ¡ãƒ©ãƒ‡ãƒ¼ã‚¿ã®å®šæ•°ãƒãƒƒãƒ•ã‚¡
+		PipelineState m_pipelineState;					// ãƒ‘ã‚¤ãƒ—ãƒ©ã‚¤ãƒ³ã‚¹ãƒ†ãƒ¼ãƒˆã€‚
+		Shader m_shader;								// ãƒ©ã‚¤ãƒˆã‚«ãƒªãƒ³ã‚°ã‚·ã‚§ãƒ¼ãƒ€ãƒ¼ã€‚
+		DescriptorHeap m_descriptorHeap;				// ãƒ‡ã‚£ã‚¹ã‚¯ãƒªãƒ—ã‚¿ãƒ’ãƒ¼ãƒ—ã€‚
+		RWStructuredBuffer* m_pointLightNoListInTileUAV = nullptr;	// ã‚¿ã‚¤ãƒ«ã”ã¨ã®ãƒã‚¤ãƒ³ãƒˆãƒ©ã‚¤ãƒˆã®ãƒªã‚¹ãƒˆã®UAVã€‚
+		RWStructuredBuffer* m_spotLightNoListInTileUAV = nullptr;	// ã‚¿ã‚¤ãƒ«ã”ã¨ã®ã‚¹ãƒãƒƒãƒˆãƒ©ã‚¤ãƒˆã®ãƒªã‚¹ãƒˆã®UAVã€‚
 	};
 }

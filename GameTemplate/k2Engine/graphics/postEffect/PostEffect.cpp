@@ -1,4 +1,4 @@
-#include "k2EnginePreCompile.h"
+ï»¿#include "k2EnginePreCompile.h"
 #include "PostEffect.h"
 #include "graphics/effect/EffectEngine.h"
 #include "Graphics/RenderingEngine.h"
@@ -71,25 +71,25 @@ namespace nsK2Engine {
         //m_ssao.Render(rc, mainRenderTarget);
         
         if (g_renderingEngine->IsEnableRaytracing() == false) {
-            // ƒŒƒCƒgƒŒ‚ğ‚µ‚Ä‚¢‚È‚¢‚È‚çSSR‚ğs‚¤B
+            // ãƒ¬ã‚¤ãƒˆãƒ¬ã‚’ã—ã¦ã„ãªã„ãªã‚‰SSRã‚’è¡Œã†ã€‚
             m_ssr.Render(rc, mainRenderTarget);
         }
-        // ƒV[ƒ“‚Ì‹P“x‚ğŒvZ‚·‚éB
+        // ã‚·ãƒ¼ãƒ³ã®è¼åº¦ã‚’è¨ˆç®—ã™ã‚‹ã€‚
         m_calsSceneLuminance.Render(rc, mainRenderTarget);
 
-        // ƒuƒ‹[ƒ€
+        // ãƒ–ãƒ«ãƒ¼ãƒ 
         m_bloom.Render(rc, mainRenderTarget);
 
-        // ƒg[ƒ“ƒ}ƒbƒv
+        // ãƒˆãƒ¼ãƒ³ãƒãƒƒãƒ—
         m_tonemap.Render(rc, mainRenderTarget);
 
         g_renderingEngine->SetMainRenderTargetAndDepthStencilBuffer(rc);
 
-        //ƒƒCƒ“ƒŒƒ“ƒ_[ƒ^[ƒQƒbƒg‚ğPRESENT‚©‚çRENDERTARGET‚ÖB
+        //ãƒ¡ã‚¤ãƒ³ãƒ¬ãƒ³ãƒ€ãƒ¼ã‚¿ãƒ¼ã‚²ãƒƒãƒˆã‚’PRESENTã‹ã‚‰RENDERTARGETã¸ã€‚
         rc.WaitUntilToPossibleSetRenderTarget(mainRenderTarget);
-        //‚±‚±‚ÅƒGƒtƒFƒNƒgƒhƒ[B
+        //ã“ã“ã§ã‚¨ãƒ•ã‚§ã‚¯ãƒˆãƒ‰ãƒ­ãƒ¼ã€‚
         EffectEngine::GetInstance()->Draw();
-        //ƒƒCƒ“ƒŒƒ“ƒ_[ƒ^[ƒQƒbƒg‚ğTARGET‚©‚çPRESENT‚ÖB
+        //ãƒ¡ã‚¤ãƒ³ãƒ¬ãƒ³ãƒ€ãƒ¼ã‚¿ãƒ¼ã‚²ãƒƒãƒˆã‚’TARGETã‹ã‚‰PRESENTã¸ã€‚
         rc.WaitUntilFinishDrawingToRenderTarget(mainRenderTarget);
 
         // DOF

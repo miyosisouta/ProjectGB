@@ -1,7 +1,7 @@
-/**
+ï»¿/**
  * Transform.cpp
- * À•WA‰ñ“]AŠgk‚ğ‚Ü‚Æ‚ß‚½‚à‚Ì
- * eq\‘¢‚ğ‚µ‚½À•WŒvZ‚È‚Ç‚ğ‚µ‚â‚·‚¢
+ * åº§æ¨™ã€å›è»¢ã€æ‹¡ç¸®ã‚’ã¾ã¨ã‚ãŸã‚‚ã®
+ * è¦ªå­æ§‹é€ ã‚’ã—ãŸåº§æ¨™è¨ˆç®—ãªã©ã‚’ã—ã‚„ã™ã„
  */
 #include "stdafx.h"
 #include "Transform.h"
@@ -33,38 +33,38 @@ void Transform::UpdateTransform()
 {
 
 	if (parent_) {
-		//À•WŒvZ
+		//åº§æ¨™è¨ˆç®—
 		Matrix localPos;
 		localPos.MakeTranslation(localPosition);
 
 		Matrix pos;
 		pos.Multiply(localPos, parent_->worldMatrix_);
 
-		//‘½•ª•½sˆÚ“®‚Ì•”•ª‚ğæ‚Á‚Ä‚é‚¾‚¯
+		//å¤šåˆ†å¹³è¡Œç§»å‹•ã®éƒ¨åˆ†ã‚’å–ã£ã¦ã‚‹ã ã‘
 		position.x = pos.m[3][0];
 		position.y = pos.m[3][1];
 		position.z = pos.m[3][2];
 
-		//ƒXƒP[ƒ‹
+		//ã‚¹ã‚±ãƒ¼ãƒ«
 		scale.x = localScale.x * parent_->scale.x;
 		scale.y = localScale.y * parent_->scale.y;
 		scale.z = localScale.z * parent_->scale.z;
 
-		//‰ñ“]
+		//å›è»¢
 		rotation = parent_->rotation * localRotation;
 
 	}
 	else
 	{
-		//ƒ[ƒJƒ‹‚Ì’l‚ğ‚»‚Ì‚Ü‚ÜƒRƒs[
+		//ãƒ­ãƒ¼ã‚«ãƒ«ã®å€¤ã‚’ãã®ã¾ã¾ã‚³ãƒ”ãƒ¼
 		position = localPosition;
 		scale = localScale;
 		rotation = localRotation;
 	}
 
-	//‰ñ“]s—ñ
+	//å›è»¢è¡Œåˆ—
 	rotationMatrix_.MakeRotationFromQuaternion(rotation);
-	//ƒ[ƒ‹ƒhs—ñXV
+	//ãƒ¯ãƒ¼ãƒ«ãƒ‰è¡Œåˆ—æ›´æ–°
 	UpdateWorldMatrix();
 }
 
@@ -77,7 +77,7 @@ void Transform::UpdateWorldMatrix()
 	world.Multiply(scal, rotationMatrix_);
 	worldMatrix_.Multiply(world, pos);
 
-	//q‚àXV
+	//å­ã‚‚æ›´æ–°
 	for (Transform* child : children_)
 	{
 		child->UpdateTransform();
@@ -87,25 +87,25 @@ void Transform::UpdateWorldMatrix()
 
 void Transform::Release()
 {
-	////ƒCƒeƒŒ[ƒ^¶¬
+	////ã‚¤ãƒ†ãƒ¬ãƒ¼ã‚¿ç”Ÿæˆ
 	//std::vector<Transform*>::iterator it = m_children_.begin();
-	////vector‚ÌI‚í‚è‚Ü‚Å‰ñ‚·
+	////vectorã®çµ‚ã‚ã‚Šã¾ã§å›ã™
 	//while (it != m_children_.end())
 	//{
-	//	//qƒgƒ‰ƒ“ƒXƒtƒH[ƒ€‚©‚ç‚Ì•R‚Ã‚¯‚ğŠO‚·
+	//	//å­ãƒˆãƒ©ãƒ³ã‚¹ãƒ•ã‚©ãƒ¼ãƒ ã‹ã‚‰ã®ç´ã¥ã‘ã‚’å¤–ã™
 	//	(*it)->m_parent_ = nullptr;
-	//	//qƒgƒ‰ƒ“ƒXƒtƒH[ƒ€‚Ö‚Ì•R‚Ã‚¯‚ğŠO‚·
+	//	//å­ãƒˆãƒ©ãƒ³ã‚¹ãƒ•ã‚©ãƒ¼ãƒ ã¸ã®ç´ã¥ã‘ã‚’å¤–ã™
 	//	m_children_.erase(it);
 	//	if (m_children_.size() <= 0) {
 	//		break;
 	//	}
-	//	//ƒCƒeƒŒ[ƒ^‚ği‚ß‚é
+	//	//ã‚¤ãƒ†ãƒ¬ãƒ¼ã‚¿ã‚’é€²ã‚ã‚‹
 	//	++it;
 	//}
-	////”O‚Ì‚½‚ßHvector‚Ì—v‘f‚ğ‘Síœ
+	////å¿µã®ãŸã‚ï¼Ÿvectorã®è¦ç´ ã‚’å…¨å‰Šé™¤
 	//m_children_.clear();
 
-	// 1. ‘S‚Ä‚Ìq‚Ç‚à‚Ìeİ’è‚ğ‰ğœ
+	// 1. å…¨ã¦ã®å­ã©ã‚‚ã®è¦ªè¨­å®šã‚’è§£é™¤
 	for (auto* child : children_)
 	{
 		if (child) {
@@ -113,30 +113,30 @@ void Transform::Release()
 		}
 	}
 
-	// 2. ƒŠƒXƒg‚ğ‹ó‚É‚·‚é
+	// 2. ãƒªã‚¹ãƒˆã‚’ç©ºã«ã™ã‚‹
 	children_.clear();
 }
 
 void Transform::RemoveChild(Transform* t)
 {
-	//ƒCƒeƒŒ[ƒ^¶¬
+	//ã‚¤ãƒ†ãƒ¬ãƒ¼ã‚¿ç”Ÿæˆ
 	std::vector<Transform*>::iterator it = children_.begin();
-	//vector‚ğ‰ñ‚·
+	//vectorã‚’å›ã™
 	while (it != children_.end())
 	{
-		//ƒCƒeƒŒ[ƒ^‚©‚çqƒgƒ‰ƒ“ƒXƒtƒH[ƒ€‚Ìƒ|ƒCƒ“ƒ^‚ğó‚¯æ‚é
+		//ã‚¤ãƒ†ãƒ¬ãƒ¼ã‚¿ã‹ã‚‰å­ãƒˆãƒ©ãƒ³ã‚¹ãƒ•ã‚©ãƒ¼ãƒ ã®ãƒã‚¤ãƒ³ã‚¿ã‚’å—ã‘å–ã‚‹
 		Transform* child = (*it);
-		//ó‚¯æ‚Á‚½qƒgƒ‰ƒ“ƒXƒtƒH[ƒ€‚ª‚µ‚Ä‚³‚ê‚½•¨‚È‚ç
+		//å—ã‘å–ã£ãŸå­ãƒˆãƒ©ãƒ³ã‚¹ãƒ•ã‚©ãƒ¼ãƒ ãŒã—ã¦ã•ã‚ŒãŸç‰©ãªã‚‰
 		if (child == t)
 		{
-			//•R‚Ã‚¯‚ğŠO‚·
+			//ç´ã¥ã‘ã‚’å¤–ã™
 			child->parent_ = nullptr;
 			children_.erase(it);
-			//ˆ—‚ğI—¹
+			//å‡¦ç†ã‚’çµ‚äº†
 			return;
 		}
 
-		//ƒCƒeƒŒ[ƒ^‚ği‚ß‚é
+		//ã‚¤ãƒ†ãƒ¬ãƒ¼ã‚¿ã‚’é€²ã‚ã‚‹
 		++it;
 	}
 }

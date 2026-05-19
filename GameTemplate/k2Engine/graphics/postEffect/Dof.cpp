@@ -1,20 +1,20 @@
-#include "k2EnginePreCompile.h"
+ï»¿#include "k2EnginePreCompile.h"
 #include "Dof.h"
 
 namespace nsK2Engine {
     void Dof::InitCombimeBokeImageToSprite(Sprite& combineBokeImageSprite, Texture& bokeTexture, Texture& depthTexture)
     {
         SpriteInitData combineBokeImageSpriteInitData;
-        //Žg—p‚·‚éƒeƒNƒXƒ`ƒƒ‚Í‚Q–‡
+        //ä½¿ç”¨ã™ã‚‹ãƒ†ã‚¯ã‚¹ãƒãƒ£ã¯ï¼’æžš
         combineBokeImageSpriteInitData.m_textures[0] = &bokeTexture;
         combineBokeImageSpriteInitData.m_textures[1] = &depthTexture;
         combineBokeImageSpriteInitData.m_width = 1280;
         combineBokeImageSpriteInitData.m_height = 720;
         combineBokeImageSpriteInitData.m_fxFilePath = "Assets/shader/postEffect/dof.fx";
         combineBokeImageSpriteInitData.m_colorBufferFormat[0] = DXGI_FORMAT_R16G16B16A16_FLOAT;
-        // ‹——£‚ð—˜—p‚µ‚Äƒ{ƒP‰æ‘œ‚ðƒAƒ‹ƒtƒ@ƒuƒŒƒ“ƒfƒBƒ“ƒO‚·‚é‚Ì‚ÅA”¼“§–¾‡¬ƒ‚[ƒh‚É‚·‚é
+        // è·é›¢ã‚’åˆ©ç”¨ã—ã¦ãƒœã‚±ç”»åƒã‚’ã‚¢ãƒ«ãƒ•ã‚¡ãƒ–ãƒ¬ãƒ³ãƒ‡ã‚£ãƒ³ã‚°ã™ã‚‹ã®ã§ã€åŠé€æ˜Žåˆæˆãƒ¢ãƒ¼ãƒ‰ã«ã™ã‚‹
         combineBokeImageSpriteInitData.m_alphaBlendMode = AlphaBlendMode_Trans;
-        // ‰Šú‰»ƒIƒuƒWƒFƒNƒg‚ð—˜—p‚µ‚ÄƒXƒvƒ‰ƒCƒg‚ð‰Šú‰»‚·‚é
+        // åˆæœŸåŒ–ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã‚’åˆ©ç”¨ã—ã¦ã‚¹ãƒ—ãƒ©ã‚¤ãƒˆã‚’åˆæœŸåŒ–ã™ã‚‹
 
         combineBokeImageSprite.Init(combineBokeImageSpriteInitData);
     }
@@ -51,21 +51,21 @@ namespace nsK2Engine {
             DXGI_FORMAT_UNKNOWN
         );
 
-        // step-2 ‚’¼A‘ÎŠpüƒuƒ‰[‚ð‚©‚¯‚é‚½‚ß‚ÌƒXƒvƒ‰ƒCƒg‚ð‰Šú‰»
+        // step-2 åž‚ç›´ã€å¯¾è§’ç·šãƒ–ãƒ©ãƒ¼ã‚’ã‹ã‘ã‚‹ãŸã‚ã®ã‚¹ãƒ—ãƒ©ã‚¤ãƒˆã‚’åˆæœŸåŒ–
         SpriteInitData vertDiagonalBlurSpriteInitData;
         vertDiagonalBlurSpriteInitData.m_textures[0] = &mainRenderTarget.GetRenderTargetTexture();
         vertDiagonalBlurSpriteInitData.m_width = mainRenderTarget.GetWidth();
         vertDiagonalBlurSpriteInitData.m_height = mainRenderTarget.GetHeight();
         vertDiagonalBlurSpriteInitData.m_fxFilePath = "Assets/shader/util/hexaBlur.fx";
 
-        // ‚’¼A‘ÎŠpüƒuƒ‰[—p‚ÌƒsƒNƒZƒ‹ƒVƒF[ƒ_[‚ðŽw’è‚·‚é
+        // åž‚ç›´ã€å¯¾è§’ç·šãƒ–ãƒ©ãƒ¼ç”¨ã®ãƒ”ã‚¯ã‚»ãƒ«ã‚·ã‚§ãƒ¼ãƒ€ãƒ¼ã‚’æŒ‡å®šã™ã‚‹
         vertDiagonalBlurSpriteInitData.m_psEntryPoinFunc = "PSVerticalDiagonalBlur";
         vertDiagonalBlurSpriteInitData.m_colorBufferFormat[0] = mainRenderTarget.GetColorBufferFormat();
         vertDiagonalBlurSpriteInitData.m_colorBufferFormat[1] = mainRenderTarget.GetColorBufferFormat();
 
         m_vertDIagonalBlurSprite.Init(vertDiagonalBlurSpriteInitData);
 
-        // step-3 ˜ZŠpŒ`ƒuƒ‰[‚ð‚©‚¯‚é‚½‚ß‚ÌƒXƒvƒ‰ƒCƒg‚ð‰Šú‰»
+        // step-3 å…­è§’å½¢ãƒ–ãƒ©ãƒ¼ã‚’ã‹ã‘ã‚‹ãŸã‚ã®ã‚¹ãƒ—ãƒ©ã‚¤ãƒˆã‚’åˆæœŸåŒ–
         SpriteInitData phomboidBlurSpriteInitData;
         phomboidBlurSpriteInitData.m_textures[0] = &m_rtVerticalBlur.GetRenderTargetTexture();
         phomboidBlurSpriteInitData.m_textures[1] = &m_rtDiagonalBlur.GetRenderTargetTexture();
@@ -73,16 +73,16 @@ namespace nsK2Engine {
         phomboidBlurSpriteInitData.m_height = mainRenderTarget.GetHeight();
         phomboidBlurSpriteInitData.m_fxFilePath = "Assets/shader/util/hexaBlur.fx";
 
-        // ˜ZŠpŒ`ƒuƒ‰[—p‚ÌƒsƒNƒZƒ‹ƒVƒF[ƒ_[‚ðŽw’è‚·‚é
+        // å…­è§’å½¢ãƒ–ãƒ©ãƒ¼ç”¨ã®ãƒ”ã‚¯ã‚»ãƒ«ã‚·ã‚§ãƒ¼ãƒ€ãƒ¼ã‚’æŒ‡å®šã™ã‚‹
         phomboidBlurSpriteInitData.m_psEntryPoinFunc = "PSRhomboidBlur";
         phomboidBlurSpriteInitData.m_colorBufferFormat[0] = mainRenderTarget.GetColorBufferFormat();
 
         m_phomboidBlurSprite.Init(phomboidBlurSpriteInitData);
 
         InitCombimeBokeImageToSprite(
-            m_combineBokeImageSprite,                     // ‰Šú‰»‚³‚ê‚éƒXƒvƒ‰ƒCƒg
-            m_rtPhomboidBlur.GetRenderTargetTexture(),    // ƒ{ƒPƒeƒNƒXƒ`ƒƒ
-            zprepassRenderTarget.GetRenderTargetTexture()  // [“xƒeƒNƒXƒ`ƒƒ
+            m_combineBokeImageSprite,                     // åˆæœŸåŒ–ã•ã‚Œã‚‹ã‚¹ãƒ—ãƒ©ã‚¤ãƒˆ
+            m_rtPhomboidBlur.GetRenderTargetTexture(),    // ãƒœã‚±ãƒ†ã‚¯ã‚¹ãƒãƒ£
+            zprepassRenderTarget.GetRenderTargetTexture()  // æ·±åº¦ãƒ†ã‚¯ã‚¹ãƒãƒ£
         );
 
     }
@@ -92,41 +92,41 @@ namespace nsK2Engine {
             return;
         }
         g_graphicsEngine->BeginGPUEvent("Dof");
-        //step-4 ‚’¼A‘ÎŠpüƒuƒ‰[‚ð‚©‚¯‚é
+        //step-4 åž‚ç›´ã€å¯¾è§’ç·šãƒ–ãƒ©ãƒ¼ã‚’ã‹ã‘ã‚‹
         RenderTarget* blurRts[] = {
             &m_rtVerticalBlur,
             &m_rtDiagonalBlur
         };
 
-        //ƒŒƒ“ƒ_ƒŠƒ“ƒOƒ^[ƒQƒbƒg‚Æ‚µ‚Ä—˜—p‚Å‚«‚é‚Ü‚Å‘Ò‚Â
+        //ãƒ¬ãƒ³ãƒ€ãƒªãƒ³ã‚°ã‚¿ãƒ¼ã‚²ãƒƒãƒˆã¨ã—ã¦åˆ©ç”¨ã§ãã‚‹ã¾ã§å¾…ã¤
         rc.WaitUntilToPossibleSetRenderTargets(2, blurRts);
-        //ƒŒƒ“ƒ_ƒŠƒ“ƒOƒ^[ƒQƒbƒg‚ðÝ’è
+        //ãƒ¬ãƒ³ãƒ€ãƒªãƒ³ã‚°ã‚¿ãƒ¼ã‚²ãƒƒãƒˆã‚’è¨­å®š
         rc.SetRenderTargetsAndViewport(2, blurRts);
-        // ƒŒƒ“ƒ_ƒŠƒ“ƒOƒ^[ƒQƒbƒg‚ðƒNƒŠƒA
+        // ãƒ¬ãƒ³ãƒ€ãƒªãƒ³ã‚°ã‚¿ãƒ¼ã‚²ãƒƒãƒˆã‚’ã‚¯ãƒªã‚¢
         rc.ClearRenderTargetViews(2, blurRts);
         //
         m_vertDIagonalBlurSprite.Draw(rc);
-        // ƒŒƒ“ƒ_ƒŠƒ“ƒOƒ^[ƒQƒbƒg‚Ö‚Ì‘‚«ž‚ÝI—¹‘Ò‚¿
+        // ãƒ¬ãƒ³ãƒ€ãƒªãƒ³ã‚°ã‚¿ãƒ¼ã‚²ãƒƒãƒˆã¸ã®æ›¸ãè¾¼ã¿çµ‚äº†å¾…ã¡
         rc.WaitUntilFinishDrawingToRenderTargets(2, blurRts);
 
-        //step-5 ˜ZŠpŒ`ƒuƒ‰[‚ð‚©‚¯‚é
+        //step-5 å…­è§’å½¢ãƒ–ãƒ©ãƒ¼ã‚’ã‹ã‘ã‚‹
         rc.WaitUntilToPossibleSetRenderTarget(m_rtPhomboidBlur);
         rc.SetRenderTargetAndViewport(m_rtPhomboidBlur);
 
         m_phomboidBlurSprite.Draw(rc);
 
-        // ƒŒƒ“ƒ_ƒŠƒ“ƒOƒ^[ƒQƒbƒg‚Ö‚Ì‘‚«ž‚ÝI—¹‘Ò‚¿
+        // ãƒ¬ãƒ³ãƒ€ãƒªãƒ³ã‚°ã‚¿ãƒ¼ã‚²ãƒƒãƒˆã¸ã®æ›¸ãè¾¼ã¿çµ‚äº†å¾…ã¡
         rc.WaitUntilFinishDrawingToRenderTarget(m_rtPhomboidBlur);
 
-        // ƒ{ƒP‰æ‘œ‚Æ[“xƒeƒNƒXƒ`ƒƒ‚ð—˜—p‚µ‚ÄAƒ{ƒP‰æ‘œ‚ð•`‚«‚±‚ñ‚Å‚¢‚­
-        // ƒƒCƒ“ƒŒƒ“ƒ_ƒŠƒ“ƒOƒ^[ƒQƒbƒg‚ðÝ’è
+        // ãƒœã‚±ç”»åƒã¨æ·±åº¦ãƒ†ã‚¯ã‚¹ãƒãƒ£ã‚’åˆ©ç”¨ã—ã¦ã€ãƒœã‚±ç”»åƒã‚’æãã“ã‚“ã§ã„ã
+        // ãƒ¡ã‚¤ãƒ³ãƒ¬ãƒ³ãƒ€ãƒªãƒ³ã‚°ã‚¿ãƒ¼ã‚²ãƒƒãƒˆã‚’è¨­å®š
         rc.WaitUntilToPossibleSetRenderTarget(mainRenderTarget);
         rc.SetRenderTargetAndViewport(mainRenderTarget);
 
-        // ƒXƒvƒ‰ƒCƒg‚ð•`‰æ&
+        // ã‚¹ãƒ—ãƒ©ã‚¤ãƒˆã‚’æç”»&
         m_combineBokeImageSprite.Draw(rc);
 
-        // ƒŒƒ“ƒ_ƒŠƒ“ƒOƒ^[ƒQƒbƒg‚Ö‚Ì‘‚«ž‚ÝI—¹‘Ò‚¿
+        // ãƒ¬ãƒ³ãƒ€ãƒªãƒ³ã‚°ã‚¿ãƒ¼ã‚²ãƒƒãƒˆã¸ã®æ›¸ãè¾¼ã¿çµ‚äº†å¾…ã¡
         rc.WaitUntilFinishDrawingToRenderTarget(mainRenderTarget);
         g_graphicsEngine->EndGPUEvent();
     };

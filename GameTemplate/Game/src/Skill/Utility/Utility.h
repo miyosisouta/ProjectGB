@@ -1,8 +1,8 @@
-#pragma once
+ï»¿#pragma once
 #include"src/Skill/ISkill.h"
 
 /*
- * “Áês“®‚ÌŠî’êƒNƒ‰ƒX
+ * ç‰¹æ®Šè¡Œå‹•ã®åŸºåº•ã‚¯ãƒ©ã‚¹
  */
 class UtilityBase : public ISkill
 {
@@ -21,7 +21,7 @@ public:
 
 
 /* =========================================== */
-/* ‰ñ”ğ—pƒNƒ‰ƒX */
+/* å›é¿ç”¨ã‚¯ãƒ©ã‚¹ */
 /* =========================================== */
 
 class Avoid : public UtilityBase

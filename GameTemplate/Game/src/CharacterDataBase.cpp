@@ -1,4 +1,4 @@
-#include "stdafx.h"
+﻿#include "stdafx.h"
 #include "CharacterDataBase.h"
 
 CharacterDataBase* CharacterDataBase::instance_ = nullptr;

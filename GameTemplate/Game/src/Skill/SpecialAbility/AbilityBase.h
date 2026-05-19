@@ -1,7 +1,7 @@
-#pragma once
+ï»¿#pragma once
 #include"src/Skill/ISkill.h"
 /*
- * “Áê”\—Í‚ÌŠî’êƒNƒ‰ƒX
+ * ç‰¹æ®Šèƒ½åŠ›ã®åŸºåº•ã‚¯ãƒ©ã‚¹
  */
 class AbilityBase : public ISkill
 {

@@ -1,4 +1,4 @@
-#include "stdafx.h"
+﻿#include "stdafx.h"
 #include "BossState.h"
 #include "BossCharacter.h"
 #include "src/Actor/AttackObjectManager.h"

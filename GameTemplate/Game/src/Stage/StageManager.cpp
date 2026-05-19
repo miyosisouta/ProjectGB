@@ -1,4 +1,4 @@
-/**
+﻿/**
  * StageManager.cpp
  * ステージ全体の管理。草の詳細処理は GrassObject に委譲している。
  */
@@ -79,7 +79,7 @@ void StageManager::StageTKLLoader(const char* path)
                 obj->SetDitherAlpha(DITHERING_ALPHA_GROUND); // ディザのアルファ値
                 obj->SetName("ground"); // 名前
                 // スプラットカラー調整 (p0=草, p1=岩土, p2=腐葉土の明るさ倍率, p3=全体HSV明るさ)
-                obj->SetSplatColorParams(SPLAT_MAP_GRASS_LUMINANCE, SPLAT_MAP_CRAY_LUMINANCE, SPLAT_MAP_HUMUS_LUMINANCE, SPLAT_MAP_WHOLE_LUMINANCE);
+                obj->SetSplatColorParams(SPLAT_MAP_GRASS_LUMINANCE, SPLAT_MAP_CLAY_LUMINANCE, SPLAT_MAP_HUMUS_LUMINANCE, SPLAT_MAP_WHOLE_LUMINANCE);
                 // スプラット彩度調整 (1.0=変化なし, 1.5=鮮やか)
                 obj->SetSplatSaturation(SPLAT_MAP_SATURATION);
             }

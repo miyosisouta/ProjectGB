@@ -1,44 +1,44 @@
-#pragma once
+﻿#pragma once
 
 namespace nsK2Engine {
 
     class VolumeSpotLight;
-    // �f�B���N�V�������C�g
+    // ディレクションライト
     struct DirectionalLight
     {
-        Vector3 direction;  // ���C�g�̕���
-        int castShadow;     // �e���L���X�g����H
-        Vector4 color;      // ���C�g�̃J���[
+        Vector3 direction;  // ライトの方向
+        int castShadow;     // 影をキャストする？
+        Vector4 color;      // ライトのカラー
     };
 
 
     /// <summary>
-    /// �|�C���g���C�g�\����
+    /// ポイントライト構造体
     /// </summary>
     /// <remark>
-    /// ���̍\���̂�POD�^�Ƃ��Ĉ����Ă��܂��B
-    /// �{�\���̂ɉ��z�֐��Ȃǂ͐�΂ɒǉ����Ȃ��悤�ɂ��Ă��������B
-    /// memcpy�Amemset�Ȃǂ̊֐��𗘗p���Ă���\��������܂��B
-    /// ���z�֐��Ȃǂ�ǉ�����ƁA���z�֐��e�[�u�����󂳂�܂��B
+    /// この構造体はPOD型として扱っています。
+    /// 本構造体に仮想関数などは絶対に追加しないようにしてください。
+    /// memcpy、memsetなどの関数を利用している可能性があります。
+    /// 仮想関数などを追加すると、仮想関数テーブルが壊されます。
     /// 
-    /// �܂��A���̍\���̂̃I�u�W�F�N�g�̃f�[�^�̓V�F�[�_�[���ɒ萔�o�b�t�@�Ƃ��ē]������Ă��܂��B
-    /// �����o�ϐ���ǉ������ꍇ�́AlightCulling.fx�ADeferredLighting.fx���ύX����K�v������܂��B
+    /// また、この構造体のオブジェクトのデータはシェーダー側に定数バッファとして転送されています。
+    /// メンバ変数を追加した場合は、lightCulling.fx、DeferredLighting.fxも変更する必要があります。
     /// </remark>
     struct SPointLight
     {
     private:
-        Vector3 position;       // ���W
-        int isUse = false;      // �g�p���t���O�B
-        Vector3 positionInView; // �J������Ԃł̍��W
+        Vector3 position;       // 座標
+        int isUse = false;      // 使用中フラグ。
+        Vector3 positionInView; // カメラ空間での座標
         float pad1;
-        Vector3 color;          // ���C�g�̃J���[
+        Vector3 color;          // ライトのカラー
         float pad2;
-        Vector3 attn;           // �����p�����[�^�Bx�ɉe���͈́Ay�ɂ͉e�����ɗݏ悷��p�����[�^�B
+        Vector3 attn;           // 減衰パラメータ。xに影響範囲、yには影響率に累乗するパラメータ。
         float pad3;
     public:
 
         /// <summary>
-        /// ���W��ݒ�B
+        /// 座標を設定。
         /// </summary>
         /// <param name="position"></param>
         void SetPosition(const Vector3& position)
@@ -50,7 +50,7 @@ namespace nsK2Engine {
             SetPosition({ x, y, z });
         }
         /// <summary>
-        /// �J���[��ݒ�B
+        /// カラーを設定。
         /// </summary>
         /// <param name="color"></param>
         void SetColor(const Vector3& color)
@@ -62,7 +62,7 @@ namespace nsK2Engine {
             SetColor({ r, g, b });
         }
         /// <summary>
-        /// �͈͂�ݒ�B
+        /// 範囲を設定。
         /// </summary>
         /// <param name="range"></param>
         void SetRange(float range)
@@ -70,7 +70,7 @@ namespace nsK2Engine {
             attn.x = range;
         }
         /// <summary>
-        /// �e�����̗ݏ搔��ݒ�B
+        /// 影響率の累乗数を設定。
         /// </summary>
         /// <param name="powParam"></param>
         void SetAffectPowParam(float powParam)
@@ -78,7 +78,7 @@ namespace nsK2Engine {
             attn.y = powParam;
         }
         /// <summary>
-        /// ���W���擾�B
+        /// 座標を取得。
         /// </summary>
         /// <returns></returns>
         const Vector3& GetPosition() const
@@ -86,7 +86,7 @@ namespace nsK2Engine {
             return position;
         }
         /// <summary>
-        /// �J���[���擾�B
+        /// カラーを取得。
         /// </summary>
         /// <returns></returns>
         const Vector3& GetColor() const
@@ -94,7 +94,7 @@ namespace nsK2Engine {
             return color;
         }
         /// <summary>
-        /// �e���͈͂��擾�B
+        /// 影響範囲を取得。
         /// </summary>
         /// <returns></returns>
         float GetRange() const
@@ -102,76 +102,76 @@ namespace nsK2Engine {
             return attn.x;
         }
         /// <summary>
-        /// �|�C���g���C�g���g�p���ɂ���B
+        /// ポイントライトを使用中にする。
         /// </summary>
         /// /// <remark>
-        /// ���̊֐���k2Engine�����ŗ��p����Ă��܂��B
-        /// �Q�[��������͎g�p���Ȃ��悤�ɒ��ӂ��Ă��������B
+        /// この関数はk2Engine内部で利用されています。
+        /// ゲーム側からは使用しないように注意してください。
         /// </remark>
         void Use()
         {
             isUse = true;
         }
         /// <summary>
-        /// �|�C���g���C�g�𖢎g�p�ɂ���B
+        /// ポイントライトを未使用にする。
         /// </summary>
         /// <remark>
-        /// ���̊֐���k2Engine�����ŗ��p����Ă��܂��B
-        /// �Q�[��������͎g�p���Ȃ��悤�ɒ��ӂ��Ă��������B
+        /// この関数はk2Engine内部で利用されています。
+        /// ゲーム側からは使用しないように注意してください。
         /// </remark>
         void UnUse()
         {
             isUse = false;
         }
         /// <summary>
-        /// �X�V�B
+        /// 更新。
         /// </summary>
         /// <remark>
-        /// ���̊֐���k2Engine�����ŗ��p����Ă��܂��B
-        /// �Q�[��������͎g�p���Ȃ��悤�ɒ��ӂ��Ă��������B
+        /// この関数はk2Engine内部で利用されています。
+        /// ゲーム側からは使用しないように注意してください。
         /// </remark>
         void Update();
 
     };
     /// <summary>
-    /// �X�|�b�g���C�g�\����
+    /// スポットライト構造体
     /// </summary>
     /// <remark>
-    /// ���̍\���̂�POD�^�Ƃ��Ĉ����Ă��܂��B
-    /// �{�\���̂ɉ��z�֐��Ȃǂ͐�΂ɒǉ����Ȃ��悤�ɂ��Ă��������B
-    /// memcpy�Amemset�Ȃǂ̊֐��𗘗p���Ă���\��������܂��B
-    /// ���z�֐��Ȃǂ�ǉ�����ƁA���z�֐��e�[�u�����󂳂�܂��B
+    /// この構造体はPOD型として扱っています。
+    /// 本構造体に仮想関数などは絶対に追加しないようにしてください。
+    /// memcpy、memsetなどの関数を利用している可能性があります。
+    /// 仮想関数などを追加すると、仮想関数テーブルが壊されます。
     /// 
-    /// �܂��A���̍\���̂̃I�u�W�F�N�g�̃f�[�^�̓V�F�[�_�[���ɒ萔�o�b�t�@�Ƃ��ē]������Ă��܂��B
-    /// �����o�ϐ���ǉ������ꍇ�́AlightCulling.fx�ADeferredLighting.fx���ύX����K�v������܂��B
+    /// また、この構造体のオブジェクトのデータはシェーダー側に定数バッファとして転送されています。
+    /// メンバ変数を追加した場合は、lightCulling.fx、DeferredLighting.fxも変更する必要があります。
     /// </remark>
    struct SSpotLight {
    private:
-        Vector3 position;                   // ���W
-        int isUse = false;                  // �g�p���t���O�B
-        Vector3 positionInView;             // �J������Ԃł̍��W�B
-        int no = 0;                         // ���C�g�̔ԍ��B
-        Vector3 direction;                  // �ˏo�����B
-        float range;                        // �e���͈́B
-        Vector3 color = g_vec3Zero;         // ���C�g�̃J���[�B
-        float angleAffectMul = 1.0f;        // �p�x�ɂ�錸�����ɏ�Z����p�����[�^�B
-        Vector3 color2 = g_vec3Zero;        // ��ڂ̃J���[�B
+        Vector3 position;                   // 座標
+        int isUse = false;                  // 使用中フラグ。
+        Vector3 positionInView;             // カメラ空間での座標。
+        int no = 0;                         // ライトの番号。
+        Vector3 direction;                  // 射出方向。
+        float range;                        // 影響範囲。
+        Vector3 color = g_vec3Zero;         // ライトのカラー。
+        float angleAffectMul = 1.0f;        // 角度による減衰率に乗算するパラメータ。
+        Vector3 color2 = g_vec3Zero;        // 二つ目のカラー。
         float pad1;
-        Vector3 color3 = g_vec3Zero;        // �O�ڂ̃J���[�B
+        Vector3 color3 = g_vec3Zero;        // 三つ目のカラー。
         float pad2;
-        Vector3 directionInView;            // �J������Ԃł̎ˏo�����B
+        Vector3 directionInView;            // カメラ空間での射出方向。
         float pad3;
-        Vector3 rangePow = g_vec3One;       // �����ɂ����̉e�����ɗݏ悷��p�����[�^�[�B1.0�Ő��`�̕ω�������B
-                                            // x����ڂ̃J���[�Ay����ڂ̃J���[�Az���O�ڂ̃J���[�B
+        Vector3 rangePow = g_vec3One;       // 距離による光の影響率に累乗するパラメーター。1.0で線形の変化をする。
+                                            // xが一つ目のカラー、yが二つ目のカラー、zが三つ目のカラー。
         float pad4;
-        Vector3 angle;                      // �ˏo�p�x(�P�ʁF���W�A���Bx����ڂ̃J���[�Ay����ڂ̃J���[�Az���O�ڂ̃J���[)�B
+        Vector3 angle;                      // 射出角度(単位：ラジアン。xが一つ目のカラー、yが二つ目のカラー、zが三つ目のカラー)。
         float pad5;
-        Vector3 anglePow = g_vec3One;       // �X�|�b�g���C�g�Ƃ̊p�x�ɂ����̉e�����ɗݏ悷��p�����[�^�B1.0�Ő��`�ɕω�����B
-                                            // x����ڂ̃J���[�Ay����ڂ̃J���[�Az���O�ڂ̃J���[�B
+        Vector3 anglePow = g_vec3One;       // スポットライトとの角度による光の影響率に累乗するパラメータ。1.0で線形に変化する。
+                                            // xが一つ目のカラー、yが二つ目のカラー、zが三つ目のカラー。
         float pad6;
    public:
        /// <summary>
-       /// �X�|�b�g���C�g�̔ԍ����擾�B
+       /// スポットライトの番号を取得。
        /// </summary>
        /// <returns></returns>
        int GetNo() const
@@ -179,7 +179,7 @@ namespace nsK2Engine {
            return no;
        }
        /// <summary>
-       /// �X�|�b�g���C�g�̔ԍ���ݒ�B
+       /// スポットライトの番号を設定。
        /// </summary>
        /// <param name="no"></param>
        void SetNo(int no)
@@ -187,7 +187,7 @@ namespace nsK2Engine {
            this->no = no;
        }
         /// <summary>
-        /// �ˏo������ݒ�B
+        /// 射出方向を設定。
         /// </summary>
         /// <param name="direction"></param>
         void SetDirection(const Vector3& direction)
@@ -196,7 +196,7 @@ namespace nsK2Engine {
             this->direction.Normalize();
         }
         /// <summary>
-        /// �ˏo������ݒ�B
+        /// 射出方向を設定。
         /// </summary>
         /// <param name="x"></param>
         /// <param name="y"></param>
@@ -207,7 +207,7 @@ namespace nsK2Engine {
             direction.Normalize();
         }
         /// <summary>
-        /// �ˏo�������擾�B
+        /// 射出方向を取得。
         /// </summary>
         /// <returns></returns>
         const Vector3& GetDirection() const
@@ -215,7 +215,7 @@ namespace nsK2Engine {
             return direction;
 ;        }
         /// <summary>
-        /// ���W��ݒ�B
+        /// 座標を設定。
         /// </summary>
         /// <param name="position"></param>
         void SetPosition(const Vector3& position)
@@ -227,7 +227,7 @@ namespace nsK2Engine {
             SetPosition({ x, y, z });
         }
         /// <summary>
-        /// ��ڂ̌��̃J���[��ݒ�B
+        /// 一つ目の光のカラーを設定。
         /// </summary>
         /// <param name="color"></param>
         void SetColor(const Vector3& color)
@@ -239,7 +239,7 @@ namespace nsK2Engine {
             SetColor({ r, g, b });
         }
         /// <summary>
-        /// ��ڂ̌��̃J���[��ݒ�B
+        /// 二つ目の光のカラーを設定。
         /// </summary>
         /// <param name="color"></param>
         void SetColor2(const Vector3 color)
@@ -251,7 +251,7 @@ namespace nsK2Engine {
             SetColor2({ r, g, b });
         }
         /// <summary>
-        /// �O�ڂ̌��̃J���[��ݒ�B
+        /// 三つ目の光のカラーを設定。
         /// </summary>
         /// <param name="color"></param>
         void SetColor3(const Vector3 color)
@@ -263,7 +263,7 @@ namespace nsK2Engine {
             SetColor3({ r, g, b });
         }
         /// <summary>
-        /// �X�|�b�g���C�g�̉e���͈͂�ݒ�B
+        /// スポットライトの影響範囲を設定。
         /// </summary>
         /// <param name="range"></param>
         void SetRange(float range)
@@ -271,7 +271,7 @@ namespace nsK2Engine {
             this->range = range;
         }
         /// <summary>
-        /// ��ڂ̌��̊p�x�ɂ��e�����ɗݏ悷��l��ݒ�B
+        /// 一つ目の光の角度による影響率に累乗する値を設定。
         /// </summary>
         /// <param name="powParam"></param>
         void SetAngleAffectPowParam(float powParam)
@@ -279,7 +279,7 @@ namespace nsK2Engine {
             this->anglePow.x = powParam;
         }
         /// <summary>
-        /// ��ڂ̌��̊p�x�ɂ��e�����ɗݏ悷��l��ݒ�B
+        /// 二つ目の光の角度による影響率に累乗する値を設定。
         /// </summary>
         /// <param name="powParam"></param>
         void SetAngleAffectPowParam2(float powParam)
@@ -287,7 +287,7 @@ namespace nsK2Engine {
             anglePow.y = powParam;
         }
         /// <summary>
-        /// �O�ڂ̌��̊p�x�ɂ��e�����ɗݏ悷��l��ݒ�B
+        /// 三つ目の光の角度による影響率に累乗する値を設定。
         /// </summary>
         /// <param name="powParam"></param>
         void SetAngleAffectPowParam3(float powParam)
@@ -296,7 +296,7 @@ namespace nsK2Engine {
         }
         
         /// <summary>
-        /// ��ڂ̌��̋����ɂ��e�����ɗݏ悷��l��ݒ�B
+        /// 一つ目の光の距離による影響率に累乗する値を設定。
         /// </summary>
         /// <param name="powParam"></param>
         void SetRangeAffectPowParam(float powParam)
@@ -304,7 +304,7 @@ namespace nsK2Engine {
             rangePow.x = powParam;
         }
         /// <summary>
-        /// ��ڂ̌��̋����ɂ��e�����ɗݏ悷��l��ݒ�B
+        /// 二つ目の光の距離による影響率に累乗する値を設定。
         /// </summary>
         /// <param name="powParam"></param>
         void SetRangeAffectPowParam2(float powParam)
@@ -312,7 +312,7 @@ namespace nsK2Engine {
             rangePow.y = powParam;
         }
         /// <summary>
-        /// �O�ڂ̌��̋����ɂ��e�����ɗݏ悷��l��ݒ�B
+        /// 三つ目の光の距離による影響率に累乗する値を設定。
         /// </summary>
         /// <param name="powParam"></param>
         void SetRangeAffectPowParam3(float powParam)
@@ -321,7 +321,7 @@ namespace nsK2Engine {
         }
         
         /// <summary>
-        /// ��ڂ̌��̎ˏo�p�x��ݒ�B
+        /// 一つ目の光の射出角度を設定。
         /// </summary>
         /// <param name="angle"></param>
         void SetAngle(float angle)
@@ -329,7 +329,7 @@ namespace nsK2Engine {
             this->angle.x = angle;
         }
         /// <summary>
-        /// ��ڂ̌��̎ˏo�p�x��ݒ�B
+        /// 二つ目の光の射出角度を設定。
         /// </summary>
         /// <param name="angle"></param>
         void SetAngle2(float angle)
@@ -337,7 +337,7 @@ namespace nsK2Engine {
             this->angle.y = angle;
         }
         /// <summary>
-        /// �O�ڂ̌��̎ˏo�p�x��ݒ�B
+        /// 三つ目の光の射出角度を設定。
         /// </summary>
         /// <param name="angle"></param>
         void SetAngle3(float angle)
@@ -345,7 +345,7 @@ namespace nsK2Engine {
             this->angle.z = angle;
         }
         /// <summary>
-        /// ��ڂ̌��̎ˏo�p�x���擾�B
+        /// 一つ目の光の射出角度を取得。
         /// </summary>
         /// <returns></returns>
         float GetAngle() const
@@ -353,7 +353,7 @@ namespace nsK2Engine {
             return angle.x;
         }
         /// <summary>
-        /// ��ڂ̌��̎ˏo�p�x���擾�B
+        /// 二つ目の光の射出角度を取得。
         /// </summary>
         /// <returns></returns>
         float GetAngle2() const
@@ -361,7 +361,7 @@ namespace nsK2Engine {
             return angle.y;
         }
         /// <summary>
-        /// �O�ڂ̌��̎ˏo�p�x���擾�B
+        /// 三つ目の光の射出角度を取得。
         /// </summary>
         /// <returns></returns>
         float GetAngle3() const
@@ -369,7 +369,7 @@ namespace nsK2Engine {
             return angle.z;
         }
         /// <summary>
-        /// ���W���擾�B
+        /// 座標を取得。
         /// </summary>
         /// <returns></returns>
         const Vector3& GetPosition() const
@@ -378,7 +378,7 @@ namespace nsK2Engine {
         }
         
         /// <summary>
-        /// �e���͈͂��擾�B
+        /// 影響範囲を取得。
         /// </summary>
         /// <returns></returns>
         float GetRange() const
@@ -386,60 +386,60 @@ namespace nsK2Engine {
             return range;
         }
         /// <summary>
-        /// �|�C���g���C�g���g�p���ɂ���B
+        /// ポイントライトを使用中にする。
         /// </summary>
         /// /// <remark>
-        /// ���̊֐���k2Engine�����ŗ��p����Ă��܂��B
-        /// �Q�[��������͎g�p���Ȃ��悤�ɒ��ӂ��Ă��������B
+        /// この関数はk2Engine内部で利用されています。
+        /// ゲーム側からは使用しないように注意してください。
         /// </remark>
         void Use()
         {
             isUse = true;
         }
         /// <summary>
-        /// �|�C���g���C�g�𖢎g�p�ɂ���B
+        /// ポイントライトを未使用にする。
         /// </summary>
         /// <remark>
-        /// ���̊֐���k2Engine�����ŗ��p����Ă��܂��B
-        /// �Q�[��������͎g�p���Ȃ��悤�ɒ��ӂ��Ă��������B
+        /// この関数はk2Engine内部で利用されています。
+        /// ゲーム側からは使用しないように注意してください。
         /// </remark>
         void UnUse()
         {
             isUse = false;
         }
         /// <summary>
-        /// �X�V�B
+        /// 更新。
         /// </summary>
         /// <remark>
-        /// ���̊֐���k2Engine�����ŗ��p����Ă��܂��B
-        /// �Q�[��������͎g�p���Ȃ��悤�ɒ��ӂ��Ă��������B
+        /// この関数はk2Engine内部で利用されています。
+        /// ゲーム側からは使用しないように注意してください。
         /// </remark>
         void Update();
     };
-    // ���C�g�\����
+    // ライト構造体
     struct Light
     {
-        DirectionalLight directionalLight[MAX_DIRECTIONAL_LIGHT];   // �f�B���N�V���i�����C�g�̔z��B
-        SPointLight pointLights[MAX_POINT_LIGHT];                    // �|�C���g���C�g�̔z��B
-        SSpotLight spotLights[MAX_SPOT_LIGHT];                       // �X�|�b�g���C�g�̔z��B
-        Matrix mViewProjInv;    // �r���[�v���W�F�N�V�����s��̋t�s��
-        Vector3 eyePos;         // �J�����̈ʒu
-        int numPointLight;      // �|�C���g���C�g�̐��B
-        Vector3 ambinetLight;   // �����B
-        int numSpotLight;       // �X�|�b�g���C�g�̐��B
+        DirectionalLight directionalLight[MAX_DIRECTIONAL_LIGHT];   // ディレクショナルライトの配列。
+        SPointLight pointLights[MAX_POINT_LIGHT];                    // ポイントライトの配列。
+        SSpotLight spotLights[MAX_SPOT_LIGHT];                       // スポットライトの配列。
+        Matrix mViewProjInv;    // ビュープロジェクション行列の逆行列
+        Vector3 eyePos;         // カメラの位置
+        int numPointLight;      // ポイントライトの数。
+        Vector3 ambinetLight;   // 環境光。
+        int numSpotLight;       // スポットライトの数。
     };
 
     /// <summary>
-    /// �V�[�����C�g�N���X�B
+    /// シーンライトクラス。
     /// </summary>
     class SceneLight : public Noncopyable {
     public:
         /// <summary>
-        /// �������B
+        /// 初期化。
         /// </summary>
         void Init();
         /// <summary>
-        /// �V�[�����C�g���擾�B
+        /// シーンライトを取得。
         /// </summary>
         /// <returns></returns>
         Light& GetSceneLight()
@@ -447,7 +447,7 @@ namespace nsK2Engine {
             return m_light;
         }
         /// <summary>
-        /// �f�B���N�V�������C�g�̃p�����[�^��ݒ�
+        /// ディレクションライトのパラメータを設定
         /// </summary>
         /// <param name="lightNo"></param>
         /// <param name="direction"></param>
@@ -458,7 +458,7 @@ namespace nsK2Engine {
             m_light.directionalLight[lightNo].color = color;
         }
         /// <summary>
-        /// �e���L���X�g����H
+        /// 影をキャストする？
         /// </summary>
         /// <param name="ligNo"></param>
         /// <returns></returns>
@@ -468,72 +468,72 @@ namespace nsK2Engine {
         }
 
         /// <summary>
-        /// �V�[���Ƀ|�C���g���C�g��ǉ�
+        /// シーンにポイントライトを追加
         /// </summary>
         /// <remark>
-        /// �{�֐��𗘗p���Ēǉ������|�C���g���C�g�́A
-        /// �s�v�ɂȂ�����DeletePointLight()���g�p���āA�폜���Ă��������B
+        /// 本関数を利用して追加したポイントライトは、
+        /// 不要になったらDeletePointLight()を使用して、削除してください。
         /// </remark>
-        /// <returns>�ǉ����ꂽ�|�C���g���C�g�̃A�h���X</returns>
+        /// <returns>追加されたポイントライトのアドレス</returns>
         SPointLight* NewPointLight()
         {
             return NewDynamicLight<SPointLight>(m_unusePointLightQueue);
         }
         /// <summary>
-        /// �V�[������|�C���g���C�g���폜
+        /// シーンからポイントライトを削除
         /// </summary>
-        /// <param name="pointLight">�폜����|�C���g���C�g</param>
+        /// <param name="pointLight">削除するポイントライト</param>
         void DeletePointLight(SPointLight* pointLight)
         {
             DeleteDynamicLight<SPointLight>(pointLight, m_unusePointLightQueue);
         }
         /// <summary>
-        /// �V�[���ɃX�|�b�g���C�g��ǉ�
+        /// シーンにスポットライトを追加
         /// </summary>
         /// <remark>
-        /// ���̊֐��̓G���W�����ŗ��p����܂��B
-        /// �Q�[�����ł͗��p���Ȃ��ł��������B
+        /// この関数はエンジン側で利用されます。
+        /// ゲーム側では利用しないでください。
         /// </remark>
-        /// <returns>�ǉ����ꂽ�X�|�b�g���C�g�̃A�h���X</returns>
+        /// <returns>追加されたスポットライトのアドレス</returns>
         SSpotLight* NewSpotLight()
         {
             return NewDynamicLight<SSpotLight>(m_unuseSpotLightQueue);
         }
         /// <summary>
-        /// �V�[������X�|�b�g���C�g���폜
+        /// シーンからスポットライトを削除
         /// </summary>
-        /// <param name="spotLight">�폜����X�|�b�g���C�g</param>
+        /// <param name="spotLight">削除するスポットライト</param>
         void DeleteSpotLight(SSpotLight* spotLight)
         {
             DeleteDynamicLight<SSpotLight>(spotLight, m_unuseSpotLightQueue);
         }
         /// <summary>
-        /// �����̌v�Z�̂��߂�IBL�e�N�X�`����ݒ�B
+        /// 環境光の計算のためのIBLテクスチャを設定。
         /// </summary>
         /// <remark>
-        /// ���̊֐��𗘗p���āAIBL�e�N�X�`�����Z�b�g����ƁA
-        /// ������IBL�e�N�X�`������T���v�����O���āA����𗘗p����
-        /// ���C�e�B���O���s���܂��B
-        /// IBL�e�N�X�`���𗘗p���������̌v�Z���I�t�ɂ������ꍇ�́ADisableIBLForAmbinet()���Ăяo���āA
-        /// IBL�𖳌��ɂ��Ă��������B
+        /// この関数を利用して、IBLテクスチャをセットすると、
+        /// 環境光をIBLテクスチャからサンプリングして、それを利用した
+        /// ライティングが行われます。
+        /// IBLテクスチャを利用した環境光の計算をオフにしたい場合は、DisableIBLForAmbinet()を呼び出して、
+        /// IBLを無効にしてください。
         /// </remark>
         /// <param name="textureFilePath">
-        /// IBL�e�N�X�`���̃t�@�C���p�X�B
-        /// �L���[�u�}�b�v�ł���K�v������܂��B
+        /// IBLテクスチャのファイルパス。
+        /// キューブマップである必要があります。
         /// </param>
         /// <param name="luminance">
-        /// IBL�e�N�X�`���̖��邳�B
+        /// IBLテクスチャの明るさ。
         /// </param>
         void SetAmbientByIBLTexture(const wchar_t* textureFilePath, float luminance);
         /// <summary>
-        /// IBL�����𖳌��ɂ���B
+        /// IBL環境光を無効にする。
         /// </summary>
         void DisableIBLTextureForAmbient()
         {
-            // todo ���Ή��B
+            // todo 未対応。
         }
         /// <summary>
-        /// ������ݒ�B
+        /// 環境光を設定。
         /// </summary>
         /// <param name="ambient"></param>
         void SetAmbinet(Vector3 ambient)
@@ -541,12 +541,12 @@ namespace nsK2Engine {
             m_light.ambinetLight = ambient;
         }
         /// <summary>
-        /// �X�V
+        /// 更新
         /// </summary>
         void Update();
     private:
         /// <summary>
-        /// �V�������I���C�g��ǉ��B
+        /// 新しい動的ライトを追加。
         /// </summary>
         /// <typeparam name="TDynamicLight"></typeparam>
         /// <typeparam name="TQue"></typeparam>
@@ -556,34 +556,34 @@ namespace nsK2Engine {
         TDynamicLight* NewDynamicLight(std::deque< TDynamicLight*>& que)
         {
             if (que.empty()) {
-                // ����ȏド�C�g��ǉ����邱�Ƃ͂ł��Ȃ��B
+                // これ以上ライトを追加することはできない。
                 return nullptr;
             }
-            // ���g�p�̃��C�g���ŃL���[������o���B
+            // 未使用のライトをでキューから取り出す。
             TDynamicLight* newPt = que.front();
-            // �g�p���ɂ���B
+            // 使用中にする。
             newPt->Use();
-            // ���o�����v�f��擪���珜���B
+            // 取り出した要素を先頭から除去。
             que.pop_front();
             return newPt;
         }
         /// <summary>
-        /// �V�[�����瓮�I���C�g���폜
+        /// シーンから動的ライトを削除
         /// </summary>
-        /// <param name="pointLight">�폜����|�C���g���C�g</param>
+        /// <param name="pointLight">削除するポイントライト</param>
         template<class TDynamicLight>
         void DeleteDynamicLight(TDynamicLight* light, std::deque< TDynamicLight*>& que)
         {
             if (light != nullptr) {
-                // �t���O�𖢎g�p�ɕύX����B
+                // フラグを未使用に変更する。
                 light->UnUse();
-                // ���g�p���X�g�ɒǉ�����B
+                // 未使用リストに追加する。
                 que.push_back(light);
             }
         }
     private:
-        Light m_light;  //�V�[�����C�g�B
-        std::deque< SPointLight* > m_unusePointLightQueue;       // ���g�p�̃|�C���g���C�g�̃L���[�B
-        std::deque< SSpotLight* > m_unuseSpotLightQueue;         // ���g�p�̃X�|�b�g���C�g�̃L���[�B�B
+        Light m_light;  //シーンライト。
+        std::deque< SPointLight* > m_unusePointLightQueue;       // 未使用のポイントライトのキュー。
+        std::deque< SSpotLight* > m_unuseSpotLightQueue;         // 未使用のスポットライトのキュー。。
     };
 }

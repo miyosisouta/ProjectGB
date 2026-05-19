@@ -1,10 +1,10 @@
-#include "k2EnginePreCompile.h"
+ï»¿#include "k2EnginePreCompile.h"
 #include "VolumeLightBase.h"
 
 namespace nsK2Engine {
 	VolumeLightBase::~VolumeLightBase()
 	{
-		// ƒV[ƒ“ƒ‰ƒCƒg‚©‚çíœB
+		// ã‚·ãƒ¼ãƒ³ãƒ©ã‚¤ãƒˆã‹ã‚‰å‰Šé™¤ã€‚
 		if (g_renderingEngine) {
 			g_renderingEngine->RemoveVolumeSpotLight(*this);
 		}
@@ -17,28 +17,28 @@ namespace nsK2Engine {
 	{
 		SetLightData(lightData);
 
-		// ƒV[ƒ“ƒ‰ƒCƒg‚É“o˜^B
+		// ã‚·ãƒ¼ãƒ³ãƒ©ã‚¤ãƒˆã«ç™»éŒ²ã€‚
 		g_renderingEngine->AddVolumeSpotLight(*this);
-		// ƒ{ƒŠƒ…[ƒ€ƒ‰ƒCƒgƒ}ƒbƒv•`‰æ—p‚Ìƒ‚ƒfƒ‹‰Šú‰»İ’è‚ğs‚¤B
-		// ”w–Ê•`‰æA‘O–Ê•`‰æ‹¤’Ê‚Ì‰Šú‰»İ’èB
+		// ãƒœãƒªãƒ¥ãƒ¼ãƒ ãƒ©ã‚¤ãƒˆãƒãƒƒãƒ—æç”»ç”¨ã®ãƒ¢ãƒ‡ãƒ«åˆæœŸåŒ–è¨­å®šã‚’è¡Œã†ã€‚
+		// èƒŒé¢æç”»ã€å‰é¢æç”»å…±é€šã®åˆæœŸåŒ–è¨­å®šã€‚
 		ModelInitData modelInitData;
 		modelInitData.m_tkmFilePath = tkmFilePath;
 		modelInitData.m_fxFilePath = "Assets/shader/DrawVolumeLight.fx";
 		modelInitData.m_expandShaderResoruceView[0] = &g_renderingEngine->GetZPrepassDepthTexture();
-		// ‚±‚±‚©‚ç‘O–Ê•`‰æ—p‚Ì‰Šú‰»İ’èB
+		// ã“ã“ã‹ã‚‰å‰é¢æç”»ç”¨ã®åˆæœŸåŒ–è¨­å®šã€‚
 		modelInitData.m_colorBufferFormat[0] = g_drawVolumeLightMapFormat.colorBufferFormat;
 		modelInitData.m_psEntryPointFunc = "PSMainFrontBack";
-		modelInitData.m_cullMode = D3D12_CULL_MODE_BACK; // ‘O–Ê•`‰æ‚È‚Ì‚ÅA”w–ÊƒJƒŠƒ“ƒOB
+		modelInitData.m_cullMode = D3D12_CULL_MODE_BACK; // å‰é¢æç”»ãªã®ã§ã€èƒŒé¢ã‚«ãƒªãƒ³ã‚°ã€‚
 		m_modelFront.Init(modelInitData);
 
-		// ‘±‚¢‚Ä”w–Ê•`‰æ—p‚Ì‰Šú‰»İ’èB
-		// ”w–Ê•`‰æ‚Ì‚ÉƒXƒ|ƒbƒgƒ‰ƒCƒg‚Ì”Ô†‚ğ‘‚«‚Ş
+		// ç¶šã„ã¦èƒŒé¢æç”»ç”¨ã®åˆæœŸåŒ–è¨­å®šã€‚
+		// èƒŒé¢æç”»ã®æ™‚ã«ã‚¹ãƒãƒƒãƒˆãƒ©ã‚¤ãƒˆã®ç•ªå·ã‚’æ›¸ãè¾¼ã‚€
 		modelInitData.m_colorBufferFormat[0] = g_drawVolumeLightMapFormat.colorBufferFormat;
 		modelInitData.m_psEntryPointFunc = "PSMainFrontBack";
-		modelInitData.m_cullMode = D3D12_CULL_MODE_FRONT; // ”w–Ê•`‰æ‚È‚Ì‚ÅA‘O–ÊƒJƒŠƒ“ƒOB
+		modelInitData.m_cullMode = D3D12_CULL_MODE_FRONT; // èƒŒé¢æç”»ãªã®ã§ã€å‰é¢ã‚«ãƒªãƒ³ã‚°ã€‚
 		m_modelBack.Init(modelInitData);
 
-		// ÅŒã‚ÉÅI•`‰æ
+		// æœ€å¾Œã«æœ€çµ‚æç”»
 		SpriteInitData spriteInitData;
 		spriteInitData.m_fxFilePath = "Assets/shader/DrawVolumeLight.fx";
 		spriteInitData.m_vsEntryPointFunc = "VSFinal";
@@ -57,7 +57,7 @@ namespace nsK2Engine {
 	}
 	void VolumeLightBase::DrawToVolumeLightMapBack(RenderContext& rc)
 	{
-		// ƒXƒ|ƒbƒgƒ‰ƒCƒg‚Ì”Ô†‚ğXV‚·‚éB
+		// ã‚¹ãƒãƒƒãƒˆãƒ©ã‚¤ãƒˆã®ç•ªå·ã‚’æ›´æ–°ã™ã‚‹ã€‚
 		m_modelBack.Draw(rc);
 	}
 	void VolumeLightBase::DrawToVolumeLightMapFront(RenderContext& rc)

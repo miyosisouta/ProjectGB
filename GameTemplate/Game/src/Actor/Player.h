@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 #include "Character.h"
 #include "src/CharacterDataBase.h"
 
@@ -9,43 +9,43 @@ class UtilityBase;
 class Player : public Character
 {
 public:
-	/** ‘JˆÚƒ‹[ƒ‹‚ÌƒZƒbƒgƒAƒbƒv */
+	/** é·ç§»ãƒ«ãƒ¼ãƒ«ã®ã‚»ãƒƒãƒˆã‚¢ãƒƒãƒ— */
 	void SetUpTranslateRulu();
-	/* ƒXƒLƒ‹‚Ìİ’èAì¬ */
+	/* ã‚¹ã‚­ãƒ«ã®è¨­å®šã€ä½œæˆ */
 	void CreateSkill(NormalAttackType nAttackType, AbilityType abilityType, UtilityType utilityType)override;
 
 	/** 
-	 * ƒAƒjƒ[ƒVƒ‡ƒ“‚ÌÄ¶B
-	 * id : ƒXƒe[ƒg‚ÌID‚É‚æ‚Á‚ÄƒAƒjƒ[ƒVƒ‡ƒ“‚ÌƒCƒ“ƒfƒbƒNƒX‚ğŒˆ‚ß‚é
+	 * ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ã®å†ç”Ÿã€‚
+	 * id : ã‚¹ãƒ†ãƒ¼ãƒˆã®IDã«ã‚ˆã£ã¦ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ã®ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹ã‚’æ±ºã‚ã‚‹
 	 */
 	void PlayAnimation(int id)override;
 
 
 	/*======================================*/
-	/* ƒXƒLƒ‹ŠÖ˜A */
+	/* ã‚¹ã‚­ãƒ«é–¢é€£ */
 	/*======================================*/
 private:
 	void EquipNormalAttack(NormalAttackType type);
 	void EquipAbility(AbilityType type);
 	void EquipUtility(UtilityType type);
 
-	/* “Áê”\—Í‚ªg‚¦‚é‚© */
+	/* ç‰¹æ®Šèƒ½åŠ›ãŒä½¿ãˆã‚‹ã‹ */
 	bool CanSpecialAbility();
 
 public:
-	/** ‰ñ”ğ‚ğg‚¦‚é‚© */
+	/** å›é¿ã‚’ä½¿ãˆã‚‹ã‹ */
 	bool IsExhausted() const;
 
 public:
-	/* ƒRƒ“ƒXƒgƒ‰ƒNƒ^ */
+	/* ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿ */
 	Player();
-	/* ƒfƒXƒgƒ‰ƒNƒ^ */
+	/* ãƒ‡ã‚¹ãƒˆãƒ©ã‚¯ã‚¿ */
 	~Player();
 
-	/* ƒXƒ^[ƒgˆ— */
+	/* ã‚¹ã‚¿ãƒ¼ãƒˆå‡¦ç† */
 	virtual bool Start() override;
-	/* XVˆ— */
+	/* æ›´æ–°å‡¦ç† */
 	virtual void Update() override;
-	/* •`‰æˆ— */
+	/* æç”»å‡¦ç† */
 	virtual void Render(RenderContext& rc) override;
 };

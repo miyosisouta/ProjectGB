@@ -1,21 +1,21 @@
-#pragma once
+ï»¿#pragma once
 
 #include "graphics/postEffect/PostEffectComponentBase.h"
 
 namespace nsK2Engine {
 	/// <summary>
-	/// ƒXƒNƒŠ[ƒ“ƒXƒy[ƒXƒŠƒtƒŒƒNƒVƒ‡ƒ“
+	/// ã‚¹ã‚¯ãƒªãƒ¼ãƒ³ã‚¹ãƒšãƒ¼ã‚¹ãƒªãƒ•ãƒ¬ã‚¯ã‚·ãƒ§ãƒ³
 	/// </summary>
 	/// <remark>
-	/// ƒŒƒCƒ}[ƒ`ƒ“ƒO–@‚É‚æ‚éSSRB
-	/// ”½Ë‚ª”­¶‚·‚é‚Ì‚ÍAG-Buffer‚É‘‚«‚Ü‚ê‚½Smoothƒpƒ‰ƒ[ƒ^[‚ÉˆË‘¶‚·‚éB
-	/// Smooth‚ª0.0‚ÌƒsƒNƒZƒ‹‚Å‚Í”½Ë‚Í”­¶‚µ‚È‚¢BÅ‚à‹­‚¢”½Ë‚Ísmooth‚Ì’l‚ª1.0‚Ì‚Æ‚«‚Æ‚È‚éB
-	/// Smooth‚Ìˆµ‚¢‚ÍA–{ƒGƒ“ƒWƒ“‚ÌPBR‚Ìƒ[ƒNƒtƒ[‚ğQÆB
+	/// ãƒ¬ã‚¤ãƒãƒ¼ãƒãƒ³ã‚°æ³•ã«ã‚ˆã‚‹SSRã€‚
+	/// åå°„ãŒç™ºç”Ÿã™ã‚‹ã®ã¯ã€G-Bufferã«æ›¸ãè¾¼ã¾ã‚ŒãŸSmoothãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿ãƒ¼ã«ä¾å­˜ã™ã‚‹ã€‚
+	/// SmoothãŒ0.0ã®ãƒ”ã‚¯ã‚»ãƒ«ã§ã¯åå°„ã¯ç™ºç”Ÿã—ãªã„ã€‚æœ€ã‚‚å¼·ã„åå°„ã¯smoothã®å€¤ãŒ1.0ã®ã¨ãã¨ãªã‚‹ã€‚
+	/// Smoothã®æ‰±ã„ã¯ã€æœ¬ã‚¨ãƒ³ã‚¸ãƒ³ã®PBRã®ãƒ¯ãƒ¼ã‚¯ãƒ•ãƒ­ãƒ¼ã‚’å‚ç…§ã€‚
 	/// </reamrk>
 	class Ssr : public PostEffectComponentBase {
 	public:
 		/// <summary>
-		/// ‰Šú‰»B
+		/// åˆæœŸåŒ–ã€‚
 		/// </summary>
 		void OnInit(
 			RenderTarget& mainRenderTarget,
@@ -25,48 +25,48 @@ namespace nsK2Engine {
 			RenderTarget& albedoRenderTarget
 		) override;
 		/// <summary>
-		/// •`‰æ
+		/// æç”»
 		/// </summary>
-		/// <param name="rc">ƒŒƒ“ƒ_ƒŠƒ“ƒOƒRƒ“ƒeƒLƒXƒg</param>
-		/// <param name="mainRenderTarget">ƒƒCƒ“ƒŒƒ“ƒ_ƒŠƒ“ƒOƒ^[ƒQƒbƒg</param>
+		/// <param name="rc">ãƒ¬ãƒ³ãƒ€ãƒªãƒ³ã‚°ã‚³ãƒ³ãƒ†ã‚­ã‚¹ãƒˆ</param>
+		/// <param name="mainRenderTarget">ãƒ¡ã‚¤ãƒ³ãƒ¬ãƒ³ãƒ€ãƒªãƒ³ã‚°ã‚¿ãƒ¼ã‚²ãƒƒãƒˆ</param>
 		void OnRender(RenderContext& rc, RenderTarget& mainRenderTarget) override;
 		/// <summary>
-		/// ƒ|ƒXƒg‚ÌŒ‹‰Ê‚Ì‰æ‘œ‚ğƒƒCƒ“ƒŒƒ“ƒ_ƒŠƒ“ƒOƒ^[ƒQƒbƒg‚ÉƒRƒs[‚·‚éH
+		/// ãƒã‚¹ãƒˆã®çµæœã®ç”»åƒã‚’ãƒ¡ã‚¤ãƒ³ãƒ¬ãƒ³ãƒ€ãƒªãƒ³ã‚°ã‚¿ãƒ¼ã‚²ãƒƒãƒˆã«ã‚³ãƒ”ãƒ¼ã™ã‚‹ï¼Ÿ
 		/// </summary>
 		/// <returns>
-		/// true‚ğ•Ô‚·‚ÆAGetResultTexture()ŠÖ”‚ª•Ô‚µ‚Ä‚­‚éA
-		/// ƒ|ƒXƒgƒGƒtƒFƒNƒg‚ÌŒ‹‰Ê‚Æ‚È‚éƒeƒNƒXƒ`ƒƒ‚ğƒƒCƒ“ƒŒƒ“ƒ_ƒŠƒ“ƒOƒ^[ƒQƒbƒg‚ÉƒRƒs[‚µ‚Ü‚·B
-		/// OnRender()ŠÖ”‚Ì’†‚ÅA‚·‚Å‚ÉŒ‹‰Ê‚ğƒƒCƒ“ƒŒƒ“ƒ_ƒŠƒ“ƒOƒ^[ƒQƒbƒg‚É‘‚«‚İÏ‚İ‚Å‚ ‚é‚È‚çA
-		/// false‚ğ•Ô‚µ‚Ä‚­‚¾‚³‚¢B
+		/// trueã‚’è¿”ã™ã¨ã€GetResultTexture()é–¢æ•°ãŒè¿”ã—ã¦ãã‚‹ã€
+		/// ãƒã‚¹ãƒˆã‚¨ãƒ•ã‚§ã‚¯ãƒˆã®çµæœã¨ãªã‚‹ãƒ†ã‚¯ã‚¹ãƒãƒ£ã‚’ãƒ¡ã‚¤ãƒ³ãƒ¬ãƒ³ãƒ€ãƒªãƒ³ã‚°ã‚¿ãƒ¼ã‚²ãƒƒãƒˆã«ã‚³ãƒ”ãƒ¼ã—ã¾ã™ã€‚
+		/// OnRender()é–¢æ•°ã®ä¸­ã§ã€ã™ã§ã«çµæœã‚’ãƒ¡ã‚¤ãƒ³ãƒ¬ãƒ³ãƒ€ãƒªãƒ³ã‚°ã‚¿ãƒ¼ã‚²ãƒƒãƒˆã«æ›¸ãè¾¼ã¿æ¸ˆã¿ã§ã‚ã‚‹ãªã‚‰ã€
+		/// falseã‚’è¿”ã—ã¦ãã ã•ã„ã€‚
 		/// </returns>
 		bool IsCopyResultTextureToMainRenderTarget() const override
 		{
 			return true;
 		}
 		/// <summary>
-		/// ƒ|ƒXƒgƒGƒtƒFƒNƒg‚ğÀs‚µ‚½Œ‹‰Ê‚Æ‚È‚éƒeƒNƒXƒ`ƒƒ‚ğæ“¾B
+		/// ãƒã‚¹ãƒˆã‚¨ãƒ•ã‚§ã‚¯ãƒˆã‚’å®Ÿè¡Œã—ãŸçµæœã¨ãªã‚‹ãƒ†ã‚¯ã‚¹ãƒãƒ£ã‚’å–å¾—ã€‚
 		/// </summary>
 		/// <returns>
-		/// ƒ|ƒXƒgƒGƒtƒFƒNƒg‚ÌÀsŒ‹‰Ê‚Æ‚È‚éƒeƒNƒXƒ`ƒƒB
-		/// IsCopyResultTextureToMainRenderTarget()ŠÖ”‚ªtrue‚ğ•Ô‚·ê‡A
-		/// OnRender()ŠÖ”‚ÌÀsŒã‚ÉƒƒCƒ“ƒŒƒ“ƒ_ƒŠƒ“ƒOƒ^[ƒQƒbƒg‚ÉA‚±‚ÌƒeƒNƒXƒ`ƒƒ‚Ì“à—e‚ª
-		/// “\‚è•t‚¯‚ç‚ê‚Ü‚·B
-		/// IsCopyResultTextureToMainRenderTarget()ŠÖ”‚ªfalse‚ğ•Ô‚·ê‡‚ÍA
-		/// –{ŠÖ”‚Í—˜—p‚³‚ê‚Ü‚¹‚ñB
+		/// ãƒã‚¹ãƒˆã‚¨ãƒ•ã‚§ã‚¯ãƒˆã®å®Ÿè¡Œçµæœã¨ãªã‚‹ãƒ†ã‚¯ã‚¹ãƒãƒ£ã€‚
+		/// IsCopyResultTextureToMainRenderTarget()é–¢æ•°ãŒtrueã‚’è¿”ã™å ´åˆã€
+		/// OnRender()é–¢æ•°ã®å®Ÿè¡Œå¾Œã«ãƒ¡ã‚¤ãƒ³ãƒ¬ãƒ³ãƒ€ãƒªãƒ³ã‚°ã‚¿ãƒ¼ã‚²ãƒƒãƒˆã«ã€ã“ã®ãƒ†ã‚¯ã‚¹ãƒãƒ£ã®å†…å®¹ãŒ
+		/// è²¼ã‚Šä»˜ã‘ã‚‰ã‚Œã¾ã™ã€‚
+		/// IsCopyResultTextureToMainRenderTarget()é–¢æ•°ãŒfalseã‚’è¿”ã™å ´åˆã¯ã€
+		/// æœ¬é–¢æ•°ã¯åˆ©ç”¨ã•ã‚Œã¾ã›ã‚“ã€‚
 		/// </returns>
 		Texture& GetResultTexture() override
 		{
 			return m_finalRt.GetRenderTargetTexture();
 		}
 		/// <summary>
-		/// SSR‚ğ—LŒø‚É‚·‚éB
+		/// SSRã‚’æœ‰åŠ¹ã«ã™ã‚‹ã€‚
 		/// </summary>
 		void Enable()
 		{
 			m_isEnable = true;
 		}
 		/// <summary>
-		/// SSR‚ğ–³Œø‚É‚·‚éB
+		/// SSRã‚’ç„¡åŠ¹ã«ã™ã‚‹ã€‚
 		/// </summary>
 		void Disable()
 		{
@@ -74,19 +74,19 @@ namespace nsK2Engine {
 		}
 	private:
 		/// <summary>
-		/// GPU‚É“]‘—‚·‚éƒf[ƒ^\‘¢‘ÌB
+		/// GPUã«è»¢é€ã™ã‚‹ãƒ‡ãƒ¼ã‚¿æ§‹é€ ä½“ã€‚
 		/// </summary>
 		struct SsrCb {
-			Matrix mViewProjInv;				// ƒrƒ…[ƒvƒƒWƒFƒNƒVƒ‡ƒ“s—ñ‚Ì‹ts—ñB
-			Matrix mViewProj;					// ƒrƒ…[ƒvƒƒWƒFƒNƒVƒ‡ƒ“s—ñB
-			Vector3 cameraPosInWorld;			// ƒ[ƒ‹ƒhÀ•WŒn‚Å‚ÌƒJƒƒ‰‚Ì‹“_B
+			Matrix mViewProjInv;				// ãƒ“ãƒ¥ãƒ¼ãƒ—ãƒ­ã‚¸ã‚§ã‚¯ã‚·ãƒ§ãƒ³è¡Œåˆ—ã®é€†è¡Œåˆ—ã€‚
+			Matrix mViewProj;					// ãƒ“ãƒ¥ãƒ¼ãƒ—ãƒ­ã‚¸ã‚§ã‚¯ã‚·ãƒ§ãƒ³è¡Œåˆ—ã€‚
+			Vector3 cameraPosInWorld;			// ãƒ¯ãƒ¼ãƒ«ãƒ‰åº§æ¨™ç³»ã§ã®ã‚«ãƒ¡ãƒ©ã®è¦–ç‚¹ã€‚
 		};
-		RenderTarget m_reflectionRt;			// ‰f‚è‚İ‚ğ‚ğ‘‚«‚±‚Ş‚½‚ß‚ÌƒŒƒ“ƒ_ƒŠƒ“ƒOƒ^[ƒQƒbƒgB
-		RenderTarget m_finalRt;					// ÅI‡¬ƒXƒvƒ‰ƒCƒg
-		GaussianBlur m_blur;					// ƒuƒ‰[
-		SsrCb m_ssrCb;							// GPU‚É“]‘—‚·‚éƒf[ƒ^B
-		Sprite m_reflectionSprite;				// ‰f‚è‚İ‰æ‘œ‚ğì¬‚·‚é‚½‚ß‚ÌƒXƒvƒ‰ƒCƒg
-		Sprite m_finalSprite;					// ÅI‡¬ƒXƒvƒ‰ƒCƒgB
-		bool m_isEnable = true;					// SSR‚Ì—LŒøA–³ŒøB
+		RenderTarget m_reflectionRt;			// æ˜ ã‚Šè¾¼ã¿ã‚’ã‚’æ›¸ãã“ã‚€ãŸã‚ã®ãƒ¬ãƒ³ãƒ€ãƒªãƒ³ã‚°ã‚¿ãƒ¼ã‚²ãƒƒãƒˆã€‚
+		RenderTarget m_finalRt;					// æœ€çµ‚åˆæˆã‚¹ãƒ—ãƒ©ã‚¤ãƒˆ
+		GaussianBlur m_blur;					// ãƒ–ãƒ©ãƒ¼
+		SsrCb m_ssrCb;							// GPUã«è»¢é€ã™ã‚‹ãƒ‡ãƒ¼ã‚¿ã€‚
+		Sprite m_reflectionSprite;				// æ˜ ã‚Šè¾¼ã¿ç”»åƒã‚’ä½œæˆã™ã‚‹ãŸã‚ã®ã‚¹ãƒ—ãƒ©ã‚¤ãƒˆ
+		Sprite m_finalSprite;					// æœ€çµ‚åˆæˆã‚¹ãƒ—ãƒ©ã‚¤ãƒˆã€‚
+		bool m_isEnable = true;					// SSRã®æœ‰åŠ¹ã€ç„¡åŠ¹ã€‚
 	};
 }

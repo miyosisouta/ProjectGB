@@ -1,4 +1,4 @@
-#include "stdafx.h"
+﻿#include "stdafx.h"
 #include "Bomb.h"
 #include "src/Actor/Player.h"
 #include "src/Actor/ActorStatus.h"

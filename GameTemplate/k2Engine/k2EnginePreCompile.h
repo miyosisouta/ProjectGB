@@ -1,8 +1,8 @@
-#pragma once
+ï»¿#pragma once
 #define _CRT_SECURE_NO_WARNINGS
 
 
-// #define COPY_RAYTRACING_FRAMEBUFFER		// —LŒø‚ÅƒŒƒCƒgƒŒ‚ÌŒ‹‰Ê‚ðƒtƒŒ[ƒ€ƒoƒbƒtƒ@‚É‘‚«o‚·B
+// #define COPY_RAYTRACING_FRAMEBUFFER		// æœ‰åŠ¹ã§ãƒ¬ã‚¤ãƒˆãƒ¬ã®çµæžœã‚’ãƒ•ãƒ¬ãƒ¼ãƒ ãƒãƒƒãƒ•ã‚¡ã«æ›¸ãå‡ºã™ã€‚
 
 #include "k2EngineLowPreCompile.h"
 using namespace nsK2EngineLow;

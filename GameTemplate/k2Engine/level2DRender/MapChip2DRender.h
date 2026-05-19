@@ -1,35 +1,35 @@
-#pragma once
+ï»¿#pragma once
 
 namespace nsK2Engine {
 	struct Level2DObjectData;
 	/// <summary>
-	/// ƒ}ƒbƒvƒ`ƒbƒv2DB
+	/// ãƒãƒƒãƒ—ãƒãƒƒãƒ—2Dã€‚
 	/// </summary>
 	class MapChip2DRender : public Noncopyable
 	{
 	public:
 		/// <summary>
-		/// ‰Šú‰»B
+		/// åˆæœŸåŒ–ã€‚
 		/// </summary>
-		/// <param name="objData">ƒŒƒxƒ‹2Dƒf[ƒ^B</param>
+		/// <param name="objData">ãƒ¬ãƒ™ãƒ«2Dãƒ‡ãƒ¼ã‚¿ã€‚</param>
 		void Init(Level2DObjectData* objData);
 		/// <summary>
-		/// XVˆ—B
+		/// æ›´æ–°å‡¦ç†ã€‚
 		/// </summary>
 		void Update()
 		{
 			m_spriteRender.Update();
 		}
 		/// <summary>
-		/// ƒXƒvƒ‰ƒCƒg‚ğ•`‰æ‚·‚éB
+		/// ã‚¹ãƒ—ãƒ©ã‚¤ãƒˆã‚’æç”»ã™ã‚‹ã€‚
 		/// </summary>
-		/// <param name="renderContext">ƒŒƒ“ƒ_[ƒRƒ“ƒeƒLƒXƒgB</param>
+		/// <param name="renderContext">ãƒ¬ãƒ³ãƒ€ãƒ¼ã‚³ãƒ³ãƒ†ã‚­ã‚¹ãƒˆã€‚</param>
 		void Draw(RenderContext& renderContext)
 		{
 			m_spriteRender.Draw(renderContext);
 		}
 	private:
-		SpriteRender m_spriteRender;			//ƒXƒvƒ‰ƒCƒgB
+		SpriteRender m_spriteRender;			//ã‚¹ãƒ—ãƒ©ã‚¤ãƒˆã€‚
 	};
 }
 

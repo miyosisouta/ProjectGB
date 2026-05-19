@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 #include "Actor.h"
 #include "StateMachine.h"
 #include "src/Skill/NormalAttack/NormalAtatck.h"
@@ -7,17 +7,17 @@
 
 namespace CharacterID
 {
-	/* ƒLƒƒƒ‰ƒNƒ^[‚Ì‘Ì‚ÌID */
+	/* ã‚­ãƒ£ãƒ©ã‚¯ã‚¿ãƒ¼ã®ä½“ã®ID */
 	inline uint32_t CharacterID() { return Hash32("Character"); }
 	inline uint32_t PlayerID() { return Hash32("Player"); }
 	inline uint32_t BossID() { return Hash32("Boss"); }
 
-	/* ƒvƒŒƒCƒ„[‚ÌUŒ‚—pID */
+	/* ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®æ”»æ’ƒç”¨ID */
 	inline uint32_t PlayerNormalAtkID() { return Hash32("PlayerNormalAttack"); }
 	inline uint32_t PlayerSkillAtkID() { return Hash32("PlayerSkillAttack"); }
 	inline uint32_t PlayerSkillAvoidID() { return Hash32("PlayerSkillAvoid"); }
 	
-	/* ƒ{ƒX‚ÌUŒ‚—pID */
+	/* ãƒœã‚¹ã®æ”»æ’ƒç”¨ID */
 	inline uint32_t BossNormalAtkID() { return Hash32("BossNormalAttack"); }
 	inline uint32_t BossHitStampAtkID() { return Hash32("BossHitStamp"); }
 	inline uint32_t BossSpinAtkID() { return Hash32("BossSpin"); }
@@ -25,7 +25,7 @@ namespace CharacterID
 	inline uint32_t BossLaserWeakAtkID() { return Hash32("BossLaserWeak"); }
 	inline uint32_t BossLaserStrongAtkID() { return Hash32("BossLaserStrong"); }
 
-	/** ƒLƒƒƒ‰ƒNƒ^[‘S‘Ì‚É‰e‹¿‚ğ—^‚¦‚é */
+	/** ã‚­ãƒ£ãƒ©ã‚¯ã‚¿ãƒ¼å…¨ä½“ã«å½±éŸ¿ã‚’ä¸ãˆã‚‹ */
 	inline uint32_t CharaLandmineAtkID() { return Hash32("CharaLandmine"); }
 }
 
@@ -33,59 +33,59 @@ namespace CharacterID
 class Character : public Actor
 {
 protected:
-	AllocatedArray<AnimationClip> animationClipList_; //!< ƒAƒjƒ[ƒVƒ‡ƒ“ƒNƒŠƒbƒv‚ÌƒŠƒXƒg
-	std::unique_ptr<GhostBody> damageBody_; //!< ƒ_ƒ[ƒW—pƒRƒŠƒWƒ‡ƒ“
+	AllocatedArray<AnimationClip> animationClipList_; //!< ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ã‚¯ãƒªãƒƒãƒ—ã®ãƒªã‚¹ãƒˆ
+	std::unique_ptr<GhostBody> damageBody_; //!< ãƒ€ãƒ¡ãƒ¼ã‚¸ç”¨ã‚³ãƒªã‚¸ãƒ§ãƒ³
 	StateMachine stateMachine_;
 	CharacterController charaCon_;
 
-	/* ƒXƒLƒ‹‚ÌÀ‘Ô‚ğ‚Â */
+	/* ã‚¹ã‚­ãƒ«ã®å®Ÿæ…‹ã‚’æŒã¤ */
 	std::unique_ptr<NormalAttackBase> activeNormalAttack_;
 	std::unique_ptr<AbilityBase>      activeAbility_;
 	std::unique_ptr<UtilityBase>      activeUtility_;
 
-	Vector3 moveVelocity_ = Vector3::Zero; //!< –ˆƒtƒŒ[ƒ€‚ÌˆÚ“®‘¬“x‚ğ•Û‚·‚é•Ï”
+	Vector3 moveVelocity_ = Vector3::Zero; //!< æ¯ãƒ•ãƒ¬ãƒ¼ãƒ ã®ç§»å‹•é€Ÿåº¦ã‚’ä¿æŒã™ã‚‹å¤‰æ•°
 
-	bool isUpdate_ = true; //!< XV‚·‚é‚©‚Ç‚¤‚©‚Ìƒtƒ‰ƒO
+	bool isUpdate_ = true; //!< æ›´æ–°ã™ã‚‹ã‹ã©ã†ã‹ã®ãƒ•ãƒ©ã‚°
 
 public:
-	/* ’ÊíUŒ‚˜g‚ÌƒXƒLƒ‹‚ğæ“¾ */
+	/* é€šå¸¸æ”»æ’ƒæ ã®ã‚¹ã‚­ãƒ«ã‚’å–å¾— */
 	NormalAttackBase* GetNormalAttackSkill() const { return activeNormalAttack_.get(); }
-	/* “Áê”\—Í˜g‚ÌƒXƒLƒ‹‚ğæ“¾ */
+	/* ç‰¹æ®Šèƒ½åŠ›æ ã®ã‚¹ã‚­ãƒ«ã‚’å–å¾— */
 	AbilityBase* GetAbilitySkill() const { return activeAbility_.get(); }
-	/* ”Ä—p”\—Í˜g‚ÌƒXƒLƒ‹‚ğæ“¾ */
+	/* æ±ç”¨èƒ½åŠ›æ ã®ã‚¹ã‚­ãƒ«ã‚’å–å¾— */
 	UtilityBase* GetUtilitySkill() const { return activeUtility_.get(); }
 
-	/* ƒXƒe[ƒgƒ}ƒV[ƒ“‚Ìæ“¾ */
+	/* ã‚¹ãƒ†ãƒ¼ãƒˆãƒã‚·ãƒ¼ãƒ³ã®å–å¾— */
 	StateMachine* GetStateMachine() { return  &stateMachine_; }
-	/* ƒLƒƒƒ‰ƒNƒ^[ƒRƒ“ƒgƒ[ƒ‰‚Ìæ“¾ */
+	/* ã‚­ãƒ£ãƒ©ã‚¯ã‚¿ãƒ¼ã‚³ãƒ³ãƒˆãƒ­ãƒ¼ãƒ©ã®å–å¾— */
 	CharacterController* GetCharaCon() { return &charaCon_; }
 
-	/* ˆÚ“®‘¬“x‚Ìİ’è */
+	/* ç§»å‹•é€Ÿåº¦ã®è¨­å®š */
 	inline void SetMoveVelocity(const Vector3& velocity) { moveVelocity_ = velocity; }
-	/* ˆÚ“®‘¬“x‚ğæ“¾ */
+	/* ç§»å‹•é€Ÿåº¦ã‚’å–å¾— */
 	inline Vector3 GetMoveVelocity() { return moveVelocity_; }
 
-	/** XV‚Ì‰Â”Ûó‘Ô‚ğİ’è */
+	/** æ›´æ–°ã®å¯å¦çŠ¶æ…‹ã‚’è¨­å®š */
 	inline void SetUpdate(const bool flg) { isUpdate_ = flg; }
 
 public:
-	/* ƒRƒ“ƒXƒgƒ‰ƒNƒ^ */
+	/* ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿ */
 	Character() {}
-	/* ƒfƒXƒgƒ‰ƒNƒ^ */
+	/* ãƒ‡ã‚¹ãƒˆãƒ©ã‚¯ã‚¿ */
 	~Character() {}
 
-	/* ƒXƒ^[ƒgˆ— */
+	/* ã‚¹ã‚¿ãƒ¼ãƒˆå‡¦ç† */
 	virtual bool Start() override;
-	/* XVˆ— */
+	/* æ›´æ–°å‡¦ç† */
 	virtual void Update() override;
-	/* •`‰æˆ— */
+	/* æç”»å‡¦ç† */
 	virtual void Render(RenderContext& rc) override;
 	/**
-	 * ƒAƒjƒ[ƒVƒ‡ƒ“‚ÌÄ¶B
-	 * id : ƒXƒe[ƒg‚ÌID‚É‚æ‚Á‚ÄƒAƒjƒ[ƒVƒ‡ƒ“‚ÌƒCƒ“ƒfƒbƒNƒX‚ğŒˆ‚ß‚é
+	 * ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ã®å†ç”Ÿã€‚
+	 * id : ã‚¹ãƒ†ãƒ¼ãƒˆã®IDã«ã‚ˆã£ã¦ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ã®ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹ã‚’æ±ºã‚ã‚‹
 	 */
 	virtual void PlayAnimation(int id) {}
 
-	/* ƒLƒƒƒ‰ƒNƒ^[‚²‚Æ‚ÌƒXƒLƒ‹ì¬ */
+	/* ã‚­ãƒ£ãƒ©ã‚¯ã‚¿ãƒ¼ã”ã¨ã®ã‚¹ã‚­ãƒ«ä½œæˆ */
 	virtual void CreateSkill(NormalAttackType nAttackType, AbilityType abilityType, UtilityType utilityType) {}
 };

@@ -1,4 +1,4 @@
-/**
+ï»¿/**
  * 
  * 
  */
@@ -9,17 +9,17 @@
 #include <algorithm>
 
 /* 
- * Às‚ÉƒTƒCƒY‚ğŒˆ’è‚Å‚«‚éŒÅ’è’·”z—ñƒNƒ‰ƒX
+ * å®Ÿè¡Œæ™‚ã«ã‚µã‚¤ã‚ºã‚’æ±ºå®šã§ãã‚‹å›ºå®šé•·é…åˆ—ã‚¯ãƒ©ã‚¹
  */
 template <typename T>
 class AllocatedArray
 {
 private:
     std::unique_ptr<T[]> data_;
-    std::size_t size_; //!< ƒAƒjƒ[ƒVƒ‡ƒ“ƒŠƒXƒg‚Ì”z—ñ‚ÌƒTƒCƒY‚ğŒˆ‚ß‚é‚½‚ß
+    std::size_t size_; //!< ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ãƒªã‚¹ãƒˆã®é…åˆ—ã®ã‚µã‚¤ã‚ºã‚’æ±ºã‚ã‚‹ãŸã‚
 
 public:
-    /* Œ^ƒGƒCƒŠƒAƒXistd::vector“™‚Æ‚ÌŒİŠ·«‚Ì‚½‚ßj*/
+    /* å‹ã‚¨ã‚¤ãƒªã‚¢ã‚¹ï¼ˆstd::vectorç­‰ã¨ã®äº’æ›æ€§ã®ãŸã‚ï¼‰*/
     using value_type = T;
     using size_type = std::size_t;
     using reference = T&;
@@ -30,8 +30,8 @@ public:
     using const_iterator = const T*;
 
     /* 
-     * ƒfƒtƒHƒ‹ƒgƒRƒ“ƒXƒgƒ‰ƒNƒ^ : ‹ó‚Ì”z—ñ‚ğì¬
-     * Às‘O‚ÉCreate()‚ğŒÄ‚Ô•K—v‚ª‚ ‚é
+     * ãƒ‡ãƒ•ã‚©ãƒ«ãƒˆã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿ : ç©ºã®é…åˆ—ã‚’ä½œæˆ
+     * å®Ÿè¡Œå‰ã«Create()ã‚’å‘¼ã¶å¿…è¦ãŒã‚ã‚‹
      */ 
     AllocatedArray()
         : data_(nullptr)
@@ -39,21 +39,21 @@ public:
     {
     }
 
-    // ‰ŠúƒTƒCƒYw’è‚ÌƒRƒ“ƒXƒgƒ‰ƒNƒ^
+    // åˆæœŸã‚µã‚¤ã‚ºæŒ‡å®šã®ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
     explicit AllocatedArray(std::size_t size) : size_(0) {
         Create(size);
     }
 
-    /* ƒRƒs[‚Í‹Ö~iŒÅ’è”z—ñ‚ÌˆÓ}‚µ‚È‚¢ƒfƒB[ƒvƒRƒs[‚ğ–h‚®‚½‚ßj*/
+    /* ã‚³ãƒ”ãƒ¼ã¯ç¦æ­¢ï¼ˆå›ºå®šé…åˆ—ã®æ„å›³ã—ãªã„ãƒ‡ã‚£ãƒ¼ãƒ—ã‚³ãƒ”ãƒ¼ã‚’é˜²ããŸã‚ï¼‰*/
     AllocatedArray(const AllocatedArray&) = delete;
     AllocatedArray& operator=(const AllocatedArray&) = delete;
 
-    /* Š—LŒ ‚ÌˆÚ“® (ƒƒ‚ƒŠƒRƒs[‚È‚µ‚Åó‚¯“n‚¹‚é) */
+    /* æ‰€æœ‰æ¨©ã®ç§»å‹• (ãƒ¡ãƒ¢ãƒªã‚³ãƒ”ãƒ¼ãªã—ã§å—ã‘æ¸¡ã›ã‚‹) */
     AllocatedArray(AllocatedArray&& other) noexcept
         : data_(std::move(other.data_)), size_(other.size_) {
         other.size_ = 0;
     }
-    /* Š—LŒ ‚ÌˆÚ“®(ƒ€[ƒu‘ã“ü‰‰Zq) */
+    /* æ‰€æœ‰æ¨©ã®ç§»å‹•(ãƒ ãƒ¼ãƒ–ä»£å…¥æ¼”ç®—å­) */
     AllocatedArray& operator=(AllocatedArray&& other) noexcept {
         if (this != &other) {
             data_ = std::move(other.data_);
@@ -64,12 +64,12 @@ public:
     }
 
     /* 
-     * Às‚É”z—ñ‚Ì—v‘f”‚ğw’è‚µ‚Äƒƒ‚ƒŠ‚ğŠm•Û‚·‚é 
-     * ‚·‚Å‚Éƒƒ‚ƒŠ‚ªŠm•Û‚³‚ê‚Ä‚¢‚éê‡‚ÍÄŠm•Û 
+     * å®Ÿè¡Œæ™‚ã«é…åˆ—ã®è¦ç´ æ•°ã‚’æŒ‡å®šã—ã¦ãƒ¡ãƒ¢ãƒªã‚’ç¢ºä¿ã™ã‚‹ 
+     * ã™ã§ã«ãƒ¡ãƒ¢ãƒªãŒç¢ºä¿ã•ã‚Œã¦ã„ã‚‹å ´åˆã¯å†ç¢ºä¿ 
      */
     void Create(std::size_t size) {
         if (size > 0) {
-            // std::make_unique ‚ÅˆÀ‘S‚É”z—ñ‚ğŠm•Û
+            // std::make_unique ã§å®‰å…¨ã«é…åˆ—ã‚’ç¢ºä¿
             data_ = std::make_unique<T[]>(size);
             size_ = size;
         }
@@ -79,9 +79,9 @@ public:
         }
     }
 
-    // --- ‚±‚±‚©‚ç‚Ístd::vector ‚Ì‚æ‚¤‚ÈƒAƒNƒZƒX‹@”\ ---
+    // --- ã“ã“ã‹ã‚‰ã¯std::vector ã®ã‚ˆã†ãªã‚¢ã‚¯ã‚»ã‚¹æ©Ÿèƒ½ ---
 
-    /* ƒCƒeƒŒ[ƒ^‚Ìæ“¾ */
+    /* ã‚¤ãƒ†ãƒ¬ãƒ¼ã‚¿ã®å–å¾— */
     iterator begin() { return data_.get(); }
     iterator end() { return data_.get() + size_; }
     const_iterator begin() const { return data_.get(); }
@@ -89,15 +89,15 @@ public:
     const_iterator cbegin() const { return data_.get(); }
     const_iterator cend() const { return data_.get() + size_; }
 
-    /* —e—Ê */
+    /* å®¹é‡ */
     size_type size() const { return size_; }
     bool empty() const { return size_ == 0; }
 
-    /* —v‘fƒAƒNƒZƒX */
+    /* è¦ç´ ã‚¢ã‚¯ã‚»ã‚¹ */
     reference operator[](size_type pos) { return data_[pos]; }
     const_reference operator[](size_type pos) const { return data_[pos]; }
 
-    /* ‹«ŠEƒ`ƒFƒbƒN•t‚«ƒAƒNƒZƒX */
+    /* å¢ƒç•Œãƒã‚§ãƒƒã‚¯ä»˜ãã‚¢ã‚¯ã‚»ã‚¹ */
     reference at(size_type pos) {
         if (pos >= size_) throw std::out_of_range("FixedArray::at: index out of bounds");
         return data_[pos];
@@ -107,7 +107,7 @@ public:
         return data_[pos];
     }
 
-    /* ¶ƒ|ƒCƒ“ƒ^‚Ìæ“¾ */
+    /* ç”Ÿãƒã‚¤ãƒ³ã‚¿ã®å–å¾— */
     pointer data() { return data_.get(); }
     const_pointer data() const { return data_.get(); }
 };

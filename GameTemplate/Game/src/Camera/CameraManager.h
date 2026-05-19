@@ -1,4 +1,4 @@
-/**
+﻿/**
  * CameraManager.h
  * カメラ管理
  */
