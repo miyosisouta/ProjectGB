@@ -1,49 +1,49 @@
-#pragma once
+﻿#pragma once
 
 namespace nsK2Engine {
-	// �V�[���̃f�B���N�V�������C�g�̍ő吔
+	// シーンのディレクションライトの最大数
 	const int MAX_DIRECTIONAL_LIGHT = 4;
-	// �V�[���̃|�C���g���C�g�̍ő吔�B
+	// シーンのポイントライトの最大数。
 	const int MAX_POINT_LIGHT = 256;
-	// �V�[���̃X�|�b�g���C�g�̍ő吔�B
+	// シーンのスポットライトの最大数。
 	const int MAX_SPOT_LIGHT = 256;
 
-	// TBR�p�̃p�����[�^�B
-	const int TILE_WIDTH = 16;  // �^�C���̕�
-	const int TILE_HEIGHT = 16; // �^�C���̍���
-	const int NUM_TILE = (FRAME_BUFFER_W / TILE_WIDTH) * (FRAME_BUFFER_H / TILE_HEIGHT); // �^�C���̐�
+	// TBR用のパラメータ。
+	const int TILE_WIDTH = 16;  // タイルの幅
+	const int TILE_HEIGHT = 16; // タイルの高さ
+	const int NUM_TILE = (FRAME_BUFFER_W / TILE_WIDTH) * (FRAME_BUFFER_H / TILE_HEIGHT); // タイルの数
 
 	
-	// �V���h�E�}�b�v
+	// シャドウマップ
 	enum {
-		SHADOW_MAP_AREA_NEAR,		//�߉e�͈͂̃V���h�E�}�b�v�B
-		SHADOW_MAP_AREA_MIDDLE,		//���e�͈͂̃V���h�E�}�b�v�B
-		SHADOW_MAP_AREA_FAR,		//���e�͈͂̃V���h�E�}�b�v�B
+		SHADOW_MAP_AREA_NEAR,		//近影範囲のシャドウマップ。
+		SHADOW_MAP_AREA_MIDDLE,		//中影範囲のシャドウマップ。
+		SHADOW_MAP_AREA_FAR,		//遠影範囲のシャドウマップ。
 		NUM_SHADOW_MAP
 	};
 
-	// �\�t�g�V���h�E�ŗ��p����J���[�o�b�t�@�̃t�H�[�}�b�g�B
-	// �����_�����O�^�[�Q�b�g�̃t�H�[�}�b�g�B
+	// ソフトシャドウで利用するカラーバッファのフォーマット。
+	// レンダリングターゲットのフォーマット。
 	struct RenderTargetFormat {
-		DXGI_FORMAT colorBufferFormat;	// �J���[�o�b�t�@�̃t�H�[�}�b�g�B
-		DXGI_FORMAT depthBufferFormat;	// �[�x�o�b�t�@�̃t�H�[�}�b�g�B
+		DXGI_FORMAT colorBufferFormat;	// カラーバッファのフォーマット。
+		DXGI_FORMAT depthBufferFormat;	// 深度バッファのフォーマット。
 	};
-	// �\�t�g�V���h�E�p�̃V���h�E�}�b�v�̃t�H�[�}�b�g�B
+	// ソフトシャドウ用のシャドウマップのフォーマット。
 	const RenderTargetFormat g_softShadowMapFormat = {
-		DXGI_FORMAT_R32G32_FLOAT,	// �J���[�o�b�t�@
-		DXGI_FORMAT_D32_FLOAT		// �[�x�o�b�t�@
+		DXGI_FORMAT_R32G32_FLOAT,	// カラーバッファ
+		DXGI_FORMAT_D32_FLOAT		// 深度バッファ
 	};
-	// �n�[�h�V���h�E�p�̃V���h�E�}�b�v�̃t�H�[�}�b�g�B
+	// ハードシャドウ用のシャドウマップのフォーマット。
 	const RenderTargetFormat g_hardShadowMapFormat = {
-		DXGI_FORMAT_R32_FLOAT,		// �J���[�o�b�t�@
-		DXGI_FORMAT_D32_FLOAT		// �[�x�o�b�t�@�B
+		DXGI_FORMAT_R32_FLOAT,		// カラーバッファ
+		DXGI_FORMAT_D32_FLOAT		// 深度バッファ。
 	};
-	// ���C�������_�����O�^�[�Q�b�g�̃t�H�[�}�b�g�B
+	// メインレンダリングターゲットのフォーマット。
 	const RenderTargetFormat g_mainRenderTargetFormat = {
 		DXGI_FORMAT_R16G16B16A16_FLOAT,
 		DXGI_FORMAT_UNKNOWN
 	};
-	// �{�����[�����C�g�}�b�v�̃t�H�[�}�b�g�B
+	// ボリュームライトマップのフォーマット。
 	const RenderTargetFormat g_drawVolumeLightMapFormat = {
 		DXGI_FORMAT_R32_FLOAT,
 		DXGI_FORMAT_D32_FLOAT

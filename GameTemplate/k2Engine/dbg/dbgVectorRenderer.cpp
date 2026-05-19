@@ -1,4 +1,4 @@
-#include "k2EnginePreCompile.h"
+ï»¿#include "k2EnginePreCompile.h"
 #include "dbg/dbgVectorRenderer.h"
 
 namespace nsK2Engine {
@@ -19,29 +19,29 @@ namespace nsK2Engine {
 		bool VectorRenderer::IsRenderVector(const SRenderData& renderData) const
 		{
 			return false;
-#if 0 // –¢‘Î‰
+#if 0 // æœªå¯¾å¿œ
 			if (m_renderVectorNameList.empty() == true) {
-				//•`‰æ‚·‚éƒxƒNƒgƒ‹‚Ì–¼‘O‚ªw’è‚³‚ê‚Ä‚¢‚È‚¢B
+				//æç”»ã™ã‚‹ãƒ™ã‚¯ãƒˆãƒ«ã®åå‰ãŒæŒ‡å®šã•ã‚Œã¦ã„ãªã„ã€‚
 				return true;
 			}
-			//‹ó‚Å‚Í‚È‚¢B
+			//ç©ºã§ã¯ãªã„ã€‚
 			auto it = std::find(
 				m_renderVectorNameList.begin(),
 				m_renderVectorNameList.end(),
 				renderData.name
 			);
-			//I’[‚Ü‚Ås‚©‚È‚©‚Á‚½B
+			//çµ‚ç«¯ã¾ã§è¡Œã‹ãªã‹ã£ãŸã€‚
 			return it != m_renderVectorNameList.end();
 #endif
 		}
 		void VectorRenderer::Update()
 		{
 			return;
-#if 0 // –¢‘Î‰
+#if 0 // æœªå¯¾å¿œ
 			if (m_isRender == false) {
 				return;
 			}
-			// ƒCƒ“ƒXƒ^ƒ“ƒVƒ“ƒOƒf[ƒ^‚ğXVB
+			// ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚·ãƒ³ã‚°ãƒ‡ãƒ¼ã‚¿ã‚’æ›´æ–°ã€‚
 			for (const auto& renderData : m_renderData) {
 				if (IsRenderVector(renderData) ){
 					Quaternion rot;
@@ -60,12 +60,12 @@ namespace nsK2Engine {
 		void VectorRenderer::Render(RenderContext& rc)
 		{
 			return;
-#if 0 // –¢‘Î‰
+#if 0 // æœªå¯¾å¿œ
 			if (m_isRender) {
 				m_modelRender.Draw(rc);
 			}
-			// todo ƒtƒHƒg‚Ì•`‰æˆ—‚Í‚¢‚Á‚½‚ñ–³ŒøB
-			// •`‰æƒf[ƒ^‚ÍƒNƒŠƒAB
+			// todo ãƒ•ã‚©ãƒˆã®æç”»å‡¦ç†ã¯ã„ã£ãŸã‚“ç„¡åŠ¹ã€‚
+			// æç”»ãƒ‡ãƒ¼ã‚¿ã¯ã‚¯ãƒªã‚¢ã€‚
 			m_renderData.clear();
 #endif
 		}

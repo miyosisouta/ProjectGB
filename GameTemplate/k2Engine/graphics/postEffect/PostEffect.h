@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 
 #include "graphics/postEffect/Bloom.h"
 #include "graphics/postEffect/Dof.h"
@@ -10,17 +10,17 @@
 
 namespace nsK2Engine {
     /// <summary>
-    /// ƒ|ƒXƒgƒGƒtƒFƒNƒgB
+    /// ãƒã‚¹ãƒˆã‚¨ãƒ•ã‚§ã‚¯ãƒˆã€‚
     /// </summary>
     class PostEffect : public Noncopyable
     {
     public:
         /// <summary>
-        /// ‰Šú‰»B
+        /// åˆæœŸåŒ–ã€‚
         /// </summary>
-        /// <param name="mainRenderTarget">ƒŒƒ“ƒ_ƒ^[ƒQƒbƒgB</param>
-        /// <param name="zprepassRenderTarget">zƒvƒŠƒpƒXƒŒƒ“ƒ_\ƒ^[ƒQƒbƒgB</param>
-        /// <param name="normalRenderTarget">–@ü‚ª‘‚«‚Ü‚ê‚Ä‚¢‚éƒŒƒ“ƒ_\ƒ^[ƒQƒbƒgB</param>
+        /// <param name="mainRenderTarget">ãƒ¬ãƒ³ãƒ€ã‚¿ãƒ¼ã‚²ãƒƒãƒˆã€‚</param>
+        /// <param name="zprepassRenderTarget">zãƒ—ãƒªãƒ‘ã‚¹ãƒ¬ãƒ³ãƒ€â€•ã‚¿ãƒ¼ã‚²ãƒƒãƒˆã€‚</param>
+        /// <param name="normalRenderTarget">æ³•ç·šãŒæ›¸ãè¾¼ã¾ã‚Œã¦ã„ã‚‹ãƒ¬ãƒ³ãƒ€â€•ã‚¿ãƒ¼ã‚²ãƒƒãƒˆã€‚</param>
         void Init(
             RenderTarget& mainRenderTarget,
             RenderTarget& zprepassRenderTarget,
@@ -29,40 +29,40 @@ namespace nsK2Engine {
             RenderTarget& albedoRenderTarget
         );
         /// <summary>
-        /// •`‰æB
+        /// æç”»ã€‚
         /// </summary>
-        /// <param name="rc">ƒŒƒ“ƒ_\ƒRƒ“ƒeƒLƒXƒgB</param>
-        /// <param name="mainRenderTarget">ƒƒCƒ“ƒŒƒ“ƒ_\ƒ^[ƒQƒbƒgB</param>
+        /// <param name="rc">ãƒ¬ãƒ³ãƒ€â€•ã‚³ãƒ³ãƒ†ã‚­ã‚¹ãƒˆã€‚</param>
+        /// <param name="mainRenderTarget">ãƒ¡ã‚¤ãƒ³ãƒ¬ãƒ³ãƒ€â€•ã‚¿ãƒ¼ã‚²ãƒƒãƒˆã€‚</param>
         void Render(RenderContext& rc, RenderTarget& mainRenderTarget);
         /// <summary>
-        /// ƒV[ƒ“‚ªØ‚è‘Ö‚í‚Á‚½‚±‚Æ‚ğ’Ê’m‚·‚éB
+        /// ã‚·ãƒ¼ãƒ³ãŒåˆ‡ã‚Šæ›¿ã‚ã£ãŸã“ã¨ã‚’é€šçŸ¥ã™ã‚‹ã€‚
         /// </summary>
         /// <remark>
-        /// ƒV[ƒ“‚Ì˜A‘±«‚ğ—˜—p‚µ‚½ƒOƒ‰ƒtƒBƒbƒNˆ—‚Ì‚½‚ß‚ÌŠÖ”‚Å‚·B
-        /// –¾ˆÃ‡‰ATAA“™‚Ìˆ—‚ÍAƒV[ƒ“‚ªØ‚è‘Ö‚í‚Á‚½‚Æ‚«‚É‚±‚ÌŠÖ”‚ğŒÄ‚Ño‚³‚È‚¢‚Æ
-        /// ”ƒtƒŒ[ƒ€‚ÌŠÔA•\Œ»‚ª‘½­‚¨‚©‚µ‚­‚È‚è‚Ü‚·B
+        /// ã‚·ãƒ¼ãƒ³ã®é€£ç¶šæ€§ã‚’åˆ©ç”¨ã—ãŸã‚°ãƒ©ãƒ•ã‚£ãƒƒã‚¯å‡¦ç†ã®ãŸã‚ã®é–¢æ•°ã§ã™ã€‚
+        /// æ˜æš—é †å¿œã€TAAç­‰ã®å‡¦ç†ã¯ã€ã‚·ãƒ¼ãƒ³ãŒåˆ‡ã‚Šæ›¿ã‚ã£ãŸã¨ãã«ã“ã®é–¢æ•°ã‚’å‘¼ã³å‡ºã•ãªã„ã¨
+        /// æ•°ãƒ•ãƒ¬ãƒ¼ãƒ ã®é–“ã€è¡¨ç¾ãŒå¤šå°‘ãŠã‹ã—ããªã‚Šã¾ã™ã€‚
         /// </remark>
-        /// <param name="changeSceneTime">ƒV[ƒ“Ø‚è‘Ö‚¦‚É‚©‚©‚éŠÔB</param>
+        /// <param name="changeSceneTime">ã‚·ãƒ¼ãƒ³åˆ‡ã‚Šæ›¿ãˆã«ã‹ã‹ã‚‹æ™‚é–“ã€‚</param>
         void NotifyChangeScene(float changeSceneTime)
         {
             m_calsSceneLuminance.NotifyChangeScene(changeSceneTime);
         }
         /// <summary>
-        /// ƒg[ƒ“ƒ}ƒbƒv‚ğƒIƒt‚ÉB
+        /// ãƒˆãƒ¼ãƒ³ãƒãƒƒãƒ—ã‚’ã‚ªãƒ•ã«ã€‚
         /// </summary>
         void DisableTonemap()
         {
             m_tonemap.Disable();
         }
         /// <summary>
-        /// ƒg[ƒ“ƒ}ƒbƒv‚ğƒIƒ“‚ÉB
+        /// ãƒˆãƒ¼ãƒ³ãƒãƒƒãƒ—ã‚’ã‚ªãƒ³ã«ã€‚
         /// </summary>
         void EnableTonemap()
         {
             m_tonemap.Enable();
         }
         /// <summary>
-        /// ƒg[ƒ“ƒ}ƒbƒv‚ª—LŒø‚©”»’è‚·‚éB
+        /// ãƒˆãƒ¼ãƒ³ãƒãƒƒãƒ—ãŒæœ‰åŠ¹ã‹åˆ¤å®šã™ã‚‹ã€‚
         /// </summary>
         /// <returns></returns>
         bool IsEnableTonemap() const
@@ -70,14 +70,14 @@ namespace nsK2Engine {
             return m_tonemap.IsEnable();
         }
         /// <summary>
-        /// ƒV[ƒ“‚Ì–¾‚é‚³‚ÌŠî€’l‚ğİ’è
+        /// ã‚·ãƒ¼ãƒ³ã®æ˜ã‚‹ã•ã®åŸºæº–å€¤ã‚’è¨­å®š
         /// </summary>
         void SetTonemapMiddlegray(float middlegray)
         {
             m_tonemap.SetMiddlegray(middlegray);
         }
         /// <summary>
-        /// ƒV[ƒ“‚Ì–¾‚é‚³‚ÌŠî€’l‚ğæ“¾B
+        /// ã‚·ãƒ¼ãƒ³ã®æ˜ã‚‹ã•ã®åŸºæº–å€¤ã‚’å–å¾—ã€‚
         /// </summary>
         /// <returns></returns>
         float GetTonemapMiddlegray() const
@@ -85,7 +85,7 @@ namespace nsK2Engine {
             return m_tonemap.GetMiddlegray();
         }
         /// <summary>
-        /// ƒuƒ‹[ƒ€‚ª”­¶‚·‚éè‡’l‚ğİ’èB
+        /// ãƒ–ãƒ«ãƒ¼ãƒ ãŒç™ºç”Ÿã™ã‚‹é–¾å€¤ã‚’è¨­å®šã€‚
         /// </summary>
         /// <param name="value"></param>
         void SetBloomThreshold(float value)
@@ -93,7 +93,7 @@ namespace nsK2Engine {
             m_bloom.SetThreshold(value);
         }
         /// <summary>
-        /// ƒuƒ‹[ƒ€‚ª”­¶‚·‚éè‡’l‚ğæ“¾B
+        /// ãƒ–ãƒ«ãƒ¼ãƒ ãŒç™ºç”Ÿã™ã‚‹é–¾å€¤ã‚’å–å¾—ã€‚
         /// </summary>
         /// <returns></returns>
         float GetBloomThreshold() const
@@ -101,7 +101,7 @@ namespace nsK2Engine {
             return m_bloom.GetThreshold();
         }
         /// <summary>
-        /// ƒV[ƒ“‚Ì•½‹Ï‹P“x‚ª‹L‰¯‚³‚ê‚Ä‚¢‚éƒeƒNƒXƒ`ƒƒ‚ğæ“¾B
+        /// ã‚·ãƒ¼ãƒ³ã®å¹³å‡è¼åº¦ãŒè¨˜æ†¶ã•ã‚Œã¦ã„ã‚‹ãƒ†ã‚¯ã‚¹ãƒãƒ£ã‚’å–å¾—ã€‚
         /// </summary>
         /// <returns></returns>
         Texture& GetLuminanceAvgTextureInScene()
@@ -109,12 +109,12 @@ namespace nsK2Engine {
             return m_calsSceneLuminance.GetLuminanceAvgTextureInScene();
         }
     private:
-        CalcSceneLuminance m_calsSceneLuminance;    // ƒV[ƒ“‚Ì•½‹Ï‹P“xŒvZˆ—B
-        Bloom m_bloom;	    //ƒuƒ‹[ƒ€
-        Dof m_dof;		    //”íÊŠE[“x
-        Fxaa m_fXaa;        //FXAAB
-        ToneMap m_tonemap;  //ƒg[ƒ“ƒ}ƒbƒvB
-        Ssao m_ssao;        //SSAO(ƒXƒNƒŠ[ƒ“ƒXƒy[ƒXƒAƒ“ƒrƒGƒ“ƒgƒIƒNƒ‹[ƒWƒ‡ƒ“)B
-        Ssr m_ssr;          //SSR(ƒXƒNƒŠ[ƒ“ƒXƒy[ƒXƒŠƒtƒŒƒNƒVƒ‡ƒ“)B
+        CalcSceneLuminance m_calsSceneLuminance;    // ã‚·ãƒ¼ãƒ³ã®å¹³å‡è¼åº¦è¨ˆç®—å‡¦ç†ã€‚
+        Bloom m_bloom;	    //ãƒ–ãƒ«ãƒ¼ãƒ 
+        Dof m_dof;		    //è¢«å†™ç•Œæ·±åº¦
+        Fxaa m_fXaa;        //FXAAã€‚
+        ToneMap m_tonemap;  //ãƒˆãƒ¼ãƒ³ãƒãƒƒãƒ—ã€‚
+        Ssao m_ssao;        //SSAO(ã‚¹ã‚¯ãƒªãƒ¼ãƒ³ã‚¹ãƒšãƒ¼ã‚¹ã‚¢ãƒ³ãƒ“ã‚¨ãƒ³ãƒˆã‚ªã‚¯ãƒ«ãƒ¼ã‚¸ãƒ§ãƒ³)ã€‚
+        Ssr m_ssr;          //SSR(ã‚¹ã‚¯ãƒªãƒ¼ãƒ³ã‚¹ãƒšãƒ¼ã‚¹ãƒªãƒ•ãƒ¬ã‚¯ã‚·ãƒ§ãƒ³)ã€‚
     };
 }

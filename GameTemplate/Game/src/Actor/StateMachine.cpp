@@ -1,22 +1,22 @@
-#include "stdafx.h"
+ï»¿#include "stdafx.h"
 #include "StateMachine.h"
 
 void StateMachine::Update()
 {
-	// ‚Ü‚¸ƒOƒ[ƒoƒ‹‘JˆÚ‚ðƒ`ƒFƒbƒNiŽ€‚ñ‚¾‚è”í’e‚µ‚½‚è‚µ‚Ä‚¢‚È‚¢‚©j
-	for (const auto& transition : globalTransitions_) { // Å—Dæ‚·‚×‚«‘JˆÚƒ‹[ƒ‹
-		if (transition.condition()) { // ðŒ‚ð–ž‚½‚µ‚½ê‡
+	// ã¾ãšã‚°ãƒ­ãƒ¼ãƒãƒ«é·ç§»ã‚’ãƒã‚§ãƒƒã‚¯ï¼ˆæ­»ã‚“ã ã‚Šè¢«å¼¾ã—ãŸã‚Šã—ã¦ã„ãªã„ã‹ï¼‰
+	for (const auto& transition : globalTransitions_) { // æœ€å„ªå…ˆã™ã¹ãé·ç§»ãƒ«ãƒ¼ãƒ«
+		if (transition.condition()) { // æ¡ä»¶ã‚’æº€ãŸã—ãŸå ´åˆ
 			nextStateId_ = transition.nextState;
 			break;
 		}
 	}
 
-	// ŽŸ‚ÉŒ»Ý‚ÌƒXƒe[ƒg‚Ì‘JˆÚ‚ðƒ`ƒFƒbƒN
+	// æ¬¡ã«ç¾åœ¨ã®ã‚¹ãƒ†ãƒ¼ãƒˆã®é·ç§»ã‚’ãƒã‚§ãƒƒã‚¯
 	if (nextStateId_ == PlayerStateID::None && currentStateId_ != PlayerStateID::None) {
-		auto it = stateTransitions_.find(currentStateId_); // ó‘Ô‚ðŒ©‚Â‚¯‚é
-		if (it != stateTransitions_.end()) { // ƒŠƒXƒg‚Ì’†‚É‚È‚©‚Á‚½‚ç
+		auto it = stateTransitions_.find(currentStateId_); // çŠ¶æ…‹ã‚’è¦‹ã¤ã‘ã‚‹
+		if (it != stateTransitions_.end()) { // ãƒªã‚¹ãƒˆã®ä¸­ã«ãªã‹ã£ãŸã‚‰
 			for (const auto& transition : it->second) {
-				if (transition.condition()) { // ðŒ‚ð–ž‚½‚µ‚½‚çI
+				if (transition.condition()) { // æ¡ä»¶ã‚’æº€ãŸã—ãŸã‚‰ï¼
 					nextStateId_ = transition.nextState;
 					break;
 				}
@@ -24,37 +24,37 @@ void StateMachine::Update()
 		}
 	}
 
-	// ƒXƒe[ƒg‚ÌØ‚è‘Ö‚¦‚ÆXV
+	// ã‚¹ãƒ†ãƒ¼ãƒˆã®åˆ‡ã‚Šæ›¿ãˆã¨æ›´æ–°
 	UpdateState();
 }
 
 
 void StateMachine::UpdateState()
 {
-	// ŽŸ‚ÌƒXƒe[ƒg‚ÌID‚ªÝ’è‚³‚ê‚Ä‚¢‚éê‡
+	// æ¬¡ã®ã‚¹ãƒ†ãƒ¼ãƒˆã®IDãŒè¨­å®šã•ã‚Œã¦ã„ã‚‹å ´åˆ
 	if (nextStateId_ != PlayerStateID::None) 
 	{
 		if (currentState_)
 		{
-			currentState_->Exit(); // Œ»Ý‚ÌƒtƒF[ƒYI—¹ˆ—
+			currentState_->Exit(); // ç¾åœ¨ã®ãƒ•ã‚§ãƒ¼ã‚ºçµ‚äº†å‡¦ç†
 		}
 
-		auto* nextState = FindState(nextStateId_); // “Á’è‚ÌID‚ÌƒXƒe[ƒg‚ðŒ©‚Â‚¯‚é
+		auto* nextState = FindState(nextStateId_); // ç‰¹å®šã®IDã®ã‚¹ãƒ†ãƒ¼ãƒˆã‚’è¦‹ã¤ã‘ã‚‹
 
-		if (nextState) // “Á’è‚ÌID‚ÌƒXƒe[ƒg‚ª‚ ‚é‚È‚ç
+		if (nextState) // ç‰¹å®šã®IDã®ã‚¹ãƒ†ãƒ¼ãƒˆãŒã‚ã‚‹ãªã‚‰
 		{
-			nextState->Enter(); // ŽŸ‚ÌƒXƒe[ƒg‚ÌƒtƒF[ƒYŠJŽnˆ—
-			currentState_ = nextState; // ŽŸ‚ÌƒXƒe[ƒg‚ðŒ»Ý‚ÌƒXƒe[ƒg‚Æ‚·‚é
-			currentStateId_ = nextStateId_; // ID‚à“¯‚¶‚­Ý’è
+			nextState->Enter(); // æ¬¡ã®ã‚¹ãƒ†ãƒ¼ãƒˆã®ãƒ•ã‚§ãƒ¼ã‚ºé–‹å§‹å‡¦ç†
+			currentState_ = nextState; // æ¬¡ã®ã‚¹ãƒ†ãƒ¼ãƒˆã‚’ç¾åœ¨ã®ã‚¹ãƒ†ãƒ¼ãƒˆã¨ã™ã‚‹
+			currentStateId_ = nextStateId_; // IDã‚‚åŒã˜ãè¨­å®š
 		}
 	}
-	// ŽŸ‚ÌƒXƒe[ƒgID‚ð‰½‚à“ü‚ê‚È‚¢
+	// æ¬¡ã®ã‚¹ãƒ†ãƒ¼ãƒˆIDã‚’ä½•ã‚‚å…¥ã‚Œãªã„
 	nextStateId_ = PlayerStateID::None; 
 
-	// Œ»Ý‚ÌƒXƒe[ƒg‚ª‚ ‚éê‡
+	// ç¾åœ¨ã®ã‚¹ãƒ†ãƒ¼ãƒˆãŒã‚ã‚‹å ´åˆ
 	if (currentState_)
 	{
-		// Œ»Ý‚ÌƒXƒe[ƒg‚ÌXV
+		// ç¾åœ¨ã®ã‚¹ãƒ†ãƒ¼ãƒˆã®æ›´æ–°
 		currentState_->Update();
 	}
 }

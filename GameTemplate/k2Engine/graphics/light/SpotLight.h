@@ -1,28 +1,28 @@
-#pragma once
+﻿#pragma once
 
 namespace nsK2Engine {
 	struct SSpotLight;
 	/// <summary>
-	/// �X�|�b�g���C�g�N���X�B
+	/// スポットライトクラス。
 	/// </summary>
     /// <remark>
-    /// ���̃X�|�b�g���C�g�ɂ͂R�̌���ݒ肷�邱�Ƃ��ł��܂��B
-    /// �Q�ԖڂƂR�Ԗڂ̌��̓{�����[�����C�g�p�̃p�����[�^�ł��B
-    /// �{�����[�����C�g����������ۂɂ́A�u�������������点�����v��
-    /// �u�������������点�����v�Ƃ���������������ꍇ������܂��B
-    /// ���̂悤�Ȓ������������ꍇ�ɗ��p���Ă��������B
-    /// �{�����[�����C�g�ł̎g�p���@��Sample_27���Q�Ƃ��Ă��������B
+    /// このスポットライトには３つの光を設定することができます。
+    /// ２番目と３番目の光はボリュームライト用のパラメータです。
+    /// ボリュームライトを実装する際には、「根元部分を光らせたい」や
+    /// 「中央部分を光らせたい」といった調整をする場合があります。
+    /// このような調整をしたい場合に利用してください。
+    /// ボリュームライトでの使用方法はSample_27を参照してください。
     /// </remark>
 	class SpotLight : Noncopyable{
 	public:
-		// �f�X�g���N�^�B
+		// デストラクタ。
 		~SpotLight();
 		/// <summary>
-		/// �������B
+		/// 初期化。
 		/// </summary>
 		void Init();
         /// <summary>
-        /// �X�|�b�g���C�g�̔ԍ����擾�B
+        /// スポットライトの番号を取得。
         /// </summary>
         /// <returns></returns>
         int GetNo() const
@@ -30,7 +30,7 @@ namespace nsK2Engine {
             return m_spotLight->GetNo();
         }
         /// <summary>
-        /// �X�|�b�g���C�g�̔ԍ���ݒ�B
+        /// スポットライトの番号を設定。
         /// </summary>
         /// <param name="no"></param>
         void SetNo(int no)
@@ -38,7 +38,7 @@ namespace nsK2Engine {
             m_spotLight->SetNo(no);
         }
         /// <summary>
-        /// �ˏo������ݒ�B
+        /// 射出方向を設定。
         /// </summary>
         /// <param name="direction"></param>
         void SetDirection(const Vector3& direction)
@@ -46,7 +46,7 @@ namespace nsK2Engine {
             m_spotLight->SetDirection(direction);
         }
         /// <summary>
-        /// �ˏo������ݒ�B
+        /// 射出方向を設定。
         /// </summary>
         /// <param name="x"></param>
         /// <param name="y"></param>
@@ -56,7 +56,7 @@ namespace nsK2Engine {
             m_spotLight->SetDirection(x, y, z);
         }
         /// <summary>
-        /// �ˏo�������擾�B
+        /// 射出方向を取得。
         /// </summary>
         /// <returns></returns>
         const Vector3& GetDirection() const
@@ -65,7 +65,7 @@ namespace nsK2Engine {
             
         }
         /// <summary>
-        /// ���W��ݒ�B
+        /// 座標を設定。
         /// </summary>
         /// <param name="position"></param>
         void SetPosition(const Vector3& position)
@@ -77,7 +77,7 @@ namespace nsK2Engine {
             m_spotLight->SetPosition( x, y, z );
         }
         /// <summary>
-        /// ��ڂ̌��̃J���[��ݒ�B
+        /// 一つ目の光のカラーを設定。
         /// </summary>
         /// <param name="color"></param>
         void SetColor(const Vector3& color)
@@ -89,10 +89,10 @@ namespace nsK2Engine {
             m_spotLight->SetColor( r, g, b );
         }
         /// <summary>
-        /// ��ڂ̌��̃J���[��ݒ�B
+        /// 二つ目の光のカラーを設定。
         /// </summary>
         /// <reamrk>
-        /// �{�����[�����C�g���g�p����Ƃ��ɂ̂ݎg�p����܂��B
+        /// ボリュームライトを使用するときにのみ使用されます。
         /// </remark>
         /// <param name="color"></param>
         void SetColor2(const Vector3 color)
@@ -104,10 +104,10 @@ namespace nsK2Engine {
             m_spotLight->SetColor2(r, g, b);
         }
         /// <summary>
-        /// �O�ڂ̌��̃J���[��ݒ�B
+        /// 三つ目の光のカラーを設定。
         /// </summary>
         /// <reamrk>
-        /// �{�����[�����C�g���g�p����Ƃ��ɂ̂ݎg�p����܂��B
+        /// ボリュームライトを使用するときにのみ使用されます。
         /// </remark>
         /// <param name="color"></param>
         void SetColor3(const Vector3 color)
@@ -119,7 +119,7 @@ namespace nsK2Engine {
             m_spotLight->SetColor3(r, g, b);
         }
         /// <summary>
-        /// �X�|�b�g���C�g�͈̔͂�ݒ�B
+        /// スポットライトの範囲を設定。
         /// </summary>
         /// <param name="range"></param>
         void SetRange(float range)
@@ -128,10 +128,10 @@ namespace nsK2Engine {
         }
 
         /// <summary>
-        /// ��ڂ̌��̋����ɂ��e�����̗ݏ搔��ݒ�B
+        /// 一つ目の光の距離による影響率の累乗数を設定。
         /// </summary>
         /// <remark>
-        /// SetColor()�Őݒ肵�����ɉe����^���܂��B
+        /// SetColor()で設定した光に影響を与えます。
         /// </remark>
         /// <param name="powParam"></param>
         void SetRangeAffectPowParam(float powParam)
@@ -139,11 +139,11 @@ namespace nsK2Engine {
             m_spotLight->SetRangeAffectPowParam(powParam);
         }
         /// <summary>
-        /// ��ڂ̌��̋����ɂ��e�����̗ݏ搔��ݒ�B
+        /// 二つ目の光の距離による影響率の累乗数を設定。
         /// </summary>
         /// <remark>
-        /// SetColor2()�Őݒ肵�����ɉe����^���܂��B
-        /// �{�����[�����C�g���g�p����Ƃ��ɂ̂ݎg�p����܂��B
+        /// SetColor2()で設定した光に影響を与えます。
+        /// ボリュームライトを使用するときにのみ使用されます。
         /// </remark>
         /// <param name="powParam"></param>
         void SetRangeAffectPowParam2(float powParam)
@@ -151,11 +151,11 @@ namespace nsK2Engine {
             m_spotLight->SetRangeAffectPowParam2(powParam);
         }
         /// <summary>
-        /// �O�ڂ̌��̋����ɂ��e�����̗ݏ搔��ݒ�B
+        /// 三つ目の光の距離による影響率の累乗数を設定。
         /// </summary>
         /// <remark>
-        /// SetColor3()�Őݒ肵�����ɉe����^���܂��B
-        /// �{�����[�����C�g���g�p����Ƃ��ɂ̂ݎg�p����܂��B
+        /// SetColor3()で設定した光に影響を与えます。
+        /// ボリュームライトを使用するときにのみ使用されます。
         /// </remark>
         /// <param name="powParam"></param>
         void SetRangeAffectPowParam3(float powParam)
@@ -163,7 +163,7 @@ namespace nsK2Engine {
             m_spotLight->SetRangeAffectPowParam3(powParam);
         }
         /// <summary>
-        /// ��ڂ̌��̃X�|�b�g���C�g�ƃs�N�Z���̊p�x�ɂ��e�����ɗݏ悷��l��ݒ�B
+        /// 一つ目の光のスポットライトとピクセルの角度による影響率に累乗する値を設定。
         /// </summary>
         /// <param name="powParam"></param>
         void SetAngleAffectPowParam(float powParam)
@@ -171,11 +171,11 @@ namespace nsK2Engine {
             m_spotLight->SetAngleAffectPowParam(powParam);
         }
         /// <summary>
-        /// ��ڂ̌��̃X�|�b�g���C�g�ƃs�N�Z���̊p�x�ɂ��e�����ɗݏ悷��l��ݒ�B
+        /// 二つ目の光のスポットライトとピクセルの角度による影響率に累乗する値を設定。
         /// </summary>
         /// <remark>
-        /// SetColor2()�Őݒ肵�����ɉe����^���܂��B
-        /// �{�����[�����C�g���g�p����Ƃ��ɂ̂ݎg�p����܂��B
+        /// SetColor2()で設定した光に影響を与えます。
+        /// ボリュームライトを使用するときにのみ使用されます。
         /// </remark>
         /// <param name="powParam"></param>
         void SetAngleAffectPowParam2(float powParam)
@@ -183,11 +183,11 @@ namespace nsK2Engine {
             m_spotLight->SetAngleAffectPowParam2(powParam);
         }
         /// <summary>
-        /// �O�ڂ̌��̃X�|�b�g���C�g�ƃs�N�Z���̊p�x�ɂ��e�����ɗݏ悷��l��ݒ�B
+        /// 三つ目の光のスポットライトとピクセルの角度による影響率に累乗する値を設定。
         /// </summary>
         /// <remark>
-        /// SetColor3()�Őݒ肵�����ɉe����^���܂��B
-        /// �{�����[�����C�g���g�p����Ƃ��ɂ̂ݎg�p����܂��B
+        /// SetColor3()で設定した光に影響を与えます。
+        /// ボリュームライトを使用するときにのみ使用されます。
         /// </remark>
         /// <param name="powParam"></param>
         void SetAngleAffectPowParam3(float powParam)
@@ -196,7 +196,7 @@ namespace nsK2Engine {
         }
 
         /// <summary>
-        /// �ˏo�p�x
+        /// 射出角度
         /// </summary>
         /// <param name="angle"></param>
         void SetAngle(float angle)
@@ -204,7 +204,7 @@ namespace nsK2Engine {
             m_spotLight->SetAngle(angle);
         }
         /// <summary>
-        /// ��ڂ̌��̎ˏo�p�x
+        /// 二つ目の光の射出角度
         /// </summary>
         /// <param name="angle"></param>
         void SetAngle2(float angle)
@@ -212,7 +212,7 @@ namespace nsK2Engine {
             m_spotLight->SetAngle2(angle);
         }
         /// <summary>
-        /// �O�ڂ̌��̎ˏo�p�x
+        /// 三つ目の光の射出角度
         /// </summary>
         /// <param name="angle"></param>
         void SetAngle3(float angle)
@@ -220,7 +220,7 @@ namespace nsK2Engine {
             m_spotLight->SetAngle3(angle);
         }
         /// <summary>
-        /// �ˏo�p�x���擾�B
+        /// 射出角度を取得。
         /// </summary>
         /// <returns></returns>
         float GetAngle() const
@@ -236,7 +236,7 @@ namespace nsK2Engine {
             return m_spotLight->GetAngle3();
         }
         /// <summary>
-        /// ���W���擾�B
+        /// 座標を取得。
         /// </summary>
         /// <returns></returns>
         const Vector3& GetPosition() const
@@ -244,7 +244,7 @@ namespace nsK2Engine {
             return m_spotLight->GetPosition();
         }
         /// <summary>
-        /// �e���͈͂��擾�B
+        /// 影響範囲を取得。
         /// </summary>
         /// <returns></returns>
         float GetRange() const
@@ -252,14 +252,14 @@ namespace nsK2Engine {
             return m_spotLight->GetRange();
         }
         /// <summary>
-        /// �X�V
+        /// 更新
         /// </summary>
         void Update()
         {
             m_spotLight->Update();
         }
         /// <summary>
-        /// ���f�[�^���擾�B
+        /// 生データを取得。
         /// </summary>
         /// <returns></returns>
         const SSpotLight& GetRawData() const

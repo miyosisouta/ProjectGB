@@ -39,7 +39,7 @@ void StageCullingSystem::Update(const std::vector<StaticObject*> staticObjects)
 		bounds.minPoint += object->GetTransform()->position;
 
 		// フラスタム内かどうか判定して描画フラグを切り替える
-		if (frustum.IsVisible(bounds)) {
+		if (frustum.IsVisible(bounds) || object->GetName() == "ground") {
 			object->SetDraw(true);   // 描画する
 		}
 		else {

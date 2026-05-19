@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 /** キャラクターパラメータ用の構造体 */
 struct CharacterStatusDef

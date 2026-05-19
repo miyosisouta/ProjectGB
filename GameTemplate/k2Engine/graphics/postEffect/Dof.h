@@ -1,18 +1,18 @@
-#pragma once
+ï»¿#pragma once
 
 #include "graphics/postEffect/PostEffectComponentBase.h"
 
 namespace nsK2Engine {
     /// <summary>
-    /// ”íÊŠE[“xB
+    /// è¢«å†™ç•Œæ·±åº¦ã€‚
     /// </summary>
     class Dof : public PostEffectComponentBase
     {
     public:
         /// <summary>
-        /// ‰Šú‰»B
+        /// åˆæœŸåŒ–ã€‚
         /// </summary>
-        /// <param name="mainRenderTarget">ƒƒCƒ“ƒŒƒ“ƒ_[ƒ^[ƒQƒbƒgB</param>
+        /// <param name="mainRenderTarget">ãƒ¡ã‚¤ãƒ³ãƒ¬ãƒ³ãƒ€ãƒ¼ã‚¿ãƒ¼ã‚²ãƒƒãƒˆã€‚</param>
         void OnInit(
             RenderTarget& mainRenderTarget,
             RenderTarget& zprepassRenderTarget,
@@ -20,13 +20,13 @@ namespace nsK2Engine {
             RenderTarget& metallicSmoothRenderTarget,
             RenderTarget& albedoRenderTarget) override;
         /// <summary>
-        /// •`‰æB
+        /// æç”»ã€‚
         /// </summary>
-        /// <param name="rc">ƒŒƒ“ƒ_\ƒRƒ“ƒeƒLƒXƒgB</param>
-        /// <param name="mainRenderTarget">ƒƒCƒ“ƒŒƒ“ƒ_\ƒ^[ƒQƒbƒgB</param>
+        /// <param name="rc">ãƒ¬ãƒ³ãƒ€â€•ã‚³ãƒ³ãƒ†ã‚­ã‚¹ãƒˆã€‚</param>
+        /// <param name="mainRenderTarget">ãƒ¡ã‚¤ãƒ³ãƒ¬ãƒ³ãƒ€â€•ã‚¿ãƒ¼ã‚²ãƒƒãƒˆã€‚</param>
         void OnRender(RenderContext& rc, RenderTarget& mainRenderTarget) override;
         /// <summary>
-        /// ƒ|ƒXƒgƒGƒtƒFƒNƒg‚ğÀs‚µ‚½Œ‹‰Ê‚Æ‚È‚éƒeƒNƒXƒ`ƒƒ‚ğæ“¾B
+        /// ãƒã‚¹ãƒˆã‚¨ãƒ•ã‚§ã‚¯ãƒˆã‚’å®Ÿè¡Œã—ãŸçµæœã¨ãªã‚‹ãƒ†ã‚¯ã‚¹ãƒãƒ£ã‚’å–å¾—ã€‚
         /// </summary>
         /// <returns></returns>
         Texture& GetResultTexture() override
@@ -34,14 +34,14 @@ namespace nsK2Engine {
             return m_rtPhomboidBlur.GetRenderTargetTexture();
         }
         /// <summary>
-        /// ”íÊŠE[“x‚ğ—LŒø‚É‚·‚éB
+        /// è¢«å†™ç•Œæ·±åº¦ã‚’æœ‰åŠ¹ã«ã™ã‚‹ã€‚
         /// </summary>
         void Enable()
         {
             m_isEnable = true;
         }
         /// <summary>
-        /// ”íÊŠE[“x‚ğ–³Œø‚É‚·‚éB
+        /// è¢«å†™ç•Œæ·±åº¦ã‚’ç„¡åŠ¹ã«ã™ã‚‹ã€‚
         /// </summary>
         void Disable()
         {
@@ -50,12 +50,12 @@ namespace nsK2Engine {
     private:
         void InitCombimeBokeImageToSprite(Sprite& combineBokeImageSprite, Texture& bokeTexture, Texture& depthTexture);
     private:
-        RenderTarget m_rtVerticalBlur;		//‚’¼ƒuƒ‰[‚ğ‚©‚¯‚é‚½‚ß‚ÌƒŒƒ“ƒ_ƒŠƒ“ƒOƒ^[ƒQƒbƒg
-        RenderTarget m_rtDiagonalBlur;		//‘ÎŠpüƒuƒ‰[‚ğ‚©‚¯‚é‚½‚ß‚ÌƒŒƒ“ƒ_ƒŠƒ“ƒOƒ^[ƒQƒbƒg
-        RenderTarget m_rtPhomboidBlur;		//˜ZŠpŒ`ƒuƒ‰[‚ğ‚©‚¯‚é‚½‚ß‚ÌƒŒƒ“ƒ_ƒŠƒ“ƒOƒ^[ƒQƒbƒg
-        Sprite m_vertDIagonalBlurSprite;	//‚’¼A‘ÎŠpüƒuƒ‰[—p‚ÌƒXƒvƒ‰ƒCƒg
-        Sprite m_phomboidBlurSprite;		//˜ZŠpŒ`ƒuƒ‰—p‚ÌƒXƒvƒ‰ƒCƒg
-        Sprite m_combineBokeImageSprite;	//ƒ{ƒP‰æ‘œ‚ğƒƒCƒ“ƒŒƒ“ƒ_ƒŠƒ“ƒOƒ^[ƒQƒbƒg‚É‡¬‚·‚é‚½‚ß‚ÌƒXƒvƒ‰ƒCƒg
-        bool m_isEnable = false;            //”íÊŠE[“x‚ª—LŒøH
+        RenderTarget m_rtVerticalBlur;		//å‚ç›´ãƒ–ãƒ©ãƒ¼ã‚’ã‹ã‘ã‚‹ãŸã‚ã®ãƒ¬ãƒ³ãƒ€ãƒªãƒ³ã‚°ã‚¿ãƒ¼ã‚²ãƒƒãƒˆ
+        RenderTarget m_rtDiagonalBlur;		//å¯¾è§’ç·šãƒ–ãƒ©ãƒ¼ã‚’ã‹ã‘ã‚‹ãŸã‚ã®ãƒ¬ãƒ³ãƒ€ãƒªãƒ³ã‚°ã‚¿ãƒ¼ã‚²ãƒƒãƒˆ
+        RenderTarget m_rtPhomboidBlur;		//å…­è§’å½¢ãƒ–ãƒ©ãƒ¼ã‚’ã‹ã‘ã‚‹ãŸã‚ã®ãƒ¬ãƒ³ãƒ€ãƒªãƒ³ã‚°ã‚¿ãƒ¼ã‚²ãƒƒãƒˆ
+        Sprite m_vertDIagonalBlurSprite;	//å‚ç›´ã€å¯¾è§’ç·šãƒ–ãƒ©ãƒ¼ç”¨ã®ã‚¹ãƒ—ãƒ©ã‚¤ãƒˆ
+        Sprite m_phomboidBlurSprite;		//å…­è§’å½¢ãƒ–ãƒ©ç”¨ã®ã‚¹ãƒ—ãƒ©ã‚¤ãƒˆ
+        Sprite m_combineBokeImageSprite;	//ãƒœã‚±ç”»åƒã‚’ãƒ¡ã‚¤ãƒ³ãƒ¬ãƒ³ãƒ€ãƒªãƒ³ã‚°ã‚¿ãƒ¼ã‚²ãƒƒãƒˆã«åˆæˆã™ã‚‹ãŸã‚ã®ã‚¹ãƒ—ãƒ©ã‚¤ãƒˆ
+        bool m_isEnable = false;            //è¢«å†™ç•Œæ·±åº¦ãŒæœ‰åŠ¹ï¼Ÿ
     };
 }

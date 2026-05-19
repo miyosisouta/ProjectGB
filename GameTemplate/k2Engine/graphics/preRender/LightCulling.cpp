@@ -1,4 +1,4 @@
-#include "k2EnginePreCompile.h"
+ï»¿#include "k2EnginePreCompile.h"
 #include "LightCulling.h"
 
 namespace nsK2Engine {
@@ -13,10 +13,10 @@ namespace nsK2Engine {
 
         m_shader.LoadCS("Assets/shader/preProcess/lightCulling.fx", "CSMain");
 
-        // ƒ‰ƒCƒgƒJƒŠƒ“ƒO‚ÌƒJƒƒ‰—p‚Ì’è”ƒoƒbƒtƒ@[‚ðì¬
+        // ãƒ©ã‚¤ãƒˆã‚«ãƒªãƒ³ã‚°ã®ã‚«ãƒ¡ãƒ©ç”¨ã®å®šæ•°ãƒãƒƒãƒ•ã‚¡ãƒ¼ã‚’ä½œæˆ
         m_cameraDataCB.Init(sizeof(CameraData), nullptr);
 
-        // ƒfƒBƒXƒNƒŠƒvƒ^ƒq[ƒv‚ð‰Šú‰»B
+        // ãƒ‡ã‚£ã‚¹ã‚¯ãƒªãƒ—ã‚¿ãƒ’ãƒ¼ãƒ—ã‚’åˆæœŸåŒ–ã€‚
         m_descriptorHeap.RegistShaderResource(0, depthTexture);
         m_descriptorHeap.RegistUnorderAccessResource(0, pointLightNoListInTileUAV);
         m_descriptorHeap.RegistUnorderAccessResource(1, spotLightNoListInTileUAV);
@@ -24,14 +24,14 @@ namespace nsK2Engine {
         m_descriptorHeap.RegistConstantBuffer(1, lightCB);
         m_descriptorHeap.Commit();
 
-        // ƒ‹[ƒgƒVƒOƒlƒ`ƒƒ‚ðì¬B
+        // ãƒ«ãƒ¼ãƒˆã‚·ã‚°ãƒãƒãƒ£ã‚’ä½œæˆã€‚
         m_rootSignature.Init(
             D3D12_FILTER_MIN_MAG_MIP_LINEAR,
             D3D12_TEXTURE_ADDRESS_MODE_WRAP,
             D3D12_TEXTURE_ADDRESS_MODE_WRAP,
             D3D12_TEXTURE_ADDRESS_MODE_WRAP);
 
-        // ƒpƒCƒvƒ‰ƒCƒ“ƒXƒe[ƒg‚ð‰Šú‰»B
+        // ãƒ‘ã‚¤ãƒ—ãƒ©ã‚¤ãƒ³ã‚¹ãƒ†ãƒ¼ãƒˆã‚’åˆæœŸåŒ–ã€‚
         D3D12_COMPUTE_PIPELINE_STATE_DESC  psoDesc = { 0 };
         psoDesc.pRootSignature = m_rootSignature.Get();
         psoDesc.CS = CD3DX12_SHADER_BYTECODE(m_shader.GetCompiledBlob());
@@ -54,21 +54,21 @@ namespace nsK2Engine {
         cameraData.screenParam.w = FRAME_BUFFER_H;
         m_cameraDataCB.CopyToVRAM(cameraData);
 
-        //ƒ‰ƒCƒgƒJƒŠƒ“ƒO‚ÌƒRƒ“ƒsƒ…[ƒgƒVƒF[ƒ_[‚ðƒfƒBƒXƒpƒbƒ`
+        //ãƒ©ã‚¤ãƒˆã‚«ãƒªãƒ³ã‚°ã®ã‚³ãƒ³ãƒ”ãƒ¥ãƒ¼ãƒˆã‚·ã‚§ãƒ¼ãƒ€ãƒ¼ã‚’ãƒ‡ã‚£ã‚¹ãƒ‘ãƒƒãƒ
         rc.SetComputeRootSignature(m_rootSignature);
         rc.SetComputeDescriptorHeap(m_descriptorHeap);
         rc.SetPipelineState(m_pipelineState);
 
-        // ƒtƒŒ[ƒ€ƒoƒbƒtƒ@‚Ì•‚Æ‚‚³‚ðTILE_WIDTHATILE_HEIGHT‚Ì”{”‚ÉØ‚èã‚°‚éB
+        // ãƒ•ãƒ¬ãƒ¼ãƒ ãƒãƒƒãƒ•ã‚¡ã®å¹…ã¨é«˜ã•ã‚’TILE_WIDTHã€TILE_HEIGHTã®å€æ•°ã«åˆ‡ã‚Šä¸Šã’ã‚‹ã€‚
         UINT FRAME_BUFFER_W_ROUNDUP = ((FRAME_BUFFER_W + TILE_WIDTH -1) / TILE_WIDTH) * TILE_WIDTH;
         UINT FRAME_BUFFER_H_ROUNDUP = ((FRAME_BUFFER_H + TILE_HEIGHT -1) / TILE_HEIGHT) * TILE_HEIGHT;
-        // ƒOƒ‹[ƒv‚Ì”‚Íƒ^ƒCƒ‹‚Ì”
+        // ã‚°ãƒ«ãƒ¼ãƒ—ã®æ•°ã¯ã‚¿ã‚¤ãƒ«ã®æ•°
         rc.Dispatch(
             FRAME_BUFFER_W_ROUNDUP / TILE_WIDTH,
             FRAME_BUFFER_H_ROUNDUP / TILE_HEIGHT,
             1);
 
-        // ƒŠƒ\[ƒXƒoƒŠƒA
+        // ãƒªã‚½ãƒ¼ã‚¹ãƒãƒªã‚¢
         rc.TransitionResourceState(
             m_pointLightNoListInTileUAV->GetD3DResoruce(),
             D3D12_RESOURCE_STATE_UNORDERED_ACCESS,

@@ -1,24 +1,24 @@
-#include "k2EngineLowPreCompile.h"
+ï»¿#include "k2EngineLowPreCompile.h"
 #include "Model.h"
 #include "Material.h"
 
 namespace nsK2EngineLow {
 	void Model::Init(const ModelInitData& initData)
 	{
-		/* ƒŒƒCƒgƒŒŒü‚¯‚Ì‰Šú‰»‚Ì‚É‚Ím_fxFilePath‚Íw’è‚³‚ê‚Ä‚¢‚È‚¢ê‡‚ª‚ ‚é‚Ì‚ÅƒXƒ‹[‚·‚éB
+		/* ï¿½ï¿½ï¿½Cï¿½gï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ìï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ìï¿½ï¿½É‚ï¿½m_fxFilePathï¿½Íwï¿½è‚³ï¿½ï¿½Ä‚ï¿½ï¿½È‚ï¿½ï¿½ê‡ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ì‚ÅƒXï¿½ï¿½ï¿½[ï¿½ï¿½ï¿½ï¿½B
 		MY_ASSERT(
 			initData.m_fxFilePath,
-			"error : initData.m_fxFilePath‚ªw’è‚³‚ê‚Ä‚¢‚Ü‚¹‚ñB"
+			"error : initData.m_fxFilePathï¿½ï¿½ï¿½wï¿½è‚³ï¿½ï¿½Ä‚ï¿½ï¿½Ü‚ï¿½ï¿½ï¿½B"
 		);
 		*/
 		K2_ASSERT(
 			initData.m_tkmFilePath,
-			"error : initData.m_tkmFilePath‚ªw’è‚³‚ê‚Ä‚¢‚Ü‚¹‚ñB"
+			"error : initData.m_tkmFilePathï¿½ï¿½ï¿½wï¿½è‚³ï¿½ï¿½Ä‚ï¿½ï¿½Ü‚ï¿½ï¿½ï¿½B"
 		);
 
 
 		if (initData.m_skeleton != nullptr) {
-			//ƒXƒPƒ‹ƒgƒ“‚ªw’è‚³‚ê‚Ä‚¢‚éB
+			//ï¿½Xï¿½Pï¿½ï¿½ï¿½gï¿½ï¿½ï¿½ï¿½ï¿½wï¿½è‚³ï¿½ï¿½Ä‚ï¿½ï¿½ï¿½B
 			m_meshParts.BindSkeleton(*initData.m_skeleton);
 		}
 
@@ -26,7 +26,7 @@ namespace nsK2EngineLow {
 
 		auto tkmFile = g_engine->GetTkmFileFromBank(initData.m_tkmFilePath);
 		if (tkmFile == nullptr) {
-			//–¢“o˜^
+			//ï¿½ï¿½ï¿½oï¿½^
 			tkmFile = new TkmFile;
 			tkmFile->Load(initData.m_tkmFilePath, false);
 			g_engine->RegistTkmFileToBank(initData.m_tkmFilePath, tkmFile);
@@ -40,6 +40,8 @@ namespace nsK2EngineLow {
 			initData.m_psEntryPointFunc,
 			initData.m_expandConstantBuffer,
 			initData.m_expandConstantBufferSize,
+			initData.m_expandConstantBuffer2,
+			initData.m_expandConstantBufferSize2,
 			initData.m_expandShaderResoruceView,
 			initData.m_colorBufferFormat,
 			initData.m_alphaBlendMode,
@@ -73,17 +75,17 @@ namespace nsK2EngineLow {
 		mWorld = mBias * mScale * mRot * mTrans;
 		return mWorld;
 	}
-	//todo ‚±‚±‚à•ÏX‚·‚é•K—v‚ ‚èHH
+	//todo ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ÏXï¿½ï¿½ï¿½ï¿½Kï¿½vï¿½ï¿½ï¿½ï¿½Hï¿½H
 	void Model::ChangeAlbedoMap(const char* materialName, Texture& albedoMap)
 	{
 		m_meshParts.QueryMeshs([&](const SMesh& mesh) {
-			//todo ƒ}ƒeƒŠƒAƒ‹–¼‚ğtkmƒtƒ@ƒCƒ‹‚Éo—Í‚µ‚Ä‚È‚©‚Á‚½B
-			//todo ¡‚Í‘Sƒ}ƒeƒŠƒAƒ‹·‚µ‘Ö‚¦‚Ü‚·
+			//todo ï¿½}ï¿½eï¿½ï¿½ï¿½Aï¿½ï¿½ï¿½ï¿½ï¿½ï¿½tkmï¿½tï¿½@ï¿½Cï¿½ï¿½ï¿½Éoï¿½Í‚ï¿½ï¿½Ä‚È‚ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½B
+			//todo ï¿½ï¿½ï¿½Í‘Sï¿½}ï¿½eï¿½ï¿½ï¿½Aï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ö‚ï¿½ï¿½Ü‚ï¿½
 			for (Material* material : mesh.m_materials) {
 				material->GetAlbedoMap().InitFromD3DResource(albedoMap.Get());
 			}
 		});
-		//ƒfƒBƒXƒNƒŠƒvƒ^ƒq[ƒv‚ÌÄì¬B
+		//ï¿½fï¿½Bï¿½Xï¿½Nï¿½ï¿½ï¿½vï¿½^ï¿½qï¿½[ï¿½vï¿½ÌÄì¬ï¿½B
 		m_meshParts.CreateDescriptorHeaps();
 	}
 	void Model::DispatchComputeAnimatedVertexBuffer(RenderContext& rc)
@@ -125,7 +127,7 @@ namespace nsK2EngineLow {
 	)
 	{
 		if (numInstance == 0) {
-			// ƒCƒ“ƒXƒ^ƒ“ƒX‚Ì”‚ª0‚È‚Ì‚ÅƒŠƒ^[ƒ“B
+			// ï¿½Cï¿½ï¿½ï¿½Xï¿½^ï¿½ï¿½ï¿½Xï¿½Ìï¿½ï¿½ï¿½0ï¿½È‚Ì‚Åƒï¿½ï¿½^ï¿½[ï¿½ï¿½ï¿½B
 			return;
 		}
 		m_meshParts.Draw(

@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 /* ボスの攻撃ID */
 enum class BossStateID

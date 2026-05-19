@@ -1,7 +1,7 @@
-#pragma once
+ï»¿#pragma once
 #include "AbilityBase.h"
 /*
- * Magic‚ÌŠî’êƒNƒ‰ƒX
+ * Magicã®åŸºåº•ã‚¯ãƒ©ã‚¹
  */
 class MagicBase : public AbilityBase
 {	
@@ -17,7 +17,7 @@ public:
 class FireMagic : public MagicBase
 {
 private:
-	EffectHandle fireEffectHandle_ = INVALID_EFFECT_HANDLE; // —\‘ªƒGƒtƒFƒNƒg‚Ìƒnƒ“ƒhƒ‹
+	EffectHandle fireEffectHandle_ = INVALID_EFFECT_HANDLE; // äºˆæ¸¬ã‚¨ãƒ•ã‚§ã‚¯ãƒˆã®ãƒãƒ³ãƒ‰ãƒ«
 
 public:
 	FireMagic();

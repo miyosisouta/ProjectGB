@@ -1,4 +1,4 @@
-#include "k2EnginePreCompile.h"
+ï»¿#include "k2EnginePreCompile.h"
 #include "ToneMap.h"
 
 namespace nsK2Engine {
@@ -49,14 +49,14 @@ namespace nsK2Engine {
 	{
 		g_graphicsEngine->BeginGPUEvent("Tonemap");
 
-		// ÅI‡¬B
-		// ƒŒƒ“ƒ_ƒŠƒ“ƒOƒ^[ƒQƒbƒg‚Æ‚µ‚Ä—˜—p‚Å‚«‚é‚Ü‚Å‘Ò‚Â
+		// æœ€çµ‚åˆæˆã€‚
+		// ãƒ¬ãƒ³ãƒ€ãƒªãƒ³ã‚°ã‚¿ãƒ¼ã‚²ãƒƒãƒˆã¨ã—ã¦åˆ©ç”¨ã§ãã‚‹ã¾ã§å¾…ã¤
 		rc.WaitUntilToPossibleSetRenderTarget(m_finalRt);
-		// ƒŒƒ“ƒ_ƒŠƒ“ƒOƒ^[ƒQƒbƒg‚ðÝ’è
+		// ãƒ¬ãƒ³ãƒ€ãƒªãƒ³ã‚°ã‚¿ãƒ¼ã‚²ãƒƒãƒˆã‚’è¨­å®š
 		rc.SetRenderTargetAndViewport(m_finalRt);
-		// ÅI‡¬B
+		// æœ€çµ‚åˆæˆã€‚
 		m_finalSprite.Draw(rc);
-		// ƒŒƒ“ƒ_ƒŠƒ“ƒOƒ^[ƒQƒbƒg‚Ö‚Ì‘‚«ž‚ÝI—¹‘Ò‚¿
+		// ãƒ¬ãƒ³ãƒ€ãƒªãƒ³ã‚°ã‚¿ãƒ¼ã‚²ãƒƒãƒˆã¸ã®æ›¸ãè¾¼ã¿çµ‚äº†å¾…ã¡
 		rc.WaitUntilFinishDrawingToRenderTarget(m_finalRt);
 
 		g_graphicsEngine->EndGPUEvent();

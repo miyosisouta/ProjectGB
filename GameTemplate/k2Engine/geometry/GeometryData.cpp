@@ -1,4 +1,4 @@
-#include "k2EnginePreCompile.h"
+ï»¿#include "k2EnginePreCompile.h"
 #include "geometry/GeometryData.h"
 #include "graphics/ModelRender.h"
 
@@ -41,7 +41,7 @@ namespace nsK2Engine {
 			&& vMin.y < 1.0f
 			&& vMin.z < 1.0f
 			) {
-			//‰æ–Ê‚É‰f‚éB
+			//ç”»é¢ã«æ˜ ã‚‹ã€‚
 			m_isInViewFrustum = true;
 		}
 	}
@@ -53,7 +53,7 @@ namespace nsK2Engine {
 	{
 		m_modelRender = modelRender;
 		m_instanceId = instanceId;
-		// tkmƒtƒ@ƒCƒ‹‚©‚çƒ‚ƒfƒ‹‚ÌÅ¬À•W‚ÆÅ‘åÀ•W‚ð’²‚×‚éB
+		// tkmãƒ•ã‚¡ã‚¤ãƒ«ã‹ã‚‰ãƒ¢ãƒ‡ãƒ«ã®æœ€å°åº§æ¨™ã¨æœ€å¤§åº§æ¨™ã‚’èª¿ã¹ã‚‹ã€‚
 		Vector3 vMax = { -FLT_MAX, -FLT_MAX, -FLT_MAX };
 		Vector3 vMin = { FLT_MAX,  FLT_MAX,  FLT_MAX };
 

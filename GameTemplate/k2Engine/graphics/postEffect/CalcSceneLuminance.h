@@ -1,22 +1,22 @@
-#pragma once
+ï»¿#pragma once
 
 #include "graphics/postEffect/PostEffectComponentBase.h"
 
 namespace nsK2Engine {
     /// <summary>
-    /// ƒV[ƒ“‚Ì•½‹Ï‹P“x‚ÌŒvZˆ—B
+    /// ã‚·ãƒ¼ãƒ³ã®å¹³å‡è¼åº¦ã®è¨ˆç®—å‡¦ç†ã€‚
     /// </summary>
     class CalcSceneLuminance : public PostEffectComponentBase
 	{
 	public:
 		/// <summary>
-		/// •`‰æB
+		/// æç”»ã€‚
 		/// </summary>
-		/// <param name="rc">ƒŒƒ“ƒ_\ƒRƒ“ƒeƒLƒXƒgB</param>
-		/// <param name="mainRenderTarget">ƒƒCƒ“ƒŒƒ“ƒ_\ƒ^[ƒQƒbƒgB</param>
+		/// <param name="rc">ãƒ¬ãƒ³ãƒ€â€•ã‚³ãƒ³ãƒ†ã‚­ã‚¹ãƒˆã€‚</param>
+		/// <param name="mainRenderTarget">ãƒ¡ã‚¤ãƒ³ãƒ¬ãƒ³ãƒ€â€•ã‚¿ãƒ¼ã‚²ãƒƒãƒˆã€‚</param>
 		void OnRender(RenderContext& rc, RenderTarget& mainRenderTarget) override;
 		/// <summary>
-		/// ‰Šú‰»B
+		/// åˆæœŸåŒ–ã€‚
 		/// </summary>
 		void OnInit(
 			RenderTarget& mainRenderTarget,
@@ -25,7 +25,7 @@ namespace nsK2Engine {
 			RenderTarget& metallicSmoothRenderTarget,
 			RenderTarget& albedoRenderTarget) override;
 		/// <summary>
-		/// ƒ|ƒXƒg‚ÌŒ‹‰Ê‚Ì‰æ‘œ‚ğƒƒCƒ“ƒŒƒ“ƒ_ƒŠƒ“ƒOƒ^[ƒQƒbƒg‚ÉƒRƒs[‚·‚éH
+		/// ãƒã‚¹ãƒˆã®çµæœã®ç”»åƒã‚’ãƒ¡ã‚¤ãƒ³ãƒ¬ãƒ³ãƒ€ãƒªãƒ³ã‚°ã‚¿ãƒ¼ã‚²ãƒƒãƒˆã«ã‚³ãƒ”ãƒ¼ã™ã‚‹ï¼Ÿ
 		/// </summary>
 		/// <returns></returns>
 		bool IsCopyResultTextureToMainRenderTarget() const override
@@ -33,7 +33,7 @@ namespace nsK2Engine {
 			return false;
 		}
 		/// <summary>
-		/// ƒV[ƒ“‚ªØ‚è‘Ö‚í‚Á‚½‚±‚Æ‚ğ’Ê’mB
+		/// ã‚·ãƒ¼ãƒ³ãŒåˆ‡ã‚Šæ›¿ã‚ã£ãŸã“ã¨ã‚’é€šçŸ¥ã€‚
 		/// </summary>
 		/// <param name="timer"></param>
 		void NotifyChangeScene(float timer)
@@ -42,7 +42,7 @@ namespace nsK2Engine {
 			m_changeSceneTimer = timer;
 		}
 		/// <summary>
-		/// ƒV[ƒ“‚Ì•½‹Ï‹P“x‚ª‹L‰¯‚³‚ê‚Ä‚¢‚éƒeƒNƒXƒ`ƒƒ‚ğæ“¾B
+		/// ã‚·ãƒ¼ãƒ³ã®å¹³å‡è¼åº¦ãŒè¨˜æ†¶ã•ã‚Œã¦ã„ã‚‹ãƒ†ã‚¯ã‚¹ãƒãƒ£ã‚’å–å¾—ã€‚
 		/// </summary>
 		/// <returns></returns>
 		Texture& GetLuminanceAvgTextureInScene()
@@ -52,38 +52,38 @@ namespace nsK2Engine {
 		
 	private:
 		/// <summary>
-		/// •½‹Ï‹P“x‚ğŒvZ‚·‚éB
+		/// å¹³å‡è¼åº¦ã‚’è¨ˆç®—ã™ã‚‹ã€‚
 		/// </summary>
-		/// <param name="">ƒŒƒ“ƒ_ƒŠƒ“ƒOƒRƒ“ƒeƒLƒXƒg</param>
+		/// <param name="">ãƒ¬ãƒ³ãƒ€ãƒªãƒ³ã‚°ã‚³ãƒ³ãƒ†ã‚­ã‚¹ãƒˆ</param>
 		void CalcLuminanceAvarage(RenderContext& rc);
 	private:
 		static const int MAX_SAMPLES = 16;
 
-		// ƒVƒF[ƒ_[‘¤‚Ìb0ƒŒƒWƒXƒ^‚ÉŠÖ˜A•t‚¯‚³‚ê‚éƒf[ƒ^B
+		// ã‚·ã‚§ãƒ¼ãƒ€ãƒ¼å´ã®b0ãƒ¬ã‚¸ã‚¹ã‚¿ã«é–¢é€£ä»˜ã‘ã•ã‚Œã‚‹ãƒ‡ãƒ¼ã‚¿ã€‚
 		struct SCB_1 {
 			float deltaTime;
 		};
 		enum CalcAvgSprite {
-			enCalcAvgLog,					// ‘Î”•½‹Ï‚ğ‹‚ß‚éB
+			enCalcAvgLog,					// å¯¾æ•°å¹³å‡ã‚’æ±‚ã‚ã‚‹ã€‚
 			enCalcAvg_Start,
-			enCalcAvg_0 = enCalcAvg_Start,	// •½‹Ï‹P“x‚ğŒvZB
-			enCalcAvg_1,					// •½‹Ï‹P“x‚ğŒvZB
-			enCalcAvg_2,					// •½‹Ï‹P“x‚ğŒvZB	
-			enCalcAvg_3,					// •½‹Ï‹P“x‚ğŒvZ‚·‚éB
+			enCalcAvg_0 = enCalcAvg_Start,	// å¹³å‡è¼åº¦ã‚’è¨ˆç®—ã€‚
+			enCalcAvg_1,					// å¹³å‡è¼åº¦ã‚’è¨ˆç®—ã€‚
+			enCalcAvg_2,					// å¹³å‡è¼åº¦ã‚’è¨ˆç®—ã€‚	
+			enCalcAvg_3,					// å¹³å‡è¼åº¦ã‚’è¨ˆç®—ã™ã‚‹ã€‚
 			enCalcAvg_End,
-			enCalcAvgExp = enCalcAvg_End,	// exp()‚ğ—p‚¢‚ÄÅI•½‹Ï‚ğ‹‚ß‚éB
+			enCalcAvgExp = enCalcAvg_End,	// exp()ã‚’ç”¨ã„ã¦æœ€çµ‚å¹³å‡ã‚’æ±‚ã‚ã‚‹ã€‚
 			enNumCalcAvgSprite
 		};
-		RenderTarget m_calcAvgRt[enNumCalcAvgSprite];		// •½‹Ï‹P“xŒvZ—p‚ÌƒŒƒ“ƒ_ƒŠƒ“ƒOƒ^[ƒQƒbƒgB
-		RenderTarget m_luminanceAvgInTonemapLastFrameRt;	// 1ƒtƒŒ[ƒ€‘O‚Ìƒg[ƒ“ƒ}ƒbƒv‚Åg—p‚µ‚½•½‹Ï‹P“x‚ğ‹L‰¯‚·‚é‚½‚ß‚ÌƒŒƒ“ƒ_ƒŠƒ“ƒOƒ^[ƒQƒbƒgB
-		RenderTarget m_luminanceAvgInTonemapRt;				// Œ»İ‚ÌƒtƒŒ[ƒ€‚Ìƒg[ƒ“ƒ}ƒbƒv‚Åg—p‚·‚é•½‹Ï‹P“x‚ğ‹L‰¯‚·‚é‚½‚ß‚ÌƒŒƒ“ƒ_ƒŠƒ“ƒOƒ^[ƒQƒbƒgB			
+		RenderTarget m_calcAvgRt[enNumCalcAvgSprite];		// å¹³å‡è¼åº¦è¨ˆç®—ç”¨ã®ãƒ¬ãƒ³ãƒ€ãƒªãƒ³ã‚°ã‚¿ãƒ¼ã‚²ãƒƒãƒˆã€‚
+		RenderTarget m_luminanceAvgInTonemapLastFrameRt;	// 1ãƒ•ãƒ¬ãƒ¼ãƒ å‰ã®ãƒˆãƒ¼ãƒ³ãƒãƒƒãƒ—ã§ä½¿ç”¨ã—ãŸå¹³å‡è¼åº¦ã‚’è¨˜æ†¶ã™ã‚‹ãŸã‚ã®ãƒ¬ãƒ³ãƒ€ãƒªãƒ³ã‚°ã‚¿ãƒ¼ã‚²ãƒƒãƒˆã€‚
+		RenderTarget m_luminanceAvgInTonemapRt;				// ç¾åœ¨ã®ãƒ•ãƒ¬ãƒ¼ãƒ ã®ãƒˆãƒ¼ãƒ³ãƒãƒƒãƒ—ã§ä½¿ç”¨ã™ã‚‹å¹³å‡è¼åº¦ã‚’è¨˜æ†¶ã™ã‚‹ãŸã‚ã®ãƒ¬ãƒ³ãƒ€ãƒªãƒ³ã‚°ã‚¿ãƒ¼ã‚²ãƒƒãƒˆã€‚			
 		Sprite m_calcAvgSprites[enNumCalcAvgSprite];
-		Sprite m_calcAdapteredLuminanceSprite;			// –¾ˆÃ‡‰—p‚ÌƒXƒvƒ‰ƒCƒgB
-		Sprite m_calcAdapteredLuminanceFisrtSprite;		// –¾ˆÃ‡‰—p‚ÌƒXƒvƒ‰ƒCƒgB(ƒV[ƒ“‚ªØ‚è‘Ö‚í‚Á‚½‚Æ‚«‚Ég—p‚³‚ê‚éB)
-		Sprite m_copyLuminanceAvgInTonemapSprite;		// ƒg[ƒ“ƒ}ƒbƒv‚Åg—p‚µ‚½•½‹Ï‹P“xƒRƒs[—p‚ÌƒXƒvƒ‰ƒCƒgB
-		bool m_isFirstWhenChangeScene = true;			// ƒV[ƒ“‚ªØ‚è‘Ö‚í‚Á‚Ä‰‰ñ‚Ì•`‰æ‚©‚Ç‚¤‚©‚Ìƒtƒ‰ƒOB
+		Sprite m_calcAdapteredLuminanceSprite;			// æ˜æš—é †å¿œç”¨ã®ã‚¹ãƒ—ãƒ©ã‚¤ãƒˆã€‚
+		Sprite m_calcAdapteredLuminanceFisrtSprite;		// æ˜æš—é †å¿œç”¨ã®ã‚¹ãƒ—ãƒ©ã‚¤ãƒˆã€‚(ã‚·ãƒ¼ãƒ³ãŒåˆ‡ã‚Šæ›¿ã‚ã£ãŸã¨ãã«ä½¿ç”¨ã•ã‚Œã‚‹ã€‚)
+		Sprite m_copyLuminanceAvgInTonemapSprite;		// ãƒˆãƒ¼ãƒ³ãƒãƒƒãƒ—ã§ä½¿ç”¨ã—ãŸå¹³å‡è¼åº¦ã‚³ãƒ”ãƒ¼ç”¨ã®ã‚¹ãƒ—ãƒ©ã‚¤ãƒˆã€‚
+		bool m_isFirstWhenChangeScene = true;			// ã‚·ãƒ¼ãƒ³ãŒåˆ‡ã‚Šæ›¿ã‚ã£ã¦åˆå›ã®æç”»ã‹ã©ã†ã‹ã®ãƒ•ãƒ©ã‚°ã€‚
 		Vector4 m_avSampleOffsets[MAX_SAMPLES];
 		SCB_1 m_cb1;
-		float m_changeSceneTimer = 0.5f;				// ƒV[ƒ“Ø‚è‘Ö‚¦ƒ^ƒCƒ}[B
+		float m_changeSceneTimer = 0.5f;				// ã‚·ãƒ¼ãƒ³åˆ‡ã‚Šæ›¿ãˆã‚¿ã‚¤ãƒãƒ¼ã€‚
 	};
 }

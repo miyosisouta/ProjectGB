@@ -1,75 +1,75 @@
-#pragma once
+﻿#pragma once
 
 namespace nsK2Engine {
 	/// <summary>
-	/// ���f���x�[�X�̃{�����[�����C�g�̃x�[�X�N���X�B
+	/// モデルベースのボリュームライトのベースクラス。
 	/// </summary>
 	class VolumeLightBase : Noncopyable {
 	public:
 		/// <summary>
-		/// �f�X�g���N�^�B
+		/// デストラクタ。
 		/// </summary>
 		virtual ~VolumeLightBase();
 		
 		/// <summary>
-		/// �X�V�����B
+		/// 更新処理。
 		/// </summary>
 		virtual void Update() = 0;
 		/// <summary>
-		/// �������B
+		/// 初期化。
 		/// </summary>
-		/// <param name="lightData">���C�g�f�[�^</param>
-		/// <param name="tkmFilePath">tkm�t�@�C���̃t�@�C���p�X</param>
-		/// <param name="psFinalEntryFunc">�ŏI�p�X�̃s�N�Z���V�F�[�_�[�̃G���g���[�|�C���g</param>
+		/// <param name="lightData">ライトデータ</param>
+		/// <param name="tkmFilePath">tkmファイルのファイルパス</param>
+		/// <param name="psFinalEntryFunc">最終パスのピクセルシェーダーのエントリーポイント</param>
 		void Init(
 			const void* lightData,
 			const char* tkmFilePath,
 			const char* psFinalEntryFunc
 		);
 		/// <summary>
-		/// �{�����[�����C�g�̔w�ʂ�`��
+		/// ボリュームライトの背面を描画
 		/// </summary>
 		/// <remark>
-		/// ���̊֐��̓G���W��������Ă΂�܂��B
-		/// �Q�[��������Ăяo�����Ȃ��悤�ɁB
+		/// この関数はエンジン側から呼ばれます。
+		/// ゲーム側から呼び出ししないように。
 		/// </remark>
-		/// <param name="rc">�����_�����O�R���e�L�X�g</param>
+		/// <param name="rc">レンダリングコンテキスト</param>
 		void DrawToVolumeLightMapBack(RenderContext& rc);
 		/// <summary>
-		/// �{�����[�����C�g�̑O�ʂ�`��B
+		/// ボリュームライトの前面を描画。
 		/// </summary>
 		/// <remark>
-		/// ���̊֐��̓G���W��������Ă΂�܂��B
-		/// �Q�[��������Ăяo�����Ȃ��悤�ɁB
+		/// この関数はエンジン側から呼ばれます。
+		/// ゲーム側から呼び出ししないように。
 		/// </remark>
-		/// <param name="rc">�����_�����O�R���e�L�X�g</param>
+		/// <param name="rc">レンダリングコンテキスト</param>
 		void DrawToVolumeLightMapFront(RenderContext& rc);
 		/// <summary>
-		/// �ŏI�`��
+		/// 最終描画
 		/// </summary>
 		void DrawFinal(RenderContext& rc);
 		
 	private:
 		/// <summary>
-		/// ���C�g�f�[�^��ݒ�B
+		/// ライトデータを設定。
 		/// </summary>
-		/// <param name="lightData">���C�g�f�[�^</param>
+		/// <param name="lightData">ライトデータ</param>
 		virtual void SetLightData(const void* lightData) = 0;
 		virtual void* GetFinalCB()  = 0;
 		virtual int GetFinalCBSize() const = 0;
 		virtual void PreDrawFinal(RenderContext& rc) = 0;
 	protected:
 		
-		Model m_modelFront;		// �{�����[�����C�g�̑O�ʕ`��p�̃��f���B
-		Model m_modelBack;		// �{�����[�����C�g�̔w�ʕ`��p�̃��f���B
-		Sprite m_final;			// �ŏI�`��B
+		Model m_modelFront;		// ボリュームライトの前面描画用のモデル。
+		Model m_modelBack;		// ボリュームライトの背面描画用のモデル。
+		Sprite m_final;			// 最終描画。
 		
 	};
 	template<class TLightData, class TLightDataRaw>
 	class VolumeLight : public VolumeLightBase {
 	private:
 		/// <summary>
-		/// ���C�g�f�[�^���Z�b�g�B
+		/// ライトデータをセット。
 		/// </summary>
 		/// <param name="lightData"></param>
 		void SetLightData(const void* lightData) override
@@ -86,23 +86,23 @@ namespace nsK2Engine {
 		}
 		void PreDrawFinal(RenderContext& rc) override
 		{
-			// �ŏI�`��̒萔�o�b�t�@���X�V����B
+			// 最終描画の定数バッファを更新する。
 			m_finalCB.lightDataRaw = m_lightData->GetRawData();
-			// �J�����֌W�̃f�[�^��Draw�̃p�X�ŃR�s�[���Ȃ��ƁAUpdate�̏��Ԃ�
-			// 1�t���[���O�̃J�������ɂȂ��Ă��܂��B
+			// カメラ関係のデータはDrawのパスでコピーしないと、Updateの順番で
+			// 1フレーム前のカメラ情報になってしまう。
 			m_finalCB.mViewProjInv = g_camera3D->GetViewProjectionMatrixInv();
 			m_finalCB.randomSeed = rand() % 100;
 		}
 	protected:
 		/// <summary>
-		/// �ŏI�`��̃p�X�̒萔�o�b�t�@�B
+		/// 最終描画のパスの定数バッファ。
 		/// </summary>
 		struct FinalCB {
-			TLightDataRaw lightDataRaw; // ���̃��C�g�f�[�^�B
-			Matrix mViewProjInv;		// �r���[�v���W�F�N�V�����s��̋t�s��
-			float randomSeed;			// �����̎�
+			TLightDataRaw lightDataRaw; // 生のライトデータ。
+			Matrix mViewProjInv;		// ビュープロジェクション行列の逆行列
+			float randomSeed;			// 乱数の種
 		};
 		const TLightData* m_lightData = nullptr;
-		FinalCB m_finalCB;		// �ŏI�`��̒萔�o�b�t�@�B
+		FinalCB m_finalCB;		// 最終描画の定数バッファ。
 	};
 }

@@ -1,75 +1,75 @@
-#pragma once
+ï»¿#pragma once
 #include "MapChip2DRender.h"
 
 namespace nsK2Engine {
 
 	struct CaslData;
 	/// <summary>
-	/// 2D‚ÌƒŒƒxƒ‹ƒf[ƒ^B
+	/// 2Dã®ãƒ¬ãƒ™ãƒ«ãƒ‡ãƒ¼ã‚¿ã€‚
 	/// </summary>
 	struct Level2DObjectData {
-		Vector3 position = Vector3::Zero;		//À•WB
-		Quaternion rotation = Quaternion::Identity;	//‰ñ“]B
-		Vector3 scale = Vector3::One;			//Šg‘å—¦B
-		int width = 0;		//‰¡•B
-		int height = 0;		//c•B
-		const char* name;	//–¼‘OB
-		const char* ddsFilePath;		//.ddsƒtƒ@ƒCƒ‹‚Ìƒtƒ@ƒCƒ‹ƒpƒXB
-		Vector2 pivot = Sprite::DEFAULT_PIVOT;	//ƒsƒ{ƒbƒgB
+		Vector3 position = Vector3::Zero;		//åº§æ¨™ã€‚
+		Quaternion rotation = Quaternion::Identity;	//å›è»¢ã€‚
+		Vector3 scale = Vector3::One;			//æ‹¡å¤§ç‡ã€‚
+		int width = 0;		//æ¨ªå¹…ã€‚
+		int height = 0;		//ç¸¦å¹…ã€‚
+		const char* name;	//åå‰ã€‚
+		const char* ddsFilePath;		//.ddsãƒ•ã‚¡ã‚¤ãƒ«ã®ãƒ•ã‚¡ã‚¤ãƒ«ãƒ‘ã‚¹ã€‚
+		Vector2 pivot = Sprite::DEFAULT_PIVOT;	//ãƒ”ãƒœãƒƒãƒˆã€‚
 		/// <summary>
-		/// ˆø”‚Å“n‚µ‚½ƒIƒuƒWƒFƒNƒg–¼‚ÌƒIƒuƒWƒFƒNƒg‚ğ’²‚×‚éB
+		/// å¼•æ•°ã§æ¸¡ã—ãŸã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆåã®ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã‚’èª¿ã¹ã‚‹ã€‚
 		/// </summary>
-		/// <param name="objName">’²‚×‚é–¼‘OB</param>
-		/// <returns>–¼‘O‚ª“¯‚¶ê‡‚Étrue‚ğ•Ô‚µ‚Ü‚·B</returns>
+		/// <param name="objName">èª¿ã¹ã‚‹åå‰ã€‚</param>
+		/// <returns>åå‰ãŒåŒã˜å ´åˆã«trueã‚’è¿”ã—ã¾ã™ã€‚</returns>
 		bool EqualObjectName(const char* objName) const
 		{
 			return strcmp(objName, name) == 0;
 		}
 		/// <summary>
-		/// –¼‘O‚ª‘O•ûˆê’v‚·‚é‚©’²‚×‚éB
+		/// åå‰ãŒå‰æ–¹ä¸€è‡´ã™ã‚‹ã‹èª¿ã¹ã‚‹ã€‚
 		/// </summary>
-		/// <param name="n">’²‚×‚é–¼‘OB</param>
-		/// <returns>–¼‘O‚ª“¯‚¶ê‡‚Étrue‚ğ•Ô‚µ‚Ü‚·B</returns>
+		/// <param name="n">èª¿ã¹ã‚‹åå‰ã€‚</param>
+		/// <returns>åå‰ãŒåŒã˜å ´åˆã«trueã‚’è¿”ã—ã¾ã™ã€‚</returns>
 		bool ForwardMatchName(const char* n) const
 		{
 			auto len = strlen(n);
 			auto namelen = strlen(name);
 			if (len > namelen) {
-				//–¼‘O‚ª’·‚¢B•sˆê’vB
+				//åå‰ãŒé•·ã„ã€‚ä¸ä¸€è‡´ã€‚
 				return false;
 			}
 			return strncmp(n, name, len) == 0;
 		}
 	};
 	/// <summary>
-	/// ƒŒƒxƒ‹2D
+	/// ãƒ¬ãƒ™ãƒ«2D
 	/// </summary>
 	class Level2DRender : public Noncopyable {
 	private:
 		using MapChip2DRenderPtr = std::unique_ptr<MapChip2DRender>;
 	public:
 		/// <summary>
-		/// ƒŒƒxƒ‹‚ğ‰Šú‰»B
+		/// ãƒ¬ãƒ™ãƒ«ã‚’åˆæœŸåŒ–ã€‚
 		/// </summary>
-		/// <param name="filePath">caslƒtƒ@ƒCƒ‹‚Ìƒtƒ@ƒCƒ‹ƒpƒXB</param>
-		/// <param name="hookFunc">ƒIƒuƒWƒFƒNƒg‚ğì¬‚·‚é‚Ìˆ—‚ğƒtƒbƒN‚·‚é‚½‚ß‚ÌŠÖ”ƒIƒuƒWƒFƒNƒgB</param>
+		/// <param name="filePath">caslãƒ•ã‚¡ã‚¤ãƒ«ã®ãƒ•ã‚¡ã‚¤ãƒ«ãƒ‘ã‚¹ã€‚</param>
+		/// <param name="hookFunc">ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã‚’ä½œæˆã™ã‚‹æ™‚ã®å‡¦ç†ã‚’ãƒ•ãƒƒã‚¯ã™ã‚‹ãŸã‚ã®é–¢æ•°ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã€‚</param>
 		void Init(const char* filePath, std::function<bool(Level2DObjectData& objData)> hookFunc);
 		/// <summary>
-		/// XVˆ—B
+		/// æ›´æ–°å‡¦ç†ã€‚
 		/// </summary>
 		void Update() const;
 		/// <summary>
-		/// ƒ}ƒbƒvƒ`ƒbƒv2D‚Ì•`‰æˆ—B
+		/// ãƒãƒƒãƒ—ãƒãƒƒãƒ—2Dã®æç”»å‡¦ç†ã€‚
 		/// </summary>
-		/// <param name="renderContext">ƒŒƒ“ƒ_[ƒRƒ“ƒeƒLƒXƒgB</param>
+		/// <param name="renderContext">ãƒ¬ãƒ³ãƒ€ãƒ¼ã‚³ãƒ³ãƒ†ã‚­ã‚¹ãƒˆã€‚</param>
 		void Draw(RenderContext& renderContext) const;
 	private:
 		/// <summary>
-		/// ƒ}ƒbƒvƒ`ƒbƒv2DƒŒƒ“ƒ_[‚ğ’Ç‰Á‚·‚éB
+		/// ãƒãƒƒãƒ—ãƒãƒƒãƒ—2Dãƒ¬ãƒ³ãƒ€ãƒ¼ã‚’è¿½åŠ ã™ã‚‹ã€‚
 		/// </summary>
-		/// <param name="objData">ƒŒƒxƒ‹2Dƒf[ƒ^</param>
+		/// <param name="objData">ãƒ¬ãƒ™ãƒ«2Dãƒ‡ãƒ¼ã‚¿</param>
 		void AddMapChip2DRender(Level2DObjectData* objData);
 	private:
-		std::vector<MapChip2DRenderPtr> m_mapChip2DRenderPtrList;		//ƒ}ƒbƒvƒ`ƒbƒv2DƒŒƒ“ƒ_[B
+		std::vector<MapChip2DRenderPtr> m_mapChip2DRenderPtrList;		//ãƒãƒƒãƒ—ãƒãƒƒãƒ—2Dãƒ¬ãƒ³ãƒ€ãƒ¼ã€‚
 	};
 }

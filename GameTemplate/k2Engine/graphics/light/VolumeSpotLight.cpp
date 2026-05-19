@@ -1,10 +1,10 @@
-#include "k2EnginePreCompile.h"
+﻿#include "k2EnginePreCompile.h"
 #include "VolumeSpotLight.h"
 
 namespace nsK2Engine {
 	void VolumeSpotLight::Update()
 	{
-		// �X�|�b�g���C�g�̏������ƂɃ��[���h�s����X�V����B
+		// スポットライトの情報をもとにワールド行列を更新する。
 		Vector3 pos = m_lightData->GetPosition();
 		Quaternion rot;
 		rot.SetRotation(g_vec3Back, m_lightData->GetDirection());
@@ -14,9 +14,9 @@ namespace nsK2Engine {
 		float angle = m_lightData->GetAngle();
 		/*angle = max(angle, m_lightData->GetAngle2());
 		angle = max(angle, m_lightData->GetAngle3());*/
-		// �p�x����xy�̊g�嗦���v�Z����B
+		// 角度からxyの拡大率を計算する。
 		
-		// tan(90��)�̌��ʂ�������ɂȂ��Ă��܂��̂ŁA�p�x�ɐ�����������B
+		// tan(90°)の結果が無限大になってしまうので、角度に制限を加える。
 		float xyScale = tan(std::min<float>(Math::PI * 0.49f, angle)) * m_lightData->GetRange();
 		scale.x = xyScale;
 		scale.y = xyScale;

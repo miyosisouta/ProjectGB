@@ -1,4 +1,4 @@
-#include "k2EnginePreCompile.h"
+ï»¿#include "k2EnginePreCompile.h"
 #include "Fxaa.h"
 
 namespace nsK2Engine {
@@ -9,20 +9,20 @@ namespace nsK2Engine {
         RenderTarget& metallicSmoothRenderTarget,
         RenderTarget& albedoRenderTarget
     ) {
-        // ÅI‡¬—p‚ÌƒXƒvƒ‰ƒCƒg‚ğ‰Šú‰»‚·‚é
+        // æœ€çµ‚åˆæˆç”¨ã®ã‚¹ãƒ—ãƒ©ã‚¤ãƒˆã‚’åˆæœŸåŒ–ã™ã‚‹
         SpriteInitData spriteInitData;
         spriteInitData.m_textures[0] = &mainRenderTarget.GetRenderTargetTexture();
-        // ‰ğ‘œ“x‚ÍmainRenderTarget‚Ì•‚Æ‚‚³
+        // è§£åƒåº¦ã¯mainRenderTargetã®å¹…ã¨é«˜ã•
         spriteInitData.m_width = mainRenderTarget.GetWidth();
         spriteInitData.m_height = mainRenderTarget.GetHeight();
-        // 2D—p‚ÌƒVƒF[ƒ_[‚ğg—p‚·‚é
+        // 2Dç”¨ã®ã‚·ã‚§ãƒ¼ãƒ€ãƒ¼ã‚’ä½¿ç”¨ã™ã‚‹
         spriteInitData.m_fxFilePath = "Assets/shader/postEffect/fxaa.fx";
         spriteInitData.m_vsEntryPointFunc = "VSMain";
         spriteInitData.m_psEntryPoinFunc = "PSMain";
 
         spriteInitData.m_alphaBlendMode = AlphaBlendMode_None;
 
-        //‰ğ‘œ“x‚ğGPU‚É‘—‚é‚½‚ß‚Ì’è”ƒoƒbƒtƒ@‚ğİ’è‚·‚éB
+        //è§£åƒåº¦ã‚’GPUã«é€ã‚‹ãŸã‚ã®å®šæ•°ãƒãƒƒãƒ•ã‚¡ã‚’è¨­å®šã™ã‚‹ã€‚
         spriteInitData.m_expandConstantBuffer = (void*)&m_cB;
         spriteInitData.m_expandConstantBufferSize = sizeof(FaxxBuffer) +
             (16 - (sizeof(FaxxBuffer) % 16));
@@ -33,7 +33,7 @@ namespace nsK2Engine {
             mainRenderTarget.GetHeight(),
             1,
             1,
-            DXGI_FORMAT_R8G8B8A8_UNORM, // HDRŒn‚ÌƒGƒtƒFƒNƒg‚ÍI—¹‚µ‚Ä‚¢‚é‚Ì‚ÅA8bit®”ƒoƒbƒtƒ@‚Å‚n‚jB
+            DXGI_FORMAT_R8G8B8A8_UNORM, // HDRç³»ã®ã‚¨ãƒ•ã‚§ã‚¯ãƒˆã¯çµ‚äº†ã—ã¦ã„ã‚‹ã®ã§ã€8bitæ•´æ•°ãƒãƒƒãƒ•ã‚¡ã§ï¼¯ï¼«ã€‚
             DXGI_FORMAT_UNKNOWN
         );
 
@@ -43,16 +43,16 @@ namespace nsK2Engine {
     void Fxaa::OnRender(RenderContext& rc, RenderTarget& mainRenderTarget)
     {
         g_graphicsEngine->BeginGPUEvent("FXAA");
-        // ƒŒƒ“ƒ_ƒŠƒ“ƒOƒ^[ƒQƒbƒg‚Æ‚µ‚Ä—˜—p‚Å‚«‚é‚Ü‚Å‘Ò‚Â
+        // ãƒ¬ãƒ³ãƒ€ãƒªãƒ³ã‚°ã‚¿ãƒ¼ã‚²ãƒƒãƒˆã¨ã—ã¦åˆ©ç”¨ã§ãã‚‹ã¾ã§å¾…ã¤
         rc.WaitUntilToPossibleSetRenderTarget(m_fxaaRt);
-        // ƒŒƒ“ƒ_ƒŠƒ“ƒOƒ^[ƒQƒbƒg‚ğİ’è
+        // ãƒ¬ãƒ³ãƒ€ãƒªãƒ³ã‚°ã‚¿ãƒ¼ã‚²ãƒƒãƒˆã‚’è¨­å®š
         rc.SetRenderTargetAndViewport(m_fxaaRt);
         m_cB.bufferW = static_cast<float>(g_graphicsEngine->GetFrameBufferWidth());
         m_cB.bufferH = static_cast<float>(g_graphicsEngine->GetFrameBufferHeight());
-        //•`‰æB
+        //æç”»ã€‚
         m_finalSprite.Draw(rc);
-        // ƒŒƒ“ƒ_ƒŠƒ“ƒOƒ^[ƒQƒbƒg‚Ö‚Ì‘‚«‚İI—¹‘Ò‚¿
-        //ƒƒCƒ“ƒŒƒ“ƒ_\ƒ^[ƒQƒbƒg‚ğRENDERTARGET‚©‚çPRESENT‚ÖB
+        // ãƒ¬ãƒ³ãƒ€ãƒªãƒ³ã‚°ã‚¿ãƒ¼ã‚²ãƒƒãƒˆã¸ã®æ›¸ãè¾¼ã¿çµ‚äº†å¾…ã¡
+        //ãƒ¡ã‚¤ãƒ³ãƒ¬ãƒ³ãƒ€â€•ã‚¿ãƒ¼ã‚²ãƒƒãƒˆã‚’RENDERTARGETã‹ã‚‰PRESENTã¸ã€‚
         rc.WaitUntilFinishDrawingToRenderTarget(m_fxaaRt);
         g_graphicsEngine->EndGPUEvent();
     }

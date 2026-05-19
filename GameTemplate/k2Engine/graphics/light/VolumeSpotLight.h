@@ -1,11 +1,11 @@
-#pragma once
+ï»¿#pragma once
 
 #include "graphics/light/VolumeLightBase.h"
 
 namespace nsK2Engine {
 	
 	/// <summary>
-	/// ƒ‚ƒfƒ‹ƒx[ƒX‚Ìƒ{ƒŠƒ…[ƒ€ƒXƒ|ƒbƒgƒ‰ƒCƒg
+	/// ãƒ¢ãƒ‡ãƒ«ãƒ™ãƒ¼ã‚¹ã®ãƒœãƒªãƒ¥ãƒ¼ãƒ ã‚¹ãƒãƒƒãƒˆãƒ©ã‚¤ãƒˆ
 	/// </summary>
 	class VolumeSpotLight : public VolumeLight<SpotLight, SSpotLight> {
 	public:
@@ -18,7 +18,7 @@ namespace nsK2Engine {
 			);
 		}
 		/// <summary>
-		/// ƒXƒ|ƒbƒgƒ‰ƒCƒg‚Ìî•ñ‚ğ‚à‚Æ‚ÉXV
+		/// ã‚¹ãƒãƒƒãƒˆãƒ©ã‚¤ãƒˆã®æƒ…å ±ã‚’ã‚‚ã¨ã«æ›´æ–°
 		/// </summary>
 		void Update();
 	};

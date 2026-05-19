@@ -1,13 +1,13 @@
-#pragma once
+ï»¿#pragma once
 /*
- * State‚ÌŠî’êƒNƒ‰ƒX
+ * Stateã®åŸºåº•ã‚¯ãƒ©ã‚¹
  */
 class Character;
 class ISkill : public Noncopyable
 {	
 protected:
-	bool isFinished_ = false; //!< UŒ‚‚ªI‚í‚Á‚½‚©‚Ç‚¤‚©
-	bool isCancelable_ = false; //!< “r’†‚Å‰ñ”ğ‚ğs‚¦‚é‚©
+	bool isFinished_ = false; //!< æ”»æ’ƒãŒçµ‚ã‚ã£ãŸã‹ã©ã†ã‹
+	bool isCancelable_ = false; //!< é€”ä¸­ã§å›é¿ã‚’è¡Œãˆã‚‹ã‹
 
 public:
 	inline void SetFinished(const bool flg) { isFinished_ = flg; }

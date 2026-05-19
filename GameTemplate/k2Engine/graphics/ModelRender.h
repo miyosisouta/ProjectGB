@@ -9,34 +9,27 @@
 namespace nsK2Engine {
 	class RenderingEngine;
 
-	/// <summary>
-	/// �X�L�����f�������_�[�B
-	/// </summary>
+	/** スプラットマップシェーダー専用の定数バッファデータ (b2)。ディザリングとは独立。 */
+	struct SplatColorCBData
+	{
+		float param0     = 1.0f; //!< テクスチャ0 (草) 明るさ倍率
+		float param1     = 1.0f; //!< テクスチャ1 (岩土) 明るさ倍率
+		float param2     = 1.0f; //!< テクスチャ2 (腐葉土) 明るさ倍率
+		float param3     = 1.0f; //!< グローバルHSV明るさ倍率
+		float saturation = 1.0f; //!< 彩度倍率 (1.0=変化なし, 1.5=鮮やか, 0.5=くすみ)
+		float _pad0 = 0.0f;
+		float _pad1 = 0.0f;
+		float _pad2 = 0.0f;
+	};
+
+	/** スキンモデルレンダラー */
 	class ModelRender : public IRenderer
 	{
 	public:
 		ModelRender();
 		~ModelRender();
-		/// <summary>
-		/// �������B�ʏ�͂��̊֐��ŏ��������Ă��������B
-		/// </summary>
-		/// <param name="filePath">�t�@�C���p�X�B</param>
-		/// <param name="animationClips">�A�j���[�V�����N���b�v�B</param>
-		/// <param name="numAnimationClips">�A�j���[�V�����N���b�v�̐��B</param>
-		/// <param name="enModelUpAxis">���f���̏�����B</param>
-		/// <param name="isShadowReciever">�V���h�E���V�[�o�[�t���Otrue�Ȃ�e��������B</param>
-		/// <param name="maxInstance">
-		/// �C���X�^���X�̍ő吔�B���̈������P���傫������ƃC���X�^���V���O�`�悪�s���܂��B
-		/// �C���X�^���V���O�`����s���ۂ͕`�悵�����C���X�^���X�̐��������AUpdateInstancingDraw()���Ăяo���K�v������܂��B
-		/// �C���X�^���V���O�`��̏ڍׂ�Smaple_XX���Q�Ƃ��Ă��������B
-		/// </param>
-		/// <param name="isFrontCullingOnDrawShadowMap">
-		/// �V���h�E�}�b�v��`�悷��ۂɃt�����g�J�����O���s���H
-		/// �t�����g�J�����O���s���ƃV���h�E�A�N�l���y���ł��܂��B
-		/// �������A�|���̂悤�ȕ��Ă��Ȃ����f�����t�����g�J�����O�ŕ`�悷��ƁA
-		/// �V���h�E�}�b�v�ɕ`�悳��Ȃ��Ȃ��Ă��܂����߁A���̏ꍇ�͂��̃t���O��false�ɂ��Ă��������B
-		/// ��)�n�ʂȂǁB
-		/// </param>
+
+		/** 初期化。通常はこの関数で初期化する。maxInstance>1でインスタンシング描画になる。isFrontCullingOnDrawShadowMapは地面など薄いモデルではfalseにする。 */
 		void Init(
 			const char* filePath,
 			AnimationClip* animationClips = nullptr,
@@ -45,26 +38,8 @@ namespace nsK2Engine {
 			bool isShadowReciever = true,
 			int maxInstance = 1,
 			bool isFrontCullingOnDrawShadowMap = false);
-		/// <summary>
-		/// �������`����s���I�u�W�F�N�g���������B
-		/// </summary>
-		/// <param name="filePath">�t�@�C���p�X�B</param>
-		/// <param name="animationClips">�A�j���[�V�����N���b�v�B</param>
-		/// <param name="numAnimationClips">�A�j���[�V�����N���b�v�̐��B</param>
-		/// <param name="enModelUpAxis">���f���̏�����B</param>
-		/// <param name="isShadowReciever">true�Ȃ�e��������B</param>
-		/// <param name="maxInstance">
-		/// �C���X�^���X�̍ő吔�B���̈������P���傫������ƃC���X�^���V���O�`�悪�s���܂��B
-		/// �C���X�^���V���O�`����s���ۂ͕`�悵�����C���X�^���X�̐��������AUpdateInstancingDraw()���Ăяo���K�v������܂��B
-		/// �C���X�^���V���O�`��̏ڍׂ�Smaple_XX���Q�Ƃ��Ă��������B
-		/// </param>	
-		/// <param name="isFrontCullingOnDrawShadowMap">
-		/// �V���h�E�}�b�v��`�悷��ۂɃt�����g�J�����O���s���H
-		/// �t�����g�J�����O���s���ƃV���h�E�A�N�l���y���ł��܂��B
-		/// �������A�|���̂悤�ȕ��Ă��Ȃ����f�����t�����g�J�����O�ŕ`�悷��ƁA
-		/// �V���h�E�}�b�v�ɕ`�悳��Ȃ��Ȃ��Ă��܂����߁A���̏ꍇ�͂��̃t���O��false�ɂ��Ă��������B
-		/// ��)�n�ʂȂǁB
-		/// </param>
+
+		/** 半透明描画を行うオブジェクトを初期化する。 */
 		void IniTranslucent(
 			const char* filePath,
 			AnimationClip* animationClips = nullptr,
@@ -73,50 +48,32 @@ namespace nsK2Engine {
 			bool isShadowReciever = true,
 			int maxInstance = 1,
 			bool isFrontCullingOnDrawShadowMap = false);
-		/// <summary>
-		/// ����ȃV�F�[�f�B���O���s�������ꍇ�̏����������B
-		/// </summary>
-		/// <param name="initData">���f���f�[�^�B</param>
+
+		/** 独自シェーディングを行いたい場合の初期化。 */
 		void InitForwardRendering(ModelInitData& initData);
-		/// <summary>
-		/// �X�V�����B
-		/// </summary>
+
+		/** 更新処理。 */
 		void Update();
-		/// <summary>
-		/// �C���X�^���V���O�f�[�^�̍X�V�B
-		/// </summary>
-		/// <param name="instanceNo">�C���X�^���X�ԍ�</param>
-		/// <param name="pos">���W</param>
-		/// <param name="rot">��]</param>
-		/// <param name="scale">�g�嗦</param>
+
+		/** インスタンシングデータの更新。 */
 		void UpdateInstancingData(int instanceNo, const Vector3& pos, const Quaternion& rot, const Vector3& scale);
-		/// <summary>
-		/// �`�揈���B
-		/// </summary>
+
+		/** 描画処理。 */
 		void Draw(RenderContext& rc);
 
-		/// <summary>
-		/// �A�j���[�V�����Đ��B
-		/// </summary>
-		/// <param name="animNo">�A�j���[�V�����N���b�v�̔ԍ��B</param>
-		/// <param name="interpolateTime">�⊮����(�P�ʁF�b�B)</param>
+		/** アニメーション再生。interpolateTimeは補間時間（秒）。 */
 		void PlayAnimation(int animNo, float interpolateTime = 0.0f)
 		{
 			m_animation.Play(animNo, interpolateTime);
 		}
 
-		/// <summary>
-		/// �A�j���[�V�����̍Đ����H
-		/// </summary>
+		/** アニメーションの再生中か？ */
 		bool IsPlayingAnimation() const
 		{
 			return m_animation.IsPlaying();
 		}
 
-		/// <summary>
-		/// ���f�����擾�B
-		/// </summary>
-		/// <returns>���f��</returns>
+		/** モデルを取得。 */
 		Model& GetModel()
 		{
 			if (m_renderToGBufferModel.IsInited()) {
@@ -129,19 +86,11 @@ namespace nsK2Engine {
 			{
 				return m_translucentModel;
 			}
-			// �����܂ŗ���̂͂��������B
+			// ここまで来るのはおかしい
 			return m_zprepassModel;
 		}
 
-		/// <summary>
-		/// ���W�A��]�A�g���S�Đݒ�B
-		/// </summary>
-		/// <remark>
-		/// �C���X�^���V���O�`�悪�L���̏ꍇ�́A���̐ݒ�͖�������܂��B
-		/// </remark>
-		/// <param name="pos">���W�B</param>
-		/// <param name="rotation">��]�B</param>
-		/// <param name="scale">�g��B</param>
+		/** 座標・回転・拡縮を一括設定。インスタンシング描画が有効の場合は無効。 */
 		void SetTRS(const Vector3& pos, const Quaternion& rotation, const Vector3& scale)
 		{
 			SetPosition(pos);
@@ -149,46 +98,25 @@ namespace nsK2Engine {
 			SetScale(scale);
 		}
 
-		/// <summary>
-		/// ���W��ݒ�B
-		/// </summary>
-		/// <remark>
-		/// �C���X�^���V���O�`�悪�L���̏ꍇ�́A���̐ݒ�͖�������܂��B
-		/// </remark>
-		/// <param name="pos">���W�B</param>
+		/** 座標を設定。インスタンシング描画が有効の場合は無効。 */
 		void SetPosition(const Vector3& pos)
 		{
 			m_position = pos;
 		}
-		/// <summary>
-		/// ���W��ݒ�B
-		/// </summary>
-		/// <param name="x">x���W</param>
-		/// <param name="y">y���W</param>
-		/// <param name="z">z���W</param>
+
+		/** 座標を設定（x,y,z個別指定）。 */
 		void SetPosition(float x, float y, float z)
 		{
 			SetPosition({ x, y, z });
 		}
-		/// <summary>
-		/// ��]��ݒ�B
-		/// </summary>
-		/// <remark>
-		/// �C���X�^���V���O�`�悪�L���̏ꍇ�́A���̐ݒ�͖�������܂��B
-		/// </remark>
-		/// <param name="rotation">��]�B</param>
+
+		/** 回転を設定。インスタンシング描画が有効の場合は無効。 */
 		void SetRotation(const Quaternion& rotation)
 		{
 			m_rotation = rotation;
 		}
 
-		/// <summary>
-		/// �g�嗦��ݒ�B
-		/// </summary>
-		/// <remark>
-		/// �C���X�^���V���O�`�悪�L���̏ꍇ�́A���̐ݒ�͖�������܂��B
-		/// </remark>
-		/// <param name="scale">�g�嗦�B</param>
+		/** 拡大率を設定。インスタンシング描画が有効の場合は無効。 */
 		void SetScale(const Vector3& scale)
 		{
 			m_scale = scale;
@@ -197,76 +125,55 @@ namespace nsK2Engine {
 		{
 			SetScale({ x, y, z });
 		}
-		/// <summary>
-		/// �V���h�E�L���X�^�[�̃t���O��ݒ肷��
-		/// </summary>
+
+		/** シャドウキャスターフラグを設定する。 */
 		void SetShadowCasterFlag(bool flag)
 		{
 			m_isShadowCaster = flag;
 		}
-		/// <summary>
-		/// �A�j���[�V�����Đ��̑��x��ݒ肷��B
-		/// </summary>
-		/// <param name="animationSpeed">���l�̕������{�ɂ���B</param>
+
+		/** アニメーション再生速度を設定する（標準=1.0）。 */
 		void SetAnimationSpeed(const float animationSpeed)
 		{
 			m_animationSpeed = animationSpeed;
 		}
-		/// <summary>
-		/// �{�[���̖��O����{�[���ԍ��������B
-		/// </summary>
-		/// <param name="boneName">�{�[���̖��O</param>
-		/// <returns>�{�[���ԍ��B������Ȃ������ꍇ��-1���Ԃ��Ă��܂��B</returns>
+
+		/** ボーン名からボーン番号を取得する。存在しない場合は-1を返す。 */
 		int FindBoneID(const wchar_t* boneName) const
 		{
 			return m_skeleton.FindBoneID(boneName);
 		}
-		/// <summary>
-		/// �{�[���ԍ�����{�[�����擾�B
-		/// </summary>
-		/// <param name="boneNo">�{�[���ԍ�</param>
-		/// <returns>�{�[��</returns>
+
+		/** ボーン番号からボーンを取得する。 */
 		Bone* GetBone(int boneNo) const
 		{
 			return m_skeleton.GetBone(boneNo);
 		}
+
 		void AddAnimationEvent(AnimationEventListener eventListener)
 		{
 			m_animation.AddAnimationEventListener(eventListener);
 		}
 
-		/// <summary>
-		/// �V���h�E�L���X�^�[�H
-		/// </summary>
-		/// <returns></returns>
+		/** シャドウキャスターか？ */
 		bool IsShadowCaster() const
 		{
 			return m_isShadowCaster;
 		}
-		/// <summary>
-		/// �C���X�^�������擾�B
-		/// </summary>
-		/// <returns></returns>
+
+		/** インスタンス数を取得。 */
 		int GetNumInstance() const
 		{
 			return m_numInstance;
 		}
-		/// <summary>
-		/// �C���X�^���V���O�`����s���H
-		/// </summary>
-		/// <returns></returns>
+
+		/** インスタンシング描画を行うか？ */
 		bool IsInstancingDraw() const
 		{
 			return m_isEnableInstancingDraw;
 		}
-		/// <summary>
-		/// ���[���h�s����擾�B
-		/// </summary>
-		/// <param name="instanceId">
-		/// �C���X�^���XID�B
-		/// ���̈����̓C���X�^���V���O�`�悪�������̏ꍇ�͖�������܂��B
-		/// </param>
-		/// <returns></returns>
+
+		/** ワールド行列を取得。インスタンシング無効の場合は instanceId 無視。 */
 		const Matrix& GetWorldMatrix(int instanceId) const
 		{
 			if (IsInstancingDraw()) {
@@ -274,221 +181,183 @@ namespace nsK2Engine {
 			}
 			return m_zprepassModel.GetWorldMatrix();
 		}
-		/// <summary>
-		/// �C���X�^���X�������B
-		/// </summary>
-		/// <remark>
-		/// �C���X�^���X�`��𗘗p���Ă���ۂɁA���̃C���X�^���X���V�[�����珜���������ꍇ�ɗ��p���Ă��������B
-		/// </remark>
-		/// <param name="instanceNo">�C���X�^���X�ԍ�</param>
+
+		/** インスタンスを削除する。シーンから除外したい場合に利用する。 */
 		void RemoveInstance(int instanceNo);
-		/// <summary>
-		/// ���C�g�����[���h�ɓo�^���邩�̃t���O��ݒ肷��
-		/// �p�ɂɐ������郂�f���i�e�Ȃǁj��Init����O�Ɉ���false�Ŏ��s���Ă��������B
-		/// </summary>
+
+		/** レイトレースワールドに登録するかを設定する。専用モデル（天など）はInit前にfalseで呼ぶ。 */
 		void SetRaytracingWorld(bool flag) {
 			m_isRaytracingWorld = flag;
 		}
-		/// <summary>
-		/// 透明度ディザ値を設定する(0.0=完全透明, 1.0=不透明)。
-		/// GBufferパスでのみ有効。
-		/// </summary>
+
+		/** 透明度ディザ値を設定する（0.0=完全透明, 1.0=不透明）。GBufferパスでのみ有効。 */
 		void SetDitherAlpha(float alpha)
 		{
 			m_localDitherCBData.ditherAlpha = alpha;
 		}
-		/// <summary>
-		/// 透明度ディザ値を取得する。
-		/// </summary>
+
+		/** 透明度ディザ値を取得する。 */
 		float GetDitherAlpha() const
 		{
 			return m_localDitherCBData.ditherAlpha;
 		}
-		/// <summary>
-		/// GBufferパスで使うカスタムシェーダーのパスを設定する（Init()呼び出し前に設定すること）。
-		/// </summary>
+
+		/** GBufferパスで使うカスタムシェーダーのパスを設定する（Init()呼び出し前に設定すること）。 */
 		void SetGBufferFxOverride(const char* fxPath) { m_gBufferFxOverride = fxPath; }
-		/// <summary>
-		/// GBufferパスの頂点シェーダーエントリーポイントを上書きする（Init()呼び出し前に設定すること）。
-		/// </summary>
+
+		/** GBufferパスの頂点シェーダーエントリーポイントを上書きする（Init()呼び出し前に設定すること）。 */
 		void SetVSEntryOverride(const char* entry) { m_vsEntryOverride = entry; }
-		/// <summary>
-		/// GBufferパスに追加のSRVを渡す。index=0 → t11, index=1 → t12 ...（Init()呼び出し前に設定すること）。
-		/// </summary>
+
+		/** GBufferパスに追加のStructuredBuffer SRVを渡す。index=0→t11, 1→t12 ...（Init()前に設定）。 */
 		void SetExtraGBufferSRV(int index, StructuredBuffer* sb)
 		{
 			K2_ASSERT(index >= 0 && index < 4, "SetExtraGBufferSRV: index out of range");
 			m_extraGBufferSRVs[index] = sb;
 		}
+
+		/** GBufferパスに追加のテクスチャSRVを渡す。index=0→t11, 1→t12 ...（Init()前に設定）。SetExtraGBufferSRVと同スロット共有。 */
+		void SetExtraGBufferTextureSRV(int index, Texture* tex)
+		{
+			K2_ASSERT(index >= 0 && index < 4, "SetExtraGBufferTextureSRV: index out of range");
+			m_extraGBufferSRVs[index] = tex;
+		}
+
+		/** スプラットシェーダー専用カラーパラメータを設定する (b2)。p0=草,p1=岩土,p2=腐葉土の明るさ倍率, p3=全体HSV明るさ。デフォルト1.0。 */
+		void SetSplatColorParams(float p0, float p1, float p2, float p3)
+		{
+			m_splatColorCBData.param0 = p0;
+			m_splatColorCBData.param1 = p1;
+			m_splatColorCBData.param2 = p2;
+			m_splatColorCBData.param3 = p3;
+		}
+
+		/** スプラットシェーダーの彩度を設定する。1.0=変化なし, 1.5=鮮やか, 0.5=くすみ。 */
+		void SetSplatSaturation(float saturation)
+		{
+			m_splatColorCBData.saturation = saturation;
+		}
+
 	private:
-		/// <summary>
-		/// �X�P���g���̏������B
-		/// </summary>
-		/// <param name="filePath">�t�@�C���p�X�B</param>
+		/** スケルトンの初期化。 */
 		void InitSkeleton(const char* filePath);
-		/// <summary>
-		/// �A�j���[�V�����̏������B
-		/// </summary>
-		/// <param name="animationClips">�A�j���[�V�����N���b�v�B</param>
-		/// <param name="numAnimationClips">�A�j���[�V�����N���b�v�̐��B</param>
-		/// <param name="enModelUpAxis">���f���̏�����B</param>
+
+		/** アニメーションの初期化。 */
 		void InitAnimation(AnimationClip* animationClips,
 			int numAnimationClips,
 			EnModelUpAxis enModelUpAxis);
-		/// <summary>
-		/// ���_�v�Z�p�X����Ăяo����鏈���B
-		/// </summary>
-		/// <param name="rc"></param>
+
+		/** 頂点計算パスから呼び出される処理。 */
 		void OnComputeVertex(RenderContext& rc);
-		/// <summary>
-		/// �V���h�E�}�b�v�ւ̕`��p�X����Ă΂�鏈���B
-		/// </summary>
-		/// <param name="rc">�����_�����O�R���e�L�X�g</param>
-		/// <param name="ligNo">���C�g�ԍ�</param>
-		/// <param name="shadowMapNo">�V���h�E�}�b�v�ԍ�</param>
-		/// <param name="lvpMatrix">���C�g�r���[�v���W�F�N�V�����s��</param>
+
+		/** シャドウマップへの描画パスから呼ばれる処理。 */
 		void OnRenderShadowMap(
 			RenderContext& rc,
 			int ligNo,
 			int shadowMapNo,
 			const Matrix& lvpMatrix) override;
-		/// <summary>
-		/// ZPrepass����Ă΂�鏈���B
-		/// </summary>
-		/// <param name="rc"></param>
+
+		/** ZPrepassから呼ばれる処理。 */
 		void OnZPrepass(RenderContext& rc) override;
-		/// <summary>
-		/// G-Buffer�`��p�X����Ă΂�鏈���B
-		/// </summary>
+
+		/** G-Buffer描画パスから呼ばれる処理。 */
 		void OnRenderToGBuffer(RenderContext& rc) override;
-		/// <summary>
-		/// �t�H���[�h�����_�[�p�X����Ă΂�鏈���B
-		/// </summary>
+
+		/** フォワードレンダーパスから呼ばれる処理。 */
 		void OnForwardRender(RenderContext& rc) override;
-		/// <summary>
-		/// �������I�u�W�F�N�g�`��p�X����Ă΂�鏈���B
-		/// </summary>
-		/// <param name="rc"></param>
+
+		/** 半透明オブジェクト描画パスから呼ばれる処理。 */
 		void OnTlanslucentRender(RenderContext& rc) override;
-		/// <summary>
-		/// �e�탂�f���̃��[���h�s����X�V����B
-		/// </summary>
+
+		/** 各モデルのワールド行列を更新する。 */
 		void UpdateWorldMatrixInModes();
+
 	private:
-		/// <summary>
-		/// �����_�����O�G���W���Ŕ��������C�x���g���󂯎�����Ƃ��ɌĂ΂�鏈���B
-		/// </summary>
-		/// <param name="enEvent"></param>
+		/** レンダリングエンジンのイベントを受け取った時に呼ばれる処理。 */
 		void OnRecievedEventFromRenderingEngine(RenderingEngine::EnEvent enEvent);
-		/// <summary>
-		/// �V���h�E�}�b�v�`��p�̃��f�����������B
-		/// </summary>
-		/// <param name="renderingEngine">�����_�����O�G���W��</param>
-		/// <param name="tkmFilePath">tkm�t�@�C���p�X</param>
-		/// <param name="modelUpAxis">���f���̏㎲</param>
+
+		/** シャドウマップ描画用のモデルを初期化。 */
 		void InitModelOnShadowMap(
 			RenderingEngine& renderingEngine,
 			const char* tkmFilePath,
 			EnModelUpAxis modelUpAxis,
 			bool isFrontCullingOnDrawShadowMap
 		);
-		/// <summary>
-		/// ZPrepass�`��p�̃��f�����������B
-		/// </summary>
-		/// <param name="renderingEngine"></param>
-		/// <param name="tkmFilePath"></param>
+
+		/** ZPrepass描画用のモデルを初期化。 */
 		void InitModelOnZprepass(
 			RenderingEngine& renderingEngine,
 			const char* tkmFilePath,
 			EnModelUpAxis modelUpAxis
 		);
 
-		/// <summary>
-		/// �C���X�^���V���O�`��p�̏��������������s�B
-		/// </summary>
-		/// <param name="maxInstance">�ő�C���X�^���X��</param>
+		/** インスタンシング描画用の初期化処理を実行。 */
 		void InitInstancingDraw(int maxInstance);
-		/// <summary>
-		/// �A�j���[�V�����ςݒ��_�o�b�t�@�̌v�Z�������������B
-		/// </summary>
-		/// <param name="tkmFilePath">tkm�t�@�C���̃t�@�C���p�X</param>
-		/// <param name="enModelUpAxis">���f���̏㎲</param>
+
+		/** アニメーション済み頂点バッファの計算処理を初期化する。 */
 		void InitComputeAnimatoinVertexBuffer(
 			const char* tkmFilePath,
 			EnModelUpAxis enModelUpAxis);
-		/// <summary>
-		/// GBuffer�`��p�̃��f�����������B
-		/// </summary>
-		/// <param name="renderingEngine">�����_�����O�G���W��</param>
-		/// <param name="tkmFilePath">tkm�t�@�C���p�X</param>
+
+		/** GBuffer描画用のモデルを初期化。 */
 		void InitModelOnRenderGBuffer(
 			RenderingEngine& renderingEngine,
 			const char* tkmFilePath,
 			EnModelUpAxis enModelUpAxis,
 			bool isShadowReciever);
-		/// <summary>
-		/// �������I�u�W�F�N�g�`��p�X�Ŏg�p����郂�f�����������B
-		/// </summary>
-		/// <param name="renderingEngine"></param>
-		/// <param name="tkmFilePath"></param>
-		/// <param name="enModelUpAxis"></param>
-		/// <param name="isShadowReciever"></param>
+
+		/** 半透明オブジェクト描画パスで使用するモデルを初期化する。 */
 		void InitModelOnTranslucent(
 			RenderingEngine& renderingEngine,
 			const char* tkmFilePath,
 			EnModelUpAxis enModelUpAxis,
 			bool isShadowReciever
 		);
-		/// <summary>
-		/// �e�탂�f���̒��_�V�F�[�_�[�̃G���g���[�|�C���g��ݒ�B
-		/// </summary>
+
+		/** 各モデルの頂点シェーダーのエントリーポイントを設定。 */
 		void SetupVertexShaderEntryPointFunc(ModelInitData& modelInitData);
-		/// <summary>
-		/// ���f��������o�E���f�B���O�{�����[�����������B
-		/// </summary>
-		/// <remark>
-		/// AABB���\�z���܂��B
-		/// </remark>
+
+		/** モデルのバウンディングボリュームを初期化する（AABB構築）。 */
 		void InitBoundingVolume();
-		/// <summary>
-		/// �􉽊w����������
-		/// </summary>
-		/// <param name="maxInstance">�C���X�^���X��</param>
+
+		/** 幾何学データの初期化。 */
 		void InitGeometryDatas(int maxInstance);
+
 	public:
 		static const int NUM_SHADOW_LIGHT = 1;
+
 	private:
-		AnimationClip* m_animationClips = nullptr;			// �A�j���[�V�����N���b�v�B
-		int							m_numAnimationClips = 0;			// �A�j���[�V�����N���b�v�̐��B
-		Vector3 					m_position = Vector3::Zero;			// ���W�B
-		Quaternion	 				m_rotation = Quaternion::Identity;	// ��]�B
-		Vector3						m_scale = Vector3::One;				// �g�嗦�B
-		EnModelUpAxis				m_enFbxUpAxis = enModelUpAxisZ;		// FBX�̏�����B
-		Animation					m_animation;						// �A�j���[�V�����B
-		ComputeAnimationVertexBuffer m_computeAnimationVertexBuffer;	// �A�j���[�V�����ςݒ��_�o�b�t�@�̌v�Z�����B
-		Model*						m_addRaytracingWorldModel = nullptr;// ���C�g�����[���h�ɓo�^�������f���B				
-		Model						m_zprepassModel;					// ZPrepass�ŕ`�悳��郂�f��
-		Model						m_forwardRenderModel;				// �t�H���[�h�����_�����O�̕`��p�X�ŕ`�悳��郂�f��
-		Model						m_translucentModel;					// ���������f���B
-		Model						m_renderToGBufferModel;				// RenderToGBuffer�ŕ`�悳��郂�f��
-		Model						m_shadowModels[MAX_DIRECTIONAL_LIGHT][NUM_SHADOW_MAP];	// �V���h�E�}�b�v�ɕ`�悷�郂�f��
-		ConstantBuffer				m_drawShadowMapCameraParamCB[MAX_DIRECTIONAL_LIGHT][NUM_SHADOW_MAP];		// �V���h�E�}�b�v�쐬���ɕK�v�ȃJ�����p�����[�^�p�̒萔�o�b�t�@�B
-		bool						m_isUpdateAnimation = true;			// �A�j���[�V�������X�V����H
-		Skeleton					m_skeleton;							// ���B
-		bool						m_isShadowCaster = true;			// �V���h�E�L���X�^�[�t���O
-		float						m_animationSpeed = 1.0f;
-		int							m_numInstance = 0;					// �C���X�^���X�̐��B
-		int							m_maxInstance = 1;					// �ő�C���X�^���X���B
-		bool						m_isEnableInstancingDraw = false;	// �C���X�^���V���O�`�悪�L���H
-		bool						m_isRaytracingWorld = true;			//���C�g�����[���h�ɓo�^����H
-		std::unique_ptr<Matrix[]>	m_worldMatrixArray;					// ���[���h�s��̔z��B
-		StructuredBuffer			m_worldMatrixArraySB;				// ���[���h�s��̔z��̃X�g���N�`���[�h�o�b�t�@�B
-		std::vector< GemometryData > m_geometryDatas;					// �W�I���g�����B
-		std::unique_ptr<int[]>		m_instanceNoToWorldMatrixArrayIndexTable;	// �C���X�^���X�ԍ����烏�[���h�s��̔z��̃C���f�b�N�X�ɕϊ�����e�[�u���B
-		DitherCBData				m_localDitherCBData;						// per-object�̒萔�o�b�t�@(ditherAlpha�̓Z�b�^�[�ŕύX)
-		const char*					m_gBufferFxOverride = nullptr;				// GBufferパスのカスタムFXファイルパス
-		const char*					m_vsEntryOverride   = nullptr;				// GBufferパスのVSエントリー上書き
-		StructuredBuffer*			m_extraGBufferSRVs[4] = {};					// GBufferパスに追加するSRV (slot1=t11, slot2=t12, ...)
+		AnimationClip*               m_animationClips = nullptr;                                    //!< アニメーションクリップ
+		int                          m_numAnimationClips = 0;                                       //!< アニメーションクリップの数
+		Vector3                      m_position = Vector3::Zero;                                    //!< 座標
+		Quaternion                   m_rotation = Quaternion::Identity;                             //!< 回転
+		Vector3                      m_scale = Vector3::One;                                        //!< 拡大率
+		EnModelUpAxis                m_enFbxUpAxis = enModelUpAxisZ;                                //!< FBXの上方向
+		Animation                    m_animation;                                                   //!< アニメーション
+		ComputeAnimationVertexBuffer m_computeAnimationVertexBuffer;                                //!< アニメーション済み頂点バッファの計算処理
+		Model*                       m_addRaytracingWorldModel = nullptr;                           //!< レイトレースワールドに登録するモデル
+		Model                        m_zprepassModel;                                               //!< ZPrepassで描画されるモデル
+		Model                        m_forwardRenderModel;                                          //!< フォワードレンダリングの描画パスで描画されるモデル
+		Model                        m_translucentModel;                                            //!< 半透明モデル
+		Model                        m_renderToGBufferModel;                                        //!< RenderToGBufferで描画されるモデル
+		Model                        m_shadowModels[MAX_DIRECTIONAL_LIGHT][NUM_SHADOW_MAP];         //!< シャドウマップに描画するモデル
+		ConstantBuffer               m_drawShadowMapCameraParamCB[MAX_DIRECTIONAL_LIGHT][NUM_SHADOW_MAP]; //!< シャドウマップ作成時に必要なカメラパラメータ用の定数バッファ
+		bool                         m_isUpdateAnimation = true;                                    //!< アニメーションを更新するか？
+		Skeleton                     m_skeleton;                                                    //!< スケルトン
+		bool                         m_isShadowCaster = true;                                      //!< シャドウキャスターフラグ
+		float                        m_animationSpeed = 1.0f;                                      //!< アニメーション再生速度
+		int                          m_numInstance = 0;                                             //!< インスタンスの数
+		int                          m_maxInstance = 1;                                             //!< 最大インスタンス数
+		bool                         m_isEnableInstancingDraw = false;                              //!< インスタンシング描画が有効か？
+		bool                         m_isRaytracingWorld = true;                                    //!< レイトレースワールドに登録するか？
+		std::unique_ptr<Matrix[]>    m_worldMatrixArray;                                            //!< ワールド行列の配列
+		StructuredBuffer             m_worldMatrixArraySB;                                          //!< ワールド行列の配列のストラクチャードバッファ
+		std::vector<GemometryData>   m_geometryDatas;                                               //!< ジオメトリデータ
+		std::unique_ptr<int[]>       m_instanceNoToWorldMatrixArrayIndexTable;                      //!< インスタンス番号からワールド行列配列インデックスへの変換テーブル
+		DitherCBData                 m_localDitherCBData;                                           //!< per-objectのディザCB（ditherAlphaはセッターで変更）
+		const char*                  m_gBufferFxOverride = nullptr;                                 //!< GBufferパスのカスタムFXファイルパス
+		const char*                  m_vsEntryOverride   = nullptr;                                 //!< GBufferパスのVSエントリー上書き
+		IShaderResource*             m_extraGBufferSRVs[4] = {};                                    //!< GBufferパスに追加するSRV（t11〜t14）。StructuredBuffer*/Texture* 両対応
+		SplatColorCBData             m_splatColorCBData;                                            //!< スプラット専用CB (b2)。ディザCBとは独立
 
 	};
 }

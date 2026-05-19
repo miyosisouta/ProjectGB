@@ -1,4 +1,4 @@
-#include "stdafx.h"
+ï»¿#include "stdafx.h"
 #include "Player.h"
 #include "Character.h"
 #include "ActorStatus.h"
@@ -14,44 +14,44 @@
 
 
 /* ==================================== */
-/* ƒAƒjƒ[ƒVƒ‡ƒ“ */
+/* ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ */
 /* ==================================== */
 
 namespace anim
 {
-	// ƒAƒjƒ[ƒVƒ‡ƒ“İ’è
+	// ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³è¨­å®š
 	struct AnimationData
 	{
-		const char* filePath; // ƒtƒ@ƒCƒ‹ƒpƒX
-		bool loopFlag; // ƒ‹[ƒv‚·‚é‚©ƒtƒ‰ƒO
+		const char* filePath; // ãƒ•ã‚¡ã‚¤ãƒ«ãƒ‘ã‚¹
+		bool loopFlag; // ãƒ«ãƒ¼ãƒ—ã™ã‚‹ã‹ãƒ•ãƒ©ã‚°
 	};
 
-	// “Ç‚İ‚İ‚½‚¢ƒAƒjƒ[ƒVƒ‡ƒ“‚Ìƒtƒ@ƒCƒ‹ƒpƒX‚ğ•À‚×‚é
-	// ‚±‚±‚ÉƒpƒX‚ğ’Ç‰ÁEíœ‚·‚é‚¾‚¯‚ÅAƒXƒ^[ƒgˆ—‚É‚Äm_animationClipList‚É©“®‚Å’Ç‰Á‚³‚ê‚é
+	// èª­ã¿è¾¼ã¿ãŸã„ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ã®ãƒ•ã‚¡ã‚¤ãƒ«ãƒ‘ã‚¹ã‚’ä¸¦ã¹ã‚‹
+	// ã“ã“ã«ãƒ‘ã‚¹ã‚’è¿½åŠ ãƒ»å‰Šé™¤ã™ã‚‹ã ã‘ã§ã€ã‚¹ã‚¿ãƒ¼ãƒˆå‡¦ç†ã«ã¦m_animationClipListã«è‡ªå‹•ã§è¿½åŠ ã•ã‚Œã‚‹
 	static AnimationData sAnimPaths[] = {
-		AnimationData{"Assets/Objects/Player/Animation/IdleA.tka",true},	// ‘Ò‹@
-		AnimationData{"Assets/Objects/Player/Animation/Walk.tka",true},		// •à‚«
-		AnimationData{"Assets/Objects/Player/Animation/Run.tka",true},		// ‘–‚é
-		AnimationData{"Assets/Objects/Player/Animation/Attack.tka",false},	// UŒ‚
-		AnimationData{"Assets/Objects/Player/Animation/Roll.tka",false},	// ‰ñ“]
-		AnimationData{"Assets/Objects/Player/Animation/Fear.tka",false},	// ’n—‹
-		AnimationData{"Assets/Objects/Player/Animation/Eat.tka",false},		// –‚–@
-		AnimationData{"Assets/Objects/Player/Animation/Death.tka",false}	// €–S
-		// ƒAƒjƒ[ƒVƒ‡ƒ“‚ğ‘‚â‚·‚Æ‚«‚Í‚±‚±‚©‚ç
+		AnimationData{"Assets/Objects/Player/Animation/IdleA.tka",true},	// å¾…æ©Ÿ
+		AnimationData{"Assets/Objects/Player/Animation/Walk.tka",true},		// æ­©ã
+		AnimationData{"Assets/Objects/Player/Animation/Run.tka",true},		// èµ°ã‚‹
+		AnimationData{"Assets/Objects/Player/Animation/Attack.tka",false},	// æ”»æ’ƒ
+		AnimationData{"Assets/Objects/Player/Animation/Roll.tka",false},	// å›è»¢
+		AnimationData{"Assets/Objects/Player/Animation/Fear.tka",false},	// åœ°é›·
+		AnimationData{"Assets/Objects/Player/Animation/Eat.tka",false},		// é­”æ³•
+		AnimationData{"Assets/Objects/Player/Animation/Death.tka",false}	// æ­»äº¡
+		// ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ã‚’å¢—ã‚„ã™ã¨ãã¯ã“ã“ã‹ã‚‰
 	};
 
-	constexpr uint8_t ANIMATION_IDLE = 0; // ‘Ò‹@
-	constexpr uint8_t ANIMATION_WALK = 1; // •à‚­
-	constexpr uint8_t ANIMATION_RUN = 2;  // ‘–‚é
-	constexpr uint8_t ANIMATION_NORMAL_ATTACK = 3;  // ’ÊíUŒ‚
-	constexpr uint8_t ANIMATION_SPECIAL_ABILITY = 3; // “Áê”\—Í
-	constexpr uint8_t ANIMATION_AVOID = 4; // ”Ä—pƒXƒLƒ‹
-	constexpr uint8_t ANIMATION_DEATH = 7; // €–S
+	constexpr uint8_t ANIMATION_IDLE = 0; // å¾…æ©Ÿ
+	constexpr uint8_t ANIMATION_WALK = 1; // æ­©ã
+	constexpr uint8_t ANIMATION_RUN = 2;  // èµ°ã‚‹
+	constexpr uint8_t ANIMATION_NORMAL_ATTACK = 3;  // é€šå¸¸æ”»æ’ƒ
+	constexpr uint8_t ANIMATION_SPECIAL_ABILITY = 3; // ç‰¹æ®Šèƒ½åŠ›
+	constexpr uint8_t ANIMATION_AVOID = 4; // æ±ç”¨ã‚¹ã‚­ãƒ«
+	constexpr uint8_t ANIMATION_DEATH = 7; // æ­»äº¡
 }
 
 namespace 
 {
-	/* ’ÊíUŒ‚‚Ì•ÏŠ· */
+	/* é€šå¸¸æ”»æ’ƒã®å¤‰æ› */
 	const char* ToNormalAttackKey(NormalAttackType type)
 	{
 		switch (type)
@@ -60,7 +60,7 @@ namespace
 		default:                       return nullptr;
 		}
 	}
-	/* “ÁêUŒ‚‚Ì•ÏŠ· */
+	/* ç‰¹æ®Šæ”»æ’ƒã®å¤‰æ› */
 	const char* ToAbilityKey(AbilityType type)
 	{
 		switch (type)
@@ -71,7 +71,7 @@ namespace
 		default:                             return nullptr;
 		}
 	}
-	/* ”Ä—pƒXƒLƒ‹‚Ì•ÏŠ· */
+	/* æ±ç”¨ã‚¹ã‚­ãƒ«ã®å¤‰æ› */
 	const char* ToUtilityKey(UtilityType type)
 	{
 		switch (type)
@@ -84,29 +84,29 @@ namespace
 
 void Player::PlayAnimation(const int id)
 {
-	// StateID ‚Æ ƒAƒjƒ[ƒVƒ‡ƒ“‚ÌƒCƒ“ƒfƒbƒNƒX(sAnimPaths‚Ì•À‚Ñ‡)‚ğ•R‚Ã‚¯‚é
+	// StateID ã¨ ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ã®ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹(sAnimPathsã®ä¸¦ã³é †)ã‚’ç´ã¥ã‘ã‚‹
 	int animIndex = 0;
 	switch (static_cast<PlayerStateID>(id)) {
-	case PlayerStateID::Idle: animIndex = anim::ANIMATION_IDLE; break;	// ‘Ò‹@B
-	case PlayerStateID::Walk: animIndex = anim::ANIMATION_WALK; break;	// •à‚«B
-	case PlayerStateID::Run:  animIndex = anim::ANIMATION_RUN; break;		// ‘–‚éB
-	case PlayerStateID::Bite:  animIndex = anim::ANIMATION_NORMAL_ATTACK; break;		// ’ÊíUŒ‚B
-	case PlayerStateID::DefaultAttack:  animIndex = anim::ANIMATION_SPECIAL_ABILITY; break;	// “Áê”\—ÍB
+	case PlayerStateID::Idle: animIndex = anim::ANIMATION_IDLE; break;	// å¾…æ©Ÿã€‚
+	case PlayerStateID::Walk: animIndex = anim::ANIMATION_WALK; break;	// æ­©ãã€‚
+	case PlayerStateID::Run:  animIndex = anim::ANIMATION_RUN; break;		// èµ°ã‚‹ã€‚
+	case PlayerStateID::Bite:  animIndex = anim::ANIMATION_NORMAL_ATTACK; break;		// é€šå¸¸æ”»æ’ƒã€‚
+	case PlayerStateID::DefaultAttack:  animIndex = anim::ANIMATION_SPECIAL_ABILITY; break;	// ç‰¹æ®Šèƒ½åŠ›ã€‚
 	case PlayerStateID::Landmine:	animIndex = anim::ANIMATION_SPECIAL_ABILITY; break;
 	case PlayerStateID::FireMagic:	animIndex = anim::ANIMATION_SPECIAL_ABILITY; break;
 	case PlayerStateID::Avoid: animIndex = anim::ANIMATION_AVOID; break;
 	case PlayerStateID::Dead: animIndex = anim::ANIMATION_DEATH; break;
 
-	default: return; // ‚È‚¢‚È‚çˆ—‚ğ•Ô‚·
+	default: return; // ãªã„ãªã‚‰å‡¦ç†ã‚’è¿”ã™
 	}
 
-	modelRender_.PlayAnimation(animIndex); // Id‚ğ‚à‚Æ‚É‚»‚ÌƒAƒjƒ[ƒVƒ‡ƒ“‚ÌÄ¶
+	modelRender_.PlayAnimation(animIndex); // Idã‚’ã‚‚ã¨ã«ãã®ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ã®å†ç”Ÿ
 }
 
 
 
 /* ==================================== */
-/* ƒZƒbƒgƒAƒbƒv */
+/* ã‚»ãƒƒãƒˆã‚¢ãƒƒãƒ— */
 /* ==================================== */
 
 
@@ -117,7 +117,7 @@ bool Player::IsExhausted() const
 
 void Player::SetUpTranslateRulu()
 {
-	// ƒXƒe[ƒgió‘Ôj‚ğ“o˜^
+	// ã‚¹ãƒ†ãƒ¼ãƒˆï¼ˆçŠ¶æ…‹ï¼‰ã‚’ç™»éŒ²
 	{
 		stateMachine_.AddState(PlayerStateID::Idle, new IdleState(this));
 		stateMachine_.AddState(PlayerStateID::Walk, new WalkState(this));
@@ -129,9 +129,9 @@ void Player::SetUpTranslateRulu()
 	}
 
 
-	// ƒgƒ‰ƒ“ƒWƒVƒ‡ƒ“i‘JˆÚƒ‹[ƒ‹j‚ğ“o˜^
+	// ãƒˆãƒ©ãƒ³ã‚¸ã‚·ãƒ§ãƒ³ï¼ˆé·ç§»ãƒ«ãƒ¼ãƒ«ï¼‰ã‚’ç™»éŒ²
 	{
-		// —Dæ‚³‚ê‚éğŒ
+		// å„ªå…ˆã•ã‚Œã‚‹æ¡ä»¶
 		{
 			/*  */
 			stateMachine_.AddGlobalTransition([this]() {
@@ -140,145 +140,145 @@ void Player::SetUpTranslateRulu()
 				} 
 					return false; 
 				}, 
-				PlayerStateID::Dead); /* HP‚ª0‚È‚ç‘¼‚ÌƒXƒe[ƒgŠÖŒW‚È‚­Às */
+				PlayerStateID::Dead); /* HPãŒ0ãªã‚‰ä»–ã®ã‚¹ãƒ†ãƒ¼ãƒˆé–¢ä¿‚ãªãå®Ÿè¡Œ */
 		}
 
-		// ˆê”Êƒ‹[ƒ‹ 
+		// ä¸€èˆ¬ãƒ«ãƒ¼ãƒ« 
 		{
-			/** ‘Ò‹@ */
+			/** å¾…æ©Ÿ */
 			{
-				// ‘Ò‹@ -> •à‚«
+				// å¾…æ©Ÿ -> æ­©ã
 				stateMachine_.AddTransition(PlayerStateID::Idle, PlayerStateID::Walk, [this]() {
 					return stateMachine_.GetStickLAmount() > 0.01f && !stateMachine_.IsDash();
 					});
 
-				// ‘Ò‹@ -> ‘–‚è
+				// å¾…æ©Ÿ -> èµ°ã‚Š
 				stateMachine_.AddTransition(PlayerStateID::Idle, PlayerStateID::Run, [this]() {
 					return !IsExhausted() && stateMachine_.GetStickLAmount() > 0.01f && stateMachine_.IsDash();
 					});
 
-				// ‘Ò‹@ -> ‰ñ”ğ
+				// å¾…æ©Ÿ -> å›é¿
 				stateMachine_.AddTransition(PlayerStateID::Idle, PlayerStateID::Avoid, [this]() {
 					if (stateMachine_.IsAvoidRequested()) {
-						stateMachine_.ClearAvoidRequest(); // true/falseŠÖŒW‚È‚­•K‚¸ƒNƒŠƒA
-						return !IsExhausted();             // ŒÍŠ‰’†‚È‚çfalse‚ğ•Ô‚·‚¾‚¯
+						stateMachine_.ClearAvoidRequest(); // true/falseé–¢ä¿‚ãªãå¿…ãšã‚¯ãƒªã‚¢
+						return !IsExhausted();             // æ¯æ¸‡ä¸­ãªã‚‰falseã‚’è¿”ã™ã ã‘
 					}
 					return false;
 					});
 
-				// ‘Ò‹@ -> ’ÊíUŒ‚
+				// å¾…æ©Ÿ -> é€šå¸¸æ”»æ’ƒ
 				stateMachine_.AddTransition(PlayerStateID::Idle, PlayerStateID::Bite, [this]() {
 					return stateMachine_.IsActionButtonB();
 					});
-				// ‘Ò‹@ -> “Áê”\—Í
+				// å¾…æ©Ÿ -> ç‰¹æ®Šèƒ½åŠ›
 				stateMachine_.AddTransition(PlayerStateID::Idle, PlayerStateID::DefaultAttack, [this]() {
 					return CanSpecialAbility();
 					});
 			}
 
-			/** •à‚« */
+			/** æ­©ã */
 			{
-				// •à‚« -> ‘Ò‹@
+				// æ­©ã -> å¾…æ©Ÿ
 				stateMachine_.AddTransition(PlayerStateID::Walk, PlayerStateID::Idle, [this]() {
 					return stateMachine_.GetStickLAmount() < 0.01f;
 					});
 
-				// •à‚« -> ‘–‚è
+				// æ­©ã -> èµ°ã‚Š
 				stateMachine_.AddTransition(PlayerStateID::Walk, PlayerStateID::Run, [this]() {
 					return !IsExhausted() && stateMachine_.IsDash();
 					});
 
-				// •à‚« -> ‰ñ”ğ
+				// æ­©ã -> å›é¿
 				stateMachine_.AddTransition(PlayerStateID::Walk, PlayerStateID::Avoid, [this]() {
 					if (stateMachine_.IsAvoidRequested()) {
-						stateMachine_.ClearAvoidRequest(); // true/falseŠÖŒW‚È‚­•K‚¸ƒNƒŠƒA
-						return !IsExhausted();             // ŒÍŠ‰’†‚È‚çfalse‚ğ•Ô‚·‚¾‚¯
+						stateMachine_.ClearAvoidRequest(); // true/falseé–¢ä¿‚ãªãå¿…ãšã‚¯ãƒªã‚¢
+						return !IsExhausted();             // æ¯æ¸‡ä¸­ãªã‚‰falseã‚’è¿”ã™ã ã‘
 					}
 					return false;
 					});
 
-				// •à‚« -> ’ÊíUŒ‚
+				// æ­©ã -> é€šå¸¸æ”»æ’ƒ
 				stateMachine_.AddTransition(PlayerStateID::Walk, PlayerStateID::Bite, [this]() {
 					return stateMachine_.IsActionButtonB();
 					});
-				// •à‚« -> “Áê”\—Í
+				// æ­©ã -> ç‰¹æ®Šèƒ½åŠ›
 				stateMachine_.AddTransition(PlayerStateID::Walk, PlayerStateID::DefaultAttack, [this]() {
 					return CanSpecialAbility();
 					});
 			}
 
-			/** ‘–‚è */
+			/** èµ°ã‚Š */
 			{
-				// ‘–‚è -> ‘Ò‹@
+				// èµ°ã‚Š -> å¾…æ©Ÿ
 				stateMachine_.AddTransition(PlayerStateID::Run, PlayerStateID::Idle, [this]() {
 					return stateMachine_.GetStickLAmount() < 0.01f;
 					});
 
-				// ‘–‚è -> •à‚«
+				// èµ°ã‚Š -> æ­©ã
 				stateMachine_.AddTransition(PlayerStateID::Run, PlayerStateID::Walk, [this]() {
 					return !stateMachine_.IsDash() || IsExhausted();
 					});
 
-				// ‘Ò‹@ -> ‰ñ”ğ
+				// å¾…æ©Ÿ -> å›é¿
 				stateMachine_.AddTransition(PlayerStateID::Run, PlayerStateID::Avoid, [this]() {
 					if (stateMachine_.IsAvoidRequested()) {
-						stateMachine_.ClearAvoidRequest(); // true/falseŠÖŒW‚È‚­•K‚¸ƒNƒŠƒA
-						return !IsExhausted();             // ŒÍŠ‰’†‚È‚çfalse‚ğ•Ô‚·‚¾‚¯
+						stateMachine_.ClearAvoidRequest(); // true/falseé–¢ä¿‚ãªãå¿…ãšã‚¯ãƒªã‚¢
+						return !IsExhausted();             // æ¯æ¸‡ä¸­ãªã‚‰falseã‚’è¿”ã™ã ã‘
 					}
 					return false;
 					});
 
-				// ‘–‚è -> ’ÊíUŒ‚
+				// èµ°ã‚Š -> é€šå¸¸æ”»æ’ƒ
 				stateMachine_.AddTransition(PlayerStateID::Run, PlayerStateID::Bite, [this]() {
 					return stateMachine_.IsActionButtonB();
 					});
 
-				// ‘–‚è -> “Áê”\—Í
+				// èµ°ã‚Š -> ç‰¹æ®Šèƒ½åŠ›
 				stateMachine_.AddTransition(PlayerStateID::Run, PlayerStateID::DefaultAttack, [this]() {
 					return CanSpecialAbility();
 					});
 			}
 
-			/** ’ÊíUŒ‚ */
+			/** é€šå¸¸æ”»æ’ƒ */
 			{
-				// ’ÊíUŒ‚ ¨ ‘Ò‹@
+				// é€šå¸¸æ”»æ’ƒ â†’ å¾…æ©Ÿ
 				stateMachine_.AddTransition(PlayerStateID::Bite, PlayerStateID::Idle, [this]() {
 					auto* currentState = static_cast<NormalAttackState*>(stateMachine_.GetCurrentState());
 					return currentState && currentState->IsFinished();
 					});
-				// ’ÊíUŒ‚ -> ‰ñ”ğ
+				// é€šå¸¸æ”»æ’ƒ -> å›é¿
 				stateMachine_.AddTransition(PlayerStateID::Bite, PlayerStateID::Avoid, [this]() {
 					if (stateMachine_.IsAvoidRequested()) {
-						stateMachine_.ClearAvoidRequest(); // true/falseŠÖŒW‚È‚­•K‚¸ƒNƒŠƒA
-						return !IsExhausted();             // ŒÍŠ‰’†‚È‚çfalse‚ğ•Ô‚·‚¾‚¯
+						stateMachine_.ClearAvoidRequest(); // true/falseé–¢ä¿‚ãªãå¿…ãšã‚¯ãƒªã‚¢
+						return !IsExhausted();             // æ¯æ¸‡ä¸­ãªã‚‰falseã‚’è¿”ã™ã ã‘
 					}
 					return false;
 					});
 			}
 
-			/* “Áê”\—Í */
+			/* ç‰¹æ®Šèƒ½åŠ› */
 			{
-				// “Áê”\—Í ¨ ‘Ò‹@
+				// ç‰¹æ®Šèƒ½åŠ› â†’ å¾…æ©Ÿ
 				stateMachine_.AddTransition(PlayerStateID::DefaultAttack, PlayerStateID::Idle, [this]() {
 					auto* currentState = static_cast<SpecialAbilityState*>(stateMachine_.GetCurrentState());
 					return currentState && currentState->IsFinished();
 					});
-				// “Áê”\—Í -> ‰ñ”ğ
+				// ç‰¹æ®Šèƒ½åŠ› -> å›é¿
 				stateMachine_.AddTransition(PlayerStateID::DefaultAttack, PlayerStateID::Avoid, [this]() {
 					if (stateMachine_.IsAvoidRequested()) {
-						stateMachine_.ClearAvoidRequest(); // true/falseŠÖŒW‚È‚­•K‚¸ƒNƒŠƒA
-						return !IsExhausted();             // ŒÍŠ‰’†‚È‚çfalse‚ğ•Ô‚·‚¾‚¯
+						stateMachine_.ClearAvoidRequest(); // true/falseé–¢ä¿‚ãªãå¿…ãšã‚¯ãƒªã‚¢
+						return !IsExhausted();             // æ¯æ¸‡ä¸­ãªã‚‰falseã‚’è¿”ã™ã ã‘
 					}
 					return false;
 					});
 			}
 
-			/** ”Ä—pƒXƒLƒ‹ */
+			/** æ±ç”¨ã‚¹ã‚­ãƒ« */
 			{
-				// ‰ñ”ğ ¨ ‘Ò‹@
+				// å›é¿ â†’ å¾…æ©Ÿ
 				stateMachine_.AddTransition(PlayerStateID::Avoid, PlayerStateID::Idle, [this]() {
 					auto* currentState = static_cast<UtilityState*>(stateMachine_.GetCurrentState());
-					// ‰ñ”ğƒAƒNƒVƒ‡ƒ“‚ªI—¹‚µ‚½‚ç‘Ò‹@‚É–ß‚é
+					// å›é¿ã‚¢ã‚¯ã‚·ãƒ§ãƒ³ãŒçµ‚äº†ã—ãŸã‚‰å¾…æ©Ÿã«æˆ»ã‚‹
 					return currentState && currentState->IsFinished();
 					});
 			}
@@ -305,12 +305,12 @@ bool Player::CanSpecialAbility()
 	return false;
 }
 /* ==================================== */
-/* XVE•`‰æˆ— */
+/* æ›´æ–°ãƒ»æç”»å‡¦ç† */
 /* ==================================== */
 Player::Player()
 {
 	PlayerStatus* status = new PlayerStatus();
-	// ƒXƒe[ƒ^ƒX‚Ì‰Šú‰»
+	// ã‚¹ãƒ†ãƒ¼ã‚¿ã‚¹ã®åˆæœŸåŒ–
 	status->Init();
 	status_ = status;
 }
@@ -322,34 +322,34 @@ Player::~Player()
 bool Player::Start()
 {
 	auto initParam = status_->As<ActorStatus>()->GetInitParam();
-	// ƒAƒjƒ[ƒVƒ‡ƒ“
+	// ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³
 	{
-		// ƒAƒjƒ[ƒVƒ‡ƒ“ƒNƒŠƒbƒvƒŠƒXƒg‚Ì”z—ñ”‚ğŒˆ’è
-		const size_t animCount = ARRAYSIZE(anim::sAnimPaths);// ƒAƒjƒ[ƒVƒ‡ƒ“‚Ì”‚ğ”‚¦‚é
-		animationClipList_.Create(animCount); // ƒAƒjƒ[ƒVƒ‡ƒ“ƒNƒŠƒbƒv‚Ì”z—ñ‚ğì‚é
+		// ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ã‚¯ãƒªãƒƒãƒ—ãƒªã‚¹ãƒˆã®é…åˆ—æ•°ã‚’æ±ºå®š
+		const size_t animCount = ARRAYSIZE(anim::sAnimPaths);// ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ã®æ•°ã‚’æ•°ãˆã‚‹
+		animationClipList_.Create(animCount); // ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ã‚¯ãƒªãƒƒãƒ—ã®é…åˆ—ã‚’ä½œã‚‹
 
-		// ‚·‚×‚Ä‚ÌƒAƒjƒ[ƒVƒ‡ƒ“‚ğ“o˜^
+		// ã™ã¹ã¦ã®ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ã‚’ç™»éŒ²
 		for (size_t i = 0; i < animCount; ++i)
 		{
-			animationClipList_[i].Load(anim::sAnimPaths[i].filePath); // ƒtƒ@ƒCƒ‹ƒpƒX‚ğ“Ç‚İ‚Ş
-			animationClipList_[i].SetLoopFlag(anim::sAnimPaths[i].loopFlag); // ƒ‹[ƒvİ’è
+			animationClipList_[i].Load(anim::sAnimPaths[i].filePath); // ãƒ•ã‚¡ã‚¤ãƒ«ãƒ‘ã‚¹ã‚’èª­ã¿è¾¼ã‚€
+			animationClipList_[i].SetLoopFlag(anim::sAnimPaths[i].loopFlag); // ãƒ«ãƒ¼ãƒ—è¨­å®š
 		}
 	}
 	
 
-	// ƒ‚ƒfƒ‹‚Ìİ’è
+	// ãƒ¢ãƒ‡ãƒ«ã®è¨­å®š
 	{
-		// ƒ‚ƒfƒ‹‚Ìƒtƒ@ƒCƒ‹ƒpƒX‚ÆƒAƒjƒ[ƒVƒ‡ƒ“‚ğİ’è
+		// ãƒ¢ãƒ‡ãƒ«ã®ãƒ•ã‚¡ã‚¤ãƒ«ãƒ‘ã‚¹ã¨ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ã‚’è¨­å®š
 		modelRender_.Init(
-			"Assets/Objects/Player/Model/Model.tkm",	// ƒtƒ@ƒCƒ‹ƒpƒX
-			animationClipList_.data(),			// ƒAƒjƒ[ƒVƒ‡ƒ“ƒf[ƒ^
-			animationClipList_.size(),			// ƒŠƒXƒg‚Ì”
-			enModelUpAxisZ						// ƒ‚ƒfƒ‹‚Ìã•ûŒü
+			"Assets/Objects/Player/Model/Model.tkm",	// ãƒ•ã‚¡ã‚¤ãƒ«ãƒ‘ã‚¹
+			animationClipList_.data(),			// ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ãƒ‡ãƒ¼ã‚¿
+			animationClipList_.size(),			// ãƒªã‚¹ãƒˆã®æ•°
+			enModelUpAxisZ						// ãƒ¢ãƒ‡ãƒ«ã®ä¸Šæ–¹å‘
 		);
 
-		// ƒ‚ƒfƒ‹‚ÌÀ•W‚ğXVE‰Šú‰»
+		// ãƒ¢ãƒ‡ãƒ«ã®åº§æ¨™ã‚’æ›´æ–°ãƒ»åˆæœŸåŒ–
 		{
-			// TODO::Boss“s‚Ì‰Šú‚Ì‹——£‚ğ—£‚·‚½‚ß
+			// TODO::Bosséƒ½ã®åˆæœŸã®è·é›¢ã‚’é›¢ã™ãŸã‚
 			transform_.localPosition = initParam.pos_;
 			transform_.localRotation = initParam.rot_;
 			transform_.localScale = initParam.scal_;
@@ -362,12 +362,12 @@ bool Player::Start()
 		}
 	}
 
-	// ƒLƒƒƒ‰ƒNƒ^[ƒRƒ“ƒgƒ[ƒ‰[‚Ì¸»
+	// ã‚­ãƒ£ãƒ©ã‚¯ã‚¿ãƒ¼ã‚³ãƒ³ãƒˆãƒ­ãƒ¼ãƒ©ãƒ¼ã®ç²¾è£½
 	{
 		charaCon_.Init(initParam.charaConRadius_, initParam.charaConHeight_, transform_.position);
 	}
 
-	// ƒS[ƒXƒgƒRƒŠƒWƒ‡ƒ“‚ğ¶¬
+	// ã‚´ãƒ¼ã‚¹ãƒˆã‚³ãƒªã‚¸ãƒ§ãƒ³ã‚’ç”Ÿæˆ
 	{
 		damageBody_ = std::make_unique<GhostBody>();
 		damageBody_->CreateCapsule(this, CharacterID::PlayerID(), initParam.collisionRadius_, initParam.collisionHeight_, ghost::CollisionAttribute::PlayerDef, ghost::CollisionAttributeMask::Player);
@@ -375,10 +375,10 @@ bool Player::Start()
 		damageBody_->SetPosition(transform_.position);
 	}
 
-	// ƒXƒe[ƒg‘JˆÚ‚Ìƒ‹[ƒ‹İ’è
+	// ã‚¹ãƒ†ãƒ¼ãƒˆé·ç§»ã®ãƒ«ãƒ¼ãƒ«è¨­å®š
 	SetUpTranslateRulu();
 
-	// ‹¤’Êˆ—‚ğŒÄ‚Ño‚·
+	// å…±é€šå‡¦ç†ã‚’å‘¼ã³å‡ºã™
 	return Character::Start();
 }
 
@@ -386,22 +386,22 @@ void Player::Update()
 {
 	if (!isUpdate_) return;
 
-	// ‹¤’Êˆ—‚ğŒÄ‚Ño‚· : ƒXƒe[ƒgƒ}ƒVƒ“‚ÌƒAƒbƒvƒf[ƒg‚ğŒÄ‚ñ‚Å‚Ü‚·
+	// å…±é€šå‡¦ç†ã‚’å‘¼ã³å‡ºã™ : ã‚¹ãƒ†ãƒ¼ãƒˆãƒã‚·ãƒ³ã®ã‚¢ãƒƒãƒ—ãƒ‡ãƒ¼ãƒˆã‚’å‘¼ã‚“ã§ã¾ã™
 	Character::Update();
 
 
-	// ƒ‚ƒfƒ‹‚Ö‚Ìİ’è
+	// ãƒ¢ãƒ‡ãƒ«ã¸ã®è¨­å®š
 	{
-		// ˆÚ“®ˆ—
+		// ç§»å‹•å‡¦ç†
 		transform_.localPosition += moveVelocity_;
 
-		// ‰ñ“]ˆ—
+		// å›è»¢å‡¦ç†
 		transform_.localRotation = stateMachine_.GetRotation();
 
-		// ƒgƒ‰ƒ“ƒXƒtƒH[ƒ€‚ÌXV
+		// ãƒˆãƒ©ãƒ³ã‚¹ãƒ•ã‚©ãƒ¼ãƒ ã®æ›´æ–°
 		transform_.UpdateTransform();
 
-		// ƒLƒƒƒ‰ƒRƒ“
+		// ã‚­ãƒ£ãƒ©ã‚³ãƒ³
 		{
 			transform_.localPosition = charaCon_.Execute(transform_.position, 1.0f);
 		}
@@ -411,17 +411,17 @@ void Player::Update()
 			Vector3 pos = transform_.localPosition;
 			pos.y = 0.0f;
 			transform_.localPosition = pos;
-			charaCon_.SetPosition(pos); // ƒLƒƒƒ‰ƒRƒ““à•”‚ÌÀ•W‚à‡‚í‚¹‚é
+			charaCon_.SetPosition(pos); // ã‚­ãƒ£ãƒ©ã‚³ãƒ³å†…éƒ¨ã®åº§æ¨™ã‚‚åˆã‚ã›ã‚‹
 		}
 		transform_.UpdateTransform();
 
-		// ƒ‚ƒfƒ‹‚Ö”½‰f
+		// ãƒ¢ãƒ‡ãƒ«ã¸åæ˜ 
 		modelRender_.SetPosition(transform_.position);
 		modelRender_.SetRotation(transform_.rotation);
 		modelRender_.Update();
 	}
 
-	// ƒS[ƒXƒgƒRƒŠƒWƒ‡ƒ“
+	// ã‚´ãƒ¼ã‚¹ãƒˆã‚³ãƒªã‚¸ãƒ§ãƒ³
 	{
 		const Vector3 heightUp = status_->As<ActorStatus>()->GetInitParam().collisionHeightUpValue_;
 		Vector3 collisionPos = transform_.position + heightUp;
@@ -431,30 +431,30 @@ void Player::Update()
 
 void Player::Render(RenderContext& rc)
 {
-	// ‹¤’Êˆ—‚ğŒÄ‚Ño‚·
+	// å…±é€šå‡¦ç†ã‚’å‘¼ã³å‡ºã™
 	Character::Render(rc);
 }
 
 
 
 /* ==================================== */
-/* ƒXƒLƒ‹‚Ìİ’èE¶¬ */
+/* ã‚¹ã‚­ãƒ«ã®è¨­å®šãƒ»ç”Ÿæˆ */
 /* ==================================== */
 
 void Player::EquipNormalAttack(NormalAttackType type)
 {
-	// ƒXƒLƒ‹‚ğì¬
+	// ã‚¹ã‚­ãƒ«ã‚’ä½œæˆ
 	switch (type)
 	{
 	case NormalAttackType::enBite:
 		activeNormalAttack_ = std::make_unique<Bite>();
 		break;
 	default:
-		activeNormalAttack_.reset(); // ‰½‚à‘•”õ‚µ‚Ä‚¢‚È‚¢ó‘Ô
+		activeNormalAttack_.reset(); // ä½•ã‚‚è£…å‚™ã—ã¦ã„ãªã„çŠ¶æ…‹
 		break;
 	}
 
-	// ƒvƒŒƒCƒ„[ƒXƒe[ƒ^ƒX‚É’ÊíUŒ‚‚ğ“o˜^
+	// ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã‚¹ãƒ†ãƒ¼ã‚¿ã‚¹ã«é€šå¸¸æ”»æ’ƒã‚’ç™»éŒ²
 	const char* skillKey = ToNormalAttackKey(type);
 	if (skillKey) {
 		status_->As<PlayerStatus>()->EquipSkill("NormalAttack", "NormalAttack", skillKey);
@@ -477,7 +477,7 @@ void Player::EquipAbility(AbilityType type)
 		break;
 	}
 
-	// ƒvƒŒƒCƒ„[ƒXƒe[ƒ^ƒX‚É“ÁêUŒ‚‚ğ“o˜^
+	// ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã‚¹ãƒ†ãƒ¼ã‚¿ã‚¹ã«ç‰¹æ®Šæ”»æ’ƒã‚’ç™»éŒ²
 	const char* skillKey = ToAbilityKey(type);
 	if (skillKey) {
 		status_->As<PlayerStatus>()->EquipSkill("SpecialAttack", "SpecialAttack", skillKey);
@@ -495,7 +495,7 @@ void Player::EquipUtility(UtilityType type)
 		break;
 	}
 
-	// ƒvƒŒƒCƒ„[ƒXƒe[ƒ^ƒX‚É“ÁêUŒ‚‚ğ“o˜^
+	// ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã‚¹ãƒ†ãƒ¼ã‚¿ã‚¹ã«ç‰¹æ®Šæ”»æ’ƒã‚’ç™»éŒ²
 	const char* skillKey = ToUtilityKey(type);
 	if (skillKey) {
 		status_->As<PlayerStatus>()->EquipSkill("Utility", "Utility", skillKey);

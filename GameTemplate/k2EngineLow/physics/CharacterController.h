@@ -1,5 +1,5 @@
-/*!
- * @brief	ƒLƒƒƒ‰ƒNƒ^ƒRƒ“ƒgƒ[ƒ‰[B
+ï»¿/*!
+ * @brief	ã‚­ãƒ£ãƒ©ã‚¯ã‚¿ã‚³ãƒ³ãƒˆãƒ­ãƒ¼ãƒ©ãƒ¼ã€‚
  */
 
 #pragma once
@@ -12,28 +12,28 @@ namespace nsK2EngineLow
 	class CharacterController : public Noncopyable
 	{
 	private:
-		/** ƒLƒƒƒ‰ƒNƒ^[—p‚È‚Ì‚ÅƒJƒvƒZƒ‹‚Æ‚µ‚Ä‚¨‚­ */
+		/** ã‚­ãƒ£ãƒ©ã‚¯ã‚¿ãƒ¼ç”¨ãªã®ã§ã‚«ãƒ—ã‚»ãƒ«ã¨ã—ã¦ãŠã */
 		CCapsuleCollider collider_;
-		/** •¨—‹óŠÔ‚Ìˆ—‚É•K—v */
+		/** ç‰©ç†ç©ºé–“ã®å‡¦ç†ã«å¿…è¦ */
 		RigidBody rigidBody_;
 
-		/** À•W */
+		/** åº§æ¨™ */
 		Vector3 position_;
-		/** ‘O‰ñ‚ÌÀ•W */
+		/** å‰å›ã®åº§æ¨™ */
 		Vector3 prevPosition_;
 
-		/** ‚’¼•ûŒü‚Ì‘¬“x */
+		/** å‚ç›´æ–¹å‘ã®é€Ÿåº¦ */
 		float verticalVelocity_ = 0.0f;
-		/** d—Í‰Á‘¬“x */
+		/** é‡åŠ›åŠ é€Ÿåº¦ */
 		float gravity_ = 0.0f;
-		/** ”¼Œa */
+		/** åŠå¾„ */
 		float radius_ = 0.0f;
-		/** ‚‚³ */
+		/** é«˜ã• */
 		float height_ = 0.0f;
 
-		/** ‰Šú‰»Ï‚İƒtƒ‰ƒO */
+		/** åˆæœŸåŒ–æ¸ˆã¿ãƒ•ãƒ©ã‚° */
 		bool isInited_ = false;
-		/** ƒeƒŒƒ|[ƒgƒŠƒNƒGƒXƒgƒtƒ‰ƒO */
+		/** ãƒ†ãƒ¬ãƒãƒ¼ãƒˆãƒªã‚¯ã‚¨ã‚¹ãƒˆãƒ•ãƒ©ã‚° */
 		bool isRequestTeleport_ = false;
 
 
@@ -44,16 +44,16 @@ namespace nsK2EngineLow
 		void Init(float radius, float height, const Vector3& position);
 
 		/*!
-		* @brief	ÀsB
-		* @details  ƒeƒŒƒ|[ƒgƒŠƒNƒGƒXƒg‚ª‚ ‚éê‡‚ÍÕ“Ë”»’è‚ğs‚í‚¸‚ÉˆÚ“®‚µ‚Ü‚·B
-		* @param[in] targetPosition	ˆÚ“®æ‚ÌÀ•WB
-		* @param[in] deltaTime		Œo‰ßŠÔB
+		* @brief	å®Ÿè¡Œã€‚
+		* @details  ãƒ†ãƒ¬ãƒãƒ¼ãƒˆãƒªã‚¯ã‚¨ã‚¹ãƒˆãŒã‚ã‚‹å ´åˆã¯è¡çªåˆ¤å®šã‚’è¡Œã‚ãšã«ç§»å‹•ã—ã¾ã™ã€‚
+		* @param[in] targetPosition	ç§»å‹•å…ˆã®åº§æ¨™ã€‚
+		* @param[in] deltaTime		çµŒéæ™‚é–“ã€‚
 		*/
 		const Vector3& Execute(const Vector3& targetPosition, float deltaTime);
 
 		/*!
-		* @brief	ƒeƒŒƒ|[ƒg‚ğƒŠƒNƒGƒXƒg‚·‚éB
-		* @details  ‚±‚ê‚ğŒÄ‚ñ‚¾Ÿ‚Ì Execute() ‚ÅAÕ“Ë”»’è‚ğs‚í‚¸‚É targetPosition ‚ÖˆÚ“®‚µ‚Ü‚·B
+		* @brief	ãƒ†ãƒ¬ãƒãƒ¼ãƒˆã‚’ãƒªã‚¯ã‚¨ã‚¹ãƒˆã™ã‚‹ã€‚
+		* @details  ã“ã‚Œã‚’å‘¼ã‚“ã æ¬¡ã® Execute() ã§ã€è¡çªåˆ¤å®šã‚’è¡Œã‚ãšã« targetPosition ã¸ç§»å‹•ã—ã¾ã™ã€‚
 		*/
 		void RequestTeleport()
 		{

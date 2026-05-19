@@ -1,17 +1,17 @@
-#pragma once
+ï»¿#pragma once
 
 namespace nsK2Engine {
 
     /// <summary>
-    /// ƒJƒXƒP[ƒhƒVƒƒƒhƒEƒ}ƒbƒv–@‚Åg—p‚³‚ê‚és—ñƒNƒ‰ƒX
+    /// ã‚«ã‚¹ã‚±ãƒ¼ãƒ‰ã‚·ãƒ£ãƒ‰ã‚¦ãƒãƒƒãƒ—æ³•ã§ä½¿ç”¨ã•ã‚Œã‚‹è¡Œåˆ—ã‚¯ãƒ©ã‚¹
     /// </summary>
     class CascadeShadowMapMatrix : public Noncopyable
     {
     public:
         /// <summary>
-        /// ƒ‰ƒCƒgƒrƒ…[ƒvƒƒWƒFƒNƒVƒ‡ƒ“ƒNƒƒbƒvs—ñ‚ğŒvZ‚·‚é
+        /// ãƒ©ã‚¤ãƒˆãƒ“ãƒ¥ãƒ¼ãƒ—ãƒ­ã‚¸ã‚§ã‚¯ã‚·ãƒ§ãƒ³ã‚¯ãƒ­ãƒƒãƒ—è¡Œåˆ—ã‚’è¨ˆç®—ã™ã‚‹
         /// </summary>
-        /// <param name="lightDirection">ƒ‰ƒCƒg‚Ì•ûŒü</param>
+        /// <param name="lightDirection">ãƒ©ã‚¤ãƒˆã®æ–¹å‘</param>
         void CalcLightViewProjectionCropMatrix(
             Vector3 lightDirection,
             float cascadeAreaRateTbl[NUM_SHADOW_MAP],
@@ -19,16 +19,16 @@ namespace nsK2Engine {
             const Vector3& sceneMinPosition
         );
         /// <summary>
-        /// ŒvZ‚³‚ê‚½ƒ‰ƒCƒgƒrƒ…[ƒvƒƒWƒFƒNƒVƒ‡ƒ“ƒNƒƒbƒvs—ñ‚ğæ“¾
+        /// è¨ˆç®—ã•ã‚ŒãŸãƒ©ã‚¤ãƒˆãƒ“ãƒ¥ãƒ¼ãƒ—ãƒ­ã‚¸ã‚§ã‚¯ã‚·ãƒ§ãƒ³ã‚¯ãƒ­ãƒƒãƒ—è¡Œåˆ—ã‚’å–å¾—
         /// </summary>
-        /// <param name="shadowMapNo">ƒVƒƒƒhƒEƒ}ƒbƒv‚Ì”Ô†</param>
+        /// <param name="shadowMapNo">ã‚·ãƒ£ãƒ‰ã‚¦ãƒãƒƒãƒ—ã®ç•ªå·</param>
         /// <returns></returns>
         const Matrix& GetLightViewProjectionCropMatrix(int shadowMapNo) const
         {
             return m_lvpcMatrix[shadowMapNo];
         }
     private:
-        Matrix m_lvpcMatrix[NUM_SHADOW_MAP];	//ƒ‰ƒCƒgƒrƒ…[ƒNƒƒbƒvs—ñ
+        Matrix m_lvpcMatrix[NUM_SHADOW_MAP];	//ãƒ©ã‚¤ãƒˆãƒ“ãƒ¥ãƒ¼ã‚¯ãƒ­ãƒƒãƒ—è¡Œåˆ—
         float m_near[NUM_SHADOW_MAP];
         float m_far[NUM_SHADOW_MAP];
     };

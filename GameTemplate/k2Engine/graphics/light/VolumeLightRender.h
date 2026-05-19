@@ -1,33 +1,33 @@
-#pragma once
+ï»¿#pragma once
 
 
 namespace nsK2Engine {
 	class VolumeLightBase;
 	/// <summary>
-	/// ƒ{ƒŠƒ…[ƒ€ƒ‰ƒCƒgƒŒƒ“ƒ_ƒ‰[B
+	/// ãƒœãƒªãƒ¥ãƒ¼ãƒ ãƒ©ã‚¤ãƒˆãƒ¬ãƒ³ãƒ€ãƒ©ãƒ¼ã€‚
 	/// </summary>
 	class VolumeLightRender : Noncopyable {
 	public:
 		/// <summary>
-		/// ‰Šú‰»B
+		/// åˆæœŸåŒ–ã€‚
 		/// </summary>
 		void Init();
 
 		/// <summary>
-		/// ƒ{ƒŠƒ…[ƒ€ƒ‰ƒCƒg‚ğ•`‰æ‚·‚éB
+		/// ãƒœãƒªãƒ¥ãƒ¼ãƒ ãƒ©ã‚¤ãƒˆã‚’æç”»ã™ã‚‹ã€‚
 		/// </summary>
 		void Render(RenderContext& rc, D3D12_CPU_DESCRIPTOR_HANDLE rtvHandle, D3D12_CPU_DESCRIPTOR_HANDLE dsvHandle);
 		
 		/// <summary>
-		/// ƒ{ƒŠƒ…[ƒ€ƒXƒ|ƒbƒgƒ‰ƒCƒg‚ğƒŒƒ“ƒ_ƒ‰[‚É’Ç‰Á
+		/// ãƒœãƒªãƒ¥ãƒ¼ãƒ ã‚¹ãƒãƒƒãƒˆãƒ©ã‚¤ãƒˆã‚’ãƒ¬ãƒ³ãƒ€ãƒ©ãƒ¼ã«è¿½åŠ 
 		/// </summary>
-		/// <param name="lig">ƒ‰ƒCƒg</param>
+		/// <param name="lig">ãƒ©ã‚¤ãƒˆ</param>
 		void AddVolumeSpotLight(VolumeLightBase& lig)
 		{
 			m_volumeSpotLightArray.emplace_back(&lig);
 		}
 		/// <summary>
-		/// ƒ{ƒŠƒ…[ƒ€ƒXƒ|ƒbƒgƒ‰ƒCƒg‚ğƒŒƒ“ƒ_ƒ‰[‚©‚çíœ
+		/// ãƒœãƒªãƒ¥ãƒ¼ãƒ ã‚¹ãƒãƒƒãƒˆãƒ©ã‚¤ãƒˆã‚’ãƒ¬ãƒ³ãƒ€ãƒ©ãƒ¼ã‹ã‚‰å‰Šé™¤
 		/// </summary>
 		/// <param name="lig"></param>
 		void RemoveVolumeSpotLight(VolumeLightBase& lig)
@@ -46,8 +46,8 @@ namespace nsK2Engine {
 			return m_volumeLightMapBack.GetRenderTargetTexture();
 		}
 	private:
-		RenderTarget m_volumeLightMapFront;                     // è‘O‚Ìƒ{ƒŠƒ…[ƒ€ƒ‰ƒCƒgƒ}ƒbƒvB
-		RenderTarget m_volumeLightMapBack;                      // ‰œ‘¤‚Ìƒ{ƒŠƒ…[ƒ€ƒ‰ƒCƒgƒ}ƒbƒvB
-		std::list< VolumeLightBase* > m_volumeSpotLightArray;   // ƒ{ƒŠƒ…[ƒ€ƒXƒ|ƒbƒgƒ‰ƒCƒg‚Ì”z—ñB
+		RenderTarget m_volumeLightMapFront;                     // æ‰‹å‰ã®ãƒœãƒªãƒ¥ãƒ¼ãƒ ãƒ©ã‚¤ãƒˆãƒãƒƒãƒ—ã€‚
+		RenderTarget m_volumeLightMapBack;                      // å¥¥å´ã®ãƒœãƒªãƒ¥ãƒ¼ãƒ ãƒ©ã‚¤ãƒˆãƒãƒƒãƒ—ã€‚
+		std::list< VolumeLightBase* > m_volumeSpotLightArray;   // ãƒœãƒªãƒ¥ãƒ¼ãƒ ã‚¹ãƒãƒƒãƒˆãƒ©ã‚¤ãƒˆã®é…åˆ—ã€‚
 	};
 }

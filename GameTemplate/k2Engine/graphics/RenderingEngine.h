@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 
 #include "MyRenderer.h"
 #include "graphics/preRender/ShadowMapRender.h"
@@ -11,125 +11,125 @@
 namespace nsK2Engine {
    
     /// <summary>
-    /// ƒŒƒ“ƒ_ƒŠƒ“ƒOƒGƒ“ƒWƒ“B
+    /// ãƒ¬ãƒ³ãƒ€ãƒªãƒ³ã‚°ã‚¨ãƒ³ã‚¸ãƒ³ã€‚
     /// </summary>
     /// <remark>
-    /// K2Engine‚Ì‚PƒtƒŒ[ƒ€‚ÌƒŒƒ“ƒ_ƒŠƒ“ƒO‚Ì—¬‚ê‚ÍŸ‚Ì‚æ‚¤‚É‚È‚Á‚Ä‚¢‚Ü‚·B
-    /// ‚P.ComputeAnimatedVertex
-    ///     ƒ[ƒ‹ƒh‹óŠÔ‚É•ÏŠ·Ï‚İ‚Ì’¸“_‚ğŒvZ‚·‚éB   
-    ///     ˆÈ~‚Ìƒ‚ƒfƒ‹•`‰æƒpƒX‚Å‚ÍA‚±‚ÌƒpƒX‚ÅŒvZ‚³‚ê‚½’¸“_‚ğg‚¢‰ñ‚·B
-    /// @@‚±‚ÌƒpƒX‚ÅƒCƒ“ƒXƒ^ƒ“ƒVƒ“ƒO•`‰æ‚ğs‚¤ƒ‚ƒfƒ‹‚Ì’¸“_ƒoƒbƒtƒ@‚Í‚P‚Â‚Ì‘å‚«‚Èƒoƒbƒtƒ@‚É‚Ü‚Æ‚ß‚ç‚ê‚éB
-    ///     —á‚¦‚ÎA‚ ‚éƒ‚ƒfƒ‹‚ğƒCƒ“ƒXƒ^ƒ“ƒVƒ“ƒO•`‰æ‚Å100’¸“_‚Ìƒ‚ƒfƒ‹‚ğ100‘Ì•`‰æ‚·‚éİ’è‚É‚È‚Á‚Ä‚¢‚éê‡A
-    ///     100’¸“_ ~ 100‚Ì1–œ’¸“_‚ğ‹L‰¯‚Å‚«‚é’¸“_ƒoƒbƒtƒ@‚ªì‚ç‚ê‚éB
-    ///     ’¸“_ƒoƒbƒtƒ@‚ğ‚Ü‚Æ‚ß‚é——R‚ÍDXR‚Ì‚‘¬‰»‚Ì‚½‚ßB
-    ///     DXR‚Å‚ÍƒŒƒCƒgƒŒƒ[ƒ‹ƒh‚É“o˜^‚·‚éƒIƒuƒWƒFƒNƒg‚Ì”‚ª‘½‚­‚È‚é‚ÆAŒø—¦“I‚ÈBVH‚ª\’z‚Å‚«‚È‚­‚È‚èA
-    ///     ‘å‚«‚­‘¬“x‚ª’á‰º‚·‚éB‚±‚ÌƒIƒuƒWƒFƒNƒg‚ğ‚P‚Â‚Ì’¸“_ƒoƒbƒtƒ@‚É“Z‚ß‚é‚±‚Æ‚Å‘å•‚È‚‘¬‰»‚ª‰Â”\‚Æ‚È‚éB
+    /// K2Engineã®ï¼‘ãƒ•ãƒ¬ãƒ¼ãƒ ã®ãƒ¬ãƒ³ãƒ€ãƒªãƒ³ã‚°ã®æµã‚Œã¯æ¬¡ã®ã‚ˆã†ã«ãªã£ã¦ã„ã¾ã™ã€‚
+    /// ï¼‘.ComputeAnimatedVertex
+    ///     ãƒ¯ãƒ¼ãƒ«ãƒ‰ç©ºé–“ã«å¤‰æ›æ¸ˆã¿ã®é ‚ç‚¹ã‚’è¨ˆç®—ã™ã‚‹ã€‚   
+    ///     ä»¥é™ã®ãƒ¢ãƒ‡ãƒ«æç”»ãƒ‘ã‚¹ã§ã¯ã€ã“ã®ãƒ‘ã‚¹ã§è¨ˆç®—ã•ã‚ŒãŸé ‚ç‚¹ã‚’ä½¿ã„å›ã™ã€‚
+    /// ã€€ã€€ã“ã®ãƒ‘ã‚¹ã§ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚·ãƒ³ã‚°æç”»ã‚’è¡Œã†ãƒ¢ãƒ‡ãƒ«ã®é ‚ç‚¹ãƒãƒƒãƒ•ã‚¡ã¯ï¼‘ã¤ã®å¤§ããªãƒãƒƒãƒ•ã‚¡ã«ã¾ã¨ã‚ã‚‰ã‚Œã‚‹ã€‚
+    ///     ä¾‹ãˆã°ã€ã‚ã‚‹ãƒ¢ãƒ‡ãƒ«ã‚’ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚·ãƒ³ã‚°æç”»ã§100é ‚ç‚¹ã®ãƒ¢ãƒ‡ãƒ«ã‚’100ä½“æç”»ã™ã‚‹è¨­å®šã«ãªã£ã¦ã„ã‚‹å ´åˆã€
+    ///     100é ‚ç‚¹ Ã— 100ã®1ä¸‡é ‚ç‚¹ã‚’è¨˜æ†¶ã§ãã‚‹é ‚ç‚¹ãƒãƒƒãƒ•ã‚¡ãŒä½œã‚‰ã‚Œã‚‹ã€‚
+    ///     é ‚ç‚¹ãƒãƒƒãƒ•ã‚¡ã‚’ã¾ã¨ã‚ã‚‹ç†ç”±ã¯DXRã®é«˜é€ŸåŒ–ã®ãŸã‚ã€‚
+    ///     DXRã§ã¯ãƒ¬ã‚¤ãƒˆãƒ¬ãƒ¯ãƒ¼ãƒ«ãƒ‰ã«ç™»éŒ²ã™ã‚‹ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã®æ•°ãŒå¤šããªã‚‹ã¨ã€åŠ¹ç‡çš„ãªBVHãŒæ§‹ç¯‰ã§ããªããªã‚Šã€
+    ///     å¤§ããé€Ÿåº¦ãŒä½ä¸‹ã™ã‚‹ã€‚ã“ã®ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã‚’ï¼‘ã¤ã®é ‚ç‚¹ãƒãƒƒãƒ•ã‚¡ã«çºã‚ã‚‹ã“ã¨ã§å¤§å¹…ãªé«˜é€ŸåŒ–ãŒå¯èƒ½ã¨ãªã‚‹ã€‚
     /// 
-    /// 2. ƒVƒƒƒhƒEƒ}ƒbƒv‚Ìì¬
-    ///     ƒJƒXƒP[ƒhƒVƒƒƒhƒE•û‚ğ—˜—p‚µ‚Ä‚S‚Â‚Ìƒ‰ƒCƒg‚©‚ç‚ÌƒVƒƒƒhƒEƒ}ƒbƒv‚ğì¬‚·‚éB
-    ///     ‚»‚Ì‚½‚ßA‚S‚Â‚Ìƒ‰ƒCƒg@~@‚R–‡‚ÌƒVƒƒƒhƒEƒ}ƒbƒv(‹ß‹——£—pA’†‹——£—pA‰“‹——£—p)‚Ì‡Œv12–‡‚ÌƒVƒƒƒhƒEƒ}ƒbƒv‚ªì¬‚³‚ê‚éB
+    /// 2. ã‚·ãƒ£ãƒ‰ã‚¦ãƒãƒƒãƒ—ã®ä½œæˆ
+    ///     ã‚«ã‚¹ã‚±ãƒ¼ãƒ‰ã‚·ãƒ£ãƒ‰ã‚¦æ–¹ã‚’åˆ©ç”¨ã—ã¦ï¼”ã¤ã®ãƒ©ã‚¤ãƒˆã‹ã‚‰ã®ã‚·ãƒ£ãƒ‰ã‚¦ãƒãƒƒãƒ—ã‚’ä½œæˆã™ã‚‹ã€‚
+    ///     ãã®ãŸã‚ã€ï¼”ã¤ã®ãƒ©ã‚¤ãƒˆã€€Ã—ã€€ï¼“æšã®ã‚·ãƒ£ãƒ‰ã‚¦ãƒãƒƒãƒ—(è¿‘è·é›¢ç”¨ã€ä¸­è·é›¢ç”¨ã€é è·é›¢ç”¨)ã®åˆè¨ˆ12æšã®ã‚·ãƒ£ãƒ‰ã‚¦ãƒãƒƒãƒ—ãŒä½œæˆã•ã‚Œã‚‹ã€‚
     /// 
     /// 3. ZPrepass
-    ///     ƒ‰ƒCƒgƒJƒŠƒ“ƒO‚Ì‚½‚ß‚ÌZPrepassB
-    ///     –³‘Ê‚ÈƒsƒNƒZƒ‹•`‰æ‚ğ”ğ‚¯‚é‚½‚ß‚Å‚Í‚È‚­A[“xƒeƒNƒXƒ`ƒƒ‚ğì¬‚·‚é‚½‚ß‚É‘¶İ‚µ‚Ä‚¢‚éƒpƒXB
-    ///     Œãq‚·‚éG-Buffer‚Ì[“xƒeƒNƒXƒ`ƒƒ‚ğg‚¦‚Î‚¢‚¢‚æ‚¤‚ÉŠ´‚¶‚é‚ªA
-    ///     ƒfƒBƒtƒ@[ƒh‚ÆƒtƒHƒ[ƒh‚Ì—¼•û‚Ì[“x’l‚ª‘‚«‚Ü‚ê‚½ƒeƒNƒXƒ`ƒƒ‚ª•K—v‚¾‚Á‚½‚½‚ß’Ç‰ÁB
+    ///     ãƒ©ã‚¤ãƒˆã‚«ãƒªãƒ³ã‚°ã®ãŸã‚ã®ZPrepassã€‚
+    ///     ç„¡é§„ãªãƒ”ã‚¯ã‚»ãƒ«æç”»ã‚’é¿ã‘ã‚‹ãŸã‚ã§ã¯ãªãã€æ·±åº¦ãƒ†ã‚¯ã‚¹ãƒãƒ£ã‚’ä½œæˆã™ã‚‹ãŸã‚ã«å­˜åœ¨ã—ã¦ã„ã‚‹ãƒ‘ã‚¹ã€‚
+    ///     å¾Œè¿°ã™ã‚‹G-Bufferã®æ·±åº¦ãƒ†ã‚¯ã‚¹ãƒãƒ£ã‚’ä½¿ãˆã°ã„ã„ã‚ˆã†ã«æ„Ÿã˜ã‚‹ãŒã€
+    ///     ãƒ‡ã‚£ãƒ•ã‚¡ãƒ¼ãƒ‰ã¨ãƒ•ã‚©ãƒ¯ãƒ¼ãƒ‰ã®ä¸¡æ–¹ã®æ·±åº¦å€¤ãŒæ›¸ãè¾¼ã¾ã‚ŒãŸãƒ†ã‚¯ã‚¹ãƒãƒ£ãŒå¿…è¦ã ã£ãŸãŸã‚è¿½åŠ ã€‚
     /// 
-    /// 4. ƒ‰ƒCƒgƒJƒŠƒ“ƒO
-    ///     ƒ^ƒCƒ‹‚²‚Æ‚Ìƒ|ƒCƒ“ƒgƒ‰ƒCƒg‚ÆƒXƒ|ƒbƒgƒ‰ƒCƒg‚Ì”Ô†ƒŠƒXƒg‚ğì¬B
+    /// 4. ãƒ©ã‚¤ãƒˆã‚«ãƒªãƒ³ã‚°
+    ///     ã‚¿ã‚¤ãƒ«ã”ã¨ã®ãƒã‚¤ãƒ³ãƒˆãƒ©ã‚¤ãƒˆã¨ã‚¹ãƒãƒƒãƒˆãƒ©ã‚¤ãƒˆã®ç•ªå·ãƒªã‚¹ãƒˆã‚’ä½œæˆã€‚
     /// 
-    /// 5. G-Buffer‚Ö‚ÌƒŒƒ“ƒ_ƒŠƒ“ƒO
-    ///     G-Buffer‚ÍƒAƒ‹ƒxƒh&[“x’lA–@üAƒƒ^ƒŠƒbƒN&ƒVƒƒƒhƒE&Smooth‚Ì‚R–‡B
+    /// 5. G-Bufferã¸ã®ãƒ¬ãƒ³ãƒ€ãƒªãƒ³ã‚°
+    ///     G-Bufferã¯ã‚¢ãƒ«ãƒ™ãƒ‰&æ·±åº¦å€¤ã€æ³•ç·šã€ãƒ¡ã‚¿ãƒªãƒƒã‚¯&ã‚·ãƒ£ãƒ‰ã‚¦&Smoothã®ï¼“æšã€‚
     /// 
-    /// 6. ƒŒƒCƒgƒŒ[ƒVƒ“ƒO‚Å‰f‚è‚İ‰æ‘œ‚ğì¬‚·‚éB
-    ///     NVIDIA‚ÌRTXƒVƒŠ[ƒY‚ÌGPU‚ªæ‚Á‚Ä‚¢‚éê‡AƒŒƒCƒgƒŒ‚ğ—p‚¢‚ÄŠeƒIƒuƒWƒFƒNƒg‚Ö‚Ì‰f‚è‚İ‰æ‘œ‚ğ¶¬‚·‚éB
-    ///     ‚±‚ÌƒpƒX‚ÍNVIDIA‚ÌRTXƒVƒŠ[ƒY‚Å‚µ‚©’Êí‚Íg‚¦‚È‚¢B
-    ///     ‚½‚¾‚µAk2EngineLow\k2EngineLowPreCompile.h‚ÌENABLE_DXR_ON_RTX_ONLY‚Ìƒ}ƒNƒ‚ğ–³Œø‚É‚·‚é‚±‚Æ‚Å
-    ///     DXR‚ª—˜—p‚Å‚«‚éˆê•”‚ÌRTXˆÈŠO‚ÌGPUiNVIDIA GTX1060‚È‚Çj‚Å‚àƒŒƒCƒgƒŒ‚ğs‚¦‚éB
-    ///     ‚½‚¾‚µAGTXƒVƒŠ[ƒY‚Å‚ÍƒpƒtƒH[ƒ}ƒ“ƒX‚ª‘å‚«‚­‘¹‚È‚í‚ê‚é‚½‚ßA‚ ‚­‚Ü‚Å‚àŠJ”­—pB
+    /// 6. ãƒ¬ã‚¤ãƒˆãƒ¬ãƒ¼ã‚·ãƒ³ã‚°ã§æ˜ ã‚Šè¾¼ã¿ç”»åƒã‚’ä½œæˆã™ã‚‹ã€‚
+    ///     NVIDIAã®RTXã‚·ãƒªãƒ¼ã‚ºã®GPUãŒä¹—ã£ã¦ã„ã‚‹å ´åˆã€ãƒ¬ã‚¤ãƒˆãƒ¬ã‚’ç”¨ã„ã¦å„ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã¸ã®æ˜ ã‚Šè¾¼ã¿ç”»åƒã‚’ç”Ÿæˆã™ã‚‹ã€‚
+    ///     ã“ã®ãƒ‘ã‚¹ã¯NVIDIAã®RTXã‚·ãƒªãƒ¼ã‚ºã§ã—ã‹é€šå¸¸ã¯ä½¿ãˆãªã„ã€‚
+    ///     ãŸã ã—ã€k2EngineLow\k2EngineLowPreCompile.hã®ENABLE_DXR_ON_RTX_ONLYã®ãƒã‚¯ãƒ­ã‚’ç„¡åŠ¹ã«ã™ã‚‹ã“ã¨ã§
+    ///     DXRãŒåˆ©ç”¨ã§ãã‚‹ä¸€éƒ¨ã®RTXä»¥å¤–ã®GPUï¼ˆNVIDIA GTX1060ãªã©ï¼‰ã§ã‚‚ãƒ¬ã‚¤ãƒˆãƒ¬ã‚’è¡Œãˆã‚‹ã€‚
+    ///     ãŸã ã—ã€GTXã‚·ãƒªãƒ¼ã‚ºã§ã¯ãƒ‘ãƒ•ã‚©ãƒ¼ãƒãƒ³ã‚¹ãŒå¤§ããæãªã‚ã‚Œã‚‹ãŸã‚ã€ã‚ãã¾ã§ã‚‚é–‹ç™ºç”¨ã€‚
     /// 
-    /// 7. ƒfƒBƒtƒ@[ƒhƒ‰ƒCƒeƒBƒ“ƒO
-    ///     ƒfƒBƒYƒj[ƒx[ƒX‚ÌPBRƒ‰ƒCƒeƒBƒ“ƒO‚ªs‚í‚ê‚éB
+    /// 7. ãƒ‡ã‚£ãƒ•ã‚¡ãƒ¼ãƒ‰ãƒ©ã‚¤ãƒ†ã‚£ãƒ³ã‚°
+    ///     ãƒ‡ã‚£ã‚ºãƒ‹ãƒ¼ãƒ™ãƒ¼ã‚¹ã®PBRãƒ©ã‚¤ãƒ†ã‚£ãƒ³ã‚°ãŒè¡Œã‚ã‚Œã‚‹ã€‚
     /// 
-    /// 8. ƒtƒHƒ[ƒhƒŒƒ“ƒ_ƒŠƒ“ƒO
-    ///     ”¼“§–¾ƒIƒuƒWƒFƒNƒg‚â“Áê‚ÈƒVƒF[ƒfƒBƒ“ƒO‚Ì•`‰æƒpƒXB
+    /// 8. ãƒ•ã‚©ãƒ¯ãƒ¼ãƒ‰ãƒ¬ãƒ³ãƒ€ãƒªãƒ³ã‚°
+    ///     åŠé€æ˜ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã‚„ç‰¹æ®Šãªã‚·ã‚§ãƒ¼ãƒ‡ã‚£ãƒ³ã‚°ã®æç”»ãƒ‘ã‚¹ã€‚
     /// 
-    /// 9. ƒ|ƒXƒgƒGƒtƒFƒNƒg
-    ///     ‰º‹L‚Ìƒ|ƒXƒgƒGƒtƒFƒNƒg‚ªÀs‚³‚ê‚éB
-    ///     9.1 ƒXƒNƒŠ[ƒ“ƒXƒy[ƒXƒŠƒtƒŒƒNƒVƒ‡ƒ“(ƒŒƒCƒgƒŒ‚ğs‚Á‚Ä‚¢‚éê‡‚Íˆ—‚³‚ê‚È‚¢B)
-    ///     9.2 ƒV[ƒ“‚Ì‹P“xŒvZ(Œãq‚ÌHDRƒŒƒ“ƒ_ƒŠƒ“ƒO‚Ìƒuƒ‹[ƒ€‚âƒg[ƒ“ƒ}ƒbƒv‚Åg—p‚³‚ê‚éB)
-    ///     9.3 ƒuƒ‹[ƒ€
-    ///     9.4 ƒg[ƒ“ƒ}ƒbƒv
-    ///     9.5 Effekseer‚ÌƒGƒtƒFƒNƒg•`‰æ
+    /// 9. ãƒã‚¹ãƒˆã‚¨ãƒ•ã‚§ã‚¯ãƒˆ
+    ///     ä¸‹è¨˜ã®ãƒã‚¹ãƒˆã‚¨ãƒ•ã‚§ã‚¯ãƒˆãŒå®Ÿè¡Œã•ã‚Œã‚‹ã€‚
+    ///     9.1 ã‚¹ã‚¯ãƒªãƒ¼ãƒ³ã‚¹ãƒšãƒ¼ã‚¹ãƒªãƒ•ãƒ¬ã‚¯ã‚·ãƒ§ãƒ³(ãƒ¬ã‚¤ãƒˆãƒ¬ã‚’è¡Œã£ã¦ã„ã‚‹å ´åˆã¯å‡¦ç†ã•ã‚Œãªã„ã€‚)
+    ///     9.2 ã‚·ãƒ¼ãƒ³ã®è¼åº¦è¨ˆç®—(å¾Œè¿°ã®HDRãƒ¬ãƒ³ãƒ€ãƒªãƒ³ã‚°ã®ãƒ–ãƒ«ãƒ¼ãƒ ã‚„ãƒˆãƒ¼ãƒ³ãƒãƒƒãƒ—ã§ä½¿ç”¨ã•ã‚Œã‚‹ã€‚)
+    ///     9.3 ãƒ–ãƒ«ãƒ¼ãƒ 
+    ///     9.4 ãƒˆãƒ¼ãƒ³ãƒãƒƒãƒ—
+    ///     9.5 Effekseerã®ã‚¨ãƒ•ã‚§ã‚¯ãƒˆæç”»
     ///     9.6 DOF
-    ///     9.7 FXAA + ƒKƒ“ƒ}•â³
+    ///     9.7 FXAA + ã‚¬ãƒ³ãƒè£œæ­£
     /// 
-    /// 10. 2D•`‰æ
-    /// 11. ÅI‰æ‘œ‚ğƒtƒŒ[ƒ€ƒoƒbƒtƒ@‚ÉƒRƒs[B
+    /// 10. 2Dæç”»
+    /// 11. æœ€çµ‚ç”»åƒã‚’ãƒ•ãƒ¬ãƒ¼ãƒ ãƒãƒƒãƒ•ã‚¡ã«ã‚³ãƒ”ãƒ¼ã€‚
     /// </reramk>
 
     class RenderingEngine : public Noncopyable
     {
 
     public:
-        // ƒfƒBƒtƒ@[ƒhƒ‰ƒCƒeƒBƒ“ƒO—p‚Ì’è”ƒoƒbƒtƒ@
+        // ãƒ‡ã‚£ãƒ•ã‚¡ãƒ¼ãƒ‰ãƒ©ã‚¤ãƒ†ã‚£ãƒ³ã‚°ç”¨ã®å®šæ•°ãƒãƒƒãƒ•ã‚¡
         struct SDeferredLightingCB
         {
-            Light m_light;              // ƒ‰ƒCƒg
-            Matrix mlvp[MAX_DIRECTIONAL_LIGHT][NUM_SHADOW_MAP]; // ƒ‰ƒCƒgƒrƒ…[ƒvƒƒWƒFƒNƒVƒ‡ƒ“s—ñB
-            float m_iblLuminance;       // IBL‚Ì–¾‚é‚³B
-            int m_isIBL;                // IBL‚ğs‚¤B
-            int m_isEnableRaytracing;   // ƒŒƒCƒgƒŒ‚ªs‚í‚ê‚Ä‚¢‚éB
+            Light m_light;              // ãƒ©ã‚¤ãƒˆ
+            Matrix mlvp[MAX_DIRECTIONAL_LIGHT][NUM_SHADOW_MAP]; // ãƒ©ã‚¤ãƒˆãƒ“ãƒ¥ãƒ¼ãƒ—ãƒ­ã‚¸ã‚§ã‚¯ã‚·ãƒ§ãƒ³è¡Œåˆ—ã€‚
+            float m_iblLuminance;       // IBLã®æ˜ã‚‹ã•ã€‚
+            int m_isIBL;                // IBLã‚’è¡Œã†ã€‚
+            int m_isEnableRaytracing;   // ãƒ¬ã‚¤ãƒˆãƒ¬ãŒè¡Œã‚ã‚Œã¦ã„ã‚‹ã€‚
         };
         /// <summary>
-        /// ƒŒƒCƒgƒŒ—p‚Ìƒ‰ƒCƒgƒf[ƒ^B
+        /// ãƒ¬ã‚¤ãƒˆãƒ¬ç”¨ã®ãƒ©ã‚¤ãƒˆãƒ‡ãƒ¼ã‚¿ã€‚
         /// </summary>
         struct RaytracingLightData {
-            DirectionalLight m_directionalLight;  // ƒfƒBƒŒƒNƒVƒ‡ƒiƒ‹ƒ‰ƒCƒgB
-            Vector3 m_ambientLight;               // ŠÂ‹«ŒõBIBLƒeƒNƒXƒ`ƒƒ‚ªw’è‚³‚ê‚Ä‚¢‚È‚¢ê‡‚É—˜—p‚³‚ê‚éB
-            float m_iblIntencity;                 // IBL‹­“xB
-            int m_enableIBLTexture;               // IBLƒeƒNƒXƒ`ƒƒ‚ªw’è‚³‚ê‚Ä‚¢‚éB
+            DirectionalLight m_directionalLight;  // ãƒ‡ã‚£ãƒ¬ã‚¯ã‚·ãƒ§ãƒŠãƒ«ãƒ©ã‚¤ãƒˆã€‚
+            Vector3 m_ambientLight;               // ç’°å¢ƒå…‰ã€‚IBLãƒ†ã‚¯ã‚¹ãƒãƒ£ãŒæŒ‡å®šã•ã‚Œã¦ã„ãªã„å ´åˆã«åˆ©ç”¨ã•ã‚Œã‚‹ã€‚
+            float m_iblIntencity;                 // IBLå¼·åº¦ã€‚
+            int m_enableIBLTexture;               // IBLãƒ†ã‚¯ã‚¹ãƒãƒ£ãŒæŒ‡å®šã•ã‚Œã¦ã„ã‚‹ã€‚
 
         };
-        //ƒƒCƒ“ƒŒƒ“ƒ_ƒŠƒ“ƒOƒ^[ƒQƒbƒg‚ÌƒXƒiƒbƒvƒVƒ‡ƒbƒg
+        //ãƒ¡ã‚¤ãƒ³ãƒ¬ãƒ³ãƒ€ãƒªãƒ³ã‚°ã‚¿ãƒ¼ã‚²ãƒƒãƒˆã®ã‚¹ãƒŠãƒƒãƒ—ã‚·ãƒ§ãƒƒãƒˆ
         enum class EnMainRTSnapshot
         {
-            enDrawnOpacity,     // •s“§–¾ƒIƒuƒWƒFƒNƒg‚Ì•`‰æŠ®—¹“_
-            enNum,              // ƒXƒiƒbƒvƒVƒ‡ƒbƒg‚Ì”
+            enDrawnOpacity,     // ä¸é€æ˜ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã®æç”»å®Œäº†æ™‚ç‚¹
+            enNum,              // ã‚¹ãƒŠãƒƒãƒ—ã‚·ãƒ§ãƒƒãƒˆã®æ•°
         };
 
-        // ƒŒƒ“ƒ_ƒŠƒ“ƒOƒpƒX
+        // ãƒ¬ãƒ³ãƒ€ãƒªãƒ³ã‚°ãƒ‘ã‚¹
         enum class EnRenderingPass
         {
-            enComputeAnimatedVertex,    // ƒAƒjƒ[ƒVƒ‡ƒ“Ï‚İ’¸“_ŒvZB
-            enRenderToShadowMap,        // ƒVƒƒƒhƒEƒ}ƒbƒv‚Ö‚Ì•`‰æƒpƒX
+            enComputeAnimatedVertex,    // ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³æ¸ˆã¿é ‚ç‚¹è¨ˆç®—ã€‚
+            enRenderToShadowMap,        // ã‚·ãƒ£ãƒ‰ã‚¦ãƒãƒƒãƒ—ã¸ã®æç”»ãƒ‘ã‚¹
             enZPrepass,                 // ZPrepass
-            enRenderToVolumeLightMap,   // ƒ{ƒŠƒ…[ƒ€ƒ‰ƒCƒgƒ}ƒbƒv‚Ö‚Ì•`‰æ
-            enLightCulling,             // ƒ‰ƒCƒgƒJƒŠƒ“ƒOB
-            enRenderToGBuffer,          // G-Buffer‚Ö‚Ì•`‰æƒpƒX
-            enForwardRender,            // ƒtƒHƒ[ƒhƒŒƒ“ƒ_ƒŠƒ“ƒO‚Ì•`‰æƒpƒX
-            enPostEffect,               // ƒ|ƒXƒgƒGƒtƒFƒNƒg
-            enRender2D,                 // 2D•`‰æB
+            enRenderToVolumeLightMap,   // ãƒœãƒªãƒ¥ãƒ¼ãƒ ãƒ©ã‚¤ãƒˆãƒãƒƒãƒ—ã¸ã®æç”»
+            enLightCulling,             // ãƒ©ã‚¤ãƒˆã‚«ãƒªãƒ³ã‚°ã€‚
+            enRenderToGBuffer,          // G-Bufferã¸ã®æç”»ãƒ‘ã‚¹
+            enForwardRender,            // ãƒ•ã‚©ãƒ¯ãƒ¼ãƒ‰ãƒ¬ãƒ³ãƒ€ãƒªãƒ³ã‚°ã®æç”»ãƒ‘ã‚¹
+            enPostEffect,               // ãƒã‚¹ãƒˆã‚¨ãƒ•ã‚§ã‚¯ãƒˆ
+            enRender2D,                 // 2Dæç”»ã€‚
         };
         /// <summary>
-        /// ƒCƒxƒ“ƒgB
+        /// ã‚¤ãƒ™ãƒ³ãƒˆã€‚
         /// </summary>
         enum EnEvent {
-            enEventReInitIBLTexture,    // IBLƒeƒNƒXƒ`ƒƒ‚ªÄ‰Šú‰»‚³‚ê‚½B
+            enEventReInitIBLTexture,    // IBLãƒ†ã‚¯ã‚¹ãƒãƒ£ãŒå†åˆæœŸåŒ–ã•ã‚ŒãŸã€‚
         };
         RenderingEngine();
         ~RenderingEngine();
         /// <summary>
-        /// ƒŒƒ“ƒ_ƒŠƒ“ƒOƒpƒCƒvƒ‰ƒCƒ“‚ğ‰Šú‰»
+        /// ãƒ¬ãƒ³ãƒ€ãƒªãƒ³ã‚°ãƒ‘ã‚¤ãƒ—ãƒ©ã‚¤ãƒ³ã‚’åˆæœŸåŒ–
         /// </summary>
         /// <param name="isSoftShadow">
-        /// true‚Ìê‡AƒVƒƒƒhƒEƒ}ƒbƒv–@‚É‚æ‚éA‰e¶¬‚ªƒ\ƒtƒgƒVƒƒƒhƒE‚É‚È‚è‚Ü‚·B
-        /// ƒn[ƒhƒVƒƒƒhƒE‚É‚µ‚½‚¢ê‡‚ÍAfalse‚ğw’è‚µ‚Ä‚­‚¾‚³‚¢B
+        /// trueã®å ´åˆã€ã‚·ãƒ£ãƒ‰ã‚¦ãƒãƒƒãƒ—æ³•ã«ã‚ˆã‚‹ã€å½±ç”ŸæˆãŒã‚½ãƒ•ãƒˆã‚·ãƒ£ãƒ‰ã‚¦ã«ãªã‚Šã¾ã™ã€‚
+        /// ãƒãƒ¼ãƒ‰ã‚·ãƒ£ãƒ‰ã‚¦ã«ã—ãŸã„å ´åˆã¯ã€falseã‚’æŒ‡å®šã—ã¦ãã ã•ã„ã€‚
         /// </param>
         void Init(bool isSoftShadow);
 
         /// <summary>
-        /// •`‰æƒIƒuƒWƒFƒNƒg‚ğ’Ç‰ÁB
+        /// æç”»ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã‚’è¿½åŠ ã€‚
         /// </summary>
         /// <param name="renderObject"></param>
         void AddRenderObject(IRenderer* renderObject)
@@ -137,31 +137,31 @@ namespace nsK2Engine {
             m_renderObjects.push_back(renderObject);
         }
         /// <summary>
-        /// ƒŒƒCƒgƒŒƒ[ƒ‹ƒh‚Éƒ‚ƒfƒ‹‚ğ’Ç‰ÁB
+        /// ãƒ¬ã‚¤ãƒˆãƒ¬ãƒ¯ãƒ¼ãƒ«ãƒ‰ã«ãƒ¢ãƒ‡ãƒ«ã‚’è¿½åŠ ã€‚
         /// </summary>
-        /// <param name="model">’Ç‰Á‚·‚éƒ‚ƒfƒ‹B</param>
+        /// <param name="model">è¿½åŠ ã™ã‚‹ãƒ¢ãƒ‡ãƒ«ã€‚</param>
         void AddModelToRaytracingWorld(Model& model) 
         {
             g_graphicsEngine->RegistModelToRaytracingWorld(model);
         }
         /// <summary>
-        /// ƒŒƒCƒgƒŒƒ[ƒ‹ƒh‚ÌÄ\’zƒŠƒNƒGƒXƒg‚ğ‘—‚éB
+        /// ãƒ¬ã‚¤ãƒˆãƒ¬ãƒ¯ãƒ¼ãƒ«ãƒ‰ã®å†æ§‹ç¯‰ãƒªã‚¯ã‚¨ã‚¹ãƒˆã‚’é€ã‚‹ã€‚
         /// </summary>
         void RequestRebuildRaytracingWorld()
         {
             g_graphicsEngine->RequestRebuildRaytracingWorld();
         }
         /// <summary>
-        /// ƒŒƒCƒgƒŒƒ[ƒ‹ƒh‚©‚çƒ‚ƒfƒ‹‚ğíœB
+        /// ãƒ¬ã‚¤ãƒˆãƒ¬ãƒ¯ãƒ¼ãƒ«ãƒ‰ã‹ã‚‰ãƒ¢ãƒ‡ãƒ«ã‚’å‰Šé™¤ã€‚
         /// </summary>
-        /// <param name="model">íœ‚·‚éƒ‚ƒfƒ‹B</param>
+        /// <param name="model">å‰Šé™¤ã™ã‚‹ãƒ¢ãƒ‡ãƒ«ã€‚</param>
         void RemoveModelFromRaytracingWorld(Model& model) 
         {
             g_graphicsEngine->RemoveModelFromRaytracingWorld(model);
             
         }
         /// <summary>
-        /// ZPrepass‚Åì¬‚³‚ê‚½[“xƒeƒNƒXƒ`ƒƒ‚ğæ“¾
+        /// ZPrepassã§ä½œæˆã•ã‚ŒãŸæ·±åº¦ãƒ†ã‚¯ã‚¹ãƒãƒ£ã‚’å–å¾—
         /// </summary>
         /// <returns></returns>
         Texture& GetZPrepassDepthTexture()
@@ -169,7 +169,7 @@ namespace nsK2Engine {
             return m_zprepassRenderTarget.GetRenderTargetTexture();
         }
         /// <summary>
-        /// GBuffer‚ÌƒAƒ‹ƒxƒhƒeƒNƒXƒ`ƒƒ‚ğæ“¾
+        /// GBufferã®ã‚¢ãƒ«ãƒ™ãƒ‰ãƒ†ã‚¯ã‚¹ãƒãƒ£ã‚’å–å¾—
         /// </summary>
         /// <returns></returns>
         Texture& GetGBufferAlbedoTexture()
@@ -177,7 +177,7 @@ namespace nsK2Engine {
             return m_gBuffer[enGBufferAlbedoDepth].GetRenderTargetTexture();
         }
         /// <summary>
-        /// GBuffer‚Ì–@üƒeƒNƒXƒ`ƒƒ‚ğæ“¾B
+        /// GBufferã®æ³•ç·šãƒ†ã‚¯ã‚¹ãƒãƒ£ã‚’å–å¾—ã€‚
         /// </summary>
         /// <returns></returns>
         Texture& GetGBufferNormalTexture()
@@ -185,8 +185,8 @@ namespace nsK2Engine {
             return m_gBuffer[enGBufferNormal].GetRenderTargetTexture();
         }
         /// <summary>
-        /// •s“§–¾ƒIƒuƒWƒFƒNƒg‚Ì•`‰æŠ®—¹‚ÌƒƒCƒ“ƒŒƒ“ƒ_ƒŠƒ“ƒOƒ^[ƒQƒbƒg‚Ì
-        /// ƒXƒiƒbƒvƒVƒ‡ƒbƒg‚ğæ“¾
+        /// ä¸é€æ˜ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã®æç”»å®Œäº†æ™‚ã®ãƒ¡ã‚¤ãƒ³ãƒ¬ãƒ³ãƒ€ãƒªãƒ³ã‚°ã‚¿ãƒ¼ã‚²ãƒƒãƒˆã®
+        /// ã‚¹ãƒŠãƒƒãƒ—ã‚·ãƒ§ãƒƒãƒˆã‚’å–å¾—
         /// </summary>
         /// <returns></returns>
         Texture& GetMainRenderTargetSnapshotDrawnOpacity()
@@ -194,7 +194,7 @@ namespace nsK2Engine {
             return m_mainRTSnapshots[(int)EnMainRTSnapshot::enDrawnOpacity].GetRenderTargetTexture();
         }
         /// <summary>
-        /// ƒV[ƒ“‚Ì•½‹Ï‹P“xƒeƒNƒXƒ`ƒƒ‚ğæ“¾B
+        /// ã‚·ãƒ¼ãƒ³ã®å¹³å‡è¼åº¦ãƒ†ã‚¯ã‚¹ãƒãƒ£ã‚’å–å¾—ã€‚
         /// </summary>
         /// <returns></returns>o
         Texture& GetLuminanceAvgTextureInScene()
@@ -202,12 +202,12 @@ namespace nsK2Engine {
             return m_postEffect.GetLuminanceAvgTextureInScene();
         }
         /// <summary>
-        /// ƒŒƒ“ƒ_ƒŠƒ“ƒOƒpƒCƒvƒ‰ƒCƒ“‚ğÀs
+        /// ãƒ¬ãƒ³ãƒ€ãƒªãƒ³ã‚°ãƒ‘ã‚¤ãƒ—ãƒ©ã‚¤ãƒ³ã‚’å®Ÿè¡Œ
         /// </summary>
-        /// <param name="rc">ƒŒƒ“ƒ_ƒŠƒ“ƒOƒRƒ“ƒeƒLƒXƒgB</param>
+        /// <param name="rc">ãƒ¬ãƒ³ãƒ€ãƒªãƒ³ã‚°ã‚³ãƒ³ãƒ†ã‚­ã‚¹ãƒˆã€‚</param>
         void Execute(RenderContext& rc);
         /// <summary>
-        /// ƒfƒBƒŒƒNƒVƒ‡ƒ“ƒ‰ƒCƒg‚Ìƒpƒ‰ƒ[ƒ^‚ğİ’è
+        /// ãƒ‡ã‚£ãƒ¬ã‚¯ã‚·ãƒ§ãƒ³ãƒ©ã‚¤ãƒˆã®ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿ã‚’è¨­å®š
         /// </summary>
         /// <param name="lightNo"></param>
         /// <param name="direction"></param>
@@ -221,7 +221,7 @@ namespace nsK2Engine {
             rc.SetRenderTarget(m_mainRenderTarget.GetRTVCpuDescriptorHandle(), m_zprepassRenderTarget.GetDSVCpuDescriptorHandle());
         }
         /// <summary>
-        /// ƒ\ƒtƒgƒVƒƒƒhƒE‚ğs‚¤‚©”»’èB
+        /// ã‚½ãƒ•ãƒˆã‚·ãƒ£ãƒ‰ã‚¦ã‚’è¡Œã†ã‹åˆ¤å®šã€‚
         /// </summary>
         /// <returns></returns>
         bool IsSoftShadow() const
@@ -229,10 +229,10 @@ namespace nsK2Engine {
             return m_isSoftShadow;
         }
         /// <summary>
-        /// ‰e¶¬‚Ìƒpƒ‰ƒ[ƒ^‚ğİ’è‚·‚é
+        /// å½±ç”Ÿæˆã®ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿ã‚’è¨­å®šã™ã‚‹
         /// </summary>
         /// <remark>
-        /// ‰e¶¬‚ÍƒJƒXƒP[ƒhƒVƒƒƒhƒE‹Z–@‚Ås‚Á‚Ä‚¢‚Ü‚·B
+        /// å½±ç”Ÿæˆã¯ã‚«ã‚¹ã‚±ãƒ¼ãƒ‰ã‚·ãƒ£ãƒ‰ã‚¦æŠ€æ³•ã§è¡Œã£ã¦ã„ã¾ã™ã€‚
         ///  
         /// </renmark>
         /// <param name=""></param>
@@ -241,20 +241,20 @@ namespace nsK2Engine {
         /// <param name="lightHeght"></param>
         void SetShadowParameter(float near, float middle, float far, float lightHeght);
         /// <summary>
-        /// ƒJƒXƒP[ƒhƒVƒƒƒhƒE‚ÌƒGƒŠƒA—¦‚ğİ’èB
+        /// ã‚«ã‚¹ã‚±ãƒ¼ãƒ‰ã‚·ãƒ£ãƒ‰ã‚¦ã®ã‚¨ãƒªã‚¢ç‡ã‚’è¨­å®šã€‚
         /// </summary>
         /// <remark>
-        /// ƒQ[ƒ€ƒJƒƒ‰‚Ì‹ß•½–Ê‚©‚ç‰“•½–Ê‚Ü‚Å‚ÌƒGƒŠƒA‚ÌA‰½%‚Ì”ÍˆÍ‚ğ‹ß‹——£—p‚Ì‚‰ğ‘œ“x‚ÌƒVƒƒƒhƒEƒ}ƒbƒv‚ÉA
-        /// ‰½%‚ğ’†‹——£—p‚ÌƒVƒƒƒhƒEƒ}ƒbƒv‚ÉA‰½%‚ğ‰“‹——£—p‚ÌƒVƒƒƒhƒEƒ}ƒbƒv‚É•`‰æ‚·‚é‚©‚ğw’è‚µ‚½‚à‚ÌB
-        /// —á‚¦‚ÎAnearArea  = 0.1(10%)AmiddleArea = 0.3(30%), farArea = 0.8(80%)‚Æw’è‚³‚ê‚Ä‚¢‚½‚çA
-        /// ƒJƒƒ‰‚©‚ç10%‚ÌƒGƒŠƒA‚Í‹ß‹——£—p‚ÌƒVƒƒƒhƒEƒ}ƒbƒv‚É•`‰æA
-        /// ƒJƒƒ‰‚©‚ç10%`30%‚ÌƒGƒŠƒA‚Í’†‹——£—p‚ÌƒVƒƒƒhƒEƒ}ƒbƒv‚É•`‰æA
-        /// ƒJƒƒ‰‚©‚ç30%`80%‚ÌƒGƒŠƒA‚Í‰“‹——£—p‚ÌƒVƒƒƒhƒEƒ}ƒbƒv‚É•`‰æ‚Æ‚È‚éB
-        /// ‰e‚Ì•i¿‚Ì’²®‚Ég‚Á‚Ä‚­‚¾‚³‚¢B
+        /// ã‚²ãƒ¼ãƒ ã‚«ãƒ¡ãƒ©ã®è¿‘å¹³é¢ã‹ã‚‰é å¹³é¢ã¾ã§ã®ã‚¨ãƒªã‚¢ã®ã€ä½•%ã®ç¯„å›²ã‚’è¿‘è·é›¢ç”¨ã®é«˜è§£åƒåº¦ã®ã‚·ãƒ£ãƒ‰ã‚¦ãƒãƒƒãƒ—ã«ã€
+        /// ä½•%ã‚’ä¸­è·é›¢ç”¨ã®ã‚·ãƒ£ãƒ‰ã‚¦ãƒãƒƒãƒ—ã«ã€ä½•%ã‚’é è·é›¢ç”¨ã®ã‚·ãƒ£ãƒ‰ã‚¦ãƒãƒƒãƒ—ã«æç”»ã™ã‚‹ã‹ã‚’æŒ‡å®šã—ãŸã‚‚ã®ã€‚
+        /// ä¾‹ãˆã°ã€nearArea  = 0.1(10%)ã€middleArea = 0.3(30%), farArea = 0.8(80%)ã¨æŒ‡å®šã•ã‚Œã¦ã„ãŸã‚‰ã€
+        /// ã‚«ãƒ¡ãƒ©ã‹ã‚‰10%ã®ã‚¨ãƒªã‚¢ã¯è¿‘è·é›¢ç”¨ã®ã‚·ãƒ£ãƒ‰ã‚¦ãƒãƒƒãƒ—ã«æç”»ã€
+        /// ã‚«ãƒ¡ãƒ©ã‹ã‚‰10%ï½30%ã®ã‚¨ãƒªã‚¢ã¯ä¸­è·é›¢ç”¨ã®ã‚·ãƒ£ãƒ‰ã‚¦ãƒãƒƒãƒ—ã«æç”»ã€
+        /// ã‚«ãƒ¡ãƒ©ã‹ã‚‰30%ï½80%ã®ã‚¨ãƒªã‚¢ã¯é è·é›¢ç”¨ã®ã‚·ãƒ£ãƒ‰ã‚¦ãƒãƒƒãƒ—ã«æç”»ã¨ãªã‚‹ã€‚
+        /// å½±ã®å“è³ªã®èª¿æ•´ã«ä½¿ã£ã¦ãã ã•ã„ã€‚
         /// </remark>
-        /// <param name="nearArea">‹ß‰eƒGƒŠƒA—¦B0.0f`1.0f</param>
-        /// <param name="nearArea">’†‰eƒGƒŠƒA—¦B0.0f`1.0f</param>
-        /// <param name="nearArea">‰“‰eƒGƒŠƒA—¦B0.0f`1.0f</param>
+        /// <param name="nearArea">è¿‘å½±ã‚¨ãƒªã‚¢ç‡ã€‚0.0fï½1.0f</param>
+        /// <param name="nearArea">ä¸­å½±ã‚¨ãƒªã‚¢ç‡ã€‚0.0fï½1.0f</param>
+        /// <param name="nearArea">é å½±ã‚¨ãƒªã‚¢ç‡ã€‚0.0fï½1.0f</param>
         void  SetCascadeNearAreaRates(float nearArea, float middleArea, float farArea)
         {
             for (auto& renderer : m_shadowMapRenders) {
@@ -262,7 +262,7 @@ namespace nsK2Engine {
             }
         }
         /// <summary>
-        /// ƒrƒ…[ƒJƒŠƒ“ƒO‚Ì‚½‚ß‚Ìƒrƒ…[ƒvƒƒWƒFƒNƒVƒ‡ƒ“s—ñ‚ğæ“¾B
+        /// ãƒ“ãƒ¥ãƒ¼ã‚«ãƒªãƒ³ã‚°ã®ãŸã‚ã®ãƒ“ãƒ¥ãƒ¼ãƒ—ãƒ­ã‚¸ã‚§ã‚¯ã‚·ãƒ§ãƒ³è¡Œåˆ—ã‚’å–å¾—ã€‚
         /// </summary>
         /// <returns></returns>
         const Matrix& GetViewProjectionMatrixForViewCulling() const
@@ -270,28 +270,28 @@ namespace nsK2Engine {
             return m_viewProjMatrixForViewCulling;
         }
         /// <summary>
-        /// ƒV[ƒ“‚ªØ‚è‘Ö‚í‚Á‚½‚±‚Æ‚ğ’Ê’m‚·‚éB
+        /// ã‚·ãƒ¼ãƒ³ãŒåˆ‡ã‚Šæ›¿ã‚ã£ãŸã“ã¨ã‚’é€šçŸ¥ã™ã‚‹ã€‚
         /// </summary>
         /// <remark>
-        /// ƒV[ƒ“‚Ì˜A‘±«‚ğ—˜—p‚µ‚½ƒOƒ‰ƒtƒBƒbƒNˆ—‚Ì‚½‚ß‚ÌŠÖ”‚Å‚·B
-        /// –¾ˆÃ‡‰ATAA“™‚Ìˆ—‚ÍAƒV[ƒ“‚ªØ‚è‘Ö‚í‚Á‚½‚Æ‚«‚É‚±‚ÌŠÖ”‚ğŒÄ‚Ño‚³‚È‚¢‚Æ
-        /// ”ƒtƒŒ[ƒ€‚ÌŠÔA•\Œ»‚ª‘½­‚¨‚©‚µ‚­‚È‚è‚Ü‚·B
+        /// ã‚·ãƒ¼ãƒ³ã®é€£ç¶šæ€§ã‚’åˆ©ç”¨ã—ãŸã‚°ãƒ©ãƒ•ã‚£ãƒƒã‚¯å‡¦ç†ã®ãŸã‚ã®é–¢æ•°ã§ã™ã€‚
+        /// æ˜æš—é †å¿œã€TAAç­‰ã®å‡¦ç†ã¯ã€ã‚·ãƒ¼ãƒ³ãŒåˆ‡ã‚Šæ›¿ã‚ã£ãŸã¨ãã«ã“ã®é–¢æ•°ã‚’å‘¼ã³å‡ºã•ãªã„ã¨
+        /// æ•°ãƒ•ãƒ¬ãƒ¼ãƒ ã®é–“ã€è¡¨ç¾ãŒå¤šå°‘ãŠã‹ã—ããªã‚Šã¾ã™ã€‚
         /// </remark>
-        /// <param name="changeSceneTime">ƒV[ƒ“Ø‚è‘Ö‚¦‚É‚©‚©‚éŠÔB</param>
+        /// <param name="changeSceneTime">ã‚·ãƒ¼ãƒ³åˆ‡ã‚Šæ›¿ãˆã«ã‹ã‹ã‚‹æ™‚é–“ã€‚</param>
         void NotifyChangeScene(float changeSceneTime)
         {
             m_postEffect.NotifyChangeScene(changeSceneTime);
         }
         /// <summary>
-        /// Šô‰½Šwƒf[ƒ^‚ğ“o˜^
+        /// å¹¾ä½•å­¦ãƒ‡ãƒ¼ã‚¿ã‚’ç™»éŒ²
         /// </summary>
-        /// <param name="geomData">Šô‰½Šwƒf[ƒ^</param>
+        /// <param name="geomData">å¹¾ä½•å­¦ãƒ‡ãƒ¼ã‚¿</param>
         void RegisterGeometryData(GemometryData* geomData)
         {
             m_sceneGeometryData.RegisterGeometryData(geomData);
         }
         /// <summary>
-        /// Šô‰½Šwƒf[ƒ^‚Ì“o˜^‰ğœB
+        /// å¹¾ä½•å­¦ãƒ‡ãƒ¼ã‚¿ã®ç™»éŒ²è§£é™¤ã€‚
         /// </summary>
         /// <param name="geomData"></param>
         void UnregisterGeometryData(GemometryData* geomData)
@@ -299,11 +299,11 @@ namespace nsK2Engine {
             m_sceneGeometryData.UnregisterGeometryData(geomData);
         }
         /// <summary>
-        /// XVB
+        /// æ›´æ–°ã€‚
         /// </summary>
         void Update();
         /// <summary>
-        /// ƒCƒxƒ“ƒgƒŠƒXƒi[‚ğ’Ç‰ÁB
+        /// ã‚¤ãƒ™ãƒ³ãƒˆãƒªã‚¹ãƒŠãƒ¼ã‚’è¿½åŠ ã€‚
         /// </summary>
         void AddEventListener(
             void* pListenerObj,
@@ -313,7 +313,7 @@ namespace nsK2Engine {
             m_eventListeners.push_back({ pListenerObj, listenerFunc });
         }
         /// <summary>
-        /// ƒCƒxƒ“ƒgƒŠƒXƒi[‚ğíœB
+        /// ã‚¤ãƒ™ãƒ³ãƒˆãƒªã‚¹ãƒŠãƒ¼ã‚’å‰Šé™¤ã€‚
         /// </summary>
         void RemoveEventListener(void* pListenerObj)
         {
@@ -327,11 +327,11 @@ namespace nsK2Engine {
             }
         }
         /// <summary>
-        /// IBL‚ğÄ‰Šú‰»B
+        /// IBLã‚’å†åˆæœŸåŒ–ã€‚
         /// </summary>
         void ReInitIBL(const wchar_t* iblTexFilePath, float luminance);
         /// <summary>
-        /// IBLƒeƒNƒXƒ`ƒƒ‚ğæ“¾B
+        /// IBLãƒ†ã‚¯ã‚¹ãƒãƒ£ã‚’å–å¾—ã€‚
         /// </summary>
         /// <returns></returns>
         Texture& GetIBLTexture()
@@ -339,9 +339,9 @@ namespace nsK2Engine {
             return m_iblData.m_texture;
         }
         /// <summary>
-        /// ƒVƒƒƒhƒEƒ}ƒbƒvƒeƒNƒXƒ`ƒƒ‚ÉƒNƒGƒŠ‚ğs‚¤B
+        /// ã‚·ãƒ£ãƒ‰ã‚¦ãƒãƒƒãƒ—ãƒ†ã‚¯ã‚¹ãƒãƒ£ã«ã‚¯ã‚¨ãƒªã‚’è¡Œã†ã€‚
         /// </summary>
-        /// <param name="queryFunc">ƒNƒGƒŠŠÖ”</param>
+        /// <param name="queryFunc">ã‚¯ã‚¨ãƒªé–¢æ•°</param>
         void QueryShadowMapTexture(std::function< void(Texture& shadowMap) > queryFunc)
         {
             for (int i = 0; i < MAX_DIRECTIONAL_LIGHT; i++)
@@ -357,21 +357,21 @@ namespace nsK2Engine {
             return m_deferredLightingCB;
         }
         /// <summary>
-        /// ƒg[ƒ“ƒ}ƒbƒv‚ğ–³Œø‚É‚·‚é
+        /// ãƒˆãƒ¼ãƒ³ãƒãƒƒãƒ—ã‚’ç„¡åŠ¹ã«ã™ã‚‹
         /// </summary>
         void DisableTonemap()
         {
             m_postEffect.DisableTonemap();
         }
         /// <summary>
-        /// ƒg[ƒ“ƒ}ƒbƒv‚ğ—LŒø‚É‚·‚éB
+        /// ãƒˆãƒ¼ãƒ³ãƒãƒƒãƒ—ã‚’æœ‰åŠ¹ã«ã™ã‚‹ã€‚
         /// </summary>
         void EnableTonemap()
         {
             m_postEffect.EnableTonemap();
         }
         /// <summary>
-        /// ƒg[ƒ“ƒ}ƒbƒv‚ª—LŒø‚©”»’è‚·‚éB
+        /// ãƒˆãƒ¼ãƒ³ãƒãƒƒãƒ—ãŒæœ‰åŠ¹ã‹åˆ¤å®šã™ã‚‹ã€‚
         /// </summary>
         /// <returns></returns>
         bool IsEnableTonemap() const
@@ -379,11 +379,11 @@ namespace nsK2Engine {
             return m_postEffect.IsEnableTonemap();
         }
         /// <summary>
-        /// ƒV[ƒ“‚Ì’†ŠÔ‚Ì–¾‚é‚³‚ğ¦‚·–¾“x—¦‚ğw’è‚·‚éB
+        /// ã‚·ãƒ¼ãƒ³ã®ä¸­é–“ã®æ˜ã‚‹ã•ã‚’ç¤ºã™æ˜åº¦ç‡ã‚’æŒ‡å®šã™ã‚‹ã€‚
         /// </summary>
         /// <remark>
-        /// ‚±‚Ìİ’è‚Íƒ|ƒXƒgƒGƒtƒFƒNƒg‚Ìƒg[ƒ“ƒ}ƒbƒv‚ª—LŒø‚È‚Æ‚«‚É—˜—p‚³‚ê‚Ü‚·B
-        /// ŠµK“I‚É0.18‚ªg‚í‚ê‚Ä‚¢‚éB
+        /// ã“ã®è¨­å®šã¯ãƒã‚¹ãƒˆã‚¨ãƒ•ã‚§ã‚¯ãƒˆã®ãƒˆãƒ¼ãƒ³ãƒãƒƒãƒ—ãŒæœ‰åŠ¹ãªã¨ãã«åˆ©ç”¨ã•ã‚Œã¾ã™ã€‚
+        /// æ…£ç¿’çš„ã«0.18ãŒä½¿ã‚ã‚Œã¦ã„ã‚‹ã€‚
         /// https://en.wikipedia.org/wiki/Middle_gray
         /// </remark>
         void SetSceneMiddleGray(float luminance)
@@ -391,7 +391,7 @@ namespace nsK2Engine {
             m_postEffect.SetTonemapMiddlegray(luminance);
         }
         /// <summary>
-        /// ƒV[ƒ“‚Ì’†ŠÔ‚Ì–¾‚é‚³‚ğ¦‚·–¾“x—¦‚ğæ“¾‚·‚éB
+        /// ã‚·ãƒ¼ãƒ³ã®ä¸­é–“ã®æ˜ã‚‹ã•ã‚’ç¤ºã™æ˜åº¦ç‡ã‚’å–å¾—ã™ã‚‹ã€‚
         /// </summary>
         /// <returns></returns>
         float GetSceneMiddleGray() const
@@ -399,7 +399,7 @@ namespace nsK2Engine {
             return m_postEffect.GetTonemapMiddlegray();
         }
         /// <summary>
-        /// ƒuƒ‹[ƒ€‚ª”­¶‚·‚éè‡’l‚ğİ’èB
+        /// ãƒ–ãƒ«ãƒ¼ãƒ ãŒç™ºç”Ÿã™ã‚‹é–¾å€¤ã‚’è¨­å®šã€‚
         /// </summary>
         /// <param name="value"></param>
         void SetBloomThreshold(float value)
@@ -407,7 +407,7 @@ namespace nsK2Engine {
             m_postEffect.SetBloomThreshold(value);
         }
         /// <summary>
-        /// ƒuƒ‹[ƒ€‚ª”­¶‚·‚éè‡’l‚ğæ“¾B
+        /// ãƒ–ãƒ«ãƒ¼ãƒ ãŒç™ºç”Ÿã™ã‚‹é–¾å€¤ã‚’å–å¾—ã€‚
         /// </summary>
         /// <returns></returns>
         float GetBloomThreshold() const
@@ -415,15 +415,15 @@ namespace nsK2Engine {
             return m_postEffect.GetBloomThreshold();
         }
         /// <summary>
-        /// ƒ{ƒŠƒ…[ƒ€ƒXƒ|ƒbƒgƒ‰ƒCƒg‚ğƒV[ƒ“‚É’Ç‰Á
+        /// ãƒœãƒªãƒ¥ãƒ¼ãƒ ã‚¹ãƒãƒƒãƒˆãƒ©ã‚¤ãƒˆã‚’ã‚·ãƒ¼ãƒ³ã«è¿½åŠ 
         /// </summary>
-        /// <param name="lig">ƒ‰ƒCƒg</param>
+        /// <param name="lig">ãƒ©ã‚¤ãƒˆ</param>
         void AddVolumeSpotLight(VolumeLightBase& lig)
         {
             m_volumeLightRender.AddVolumeSpotLight(lig);
         }
         /// <summary>
-        /// ƒ{ƒŠƒ…[ƒ€ƒXƒ|ƒbƒgƒ‰ƒCƒg‚ğƒV[ƒ“‚©‚çíœ
+        /// ãƒœãƒªãƒ¥ãƒ¼ãƒ ã‚¹ãƒãƒƒãƒˆãƒ©ã‚¤ãƒˆã‚’ã‚·ãƒ¼ãƒ³ã‹ã‚‰å‰Šé™¤
         /// </summary>
         /// <param name="lig"></param>
         void RemoveVolumeSpotLight(VolumeLightBase& lig)
@@ -431,7 +431,7 @@ namespace nsK2Engine {
             m_volumeLightRender.RemoveVolumeSpotLight(lig);
         }
         /// <summary>
-        /// ƒ{ƒŠƒ…[ƒ€ƒ‰ƒCƒgƒŒƒ“ƒ_ƒ‰[‚ğæ“¾B
+        /// ãƒœãƒªãƒ¥ãƒ¼ãƒ ãƒ©ã‚¤ãƒˆãƒ¬ãƒ³ãƒ€ãƒ©ãƒ¼ã‚’å–å¾—ã€‚
         /// </summary>
         /// <returns></returns>
         VolumeLightRender& GetVolumeLightRender()
@@ -439,35 +439,35 @@ namespace nsK2Engine {
             return m_volumeLightRender;
         }
         /// <summary>
-        /// ŠÂ‹«Œõ‚ÌŒvZ‚Ì‚½‚ß‚ÌIBLƒeƒNƒXƒ`ƒƒ‚ğİ’èB
+        /// ç’°å¢ƒå…‰ã®è¨ˆç®—ã®ãŸã‚ã®IBLãƒ†ã‚¯ã‚¹ãƒãƒ£ã‚’è¨­å®šã€‚
         /// </summary>
         /// <remark>
-        /// ‚±‚ÌŠÖ”‚ğ—˜—p‚µ‚ÄAIBLƒeƒNƒXƒ`ƒƒ‚ğƒZƒbƒg‚·‚é‚ÆA
-        /// ŠÂ‹«Œõ‚ğIBLƒeƒNƒXƒ`ƒƒ‚©‚çƒTƒ“ƒvƒŠƒ“ƒO‚µ‚ÄA‚»‚ê‚ğ—˜—p‚µ‚½
-        /// ƒ‰ƒCƒeƒBƒ“ƒO‚ªs‚í‚ê‚Ü‚·B
-        /// IBLƒeƒNƒXƒ`ƒƒ‚ğ—˜—p‚µ‚½ŠÂ‹«Œõ‚ÌŒvZ‚ğƒIƒt‚É‚µ‚½‚¢ê‡‚ÍADisableIBLForAmbinet()‚ğŒÄ‚Ño‚µ‚ÄA
-        /// IBL‚ğ–³Œø‚É‚µ‚Ä‚­‚¾‚³‚¢B
+        /// ã“ã®é–¢æ•°ã‚’åˆ©ç”¨ã—ã¦ã€IBLãƒ†ã‚¯ã‚¹ãƒãƒ£ã‚’ã‚»ãƒƒãƒˆã™ã‚‹ã¨ã€
+        /// ç’°å¢ƒå…‰ã‚’IBLãƒ†ã‚¯ã‚¹ãƒãƒ£ã‹ã‚‰ã‚µãƒ³ãƒ—ãƒªãƒ³ã‚°ã—ã¦ã€ãã‚Œã‚’åˆ©ç”¨ã—ãŸ
+        /// ãƒ©ã‚¤ãƒ†ã‚£ãƒ³ã‚°ãŒè¡Œã‚ã‚Œã¾ã™ã€‚
+        /// IBLãƒ†ã‚¯ã‚¹ãƒãƒ£ã‚’åˆ©ç”¨ã—ãŸç’°å¢ƒå…‰ã®è¨ˆç®—ã‚’ã‚ªãƒ•ã«ã—ãŸã„å ´åˆã¯ã€DisableIBLForAmbinet()ã‚’å‘¼ã³å‡ºã—ã¦ã€
+        /// IBLã‚’ç„¡åŠ¹ã«ã—ã¦ãã ã•ã„ã€‚
         /// </remark>
         /// <param name="textureFilePath">
-        /// IBLƒeƒNƒXƒ`ƒƒ‚Ìƒtƒ@ƒCƒ‹ƒpƒXB
-        /// ƒLƒ…[ƒuƒ}ƒbƒv‚Å‚ ‚é•K—v‚ª‚ ‚è‚Ü‚·B
+        /// IBLãƒ†ã‚¯ã‚¹ãƒãƒ£ã®ãƒ•ã‚¡ã‚¤ãƒ«ãƒ‘ã‚¹ã€‚
+        /// ã‚­ãƒ¥ãƒ¼ãƒ–ãƒãƒƒãƒ—ã§ã‚ã‚‹å¿…è¦ãŒã‚ã‚Šã¾ã™ã€‚
         /// </param>
         /// <param name="luminance">
-        /// IBLƒeƒNƒXƒ`ƒƒ‚Ì–¾‚é‚³B
+        /// IBLãƒ†ã‚¯ã‚¹ãƒãƒ£ã®æ˜ã‚‹ã•ã€‚
         /// <param>
         void SetAmbientByIBLTexture(const wchar_t* textureFilePath, float luminance)
         {
             ReInitIBL(textureFilePath, luminance);
         }
         /// <summary>
-        /// IBLŠÂ‹«Œõ‚ğ–³Œø‚É‚·‚éB
+        /// IBLç’°å¢ƒå…‰ã‚’ç„¡åŠ¹ã«ã™ã‚‹ã€‚
         /// </summary>
         void DisableIBLTextureForAmbient()
         {
             m_sceneLight.DisableIBLTextureForAmbient();
         }
         /// <summary>
-        /// ŠÂ‹«Œõ‚ğİ’èB
+        /// ç’°å¢ƒå…‰ã‚’è¨­å®šã€‚
         /// </summary>
         /// <param name="ambient"></param>
         void SetAmbient(Vector3 ambient)
@@ -475,7 +475,7 @@ namespace nsK2Engine {
             m_sceneLight.SetAmbinet(ambient);
         }
         /// <summary>
-        /// ƒŒƒCƒgƒŒ[ƒVƒ“ƒO‚ª—LŒø‚©‚Ç‚¤‚©‚ğ”»’è‚·‚éB
+        /// ãƒ¬ã‚¤ãƒˆãƒ¬ãƒ¼ã‚·ãƒ³ã‚°ãŒæœ‰åŠ¹ã‹ã©ã†ã‹ã‚’åˆ¤å®šã™ã‚‹ã€‚
         /// </summary>
         /// <returns></returns>
         bool IsEnableRaytracing() const
@@ -483,23 +483,23 @@ namespace nsK2Engine {
             return m_isEnableRaytracing && g_graphicsEngine->IsPossibleRaytracing();
         }
         /// <summary>
-        /// ƒŒƒCƒgƒŒ[ƒVƒ“ƒO‚ğ—LŒø‚É‚µ‚Ü‚·B
-        /// ‚±‚Ìİ’è‚Íƒn[ƒhƒEƒFƒAƒŒƒCƒgƒŒ[ƒVƒ“ƒO‚ª–³Œø‚Èê‡‚Í–³‹‚³‚ê‚Ü‚·B
+        /// ãƒ¬ã‚¤ãƒˆãƒ¬ãƒ¼ã‚·ãƒ³ã‚°ã‚’æœ‰åŠ¹ã«ã—ã¾ã™ã€‚
+        /// ã“ã®è¨­å®šã¯ãƒãƒ¼ãƒ‰ã‚¦ã‚§ã‚¢ãƒ¬ã‚¤ãƒˆãƒ¬ãƒ¼ã‚·ãƒ³ã‚°ãŒç„¡åŠ¹ãªå ´åˆã¯ç„¡è¦–ã•ã‚Œã¾ã™ã€‚
         /// </summary>
         void EnableRaytracing()
         {
             m_isEnableRaytracing = true && IsEnableRaytracing();
         }
         /// <summary>
-        /// ƒŒƒCƒgƒŒ[ƒVƒ“ƒO‚ğ–³Œø‚É‚µ‚Ü‚·B
-        /// ‚±‚Ìİ’è‚Íƒn[ƒhƒEƒFƒAƒŒƒCƒgƒŒ[ƒVƒ“ƒO‚ª–³Œø‚Èê‡‚Í–³‹‚³‚ê‚Ü‚·B
+        /// ãƒ¬ã‚¤ãƒˆãƒ¬ãƒ¼ã‚·ãƒ³ã‚°ã‚’ç„¡åŠ¹ã«ã—ã¾ã™ã€‚
+        /// ã“ã®è¨­å®šã¯ãƒãƒ¼ãƒ‰ã‚¦ã‚§ã‚¢ãƒ¬ã‚¤ãƒˆãƒ¬ãƒ¼ã‚·ãƒ³ã‚°ãŒç„¡åŠ¹ãªå ´åˆã¯ç„¡è¦–ã•ã‚Œã¾ã™ã€‚
         /// </summary>
         void DisableRaytracing()
         {
             m_isEnableRaytracing = false && IsEnableRaytracing();
         }
         /// <summary>
-        /// ƒŒƒCƒgƒŒ—p‚Ìƒ‰ƒCƒgƒf[ƒ^‚ğæ“¾B
+        /// ãƒ¬ã‚¤ãƒˆãƒ¬ç”¨ã®ãƒ©ã‚¤ãƒˆãƒ‡ãƒ¼ã‚¿ã‚’å–å¾—ã€‚
         /// </summary>
         /// <returns></returns>
         RaytracingLightData& GetRaytracingLightData()
@@ -508,161 +508,161 @@ namespace nsK2Engine {
         }
     private:
         /// <summary>
-        /// ƒCƒ[ƒWƒx[ƒXƒhƒ‰ƒCƒeƒBƒ“ƒO(IBL)‚Ì‚½‚ß‚Ìƒf[ƒ^‚ğ‰Šú‰»‚·‚éB
+        /// ã‚¤ãƒ¡ãƒ¼ã‚¸ãƒ™ãƒ¼ã‚¹ãƒ‰ãƒ©ã‚¤ãƒ†ã‚£ãƒ³ã‚°(IBL)ã®ãŸã‚ã®ãƒ‡ãƒ¼ã‚¿ã‚’åˆæœŸåŒ–ã™ã‚‹ã€‚
         /// </summary>
-        /// <param name="iblTexFilePath">IBLƒeƒNƒXƒ`ƒƒ‚Ìƒtƒ@ƒCƒ‹ƒpƒXB</param>
-        /// <param name="intencity">IBL‚Ì‹­“xB</param>
+        /// <param name="iblTexFilePath">IBLãƒ†ã‚¯ã‚¹ãƒãƒ£ã®ãƒ•ã‚¡ã‚¤ãƒ«ãƒ‘ã‚¹ã€‚</param>
+        /// <param name="intencity">IBLã®å¼·åº¦ã€‚</param>
         void InitIBLData(const wchar_t* iblTexFilePath, float intencity);
         /// <summary>
-        /// G-Buffer‚ğ‰Šú‰»
+        /// G-Bufferã‚’åˆæœŸåŒ–
         /// </summary>
         void InitGBuffer();
         /// <summary>
-        /// ƒfƒBƒtƒ@[ƒhƒ‰ƒCƒeƒBƒ“ƒO‚Ì‰Šú‰»
+        /// ãƒ‡ã‚£ãƒ•ã‚¡ãƒ¼ãƒ‰ãƒ©ã‚¤ãƒ†ã‚£ãƒ³ã‚°ã®åˆæœŸåŒ–
         /// </summary>
         void InitDeferredLighting();
         /// <summary>
-        /// ƒfƒBƒtƒ@[ƒhƒ‰ƒCƒeƒBƒ“ƒO‚Åg—p‚·‚éƒXƒvƒ‰ƒCƒg‚ğ‰Šú‰»B
+        /// ãƒ‡ã‚£ãƒ•ã‚¡ãƒ¼ãƒ‰ãƒ©ã‚¤ãƒ†ã‚£ãƒ³ã‚°ã§ä½¿ç”¨ã™ã‚‹ã‚¹ãƒ—ãƒ©ã‚¤ãƒˆã‚’åˆæœŸåŒ–ã€‚
         /// </summary>
         void InitDefferedLighting_Sprite();
         /// <summary>
-        /// ƒAƒjƒ[ƒVƒ‡ƒ“Ï‚İ’¸“_‚ÌŒvZB
+        /// ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³æ¸ˆã¿é ‚ç‚¹ã®è¨ˆç®—ã€‚
         /// </summary>
         /// <remark>
         /// </remark>
-        /// <param name="rc">ƒŒƒ“ƒ_ƒŠƒ“ƒOƒRƒ“ƒeƒLƒXƒg</param>
+        /// <param name="rc">ãƒ¬ãƒ³ãƒ€ãƒªãƒ³ã‚°ã‚³ãƒ³ãƒ†ã‚­ã‚¹ãƒˆ</param>
         void ComputeAnimatedVertex(RenderContext& rc);
         /// <summary>
-        /// ƒVƒƒƒhƒEƒ}ƒbƒv‚É•`‰æ
+        /// ã‚·ãƒ£ãƒ‰ã‚¦ãƒãƒƒãƒ—ã«æç”»
         /// </summary>
-        /// <param name="rc">ƒŒƒ“ƒ_ƒŠƒ“ƒOƒRƒ“ƒeƒLƒXƒg</param>
+        /// <param name="rc">ãƒ¬ãƒ³ãƒ€ãƒªãƒ³ã‚°ã‚³ãƒ³ãƒ†ã‚­ã‚¹ãƒˆ</param>
         void RenderToShadowMap(RenderContext& rc);
         /// <summary>
         /// ZPrepass
         /// </summary>
-        /// <param name="rc">ƒŒƒ“ƒ_ƒŠƒ“ƒOƒRƒ“ƒeƒLƒXƒg</param>
+        /// <param name="rc">ãƒ¬ãƒ³ãƒ€ãƒªãƒ³ã‚°ã‚³ãƒ³ãƒ†ã‚­ã‚¹ãƒˆ</param>
         void ZPrepass(RenderContext& rc);
         /// <summary>
-        /// G-Buffer‚Ö‚Ì•`‰æ
+        /// G-Bufferã¸ã®æç”»
         /// </summary>
-        /// <param name="rc">ƒŒƒ“ƒ_ƒŠƒ“ƒOƒRƒ“ƒeƒLƒXƒgB</param>
+        /// <param name="rc">ãƒ¬ãƒ³ãƒ€ãƒªãƒ³ã‚°ã‚³ãƒ³ãƒ†ã‚­ã‚¹ãƒˆã€‚</param>
         void RenderToGBuffer(RenderContext& rc);
         /// <summary>
-        /// ƒfƒBƒtƒ@[ƒhƒ‰ƒCƒeƒBƒ“ƒO
+        /// ãƒ‡ã‚£ãƒ•ã‚¡ãƒ¼ãƒ‰ãƒ©ã‚¤ãƒ†ã‚£ãƒ³ã‚°
         /// </summary>
-        /// <param name="rc">ƒŒƒ“ƒ_ƒŠƒ“ƒOƒRƒ“ƒeƒLƒXƒg</param>
+        /// <param name="rc">ãƒ¬ãƒ³ãƒ€ãƒªãƒ³ã‚°ã‚³ãƒ³ãƒ†ã‚­ã‚¹ãƒˆ</param>
         void DeferredLighting(RenderContext& rc);
         /// <summary>
-        /// 2D•`‰æ
+        /// 2Dæç”»
         /// </summary>
-        /// <param name="rc">ƒŒƒ“ƒ_ƒŠƒ“ƒOƒRƒ“ƒeƒLƒXƒg</param>
+        /// <param name="rc">ãƒ¬ãƒ³ãƒ€ãƒªãƒ³ã‚°ã‚³ãƒ³ãƒ†ã‚­ã‚¹ãƒˆ</param>
         void Render2D(RenderContext& rc);
         /// <summary>
-        /// ƒƒCƒ“ƒŒƒ“ƒ_ƒŠƒ“ƒOƒ^[ƒQƒbƒg‚Ì“à—e‚ğƒtƒŒ[ƒ€ƒoƒbƒtƒ@‚ÉƒRƒs[‚·‚é
+        /// ãƒ¡ã‚¤ãƒ³ãƒ¬ãƒ³ãƒ€ãƒªãƒ³ã‚°ã‚¿ãƒ¼ã‚²ãƒƒãƒˆã®å†…å®¹ã‚’ãƒ•ãƒ¬ãƒ¼ãƒ ãƒãƒƒãƒ•ã‚¡ã«ã‚³ãƒ”ãƒ¼ã™ã‚‹
         /// </summary>
-        /// <param name="rc">ƒŒƒ“ƒ_ƒŠƒ“ƒOƒRƒ“ƒeƒLƒXƒg</param>
+        /// <param name="rc">ãƒ¬ãƒ³ãƒ€ãƒªãƒ³ã‚°ã‚³ãƒ³ãƒ†ã‚­ã‚¹ãƒˆ</param>
         void CopyMainRenderTargetToFrameBuffer(RenderContext& rc);
         /// <summary>
-        /// ƒtƒHƒ[ƒhƒŒƒ“ƒ_ƒŠƒ“ƒO
+        /// ãƒ•ã‚©ãƒ¯ãƒ¼ãƒ‰ãƒ¬ãƒ³ãƒ€ãƒªãƒ³ã‚°
         /// </summary>
-        /// <param name="rc">ƒŒƒ“ƒ_ƒŠƒ“ƒOƒRƒ“ƒeƒLƒXƒg</param>
+        /// <param name="rc">ãƒ¬ãƒ³ãƒ€ãƒªãƒ³ã‚°ã‚³ãƒ³ãƒ†ã‚­ã‚¹ãƒˆ</param>
         void ForwardRendering(RenderContext& rc);
         /// <summary>
-        /// ƒƒCƒ“ƒŒƒ“ƒ_ƒŠƒ“ƒOƒ^[ƒQƒbƒg‚ğ‰Šú‰»
+        /// ãƒ¡ã‚¤ãƒ³ãƒ¬ãƒ³ãƒ€ãƒªãƒ³ã‚°ã‚¿ãƒ¼ã‚²ãƒƒãƒˆã‚’åˆæœŸåŒ–
         /// </summary>
         void InitMainRenderTarget();
         /// <summary>
-        /// ƒƒCƒ“ƒŒƒ“ƒ_ƒŠƒ“ƒOƒ^[ƒQƒbƒg‚Ì‚ÌƒXƒiƒbƒvƒVƒ‡ƒbƒg‚ğæ‚é‚½‚ß‚Ì
-        /// ƒŒƒ“ƒ_ƒŠƒ“ƒOƒ^[ƒQƒbƒg‚ğ‰Šú‰»
+        /// ãƒ¡ã‚¤ãƒ³ãƒ¬ãƒ³ãƒ€ãƒªãƒ³ã‚°ã‚¿ãƒ¼ã‚²ãƒƒãƒˆã®ã®ã‚¹ãƒŠãƒƒãƒ—ã‚·ãƒ§ãƒƒãƒˆã‚’å–ã‚‹ãŸã‚ã®
+        /// ãƒ¬ãƒ³ãƒ€ãƒªãƒ³ã‚°ã‚¿ãƒ¼ã‚²ãƒƒãƒˆã‚’åˆæœŸåŒ–
         /// </summary>
         void InitMainRTSnapshotRenderTarget();
         /// <summary>
-        /// ƒƒCƒ“ƒŒƒ“ƒ_ƒŠƒ“ƒOƒ^[ƒQƒbƒg‚ÌƒJƒ‰[ƒoƒbƒtƒ@‚Ì“à—e‚ğ
-        /// ƒtƒŒ[ƒ€ƒoƒbƒtƒ@‚ÉƒRƒs[‚·‚é‚½‚ß‚ÌƒXƒvƒ‰ƒCƒg‚ğ‰Šú‰»‚·‚é
+        /// ãƒ¡ã‚¤ãƒ³ãƒ¬ãƒ³ãƒ€ãƒªãƒ³ã‚°ã‚¿ãƒ¼ã‚²ãƒƒãƒˆã®ã‚«ãƒ©ãƒ¼ãƒãƒƒãƒ•ã‚¡ã®å†…å®¹ã‚’
+        /// ãƒ•ãƒ¬ãƒ¼ãƒ ãƒãƒƒãƒ•ã‚¡ã«ã‚³ãƒ”ãƒ¼ã™ã‚‹ãŸã‚ã®ã‚¹ãƒ—ãƒ©ã‚¤ãƒˆã‚’åˆæœŸåŒ–ã™ã‚‹
         /// </summary>
         void InitCopyMainRenderTargetToFrameBufferSprite();
         /// <summary>
-        /// ZPrepass—p‚ÌƒŒƒ“ƒ_ƒŠƒ“ƒOƒ^[ƒQƒbƒg‚ğ‰Šú‰»
+        /// ZPrepassç”¨ã®ãƒ¬ãƒ³ãƒ€ãƒªãƒ³ã‚°ã‚¿ãƒ¼ã‚²ãƒƒãƒˆã‚’åˆæœŸåŒ–
         /// </summary>
         void InitZPrepassRenderTarget();
         /// <summary>
-        /// ƒƒCƒ“ƒŒƒ“ƒ_ƒŠƒ“ƒOƒ^[ƒQƒbƒg‚ÌƒXƒiƒbƒvƒVƒ‡ƒbƒg‚ğB‰e
+        /// ãƒ¡ã‚¤ãƒ³ãƒ¬ãƒ³ãƒ€ãƒªãƒ³ã‚°ã‚¿ãƒ¼ã‚²ãƒƒãƒˆã®ã‚¹ãƒŠãƒƒãƒ—ã‚·ãƒ§ãƒƒãƒˆã‚’æ’®å½±
         /// </summary>
         void SnapshotMainRenderTarget(RenderContext& rc, EnMainRTSnapshot enSnapshot);
         /// <summary>
-        /// ƒVƒƒƒhƒEƒ}ƒbƒv‚Ö‚Ì•`‰æˆ—‚ğ‰Šú‰»
+        /// ã‚·ãƒ£ãƒ‰ã‚¦ãƒãƒƒãƒ—ã¸ã®æç”»å‡¦ç†ã‚’åˆæœŸåŒ–
         /// </summary>
         void InitShadowMapRender();
         /// <summary>
-        /// ƒrƒ…[ƒJƒŠƒ“ƒO—p‚Ìƒrƒ…[ƒvƒƒWƒFƒNƒVƒ‡ƒ“s—ñ‚ğŒvZB
+        /// ãƒ“ãƒ¥ãƒ¼ã‚«ãƒªãƒ³ã‚°ç”¨ã®ãƒ“ãƒ¥ãƒ¼ãƒ—ãƒ­ã‚¸ã‚§ã‚¯ã‚·ãƒ§ãƒ³è¡Œåˆ—ã‚’è¨ˆç®—ã€‚
         /// </summary>
         void CalcViewProjectionMatrixForViewCulling();
         /// <summary>
-        /// 2D•`‰æ—p‚ÌƒŒƒ“ƒ_\ƒ^[ƒQƒbƒg‚ğ‰Šú‰»
+        /// 2Dæç”»ç”¨ã®ãƒ¬ãƒ³ãƒ€â€•ã‚¿ãƒ¼ã‚²ãƒƒãƒˆã‚’åˆæœŸåŒ–
         /// </summary>
         void Init2DRenderTarget();
     private:
-        // GBuffer‚Ì’è‹`
+        // GBufferã®å®šç¾©
         enum EnGBuffer
         {
-            enGBufferAlbedoDepth,           // ƒAƒ‹ƒxƒh‚Æ[“x’lBƒ¿‚É[“x’l‚ª‹L‰¯‚³‚ê‚Ä‚¢‚Ü‚·B
-            enGBufferNormal,                // –@ü
-            enGBufferMetaricShadowSmooth,   // ƒƒ^ƒŠƒbƒNA‰eƒpƒ‰ƒ[ƒ^AƒXƒ€[ƒXB
-                                            // ƒƒ^ƒŠƒbƒN‚ªrA‰eƒpƒ‰ƒ[ƒ^‚ªgAƒXƒ€[ƒX‚ªaBg‚Í–¢g—pB
-                                            enGBufferNum,                   // G-Buffer‚Ì”
+            enGBufferAlbedoDepth,           // ã‚¢ãƒ«ãƒ™ãƒ‰ã¨æ·±åº¦å€¤ã€‚Î±ã«æ·±åº¦å€¤ãŒè¨˜æ†¶ã•ã‚Œã¦ã„ã¾ã™ã€‚
+            enGBufferNormal,                // æ³•ç·š
+            enGBufferMetaricShadowSmooth,   // ãƒ¡ã‚¿ãƒªãƒƒã‚¯ã€å½±ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿ã€ã‚¹ãƒ ãƒ¼ã‚¹ã€‚
+                                            // ãƒ¡ã‚¿ãƒªãƒƒã‚¯ãŒrã€å½±ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿ãŒgã€ã‚¹ãƒ ãƒ¼ã‚¹ãŒaã€‚gã¯æœªä½¿ç”¨ã€‚
+                                            enGBufferNum,                   // G-Bufferã®æ•°
         };
         /// <summary>
-        /// IBLƒf[ƒ^
+        /// IBLãƒ‡ãƒ¼ã‚¿
         /// </summary>
         struct SIBLData {
-            Texture m_texture;          // IBLƒeƒNƒXƒ`ƒƒ
-            float m_intencity = 1.0f;   // ‹­“xB
+            Texture m_texture;          // IBLãƒ†ã‚¯ã‚¹ãƒãƒ£
+            float m_intencity = 1.0f;   // å¼·åº¦ã€‚
         };
         
         /// <summary>
-        /// GIƒeƒNƒXƒ`ƒƒ‚ğì‚é‚½‚ß‚Ìƒuƒ‰[ˆ—B
+        /// GIãƒ†ã‚¯ã‚¹ãƒãƒ£ã‚’ä½œã‚‹ãŸã‚ã®ãƒ–ãƒ©ãƒ¼å‡¦ç†ã€‚
         /// </summary>
         enum EGITextureBlur {
-            eGITextureBlur_1024x1024,   // 1024~1024
-            eGITextureBlur_512x512,     // 512~512
-            eGITextureBlur_256x256,     // 256~256
-            eGITextureBlur_128x128,     // 128~128
+            eGITextureBlur_1024x1024,   // 1024Ã—1024
+            eGITextureBlur_512x512,     // 512Ã—512
+            eGITextureBlur_256x256,     // 256Ã—256
+            eGITextureBlur_128x128,     // 128Ã—128
             eGITextureBlur_Num,     
         };
-        RaytracingLightData m_raytracingLightData;                      // ƒŒƒCƒgƒŒ—p‚Ìƒ‰ƒCƒgƒf[ƒ^B
-        LightCulling m_lightCulling;                                    // ƒ‰ƒCƒgƒJƒŠƒ“ƒOB 
-        ShadowMapRender m_shadowMapRenders[MAX_DIRECTIONAL_LIGHT];      // ƒVƒƒƒhƒEƒ}ƒbƒv‚Ö‚Ì•`‰æˆ—
-        VolumeLightRender m_volumeLightRender;                          // ƒ{ƒŠƒ…[ƒ€ƒ‰ƒCƒgƒŒƒ“ƒ_ƒ‰[B
-        SDeferredLightingCB m_deferredLightingCB;                       // ƒfƒBƒtƒ@[ƒhƒ‰ƒCƒeƒBƒ“ƒO—p‚Ì’è”ƒoƒbƒtƒ@
-        Sprite m_copyMainRtToFrameBufferSprite;                         // ƒƒCƒ“ƒŒƒ“ƒ_ƒŠƒ“ƒOƒ^[ƒQƒbƒg‚ğƒtƒŒ[ƒ€ƒoƒbƒtƒ@‚ÉƒRƒs[‚·‚é‚½‚ß‚ÌƒXƒvƒ‰ƒCƒg
-        Sprite m_diferredLightingSprite;                                // ƒfƒBƒtƒ@[ƒhƒ‰ƒCƒeƒBƒ“ƒO‚ğs‚¤‚½‚ß‚ÌƒXƒvƒ‰ƒCƒg
-        RenderTarget m_zprepassRenderTarget;                            // ZPrepass•`‰æ—p‚ÌƒŒƒ“ƒ_ƒŠƒ“ƒOƒ^[ƒQƒbƒg
-        RenderTarget m_mainRenderTarget;                                // ƒƒCƒ“ƒŒƒ“ƒ_ƒŠƒ“ƒOƒ^[ƒQƒbƒg
-        RenderTarget m_mainRTSnapshots[(int)EnMainRTSnapshot::enNum];   // ƒƒCƒ“ƒŒƒ“ƒ_ƒŠƒ“ƒOƒ^[ƒQƒbƒg‚ÌƒXƒiƒbƒvƒVƒ‡ƒbƒg
+        RaytracingLightData m_raytracingLightData;                      // ãƒ¬ã‚¤ãƒˆãƒ¬ç”¨ã®ãƒ©ã‚¤ãƒˆãƒ‡ãƒ¼ã‚¿ã€‚
+        LightCulling m_lightCulling;                                    // ãƒ©ã‚¤ãƒˆã‚«ãƒªãƒ³ã‚°ã€‚ 
+        ShadowMapRender m_shadowMapRenders[MAX_DIRECTIONAL_LIGHT];      // ã‚·ãƒ£ãƒ‰ã‚¦ãƒãƒƒãƒ—ã¸ã®æç”»å‡¦ç†
+        VolumeLightRender m_volumeLightRender;                          // ãƒœãƒªãƒ¥ãƒ¼ãƒ ãƒ©ã‚¤ãƒˆãƒ¬ãƒ³ãƒ€ãƒ©ãƒ¼ã€‚
+        SDeferredLightingCB m_deferredLightingCB;                       // ãƒ‡ã‚£ãƒ•ã‚¡ãƒ¼ãƒ‰ãƒ©ã‚¤ãƒ†ã‚£ãƒ³ã‚°ç”¨ã®å®šæ•°ãƒãƒƒãƒ•ã‚¡
+        Sprite m_copyMainRtToFrameBufferSprite;                         // ãƒ¡ã‚¤ãƒ³ãƒ¬ãƒ³ãƒ€ãƒªãƒ³ã‚°ã‚¿ãƒ¼ã‚²ãƒƒãƒˆã‚’ãƒ•ãƒ¬ãƒ¼ãƒ ãƒãƒƒãƒ•ã‚¡ã«ã‚³ãƒ”ãƒ¼ã™ã‚‹ãŸã‚ã®ã‚¹ãƒ—ãƒ©ã‚¤ãƒˆ
+        Sprite m_diferredLightingSprite;                                // ãƒ‡ã‚£ãƒ•ã‚¡ãƒ¼ãƒ‰ãƒ©ã‚¤ãƒ†ã‚£ãƒ³ã‚°ã‚’è¡Œã†ãŸã‚ã®ã‚¹ãƒ—ãƒ©ã‚¤ãƒˆ
+        RenderTarget m_zprepassRenderTarget;                            // ZPrepassæç”»ç”¨ã®ãƒ¬ãƒ³ãƒ€ãƒªãƒ³ã‚°ã‚¿ãƒ¼ã‚²ãƒƒãƒˆ
+        RenderTarget m_mainRenderTarget;                                // ãƒ¡ã‚¤ãƒ³ãƒ¬ãƒ³ãƒ€ãƒªãƒ³ã‚°ã‚¿ãƒ¼ã‚²ãƒƒãƒˆ
+        RenderTarget m_mainRTSnapshots[(int)EnMainRTSnapshot::enNum];   // ãƒ¡ã‚¤ãƒ³ãƒ¬ãƒ³ãƒ€ãƒªãƒ³ã‚°ã‚¿ãƒ¼ã‚²ãƒƒãƒˆã®ã‚¹ãƒŠãƒƒãƒ—ã‚·ãƒ§ãƒƒãƒˆ
         RenderTarget m_gBuffer[enGBufferNum];                           // G-Buffer
-        PostEffect m_postEffect;                                        // ƒ|ƒXƒgƒGƒtƒFƒNƒg
-        RWStructuredBuffer m_pointLightNoListInTileUAV;                 // ƒ^ƒCƒ‹‚²‚Æ‚Ìƒ|ƒCƒ“ƒgƒ‰ƒCƒg‚ÌƒŠƒXƒg‚ÌUAVB
-        RWStructuredBuffer m_spotLightNoListInTileUAV;                  // ƒ^ƒCƒ‹‚²‚Æ‚ÌƒXƒ|ƒbƒgƒ‰ƒCƒg‚ÌƒŠƒXƒg‚ÌUAVB
-        std::vector< IRenderer* > m_renderObjects;                      // •`‰æƒIƒuƒWƒFƒNƒg‚ÌƒŠƒXƒgB
-        SceneLight m_sceneLight;                                        // ƒV[ƒ“ƒ‰ƒCƒgB
-        bool m_isSoftShadow = false;                                    // ƒ\ƒtƒgƒVƒƒƒhƒEƒtƒ‰ƒOB
-        Matrix m_viewProjMatrixForViewCulling;                          // ƒrƒ…[ƒJƒŠƒ“ƒO—p‚Ìƒrƒ…[ƒvƒƒWƒFƒNƒVƒ‡ƒ“s—ñB
-        SceneGeometryData m_sceneGeometryData;                          // ƒV[ƒ“‚ÌƒWƒIƒƒgƒŠî•ñB
-        static RenderingEngine* m_instance;		                        // —Bˆê‚ÌƒCƒ“ƒXƒ^ƒ“ƒX‚ÌƒAƒhƒŒƒX‚ğ‹L˜^‚·‚é•Ï”B
-        RenderTarget m_2DRenderTarget;                                  // 2D•`‰æ—p‚ÌƒŒƒ“ƒ_\ƒ^[ƒQƒbƒgB
-        Sprite m_2DSprite;                                              // 2D‡¬—p‚ÌƒXƒvƒ‰ƒCƒgB
+        PostEffect m_postEffect;                                        // ãƒã‚¹ãƒˆã‚¨ãƒ•ã‚§ã‚¯ãƒˆ
+        RWStructuredBuffer m_pointLightNoListInTileUAV;                 // ã‚¿ã‚¤ãƒ«ã”ã¨ã®ãƒã‚¤ãƒ³ãƒˆãƒ©ã‚¤ãƒˆã®ãƒªã‚¹ãƒˆã®UAVã€‚
+        RWStructuredBuffer m_spotLightNoListInTileUAV;                  // ã‚¿ã‚¤ãƒ«ã”ã¨ã®ã‚¹ãƒãƒƒãƒˆãƒ©ã‚¤ãƒˆã®ãƒªã‚¹ãƒˆã®UAVã€‚
+        std::vector< IRenderer* > m_renderObjects;                      // æç”»ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã®ãƒªã‚¹ãƒˆã€‚
+        SceneLight m_sceneLight;                                        // ã‚·ãƒ¼ãƒ³ãƒ©ã‚¤ãƒˆã€‚
+        bool m_isSoftShadow = false;                                    // ã‚½ãƒ•ãƒˆã‚·ãƒ£ãƒ‰ã‚¦ãƒ•ãƒ©ã‚°ã€‚
+        Matrix m_viewProjMatrixForViewCulling;                          // ãƒ“ãƒ¥ãƒ¼ã‚«ãƒªãƒ³ã‚°ç”¨ã®ãƒ“ãƒ¥ãƒ¼ãƒ—ãƒ­ã‚¸ã‚§ã‚¯ã‚·ãƒ§ãƒ³è¡Œåˆ—ã€‚
+        SceneGeometryData m_sceneGeometryData;                          // ã‚·ãƒ¼ãƒ³ã®ã‚¸ã‚ªãƒ¡ãƒˆãƒªæƒ…å ±ã€‚
+        static RenderingEngine* m_instance;		                        // å”¯ä¸€ã®ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹ã®ã‚¢ãƒ‰ãƒ¬ã‚¹ã‚’è¨˜éŒ²ã™ã‚‹å¤‰æ•°ã€‚
+        RenderTarget m_2DRenderTarget;                                  // 2Dæç”»ç”¨ã®ãƒ¬ãƒ³ãƒ€â€•ã‚¿ãƒ¼ã‚²ãƒƒãƒˆã€‚
+        Sprite m_2DSprite;                                              // 2Dåˆæˆç”¨ã®ã‚¹ãƒ—ãƒ©ã‚¤ãƒˆã€‚
         Sprite m_mainSprite;
-        SIBLData m_iblData;                                             // IBLƒf[ƒ^B
-        bool m_isEnableRaytracing = true;                               // ƒŒƒCƒgƒŒ[ƒVƒ“ƒO‚ª—LŒøH
-        GaussianBlur m_giTextureBlur[eGITextureBlur_Num];                                // GIƒeƒNƒXƒ`ƒƒ‚Éƒuƒ‰[‚ğ‚©‚¯‚éˆ—B
+        SIBLData m_iblData;                                             // IBLãƒ‡ãƒ¼ã‚¿ã€‚
+        bool m_isEnableRaytracing = true;                               // ãƒ¬ã‚¤ãƒˆãƒ¬ãƒ¼ã‚·ãƒ³ã‚°ãŒæœ‰åŠ¹ï¼Ÿ
+        GaussianBlur m_giTextureBlur[eGITextureBlur_Num];                                // GIãƒ†ã‚¯ã‚¹ãƒãƒ£ã«ãƒ–ãƒ©ãƒ¼ã‚’ã‹ã‘ã‚‹å‡¦ç†ã€‚
         /// <summary>
-        /// ƒCƒxƒ“ƒgƒŠƒXƒi[‚Ìƒf[ƒ^B
+        /// ã‚¤ãƒ™ãƒ³ãƒˆãƒªã‚¹ãƒŠãƒ¼ã®ãƒ‡ãƒ¼ã‚¿ã€‚
         /// </summary>
         struct SEventListenerData {
-            void* pListenerObj;     // ƒŠƒXƒi[ƒIƒuƒWƒFƒNƒg
+            void* pListenerObj;     // ãƒªã‚¹ãƒŠãƒ¼ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆ
             std::function<void(EnEvent enEvent)> listenerFunc;
         };
         
-        std::list< SEventListenerData > m_eventListeners;                // ƒCƒxƒ“ƒgƒŠƒXƒi[B
+        std::list< SEventListenerData > m_eventListeners;                // ã‚¤ãƒ™ãƒ³ãƒˆãƒªã‚¹ãƒŠãƒ¼ã€‚
     };    
 }
