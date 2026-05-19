@@ -112,8 +112,7 @@ StageManager::~StageManager()
 bool StageManager::Start()
 {
     // 地面スプラットシェーダー用テクスチャをロード (StageTKLLoader より前に行う)
-    // splat_map の各チャンネル: R=草, G=岩土, B=腐葉土
-    // miniRed.DDS (R=1,G=0,B=0) をプレースホルダーとして使用 → 草テクスチャのみ表示
+    // SplatMap.DDS の各チャンネル: R=草, G=岩土, B=腐葉土
     splatTex_.InitFromDDSFile(L"Assets/Objects/Stage/Forest/ObjectData/SplatMap.DDS");
     kusaTex_.InitFromDDSFile(L"Assets/Objects/Stage/Forest/ObjectData/kusaGround.DDS");
     tuthiTex_.InitFromDDSFile(L"Assets/Objects/Stage/Forest/ObjectData/tuthi_ground.DDS");
