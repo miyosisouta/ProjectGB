@@ -59,6 +59,13 @@ namespace nsK2EngineLow {
 			m_sourceVoice->Stop(/*XAUDIO2_PLAY_TAILS*/);
 		}
 		/// <summary>
+		/// 一時停止を解除。Pause()で停止した箇所から再開されます。
+		/// </summary>
+		void Resume()
+		{
+			m_sourceVoice->Start();
+		}
+		/// <summary>
 		/// 再生中？。
 		/// </summary>
 		/// <returns>trueなら再生中。</returns>

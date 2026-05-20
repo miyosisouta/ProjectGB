@@ -6,6 +6,8 @@
 #include "stdafx.h"
 #include "BattleManager.h"
 #include "MissionManager.h"
+#include "src/Effect/EffectManager.h"
+#include "src/Sound/SoundManager.h"
 
 #include "Src/Actor/Player.h"
 #include "Src/Actor/PlayerController.h"
@@ -70,7 +72,7 @@ BattleManager::BattleManager()
 	// キャラクター用設定
 	{
 		CharacterDataBase::Get().SetPlayerNormalAttack(NormalAttackType::enBite);
-		CharacterDataBase::Get().SetPlayerAbility(AbilityType::enLandmine);
+		CharacterDataBase::Get().SetPlayerAbility(AbilityType::enDefault);
 		CharacterDataBase::Get().SetPlayerUtility(UtilityType::enAvoid);
 
 		player_->CreateSkill(
@@ -455,5 +457,48 @@ void BattleManager::UpdateDebugGroupInput()
 	}
 
 	if (changed) ApplyGroupMasks();
+
+	// F6 : エフェクト更新 ON/OFF（Effekseer を一時停止）
+	static bool prevF6 = false;
+	const bool curF6 = (GetAsyncKeyState(VK_F6) & 0x8000) != 0;
+	if (curF6 && !prevF6) {
+		const bool isPaused = !EffectManagerObject::IsUpdatePaused();
+		EffectManagerObject::SetUpdatePaused(isPaused);
+		char buf[64];
+		sprintf_s(buf, "[Debug] Effect Update: %s\n", isPaused ? "OFF" : "ON");
+		OutputDebugStringA(buf);
+	}
+	prevF6 = curF6;
+
+	// F7 : サウンド一時停止 ON/OFF（BGM・ループSEをその場で止める）
+	static bool prevF7 = false;
+	const bool curF7 = (GetAsyncKeyState(VK_F7) & 0x8000) != 0;
+	if (curF7 && !prevF7) {
+		const bool isPaused = !SoundManagerObject::IsUpdatePaused();
+		SoundManagerObject::SetUpdatePaused(isPaused);
+		if (isPaused) {
+			SoundManager::Get().PauseAll();
+		} else {
+			SoundManager::Get().ResumeAll();
+		}
+		char buf[64];
+		sprintf_s(buf, "[Debug] Sound: %s\n", isPaused ? "PAUSE" : "RESUME");
+		OutputDebugStringA(buf);
+	}
+	prevF7 = curF7;
+
+	// F8 : UI 描画 ON/OFF（UIManager管理UI＋InGameMenuを一括で止める）
+	static bool prevF8 = false;
+	const bool curF8 = (GetAsyncKeyState(VK_F8) & 0x8000) != 0;
+	if (curF8 && !prevF8) {
+		drawMask_ ^= UpdateGroup::UI;
+		ApplyGroupMasks();
+		Layout::SetDrawPaused(!Layout::IsDrawPaused());
+		char buf[64];
+		const bool isOn = (drawMask_ & UpdateGroup::UI) != 0;
+		sprintf_s(buf, "[Debug] UI Draw: %s\n", isOn ? "ON" : "OFF");
+		OutputDebugStringA(buf);
+	}
+	prevF8 = curF8;
 }
 #endif

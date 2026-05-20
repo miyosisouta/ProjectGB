@@ -40,6 +40,14 @@ public:
 
     void Reload();
 
+#ifdef K2_DEBUG
+    static void SetDrawPaused(bool isPaused) { s_isDrawPaused = isPaused; }
+    static bool IsDrawPaused() { return s_isDrawPaused; }
+private:
+    static bool s_isDrawPaused;
+public:
+#endif
+
     /** ファイルパスを取得（Swap の戻り先再構築用） */
     const std::string& GetFilePath() const { return filePath_; }
 

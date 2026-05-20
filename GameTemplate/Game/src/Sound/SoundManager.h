@@ -75,6 +75,13 @@ public:
     /** SE停止 */
     void StopSE(const SoundHandle handle);
 
+#ifdef K2_DEBUG
+    /** BGM と ループSE をその場で一時停止する */
+    void PauseAll();
+    /** PauseAll() で止めた音を再開する */
+    void ResumeAll();
+#endif
+
 
     SoundSource* FindSE(const SoundHandle handle)
     {
@@ -167,4 +174,12 @@ public:
 public:
     bool Start()override;
     void Update()override;
+
+#ifdef K2_DEBUG
+private:
+    static bool s_isUpdatePaused;
+public:
+    static void SetUpdatePaused(bool isPaused) { s_isUpdatePaused = isPaused; }
+    static bool IsUpdatePaused() { return s_isUpdatePaused; }
+#endif
 };
