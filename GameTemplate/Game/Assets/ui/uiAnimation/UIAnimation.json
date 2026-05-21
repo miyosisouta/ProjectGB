@@ -21,16 +21,6 @@
             "loop": "Once"
         },
         {
-            "comment": "サウンドオプション：歯車を回す",
-            "key": "gear_rotation",
-            "valueType": "float",
-            "startValue": 0.0,
-            "endValue":   180.0,
-            "duration": 7.0,
-            "easing": "Linear",
-            "loop": "Loop"
-        },
-        {
             "comment": "タイトル画面：Aボタン押してね",
             "key": "pushAbutton_fadeout",
             "valueType": "Vector4",
@@ -444,6 +434,16 @@
 
 
 
+        {
+            "comment": "オプション：歯車を回す",
+            "key": "gear_rotation",
+            "valueType": "float",
+            "startValue": 0.0,
+            "endValue":   180.0,
+            "duration": 7.0,
+            "easing": "Linear",
+            "loop": "Loop"
+        },
         {
             "comment": "設定画面：アイコン拡大",
             "key": "Option_soundIcon_scaleUp",
