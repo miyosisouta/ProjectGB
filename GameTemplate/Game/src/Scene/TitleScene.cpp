@@ -16,6 +16,7 @@
 #include "src/UI/OptionMenu.h"
 #include "src/UI/SoundOptionMenu.h"
 #include "src/UI/KeyConfigOptionMenu.h"
+#include "src/UI/WarningButtonWindow.h"
 #include "src/UI/UIScreenManager.h"
 
 
@@ -111,6 +112,47 @@ void TitleScene::Update()
 			UIScreenManager::Get().Pop();
 		}
 	}
+
+	// キーコンフィグオプションメニューが有効な時
+	auto* keyConfigOptionMenu = dynamic_cast<KeyConfigOptionMenu*>(menu);
+	if (keyConfigOptionMenu) {
+		// ボタンが重なったら
+		if (keyConfigOptionMenu->IsButtonOverLap()) {
+			// キャンセルした後なら処理したくない
+			if (!KeyConfigOptionMenu::IsWarningWindowCancel() && !KeyConfigOptionMenu::IsWarningWindowClose()) {
+				SoundManager::Get().PlaySE(enSoundKind_Menu_Decide);
+				UIScreenManager::Get().Push<WarningButtonWindow>("Assets/ui/layout/WarningButtonWindow.json", UITransitionMode::Push, UIScreenTransitionPreset::FadeInOut());
+			}
+		}
+		// キーコンフィグオプションメニューが有効な時 戻る
+		if (!UIScreenManager::Get().IsTransitioning()) {
+			if (!keyConfigOptionMenu->IsButtonSetting()) {
+				if (g_pad[0]->IsTrigger(enButtonB)) {
+					KeyConfigOptionMenu::SetWarningWindowCancel(true);
+					SoundManager::Get().PlaySE(enSoundKind_Menu_Return);
+					UIScreenManager::Get().Pop();
+				}
+			}
+		}
+	}
+
+	// 警告ウィンドウ(WarningButtonWindow)が有効な時
+	auto* warningButtonWindow = dynamic_cast<WarningButtonWindow*>(menu);
+	if (warningButtonWindow){
+		if (!UIScreenManager::Get().IsTransitioning()) {
+			if (g_pad[0]->IsTrigger(enButtonB)) {
+				KeyConfigOptionMenu::SetWarningWindowCancel(true);
+				SoundManager::Get().PlaySE(enSoundKind_Menu_Return);
+				UIScreenManager::Get().Pop();
+			}
+			if (g_pad[0]->IsTrigger(enButtonA)) {
+				KeyConfigOptionMenu::SetWarningWindowClose(true);
+				SoundManager::Get().PlaySE(enSoundKind_Menu_Return);
+				UIScreenManager::Get().Pop();
+			}
+		}
+	}
+
 
 	UIScreenManager::Get().Update();
 }

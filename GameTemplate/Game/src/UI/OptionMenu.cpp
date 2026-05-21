@@ -184,6 +184,14 @@ void OptionMenu::InitializeLogic()
 			}, true);
 	}
 
+	// 歯車が回る
+	auto* gear = GetUI<UIIcon>(Hash32("title_icon"));
+	UIAnimationFactory::Attach<UIRotationAnimation>(gear, Hash32("gear_rotation"));
+	{
+		auto* animation = gear->FindAnimation(Hash32("gear_rotation"));
+		animation->Play();
+	}
+
 	// 初めに選択されているときに一度だけ再生
 	SoundIconAnimation();
 }
@@ -240,7 +248,7 @@ void OptionMenu::SoundIconAnimation()
 			auto* animation = sound->FindAnimation(Hash32("sound_rotation"));
 			animation->Play();
 		});
-	taskScheduler->AddLoopTimer(id, 3.2f, [&]()
+	taskScheduler->AddLoopTimer(id, 3.4f, [&]()
 		{
 			auto* sound = GetUI<UIIcon>(Hash32("icon_sound"));
 			//UIAnimationFactory::Attach<UIRotationAnimation>(sound, Hash32("sound_rotation"));

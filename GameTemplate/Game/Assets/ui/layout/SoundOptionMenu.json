@@ -26,11 +26,11 @@
       },
       {
         "type": "UIIcon",
-        "name": "Gear",
-        "asset": "Assets/ui/SoundOption/title/haguruma.DDS",
-        "width": 150,
-        "height": 150,
-        "position": [-850, 460, 0],
+        "name": "sound",
+        "asset": "Assets/ui/SoundOption/title/sound.DDS",
+        "width": 120,
+        "height": 110,
+        "position": [-850, 455, 0],
         "scale": [1, 1, 1],
         "rotation": 0,
         "color": [1, 1, 1, 1]

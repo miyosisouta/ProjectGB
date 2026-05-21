@@ -201,14 +201,6 @@
         "source": "Assets/ui/layout/ButtonUI.json",
         "position": [700, -200, 0],
         "scale": [1, 1, 1]
-      },
-      {
-        "comment": "ウィンドウ：ボタン設定が同じ",
-        "type": "UIPrefab",
-        "name": "Window",
-        "source": "Assets/ui/layout/WarningButtonWindow.json",
-        "position": [0, 0, 0],
-        "scale": [1, 1, 1]
       }
     ]
 }

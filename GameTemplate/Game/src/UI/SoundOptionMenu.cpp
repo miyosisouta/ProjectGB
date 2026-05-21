@@ -226,15 +226,6 @@ void SoundOptionMenu::InitializeLogic()
 			},true);
 	}
 
-	
-	auto* gear = GetUI<UIIcon>(Hash32("Gear"));
-	UIAnimationFactory::Attach<UIRotationAnimation>(gear, Hash32("gear_rotation"));
-	{
-		auto* animation = gear->FindAnimation(Hash32("gear_rotation"));
-		animation->Play();
-	}
-
-
 	auto* gauge1 = GetUI<UIIcon>(Hash32("Ber_greenback1"));
 	gauge1->SetPivot(Vector2(0.0f, 0.5f));
 	auto* gauge2 = GetUI<UIIcon>(Hash32("Ber_greenback2"));

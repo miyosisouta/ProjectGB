@@ -12,7 +12,7 @@
 #include "src/Util/TaskSchedulerSystem.h"
 
 #include "src/UI/Layout.h"
-#include "src/UI/WarningButtonWindow.h"
+#include "src/UI/KeyConfigOptionMenu.h"
 
 
 DebugScene::DebugScene()
@@ -29,7 +29,7 @@ DebugScene::~DebugScene()
 bool DebugScene::Start()
 {
 	layout_ = new Layout;
-	layout_->Initialize<WarningButtonWindow>("Assets/ui/Layout/WarningButtonWindow.json");
+	layout_->Initialize<KeyConfigOptionMenu>("Assets/ui/Layout/KeyConfigOptionMenu.json");
 
 	return true;
 }
@@ -37,7 +37,7 @@ bool DebugScene::Start()
 
 void DebugScene::Update()
 {
-	WarningButtonWindow* menu = static_cast<WarningButtonWindow*>(layout_->GetMenu());
+	KeyConfigOptionMenu* menu = static_cast<KeyConfigOptionMenu*>(layout_->GetMenu());
 	
 
 	layout_->Update();
