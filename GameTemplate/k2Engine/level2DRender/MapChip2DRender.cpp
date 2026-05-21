@@ -1,11 +1,11 @@
-#include "k2EnginePreCompile.h"
+ï»¿#include "k2EnginePreCompile.h"
 #include "MapChip2DRender.h"
 #include "level2DRender/Level2DRender.h"
 
 namespace nsK2Engine {
 	void MapChip2DRender::Init(Level2DObjectData* objData)
 	{
-		//‰Šú‰»B
+		//åˆæœŸåŒ–ã€‚
 		m_spriteRender.Init(
 			objData->ddsFilePath,
 			static_cast<float>(objData->width),

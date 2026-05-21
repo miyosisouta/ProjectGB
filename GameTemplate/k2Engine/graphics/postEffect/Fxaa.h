@@ -1,18 +1,18 @@
-#pragma once
+ï»¿#pragma once
 
 #include "graphics/postEffect/PostEffectComponentBase.h"
 
 namespace nsK2Engine {
     /// <summary>
-    /// FXAAB
+    /// FXAAã€‚
     /// </summary>
     class Fxaa : public PostEffectComponentBase
     {
     public:
         /// <summary>
-        /// ‰Šú‰»B
+        /// åˆæœŸåŒ–ã€‚
         /// </summary>
-        /// <param name="mainRenderTarget">ƒƒCƒ“ƒŒƒ“ƒ_[ƒ^[ƒQƒbƒgB</param>
+        /// <param name="mainRenderTarget">ãƒ¡ã‚¤ãƒ³ãƒ¬ãƒ³ãƒ€ãƒ¼ã‚¿ãƒ¼ã‚²ãƒƒãƒˆã€‚</param>
         void OnInit(
             RenderTarget& mainRenderTarget,
             RenderTarget& zprepassRenderTarget,
@@ -20,13 +20,13 @@ namespace nsK2Engine {
             RenderTarget& metallicSmoothRenderTarget,
             RenderTarget& albedoRenderTarget) override;
         /// <summary>
-        /// •`‰æB
+        /// æç”»ã€‚
         /// </summary>
-        /// <param name="rc">ƒŒƒ“ƒ_\ƒRƒ“ƒeƒLƒXƒgB</param>
-        /// <param name="mainRenderTarget">ƒƒCƒ“ƒŒƒ“ƒ_\ƒ^[ƒQƒbƒgB</param>
+        /// <param name="rc">ãƒ¬ãƒ³ãƒ€â€•ã‚³ãƒ³ãƒ†ã‚­ã‚¹ãƒˆã€‚</param>
+        /// <param name="mainRenderTarget">ãƒ¡ã‚¤ãƒ³ãƒ¬ãƒ³ãƒ€â€•ã‚¿ãƒ¼ã‚²ãƒƒãƒˆã€‚</param>
         void OnRender(RenderContext& rc, RenderTarget& mainRenderTarget) override;
         /// <summary>
-        /// ƒ|ƒXƒgƒGƒtƒFƒNƒg‚ğÀs‚µ‚½Œ‹‰Ê‚Æ‚È‚éƒeƒNƒXƒ`ƒƒ‚ğæ“¾B
+        /// ãƒã‚¹ãƒˆã‚¨ãƒ•ã‚§ã‚¯ãƒˆã‚’å®Ÿè¡Œã—ãŸçµæœã¨ãªã‚‹ãƒ†ã‚¯ã‚¹ãƒãƒ£ã‚’å–å¾—ã€‚
         /// </summary>
         /// <returns></returns>
         Texture& GetResultTexture() override
@@ -34,7 +34,7 @@ namespace nsK2Engine {
             return m_fxaaRt.GetRenderTargetTexture();
         }
         /// <summary>
-        /// ƒ|ƒXƒg‚ÌŒ‹‰Ê‚Ì‰æ‘œ‚ğƒƒCƒ“ƒŒƒ“ƒ_ƒŠƒ“ƒOƒ^[ƒQƒbƒg‚ÉƒRƒs[‚·‚éH
+        /// ãƒã‚¹ãƒˆã®çµæœã®ç”»åƒã‚’ãƒ¡ã‚¤ãƒ³ãƒ¬ãƒ³ãƒ€ãƒªãƒ³ã‚°ã‚¿ãƒ¼ã‚²ãƒƒãƒˆã«ã‚³ãƒ”ãƒ¼ã™ã‚‹ï¼Ÿ
         /// </summary>
         /// <returns></returns>
         bool IsCopyResultTextureToMainRenderTarget() const override
@@ -48,9 +48,9 @@ namespace nsK2Engine {
             float bufferW;
             float bufferH;
         };
-        RenderTarget m_fxaaRt;  // FXAA‚ğs‚¤ƒŒƒ“ƒ_ƒŠƒ“ƒOƒ^[ƒQƒbƒgB
-        Sprite m_finalSprite;	// ÅI‡¬—p‚ÌƒXƒvƒ‰ƒCƒg
-        Sprite m_copySprite;    //@
-        FaxxBuffer m_cB;        // ‰ğ‘œ“x‚ğGPU‚É‘—‚é‚½‚ß‚Ì’è”ƒoƒbƒtƒ@\B
+        RenderTarget m_fxaaRt;  // FXAAã‚’è¡Œã†ãƒ¬ãƒ³ãƒ€ãƒªãƒ³ã‚°ã‚¿ãƒ¼ã‚²ãƒƒãƒˆã€‚
+        Sprite m_finalSprite;	// æœ€çµ‚åˆæˆç”¨ã®ã‚¹ãƒ—ãƒ©ã‚¤ãƒˆ
+        Sprite m_copySprite;    //ã€€
+        FaxxBuffer m_cB;        // è§£åƒåº¦ã‚’GPUã«é€ã‚‹ãŸã‚ã®å®šæ•°ãƒãƒƒãƒ•ã‚¡â€•ã€‚
     };
 }

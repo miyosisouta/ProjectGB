@@ -189,10 +189,13 @@ private:
 	/**
 	 * デバッグ用グループトグル入力
 	 *
-	 * F1 : Player 更新 ON/OFF
-	 * F2 : Boss   更新 ON/OFF
-	 * F3 : UI     更新 ON/OFF
-	 * F4 : Stage  更新 ON/OFF
+	 * F1 : Player  更新 ON/OFF
+	 * F3 : UI      更新 ON/OFF
+	 * F4 : Stage   更新 ON/OFF
+	 * F5 : Boss    更新 ON/OFF
+	 * F6 : Effect  更新 ON/OFF（Effekseer を一時停止）
+	 * F7 : Sound   更新 ON/OFF
+	 * F8 : UI      描画 ON/OFF
 	 */
 	void UpdateDebugGroupInput();
 #endif

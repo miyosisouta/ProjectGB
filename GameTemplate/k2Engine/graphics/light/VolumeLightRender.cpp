@@ -1,4 +1,4 @@
-#include "k2EnginePreCompile.h"
+ï»¿#include "k2EnginePreCompile.h"
 #include "VolumeLightRender.h"
 #include "VolumeSpotLight.h"
 
@@ -25,30 +25,30 @@ namespace nsK2Engine {
 	void VolumeLightRender::Render(RenderContext& rc, D3D12_CPU_DESCRIPTOR_HANDLE rtvHandle, D3D12_CPU_DESCRIPTOR_HANDLE dsvHandle)
 	{
         BeginGPUEvent("VolumeLightRender");
-        // ƒ{ƒŠƒ…[ƒ€ƒ‰ƒCƒg‚ð•`‰æ
+        // ãƒœãƒªãƒ¥ãƒ¼ãƒ ãƒ©ã‚¤ãƒˆã‚’æç”»
         for (auto& volumeLig : m_volumeSpotLightArray) {
-            // 1ƒpƒXA‘O–Ê‚ð•`‰æB
+            // 1ãƒ‘ã‚¹ã€å‰é¢ã‚’æç”»ã€‚
             rc.WaitUntilToPossibleSetRenderTarget(m_volumeLightMapFront);
             rc.SetRenderTargetAndViewport(m_volumeLightMapFront);
             rc.ClearRenderTargetView(m_volumeLightMapFront);
             volumeLig->DrawToVolumeLightMapFront(rc);
 
-            // 2ƒpƒXA”w–Ê‚ð•`‰æ
+            // 2ãƒ‘ã‚¹ã€èƒŒé¢ã‚’æç”»
             rc.WaitUntilToPossibleSetRenderTarget(m_volumeLightMapBack);
             rc.SetRenderTargetAndViewport(m_volumeLightMapBack);
             rc.ClearRenderTargetView(m_volumeLightMapBack);
             volumeLig->DrawToVolumeLightMapBack(rc);
             
-            // ‰œ‚ÆŽè‘O‚Ì‘‚«ž‚ÝŠ®—¹‘Ò‚¿
+            // å¥¥ã¨æ‰‹å‰ã®æ›¸ãè¾¼ã¿å®Œäº†å¾…ã¡
             rc.WaitUntilFinishDrawingToRenderTarget(m_volumeLightMapBack);
             rc.WaitUntilFinishDrawingToRenderTarget(m_volumeLightMapFront);
             
-            // 3ƒpƒXAÅI•`‰æ
+            // 3ãƒ‘ã‚¹ã€æœ€çµ‚æç”»
             rc.SetRenderTarget(rtvHandle, dsvHandle);
             rc.SetViewportAndScissor(g_graphicsEngine->GetFrameBufferViewport());
             volumeLig->DrawFinal(rc);
 
-            // ÅŒã‚ÉSSR‚Ì‚½‚ß‚Éƒ{ƒŠƒ…[ƒ€ƒ‰ƒCƒg‚Ì[“x’l‚ð‘‚«ž‚ÞB
+            // æœ€å¾Œã«SSRã®ãŸã‚ã«ãƒœãƒªãƒ¥ãƒ¼ãƒ ãƒ©ã‚¤ãƒˆã®æ·±åº¦å€¤ã‚’æ›¸ãè¾¼ã‚€ã€‚
             // volumeLig->DrawDepth(rc);
             
         }

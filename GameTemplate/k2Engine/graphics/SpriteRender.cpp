@@ -1,4 +1,4 @@
-#include "k2EnginePreCompile.h"
+ï»¿#include "k2EnginePreCompile.h"
 #include "SpriteRender.h"
 #include "RenderingEngine.h"
 
@@ -6,16 +6,16 @@ namespace nsK2Engine {
 	void SpriteRender::Init(const char* filePath, const float w, const float h, AlphaBlendMode alphaBlendMode)
 	{
 		SpriteInitData initData;
-		//DDSƒtƒ@ƒCƒ‹(‰æ‘œƒf[ƒ^)‚Ìƒtƒ@ƒCƒ‹ƒpƒX‚ğw’è‚·‚éB
+		//DDSãƒ•ã‚¡ã‚¤ãƒ«(ç”»åƒãƒ‡ãƒ¼ã‚¿)ã®ãƒ•ã‚¡ã‚¤ãƒ«ãƒ‘ã‚¹ã‚’æŒ‡å®šã™ã‚‹ã€‚
 		initData.m_ddsFilePath[0] = filePath;
-		//Sprite•\¦—p‚ÌƒVƒF[ƒ_[‚Ìƒtƒ@ƒCƒ‹ƒpƒX‚ğw’è‚·‚éB
+		//Spriteè¡¨ç¤ºç”¨ã®ã‚·ã‚§ãƒ¼ãƒ€ãƒ¼ã®ãƒ•ã‚¡ã‚¤ãƒ«ãƒ‘ã‚¹ã‚’æŒ‡å®šã™ã‚‹ã€‚
 		initData.m_fxFilePath = "Assets/shader/sprite.fx";
-		//ƒXƒvƒ‰ƒCƒg‚Ì•‚Æ‚‚³‚ğw’è‚·‚éB
+		//ã‚¹ãƒ—ãƒ©ã‚¤ãƒˆã®å¹…ã¨é«˜ã•ã‚’æŒ‡å®šã™ã‚‹ã€‚
 		initData.m_width = static_cast<UINT>(w);
 		initData.m_height = static_cast<UINT>(h);
 		initData.m_alphaBlendMode = alphaBlendMode;
 		
-		//Sprite‰Šú‰»ƒIƒuƒWƒFƒNƒg‚ğg—p‚µ‚ÄASprite‚ğ‰Šú‰»‚·‚éB
+		//SpriteåˆæœŸåŒ–ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã‚’ä½¿ç”¨ã—ã¦ã€Spriteã‚’åˆæœŸåŒ–ã™ã‚‹ã€‚
 		m_sprite.Init(initData);
 	}
 

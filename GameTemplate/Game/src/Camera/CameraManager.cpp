@@ -1,4 +1,4 @@
-#include "stdafx.h"
+ï»¿#include "stdafx.h"
 #include "CameraManager.h"
 
 
@@ -24,7 +24,7 @@ void CameraManager::Setup(nsK2EngineLow::Camera* engineCamera)
 void CameraManager::Register(const uint32_t nameHash, RefCameraController controller)
 {
     if (controllers_.find(nameHash) != controllers_.end()) {
-        // ‚·‚Å‚É“o˜^‚³‚ê‚Ä‚¢‚éê‡‚Í–³‹
+        // ã™ã§ã«ç™»éŒ²ã•ã‚Œã¦ã„ã‚‹å ´åˆã¯ç„¡è¦–
         return;
     }
     controllers_[nameHash] = controller;
@@ -34,7 +34,7 @@ void CameraManager::Register(const uint32_t nameHash, RefCameraController contro
 void CameraManager::Unregister(const uint32_t nameHash)
 {
     if (controllers_.find(nameHash) == controllers_.end()) {
-        // “o˜^‚³‚ê‚Ä‚¢‚È‚¢ê‡‚Í–³‹
+        // ç™»éŒ²ã•ã‚Œã¦ã„ãªã„å ´åˆã¯ç„¡è¦–
         return;
     }
     controllers_.erase(nameHash);
@@ -55,19 +55,19 @@ void CameraManager::SwitchCamera(RefCameraController controller, const float ble
     prev_ = current_;
 #endif
     if (!current_ || blendTime <= 0.0f) {
-        // ‘¦Ø‚è‘Ö‚¦
+        // å³æ™‚åˆ‡ã‚Šæ›¿ãˆ
         current_ = controller;
         current_->OnEnter();
         next_ = nullptr;
         isBlending_ = false;
     }
     else {
-        // ƒuƒŒƒ“ƒhŠJn
+        // ãƒ–ãƒ¬ãƒ³ãƒ‰é–‹å§‹
         if (current_ != controller) {
             next_ = controller;
             next_->OnEnter();
 
-            // Œ»İ‚ÌƒGƒ“ƒWƒ“ƒJƒƒ‰‚Ìó‘Ô‚ğƒuƒŒƒ“ƒhŠJn’n“_‚Æ‚µ‚Ä•Û‘¶
+            // ç¾åœ¨ã®ã‚¨ãƒ³ã‚¸ãƒ³ã‚«ãƒ¡ãƒ©ã®çŠ¶æ…‹ã‚’ãƒ–ãƒ¬ãƒ³ãƒ‰é–‹å§‹åœ°ç‚¹ã¨ã—ã¦ä¿å­˜
             blendStartData_.position = engineCamera_->GetPosition();
             blendStartData_.target = engineCamera_->GetTarget();
             blendStartData_.up = engineCamera_->GetUp();
@@ -89,7 +89,7 @@ void CameraManager::Update(const float deltaTime)
 
     CameraData applyData;
 
-    // ŠeƒRƒ“ƒgƒ[ƒ‰[‚ÌUpdate
+    // å„ã‚³ãƒ³ãƒˆãƒ­ãƒ¼ãƒ©ãƒ¼ã®Update
     if (current_) {
         current_->Update();
     }
@@ -97,11 +97,11 @@ void CameraManager::Update(const float deltaTime)
         next_->Update();
     }
 
-    // î•ñ‚ÌŒˆ’è
+    // æƒ…å ±ã®æ±ºå®š
     if (isBlending_ && next_) {
         blendTimer_ += deltaTime;
         const float t = blendTimer_ / blendDuration_;
-        // •ÛŠÇI—¹
+        // ä¿ç®¡çµ‚äº†
         if (t >= 1.0f) {
             isBlending_ = false;
             current_ = next_;
@@ -116,7 +116,7 @@ void CameraManager::Update(const float deltaTime)
         applyData = current_->GetCameraData();
     }
 
-    // 3. ƒGƒ“ƒWƒ“ƒJƒƒ‰‚Ö‚Ì”½‰f
+    // 3. ã‚¨ãƒ³ã‚¸ãƒ³ã‚«ãƒ¡ãƒ©ã¸ã®åæ˜ 
     engineCamera_->SetPosition(applyData.position);
     engineCamera_->SetTarget(applyData.target);
 }

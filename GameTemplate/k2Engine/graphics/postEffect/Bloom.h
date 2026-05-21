@@ -1,18 +1,18 @@
-#pragma once
+ï»¿#pragma once
 
 #include "graphics/postEffect/PostEffectComponentBase.h"
 
 namespace nsK2Engine {
     /// <summary>
-    /// ƒuƒ‹[ƒ€B
+    /// ãƒ–ãƒ«ãƒ¼ãƒ ã€‚
     /// </summary>
     class Bloom : public PostEffectComponentBase
     {
     public:
         /// <summary>
-        /// ‰Šú‰»B
+        /// åˆæœŸåŒ–ã€‚
         /// </summary>
-        /// <param name="mainRenderTarget">ƒƒCƒ“ƒŒƒ“ƒ_[ƒ^[ƒQƒbƒgB</param>
+        /// <param name="mainRenderTarget">ãƒ¡ã‚¤ãƒ³ãƒ¬ãƒ³ãƒ€ãƒ¼ã‚¿ãƒ¼ã‚²ãƒƒãƒˆã€‚</param>
         void OnInit(
             RenderTarget& mainRenderTarget,
             RenderTarget& zprepassRenderTarget,
@@ -20,13 +20,13 @@ namespace nsK2Engine {
             RenderTarget& metallicSmoothRenderTarget,
             RenderTarget& albedoRenderTarget) override;
         /// <summary>
-        /// •`‰æB
+        /// æç”»ã€‚
         /// </summary>
-        /// <param name="rc">ƒŒƒ“ƒ_\ƒRƒ“ƒeƒLƒXƒgB</param>
-        /// <param name="mainRenderTarget">ƒƒCƒ“ƒŒƒ“ƒ_\ƒ^[ƒQƒbƒgB</param>
+        /// <param name="rc">ãƒ¬ãƒ³ãƒ€â€•ã‚³ãƒ³ãƒ†ã‚­ã‚¹ãƒˆã€‚</param>
+        /// <param name="mainRenderTarget">ãƒ¡ã‚¤ãƒ³ãƒ¬ãƒ³ãƒ€â€•ã‚¿ãƒ¼ã‚²ãƒƒãƒˆã€‚</param>
         void OnRender(RenderContext& rc, RenderTarget& mainRenderTarget) override;
         /// <summary>
-        /// ƒ|ƒXƒgƒGƒtƒFƒNƒg‚ğÀs‚µ‚½Œ‹‰Ê‚Æ‚È‚éƒeƒNƒXƒ`ƒƒ‚ğæ“¾B
+        /// ãƒã‚¹ãƒˆã‚¨ãƒ•ã‚§ã‚¯ãƒˆã‚’å®Ÿè¡Œã—ãŸçµæœã¨ãªã‚‹ãƒ†ã‚¯ã‚¹ãƒãƒ£ã‚’å–å¾—ã€‚
         /// </summary>
         /// <returns></returns>
         Texture& GetResultTexture() override
@@ -34,7 +34,7 @@ namespace nsK2Engine {
             return m_luminanceRenderTarget.GetRenderTargetTexture();
         }
         /// <summary>
-        /// ƒuƒ‹[ƒ€‚ª”­¶‚·‚éè‡’l‚ğİ’èB
+        /// ãƒ–ãƒ«ãƒ¼ãƒ ãŒç™ºç”Ÿã™ã‚‹é–¾å€¤ã‚’è¨­å®šã€‚
         /// </summary>
         /// <param name="value"></param>
         void SetThreshold(float value)
@@ -42,7 +42,7 @@ namespace nsK2Engine {
             m_samplingLuminanceCB1.threshold = value;
         }
         /// <summary>
-        /// ƒuƒ‹[ƒ€‚ª”­¶‚·‚éè‡’l‚ğæ“¾B
+        /// ãƒ–ãƒ«ãƒ¼ãƒ ãŒç™ºç”Ÿã™ã‚‹é–¾å€¤ã‚’å–å¾—ã€‚
         /// </summary>
         /// <returns></returns>
         float GetThreshold() const
@@ -51,17 +51,17 @@ namespace nsK2Engine {
         }
     private:
         /// <summary>
-        /// ‹P“x’ŠoƒpƒX‚Ì’è”ƒoƒbƒtƒ@‚P‚É‘—‚é“à—eB
+        /// è¼åº¦æŠ½å‡ºãƒ‘ã‚¹ã®å®šæ•°ãƒãƒƒãƒ•ã‚¡ï¼‘ã«é€ã‚‹å†…å®¹ã€‚
         /// </summary>
         struct SSamplingLuminanceCB1 {
-            int isTonemap;      // ƒg[ƒ“ƒ}ƒbƒv‚ª—LŒøH
-            float middlegray;   // ƒ~ƒhƒ‹ƒOƒŒ[B
+            int isTonemap;      // ãƒˆãƒ¼ãƒ³ãƒãƒƒãƒ—ãŒæœ‰åŠ¹ï¼Ÿ
+            float middlegray;   // ãƒŸãƒ‰ãƒ«ã‚°ãƒ¬ãƒ¼ã€‚
             float threshold = 1.0f;
         };
-        RenderTarget m_luminanceRenderTarget;	//‹P“x’Šo—p‚ÌƒŒƒ“ƒ_ƒŠƒ“ƒOƒ^[ƒQƒbƒg
-        Sprite m_luminanceSprite;				//‹P“x’Šo—p‚ÌƒXƒvƒ‰ƒCƒg
-        GaussianBlur m_gaussianBlur[4];			//ƒKƒEƒVƒAƒ“ƒuƒ‰[
-        Sprite m_finalSprite;					//ÅI‡¬—p‚ÌƒXƒvƒ‰ƒCƒg
+        RenderTarget m_luminanceRenderTarget;	//è¼åº¦æŠ½å‡ºç”¨ã®ãƒ¬ãƒ³ãƒ€ãƒªãƒ³ã‚°ã‚¿ãƒ¼ã‚²ãƒƒãƒˆ
+        Sprite m_luminanceSprite;				//è¼åº¦æŠ½å‡ºç”¨ã®ã‚¹ãƒ—ãƒ©ã‚¤ãƒˆ
+        GaussianBlur m_gaussianBlur[4];			//ã‚¬ã‚¦ã‚·ã‚¢ãƒ³ãƒ–ãƒ©ãƒ¼
+        Sprite m_finalSprite;					//æœ€çµ‚åˆæˆç”¨ã®ã‚¹ãƒ—ãƒ©ã‚¤ãƒˆ
         SSamplingLuminanceCB1 m_samplingLuminanceCB1;
     };
 }

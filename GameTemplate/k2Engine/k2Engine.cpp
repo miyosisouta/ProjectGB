@@ -1,4 +1,4 @@
-#include "k2EnginePreCompile.h"
+ï»¿#include "k2EnginePreCompile.h"
 #include "k2Engine.h"
 #include "dbg/dbgVectorRenderer.h"
 
@@ -19,8 +19,8 @@ namespace nsK2Engine {
 		raytracintInitData.m_expandShaderResource = &m_renderingEngine.GetRaytracingLightData();
 		raytracintInitData.m_expandShaderResourceSize = sizeof(m_renderingEngine.GetRaytracingLightData());
 #ifdef COPY_RAYTRACING_FRAMEBUFFER
-		// ƒtƒŒ[ƒ€ƒoƒbƒtƒ@‚ÉƒRƒs[‚·‚éê‡‚ÍAƒŒƒCƒgƒŒ‚Ìo—Íæ‚ÌƒJƒ‰[ƒoƒbƒtƒ@‚ÌƒtƒH[ƒ}ƒbƒg‚ğ
-		// ƒtƒŒ[ƒ€ƒoƒbƒtƒ@‚Æ“¯‚¶‚É‚·‚éB
+		// ãƒ•ãƒ¬ãƒ¼ãƒ ãƒãƒƒãƒ•ã‚¡ã«ã‚³ãƒ”ãƒ¼ã™ã‚‹å ´åˆã¯ã€ãƒ¬ã‚¤ãƒˆãƒ¬ã®å‡ºåŠ›å…ˆã®ã‚«ãƒ©ãƒ¼ãƒãƒƒãƒ•ã‚¡ã®ãƒ•ã‚©ãƒ¼ãƒãƒƒãƒˆã‚’
+		// ãƒ•ãƒ¬ãƒ¼ãƒ ãƒãƒƒãƒ•ã‚¡ã¨åŒã˜ã«ã™ã‚‹ã€‚
 		raytracintInitData.m_outputColorBufferFormat = DXGI_FORMAT_R8G8B8A8_UNORM;
 #endif // #ifdef COPY_RAYTRACING_FRAMEBUFFER
 		m_k2EngineLow.Init(
@@ -33,7 +33,7 @@ namespace nsK2Engine {
 		g_camera3D->SetPosition({ 0.0f, 100.0f, -200.0f });
 		g_camera3D->SetTarget({ 0.0f, 50.0f, 0.0f });
 #ifdef K2_DEBUG
-		// ƒfƒoƒbƒOƒxƒNƒgƒ‹ƒŒƒ“ƒ_ƒ‰[‚ğì¬‚·‚éB
+		// ãƒ‡ãƒãƒƒã‚°ãƒ™ã‚¯ãƒˆãƒ«ãƒ¬ãƒ³ãƒ€ãƒ©ãƒ¼ã‚’ä½œæˆã™ã‚‹ã€‚
 		m_vectorRenderer = NewGO<nsDbg::VectorRenderer>(0);
 #endif // #ifdef K2_DEBUG
 	}
@@ -54,18 +54,18 @@ namespace nsK2Engine {
 		g_engine->BeginFrame();
 
 		g_engine->ExecuteUpdate();
-		// ƒŒƒ“ƒ_ƒŠƒ“ƒOƒGƒ“ƒWƒ“‚ÌXVB
+		// ãƒ¬ãƒ³ãƒ€ãƒªãƒ³ã‚°ã‚¨ãƒ³ã‚¸ãƒ³ã®æ›´æ–°ã€‚
 		m_renderingEngine.Update();
 		
 		g_engine->ExecuteRender();
-		//ƒŒƒ“ƒ_ƒŠƒ“ƒOƒGƒ“ƒWƒ“‚ğÀsB		
+		//ãƒ¬ãƒ³ãƒ€ãƒªãƒ³ã‚°ã‚¨ãƒ³ã‚¸ãƒ³ã‚’å®Ÿè¡Œã€‚		
 		m_renderingEngine.Execute(renderContext);
 		
-		//“–‚½‚è”»’è•`‰æB
+		//å½“ãŸã‚Šåˆ¤å®šæç”»ã€‚
 		g_engine->DebubDrawWorld();
 
 		//////////////////////////////////////
-		//ŠG‚ğ•`‚­ƒR[ƒh‚ğ‘‚­‚Ì‚Í‚±‚±‚Ü‚ÅIII
+		//çµµã‚’æãã‚³ãƒ¼ãƒ‰ã‚’æ›¸ãã®ã¯ã“ã“ã¾ã§ï¼ï¼ï¼
 		//////////////////////////////////////
 		g_engine->EndFrame();
 	}

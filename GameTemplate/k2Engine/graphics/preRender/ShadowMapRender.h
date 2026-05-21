@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 
 #include "CascadeShadowMapMatrix.h"
 
@@ -6,26 +6,26 @@
 namespace nsK2Engine {
     class IRenderer;
     /// <summary>
-    /// ƒVƒƒƒhƒEƒ}ƒbƒv‚Ö‚Ì•`‰æˆ—
+    /// ã‚·ãƒ£ãƒ‰ã‚¦ãƒãƒƒãƒ—ã¸ã®æç”»å‡¦ç†
     /// </summary>
     class ShadowMapRender : public Noncopyable
     {
     public:
         /// <summary>
-        /// ‰Šú‰»
+        /// åˆæœŸåŒ–
         /// </summary>
         /// <param name="isSoftShadow">
-        /// true‚Ìê‡AƒVƒƒƒhƒEƒ}ƒbƒv–@‚É‚æ‚éA‰e¶¬‚ªƒ\ƒtƒgƒVƒƒƒhƒE‚É‚È‚è‚Ü‚·B
-        /// ƒn[ƒhƒVƒƒƒhƒE‚É‚µ‚½‚¢ê‡‚ÍAfalse‚ğw’è‚µ‚Ä‚­‚¾‚³‚¢B
+        /// trueã®å ´åˆã€ã‚·ãƒ£ãƒ‰ã‚¦ãƒãƒƒãƒ—æ³•ã«ã‚ˆã‚‹ã€å½±ç”ŸæˆãŒã‚½ãƒ•ãƒˆã‚·ãƒ£ãƒ‰ã‚¦ã«ãªã‚Šã¾ã™ã€‚
+        /// ãƒãƒ¼ãƒ‰ã‚·ãƒ£ãƒ‰ã‚¦ã«ã—ãŸã„å ´åˆã¯ã€falseã‚’æŒ‡å®šã—ã¦ãã ã•ã„ã€‚
         /// </param>
         void Init(bool isSoftShadow);
 
         /// <summary>
-        /// •`‰æ
+        /// æç”»
         /// </summary>
-        /// <param name="rc">ƒŒƒ“ƒ_ƒŠƒ“ƒOƒRƒ“ƒeƒLƒXƒg</param>
-        /// <param name="sceneMaxPosition">ƒQ[ƒ€ƒV[ƒ“‚ÌÅ‘åÀ•W</param>
-        /// <param name="sceneMinPosition">ƒQ[ƒ€ƒV[ƒ“‚ÌÅ¬À•W</param>
+        /// <param name="rc">ãƒ¬ãƒ³ãƒ€ãƒªãƒ³ã‚°ã‚³ãƒ³ãƒ†ã‚­ã‚¹ãƒˆ</param>
+        /// <param name="sceneMaxPosition">ã‚²ãƒ¼ãƒ ã‚·ãƒ¼ãƒ³ã®æœ€å¤§åº§æ¨™</param>
+        /// <param name="sceneMinPosition">ã‚²ãƒ¼ãƒ ã‚·ãƒ¼ãƒ³ã®æœ€å°åº§æ¨™</param>
         void Render(
             RenderContext& rc,
             int ligNo,
@@ -35,9 +35,9 @@ namespace nsK2Engine {
             const Vector3& sceneMinPosition
         );
         /// <summary>
-        /// ƒVƒƒƒhƒEƒ}ƒbƒv‚ğæ“¾
+        /// ã‚·ãƒ£ãƒ‰ã‚¦ãƒãƒƒãƒ—ã‚’å–å¾—
         /// </summary>
-        /// <param name="areaNo">ƒGƒŠƒA”Ô†</param>
+        /// <param name="areaNo">ã‚¨ãƒªã‚¢ç•ªå·</param>
         /// <returns></returns>
         Texture& GetShadowMap(int areaNo)
         {
@@ -47,7 +47,7 @@ namespace nsK2Engine {
             return m_shadowMaps[areaNo].GetRenderTargetTexture();
         }
         /// <summary>
-        /// ƒ‰ƒCƒgƒrƒ…[ƒvƒƒWƒFƒNƒVƒ‡ƒ“s—ñ‚ğæ“¾
+        /// ãƒ©ã‚¤ãƒˆãƒ“ãƒ¥ãƒ¼ãƒ—ãƒ­ã‚¸ã‚§ã‚¯ã‚·ãƒ§ãƒ³è¡Œåˆ—ã‚’å–å¾—
         /// </summary>
         /// <returns></returns>
         const Matrix& GetLVPMatrix(int areaNo) const
@@ -55,36 +55,36 @@ namespace nsK2Engine {
             return m_cascadeShadowMapMatrix.GetLightViewProjectionCropMatrix(areaNo);
         }
         /// <summary>
-        /// ƒJƒXƒP[ƒhƒVƒƒƒhƒE‚ÌƒGƒŠƒA—¦‚ğİ’èB
+        /// ã‚«ã‚¹ã‚±ãƒ¼ãƒ‰ã‚·ãƒ£ãƒ‰ã‚¦ã®ã‚¨ãƒªã‚¢ç‡ã‚’è¨­å®šã€‚
         /// </summary>
         /// <remark>
-        /// ƒQ[ƒ€ƒJƒƒ‰‚Ì‹ß•½–Ê‚©‚ç‰“•½–Ê‚Ü‚Å‚ÌƒGƒŠƒA‚ÌA‰½%‚Ì”ÍˆÍ‚ğ‹ß‹——£—p‚Ì‚‰ğ‘œ“x‚ÌƒVƒƒƒhƒEƒ}ƒbƒv‚ÉA
-        /// ‰½%‚ğ’†‹——£—p‚ÌƒVƒƒƒhƒEƒ}ƒbƒv‚ÉA‰½%‚ğ‰“‹——£—p‚ÌƒVƒƒƒhƒEƒ}ƒbƒv‚É•`‰æ‚·‚é‚©‚ğw’è‚µ‚½‚à‚ÌB
-        /// —á‚¦‚ÎAnearArea  = 0.1(10%)AmiddleArea = 0.3(30%), farArea = 0.8(80%)‚Æw’è‚³‚ê‚Ä‚¢‚½‚çA
-        /// ƒJƒƒ‰‚©‚ç10%‚ÌƒGƒŠƒA‚Í‹ß‹——£—p‚ÌƒVƒƒƒhƒEƒ}ƒbƒv‚É•`‰æA
-        /// ƒJƒƒ‰‚©‚ç10%`30%‚ÌƒGƒŠƒA‚Í’†‹——£—p‚ÌƒVƒƒƒhƒEƒ}ƒbƒv‚É•`‰æA
-        /// ƒJƒƒ‰‚©‚ç30%`80%‚ÌƒGƒŠƒA‚Í‰“‹——£—p‚ÌƒVƒƒƒhƒEƒ}ƒbƒv‚É•`‰æ‚Æ‚È‚éB
-        /// ‰e‚Ì•i¿‚Ì’²®‚Ég‚Á‚Ä‚­‚¾‚³‚¢B
+        /// ã‚²ãƒ¼ãƒ ã‚«ãƒ¡ãƒ©ã®è¿‘å¹³é¢ã‹ã‚‰é å¹³é¢ã¾ã§ã®ã‚¨ãƒªã‚¢ã®ã€ä½•%ã®ç¯„å›²ã‚’è¿‘è·é›¢ç”¨ã®é«˜è§£åƒåº¦ã®ã‚·ãƒ£ãƒ‰ã‚¦ãƒãƒƒãƒ—ã«ã€
+        /// ä½•%ã‚’ä¸­è·é›¢ç”¨ã®ã‚·ãƒ£ãƒ‰ã‚¦ãƒãƒƒãƒ—ã«ã€ä½•%ã‚’é è·é›¢ç”¨ã®ã‚·ãƒ£ãƒ‰ã‚¦ãƒãƒƒãƒ—ã«æç”»ã™ã‚‹ã‹ã‚’æŒ‡å®šã—ãŸã‚‚ã®ã€‚
+        /// ä¾‹ãˆã°ã€nearArea  = 0.1(10%)ã€middleArea = 0.3(30%), farArea = 0.8(80%)ã¨æŒ‡å®šã•ã‚Œã¦ã„ãŸã‚‰ã€
+        /// ã‚«ãƒ¡ãƒ©ã‹ã‚‰10%ã®ã‚¨ãƒªã‚¢ã¯è¿‘è·é›¢ç”¨ã®ã‚·ãƒ£ãƒ‰ã‚¦ãƒãƒƒãƒ—ã«æç”»ã€
+        /// ã‚«ãƒ¡ãƒ©ã‹ã‚‰10%ï½30%ã®ã‚¨ãƒªã‚¢ã¯ä¸­è·é›¢ç”¨ã®ã‚·ãƒ£ãƒ‰ã‚¦ãƒãƒƒãƒ—ã«æç”»ã€
+        /// ã‚«ãƒ¡ãƒ©ã‹ã‚‰30%ï½80%ã®ã‚¨ãƒªã‚¢ã¯é è·é›¢ç”¨ã®ã‚·ãƒ£ãƒ‰ã‚¦ãƒãƒƒãƒ—ã«æç”»ã¨ãªã‚‹ã€‚
+        /// å½±ã®å“è³ªã®èª¿æ•´ã«ä½¿ã£ã¦ãã ã•ã„ã€‚
         /// </remark>
-        /// <param name="nearArea">‹ß‰eƒGƒŠƒA—¦B</param>
+        /// <param name="nearArea">è¿‘å½±ã‚¨ãƒªã‚¢ç‡ã€‚</param>
         void SetCascadeNearAreaRates(float nearArea, float middleArea, float farArea)
         {
-            // ’†‹——£ƒGƒŠƒA‚Ì”ÍˆÍ‚ª‹ß‹——£ƒGƒŠƒA‚Ì”ÍˆÍ‚æ‚è¬‚³‚­‚È‚Á‚Ä‚¢‚é‚Æ
-            // ŒvZã•s“s‡‚ª‹N‚«‚é‚Ì‚ÅA•â³B
+            // ä¸­è·é›¢ã‚¨ãƒªã‚¢ã®ç¯„å›²ãŒè¿‘è·é›¢ã‚¨ãƒªã‚¢ã®ç¯„å›²ã‚ˆã‚Šå°ã•ããªã£ã¦ã„ã‚‹ã¨
+            // è¨ˆç®—ä¸Šä¸éƒ½åˆãŒèµ·ãã‚‹ã®ã§ã€è£œæ­£ã€‚
             middleArea = max(nearArea + 0.01f, middleArea);
-            // ‰“‚¢‹——£ƒGƒŠƒA‚Ì”ÍˆÍ‚ª’†‹——£ƒGƒŠƒA‚Ì”ÍˆÍ‚æ‚è¬‚³‚­‚È‚Á‚Ä‚¢‚é‚Æ
-            // ŒvZã•s“s‡‚ª‹N‚«‚é‚Ì‚ÅA•â³B
+            // é ã„è·é›¢ã‚¨ãƒªã‚¢ã®ç¯„å›²ãŒä¸­è·é›¢ã‚¨ãƒªã‚¢ã®ç¯„å›²ã‚ˆã‚Šå°ã•ããªã£ã¦ã„ã‚‹ã¨
+            // è¨ˆç®—ä¸Šä¸éƒ½åˆãŒèµ·ãã‚‹ã®ã§ã€è£œæ­£ã€‚
             farArea = max(middleArea + 0.01f, farArea);
             m_cascadeAreaRateArray[SHADOW_MAP_AREA_NEAR] = nearArea;
             m_cascadeAreaRateArray[SHADOW_MAP_AREA_MIDDLE] = middleArea;
             m_cascadeAreaRateArray[SHADOW_MAP_AREA_FAR] = farArea;
         }
     private:
-        CascadeShadowMapMatrix m_cascadeShadowMapMatrix;    // ƒJƒXƒP[ƒhƒVƒƒƒhƒEƒ}ƒbƒv‚Ìs—ñ‚ğˆµ‚¤ƒIƒuƒWƒFƒNƒg
-        RenderTarget m_shadowMaps[NUM_SHADOW_MAP];          // ƒVƒƒƒhƒEƒ}ƒbƒv
-        std::vector< IRenderer* > m_renderers;              // ƒVƒƒƒhƒEƒ}ƒbƒv‚Ö‚ÌƒŒƒ“ƒ_ƒ‰[‚Ì”z—ñB
+        CascadeShadowMapMatrix m_cascadeShadowMapMatrix;    // ã‚«ã‚¹ã‚±ãƒ¼ãƒ‰ã‚·ãƒ£ãƒ‰ã‚¦ãƒãƒƒãƒ—ã®è¡Œåˆ—ã‚’æ‰±ã†ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆ
+        RenderTarget m_shadowMaps[NUM_SHADOW_MAP];          // ã‚·ãƒ£ãƒ‰ã‚¦ãƒãƒƒãƒ—
+        std::vector< IRenderer* > m_renderers;              // ã‚·ãƒ£ãƒ‰ã‚¦ãƒãƒƒãƒ—ã¸ã®ãƒ¬ãƒ³ãƒ€ãƒ©ãƒ¼ã®é…åˆ—ã€‚
         float m_cascadeAreaRateArray[NUM_SHADOW_MAP] = { 0.05f,0.3f, 1.0f };
-        GaussianBlur m_blur[NUM_SHADOW_MAP];                // ƒVƒƒƒhƒEƒ}ƒbƒv‚Éƒuƒ‰[‚ğ‚©‚¯‚éˆ—Bƒ\ƒtƒgƒVƒƒƒhƒE‚ğs‚¤Û‚Ég‚í‚ê‚Ü‚·B
-        bool m_isSoftShadow = false;                        // ƒ\ƒtƒgƒVƒƒƒhƒEH
+        GaussianBlur m_blur[NUM_SHADOW_MAP];                // ã‚·ãƒ£ãƒ‰ã‚¦ãƒãƒƒãƒ—ã«ãƒ–ãƒ©ãƒ¼ã‚’ã‹ã‘ã‚‹å‡¦ç†ã€‚ã‚½ãƒ•ãƒˆã‚·ãƒ£ãƒ‰ã‚¦ã‚’è¡Œã†éš›ã«ä½¿ã‚ã‚Œã¾ã™ã€‚
+        bool m_isSoftShadow = false;                        // ã‚½ãƒ•ãƒˆã‚·ãƒ£ãƒ‰ã‚¦ï¼Ÿ
     };
 }

@@ -1,10 +1,10 @@
-#pragma once
+ï»¿#pragma once
 #include "src/Skill/ISkill.h"
 
 class TaskSchedulerSystem;
 class GhostBody;
  /*========================================*/
- /** ’ÊíUŒ‚‚ÌŠî’êƒNƒ‰ƒX */
+ /** é€šå¸¸æ”»æ’ƒã®åŸºåº•ã‚¯ãƒ©ã‚¹ */
  /*========================================*/
 class NormalAttackBase : public ISkill
 {	
@@ -22,7 +22,7 @@ public:
 
 
 /*========================================*/
-/** ‚©‚İ‚Â‚«ƒNƒ‰ƒX */
+/** ã‹ã¿ã¤ãã‚¯ãƒ©ã‚¹ */
 /*========================================*/
 class Bite : public NormalAttackBase
 {

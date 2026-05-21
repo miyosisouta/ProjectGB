@@ -1,4 +1,4 @@
-#include "k2EnginePreCompile.h"
+﻿#include "k2EnginePreCompile.h"
 #include "CollisionObject.h"
 
 namespace nsK2Engine {

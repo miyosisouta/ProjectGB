@@ -1,4 +1,4 @@
-/**
+﻿/**
  * BroadphaseInterface.h
  * 広域衝突判定のインターフェース
  */

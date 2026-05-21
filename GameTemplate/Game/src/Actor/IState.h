@@ -1,17 +1,17 @@
-#pragma once
+ï»¿#pragma once
 /*
- * State‚ÌŠî’êƒNƒ‰ƒX
+ * Stateã®åŸºåº•ã‚¯ãƒ©ã‚¹
  */
 class Character;
 class IState : public Noncopyable
 {	
 protected:
-	bool isFinished_ = false; //!< Œ»İ‚ÌƒXƒe[ƒgˆ—‚ªI‚í‚Á‚½‚©
+	bool isFinished_ = false; //!< ç¾åœ¨ã®ã‚¹ãƒ†ãƒ¼ãƒˆå‡¦ç†ãŒçµ‚ã‚ã£ãŸã‹
 	std::unique_ptr<TaskSchedulerSystem> taskScheduler_;
 	std::unique_ptr<GhostBody> attackHitbox_;
 
 public:
-	/** Ÿ‚Ìˆ—‚És‚Á‚Ä‚à‚æ‚¢‚© */
+	/** æ¬¡ã®å‡¦ç†ã«è¡Œã£ã¦ã‚‚ã‚ˆã„ã‹ */
 	virtual bool IsFinished() const { return isFinished_; }
 	virtual bool IsCancelable() const { return false; }
 

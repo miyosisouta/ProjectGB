@@ -1,29 +1,29 @@
-#pragma once
+ï»¿#pragma once
 #include "IState.h"
 #include "src/Actor/Character.h"
 class BossCharacter;
 /*
- * State‚ÌŠî’êƒNƒ‰ƒX
+ * Stateã®åŸºåº•ã‚¯ãƒ©ã‚¹
  */
 class BossStateBase: public IState
 {	
 protected:
-	BossCharacter* boss_; //!< ƒvƒŒƒCƒ„[
+	BossCharacter* boss_; //!< ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼
 
 
 protected:
-	/** ƒvƒŒƒCƒ„[‚ÉŒü‚¯‚ÄˆÚ“®‘¬“x‚ğŒvZ‚·‚é‹¤’Êˆ— */
+	/** ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã«å‘ã‘ã¦ç§»å‹•é€Ÿåº¦ã‚’è¨ˆç®—ã™ã‚‹å…±é€šå‡¦ç† */
 	Vector3 CalcMovePlayerVelocity(float speed);
-	/** w’è‚µ‚½êŠ‚ÉŒü‚¯‚ÄˆÚ“®‘¬“x‚ğŒvZ‚·‚é‹¤’Êˆ— */
+	/** æŒ‡å®šã—ãŸå ´æ‰€ã«å‘ã‘ã¦ç§»å‹•é€Ÿåº¦ã‚’è¨ˆç®—ã™ã‚‹å…±é€šå‡¦ç† */
 	Vector3 CalcVelocityTowards(Vector3 targetPos, float speed);
-	/** ƒ^[ƒQƒbƒg‚ÉŒü‚©‚¤‰ñ“]‚Ì‹¤’Êˆ— */
+	/** ã‚¿ãƒ¼ã‚²ãƒƒãƒˆã«å‘ã‹ã†å›è»¢ã®å…±é€šå‡¦ç† */
 	Quaternion RotateToTarget(float rotateSpeed);
 
 
 public:
 	/*
-	 * ƒRƒ“ƒXƒgƒ‰ƒNƒ^
-	 * chara : ƒLƒƒƒ‰ƒNƒ^[‚Ìî•ñ‚ğ“n‚·‚½‚ß
+	 * ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
+	 * chara : ã‚­ãƒ£ãƒ©ã‚¯ã‚¿ãƒ¼ã®æƒ…å ±ã‚’æ¸¡ã™ãŸã‚
 	 */
 	BossStateBase(BossCharacter* chara) : boss_(chara) {}
 	virtual ~BossStateBase() {}
@@ -37,13 +37,13 @@ public:
 };
 
 /*==========================================*/
-// ‘Ò‹@‚Ìó‘Ô
+// å¾…æ©Ÿã®çŠ¶æ…‹
 /*==========================================*/
 
 class BossIdleState : public BossStateBase
 {
 public:
-	/* ˆ—‚ªI‚í‚Á‚½‚© */
+	/* å‡¦ç†ãŒçµ‚ã‚ã£ãŸã‹ */
 	bool IsFinished() const override { return isFinished_; }
 
 public:
@@ -56,16 +56,16 @@ public:
 
 
 /*==========================================*/
-// ‘–‚éó‘Ô
+// èµ°ã‚‹çŠ¶æ…‹
 /*==========================================*/
 class BossRunState : public BossStateBase
 {
 private:
-	/* –Ú•WÀ•W */
+	/* ç›®æ¨™åº§æ¨™ */
 	float goalPos_ = 0.0f;
 
 public:
-	/* ˆ—‚ªI‚í‚Á‚½‚© */
+	/* å‡¦ç†ãŒçµ‚ã‚ã£ãŸã‹ */
 	bool IsFinished() const override{ return isFinished_; }
 
 public:
@@ -78,12 +78,12 @@ public:
 
 
 /*==========================================*/
-// ’ÊíUŒ‚ó‘Ô
+// é€šå¸¸æ”»æ’ƒçŠ¶æ…‹
 /*==========================================*/
 class BossAttackState : public BossStateBase
 {
 public:
-	/* ˆ—‚ªI‚í‚Á‚½‚© */
+	/* å‡¦ç†ãŒçµ‚ã‚ã£ãŸã‹ */
 	bool IsFinished() const override { return isFinished_; }
 
 public:
@@ -97,33 +97,33 @@ public:
 
 
 /*==========================================*/
-// ƒqƒbƒgƒXƒ^ƒ“ƒvUŒ‚
+// ãƒ’ãƒƒãƒˆã‚¹ã‚¿ãƒ³ãƒ—æ”»æ’ƒ
 /*==========================================*/
 class HitStampState : public BossStateBase
 {
 private:
 	enum Phase
 	{
-		Ready,			//!< €”õ’†
-		JumpUp,			//!< ã¸’†
-		Hover,			//!< ‹ó’†‘Ò‹@’†
-		FallDown,		//!< ‹}~‰º’†
-		ShokingStamp,	//!< ’…’n
-		Finished		//!< ’…’nŒã
+		Ready,			//!< æº–å‚™ä¸­
+		JumpUp,			//!< ä¸Šæ˜‡ä¸­
+		Hover,			//!< ç©ºä¸­å¾…æ©Ÿä¸­
+		FallDown,		//!< æ€¥é™ä¸‹ä¸­
+		ShokingStamp,	//!< ç€åœ°æ™‚
+		Finished		//!< ç€åœ°å¾Œ
 	};
 
 private:
-	Phase phase_ = Phase::Ready; //!< UŒ‚’iŠK
-	Vector3 targetPos_ = Vector3::Zero; //!< ˆÚ“®æ‚ÌÀ•W
-	Vector3 nextTargetPos_ = Vector3::Zero; //!< Ÿ‚ÌˆÚ“®æ‚ÌÀ•W
+	Phase phase_ = Phase::Ready; //!< æ”»æ’ƒæ®µéš
+	Vector3 targetPos_ = Vector3::Zero; //!< ç§»å‹•å…ˆã®åº§æ¨™
+	Vector3 nextTargetPos_ = Vector3::Zero; //!< æ¬¡ã®ç§»å‹•å…ˆã®åº§æ¨™
 	Vector3 fixedAttackPos_ = Vector3::Zero;
-	float verticalVelocity_ = 0.0f;  //!< ‚’¼‘¬“x
-	float gravity_ = 0.0f;        //!< d—Í
-	bool createAttackCollision_ = false; //!< UŒ‚—pƒRƒŠƒWƒ‡ƒ“‚ğì¬‚µ‚½‚©‚Ìƒtƒ‰ƒO
-	EffectHandle predictionEffectHandle_ = INVALID_EFFECT_HANDLE; //!< UŒ‚—\‘ªƒGƒtƒFƒNƒg‚Ìƒnƒ“ƒhƒ‹
+	float verticalVelocity_ = 0.0f;  //!< å‚ç›´é€Ÿåº¦
+	float gravity_ = 0.0f;        //!< é‡åŠ›
+	bool createAttackCollision_ = false; //!< æ”»æ’ƒç”¨ã‚³ãƒªã‚¸ãƒ§ãƒ³ã‚’ä½œæˆã—ãŸã‹ã®ãƒ•ãƒ©ã‚°
+	EffectHandle predictionEffectHandle_ = INVALID_EFFECT_HANDLE; //!< æ”»æ’ƒäºˆæ¸¬ã‚¨ãƒ•ã‚§ã‚¯ãƒˆã®ãƒãƒ³ãƒ‰ãƒ«
 	
 public:
-	/* ˆ—‚ªI‚í‚è‚© */
+	/* å‡¦ç†ãŒçµ‚ã‚ã‚Šã‹ */
 	bool IsFinished() const override { return isFinished_; }
 
 public:
@@ -136,18 +136,18 @@ public:
 
 
 /*==========================================*/
-// ‰ñ“]UŒ‚
+// å›è»¢æ”»æ’ƒ
 /*==========================================*/
 class SpinState : public BossStateBase
 {
 private:
-	Vector3 targetPos_ = Vector3::Zero; //!< UŒ‚‘ÎÛ‚ÌÀ•W
-	bool isAttackStart_ = false; //!< UŒ‚‚ğƒXƒ^[ƒg‚·‚é‚©
-	EffectHandle spinEffectHandle_ = INVALID_EFFECT_HANDLE; //!< ‰ñ“]ƒGƒtƒFƒNƒg‚Ìƒnƒ“ƒhƒ‹
-	EffectHandle predictionEffectHandle_ = INVALID_EFFECT_HANDLE; //!< UŒ‚—\‘ª—pƒGƒtƒFƒNƒg‚ÌƒIƒnƒ“ƒhƒ‹
+	Vector3 targetPos_ = Vector3::Zero; //!< æ”»æ’ƒå¯¾è±¡ã®åº§æ¨™
+	bool isAttackStart_ = false; //!< æ”»æ’ƒã‚’ã‚¹ã‚¿ãƒ¼ãƒˆã™ã‚‹ã‹
+	EffectHandle spinEffectHandle_ = INVALID_EFFECT_HANDLE; //!< å›è»¢ã‚¨ãƒ•ã‚§ã‚¯ãƒˆã®ãƒãƒ³ãƒ‰ãƒ«
+	EffectHandle predictionEffectHandle_ = INVALID_EFFECT_HANDLE; //!< æ”»æ’ƒäºˆæ¸¬ç”¨ã‚¨ãƒ•ã‚§ã‚¯ãƒˆã®ã‚ªãƒãƒ³ãƒ‰ãƒ«
 
 public:
-	/* ˆ—‚ªI‚í‚è‚© */
+	/* å‡¦ç†ãŒçµ‚ã‚ã‚Šã‹ */
 	bool IsFinished() const override { return isFinished_; }
 
 public:
@@ -160,26 +160,26 @@ public:
 
 
 /*==========================================*/
-// Šâ‚ğ“Š‚°‚éUŒ‚
+// å²©ã‚’æŠ•ã’ã‚‹æ”»æ’ƒ
 /*==========================================*/
 class ThrowRockState : public BossStateBase
 {
 private:
 	enum Phase
 	{
-		enReady,	//!< €”õ
-		enPredict,	//!< —\‘ª
-		enThrow,	//!< UŒ‚
-		enDone,		//!< ‰½‚à‚È‚µ
+		enReady,	//!< æº–å‚™
+		enPredict,	//!< äºˆæ¸¬
+		enThrow,	//!< æ”»æ’ƒ
+		enDone,		//!< ä½•ã‚‚ãªã—
 	};
 
 private:
-	Phase phase_ = Phase::enReady; //!< UŒ‚’iŠK
-	Vector3 targetPos_ = Vector3::Zero; //!< UŒ‚‘ÎÛ‚ÌÀ•W
-	EffectHandle predictionEffectHandle_ = INVALID_EFFECT_HANDLE; // —\‘ªƒGƒtƒFƒNƒg‚Ìƒnƒ“ƒhƒ‹
+	Phase phase_ = Phase::enReady; //!< æ”»æ’ƒæ®µéš
+	Vector3 targetPos_ = Vector3::Zero; //!< æ”»æ’ƒå¯¾è±¡ã®åº§æ¨™
+	EffectHandle predictionEffectHandle_ = INVALID_EFFECT_HANDLE; // äºˆæ¸¬ã‚¨ãƒ•ã‚§ã‚¯ãƒˆã®ãƒãƒ³ãƒ‰ãƒ«
 
 public:
-	/* ˆ—‚ªI‚í‚è‚© */
+	/* å‡¦ç†ãŒçµ‚ã‚ã‚Šã‹ */
 	bool IsFinished() const override { return isFinished_; }
 
 
@@ -194,53 +194,53 @@ public:
 
 
 /*==========================================*/
-// ƒŒ[ƒU[UŒ‚
+// ãƒ¬ãƒ¼ã‚¶ãƒ¼æ”»æ’ƒ
 /*==========================================*/
 class LaserState : public BossStateBase
 {
 private:
-	/* ˆ—’iŠK */
+	/* å‡¦ç†æ®µéš */
 	enum Phase
 	{
-		enReady,	//!< €”õ
-		enPredict,	//!< —\‘ª
-		enShot,		//!< ”­Ë
-		enDone,		//!< ‰½‚à‚È‚µ
+		enReady,	//!< æº–å‚™
+		enPredict,	//!< äºˆæ¸¬
+		enShot,		//!< ç™ºå°„
+		enDone,		//!< ä½•ã‚‚ãªã—
 	};
 
-	/* UŒ‚ƒpƒ^[ƒ“ */
+	/* æ”»æ’ƒãƒ‘ã‚¿ãƒ¼ãƒ³ */
 	enum Mode 
 	{
-		enNormal,	//!< ƒNƒCƒbƒNUŒ‚
-		enMult,		//!< ˜A”­‚·‚éUŒ‚
-		enCharge,	//!< ƒ`ƒƒ[ƒWUŒ‚
-		enMax,		//!< UŒ‚è’i‚Ì”
-		enWeightMax = 10 //!< d‚İ‚Ì‡Œv
+		enNormal,	//!< ã‚¯ã‚¤ãƒƒã‚¯æ”»æ’ƒ
+		enMult,		//!< é€£ç™ºã™ã‚‹æ”»æ’ƒ
+		enCharge,	//!< ãƒãƒ£ãƒ¼ã‚¸æ”»æ’ƒ
+		enMax,		//!< æ”»æ’ƒæ‰‹æ®µã®æ•°
+		enWeightMax = 10 //!< é‡ã¿ã®åˆè¨ˆ
 	};
 
 
 private:
-	Phase phase_ = Phase::enReady; //!< ˆ—’iŠK
-	Mode mode_ = Mode::enMax; //!< UŒ‚ƒpƒ^[ƒ“
-	uint8_t weights_[enMax] = { 4,3,3 }; //!< UŒ‚‚Ìd‚İ
-	Vector3 targetPos_ = Vector3::Zero; //!< UŒ‚‘ÎÛ‚ÌÀ•W
-	EffectHandle predictionEffectHandle_= INVALID_EFFECT_HANDLE; //!< —\‘ªƒGƒtƒFƒNƒg‚Ìƒnƒ“ƒhƒ‹
-	EffectHandle laserEffectHandle_ = INVALID_EFFECT_HANDLE; //!< —\‘ªƒGƒtƒFƒNƒg‚Ìƒnƒ“ƒhƒ‹
+	Phase phase_ = Phase::enReady; //!< å‡¦ç†æ®µéš
+	Mode mode_ = Mode::enMax; //!< æ”»æ’ƒãƒ‘ã‚¿ãƒ¼ãƒ³
+	uint8_t weights_[enMax] = { 4,3,3 }; //!< æ”»æ’ƒã®é‡ã¿
+	Vector3 targetPos_ = Vector3::Zero; //!< æ”»æ’ƒå¯¾è±¡ã®åº§æ¨™
+	EffectHandle predictionEffectHandle_= INVALID_EFFECT_HANDLE; //!< äºˆæ¸¬ã‚¨ãƒ•ã‚§ã‚¯ãƒˆã®ãƒãƒ³ãƒ‰ãƒ«
+	EffectHandle laserEffectHandle_ = INVALID_EFFECT_HANDLE; //!< äºˆæ¸¬ã‚¨ãƒ•ã‚§ã‚¯ãƒˆã®ãƒãƒ³ãƒ‰ãƒ«
 
 
-	Vector3 scale_ = Vector3::Zero; //!< UŒ‚”ÍˆÍ
-	float shotTime_ = 0.0f; //!< ƒ^ƒXƒNƒXƒPƒWƒ…[ƒ‰‚ÌŸ‚Ìˆ—‚Ü‚Å‚ÌŠÔ
-	float attackDeleyTime = 0.0f; //!< UŒ‚‚Ü‚Å‚ÌŠÔ
-	uint8_t shotCount_ = 0; //!< UŒ‚‰ñ”
+	Vector3 scale_ = Vector3::Zero; //!< æ”»æ’ƒç¯„å›²
+	float shotTime_ = 0.0f; //!< ã‚¿ã‚¹ã‚¯ã‚¹ã‚±ã‚¸ãƒ¥ãƒ¼ãƒ©ã®æ¬¡ã®å‡¦ç†ã¾ã§ã®æ™‚é–“
+	float attackDeleyTime = 0.0f; //!< æ”»æ’ƒã¾ã§ã®æ™‚é–“
+	uint8_t shotCount_ = 0; //!< æ”»æ’ƒå›æ•°
 
 	
 private:
-	/* ƒZƒbƒgƒAƒbƒv */
+	/* ã‚»ãƒƒãƒˆã‚¢ãƒƒãƒ— */
 	void Setup();
 
 
 public:
-	/* UŒ‚I—¹‚© */
+	/* æ”»æ’ƒçµ‚äº†ã‹ */
 	bool IsFinished() const override { return isFinished_; }
 
 
@@ -255,10 +255,10 @@ public:
 
 
 /************************************************************/
-// ‚±‚±‚©‚ç‚Í‹­§“I‚Èó‘Ô‚Ì‚à‚Ì‚ğ‘‚­
+// ã“ã“ã‹ã‚‰ã¯å¼·åˆ¶çš„ãªçŠ¶æ…‹ã®ã‚‚ã®ã‚’æ›¸ã
 
 /*==========================================*/
-// €–S‚Ìó‘Ô
+// æ­»äº¡ã®çŠ¶æ…‹
 /*==========================================*/
 
 class BossDeathState : public BossStateBase

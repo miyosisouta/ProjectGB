@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 namespace nsK2EngineLow {
 	inline ID3D12DescriptorHeap* DescriptorHeap::Get()const

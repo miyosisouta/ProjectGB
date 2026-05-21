@@ -1,4 +1,4 @@
-#include "k2EnginePreCompile.h"
+ï»¿#include "k2EnginePreCompile.h"
 #include "graphics/postEffect/ssr.h"
 
 namespace nsK2Engine {
@@ -11,7 +11,7 @@ namespace nsK2Engine {
 	)
 	{
 		{
-			// ‰f‚èž‚Ý‰æ‘œ‚ðì¬‚·‚é‚½‚ß‚ÌƒXƒvƒ‰ƒCƒg‚ðì¬B
+			// æ˜ ã‚Šè¾¼ã¿ç”»åƒã‚’ä½œæˆã™ã‚‹ãŸã‚ã®ã‚¹ãƒ—ãƒ©ã‚¤ãƒˆã‚’ä½œæˆã€‚
 			UINT w = mainRenderTarget.GetWidth();
 			UINT h = mainRenderTarget.GetHeight();
 			SpriteInitData initData;
@@ -33,12 +33,12 @@ namespace nsK2Engine {
 
 			m_reflectionSprite.Init(initData);
 
-			// ƒ¿‚ð‰f‚èž‚Ý‚Ì‹­‚³‚Æ‚µ‚Äˆµ‚¤B0.0‚È‚ç‰f‚èž‚Ý‚È‚µA1.0‚ªÅ‚à‹­‚­‰f‚èž‚Ý‚µ‚Ü‚·B
-			// ƒ¿‚Í0.0‚Å‰Šú‰»‚µ‚Ü‚·B
+			// Î±ã‚’æ˜ ã‚Šè¾¼ã¿ã®å¼·ã•ã¨ã—ã¦æ‰±ã†ã€‚0.0ãªã‚‰æ˜ ã‚Šè¾¼ã¿ãªã—ã€1.0ãŒæœ€ã‚‚å¼·ãæ˜ ã‚Šè¾¼ã¿ã—ã¾ã™ã€‚
+			// Î±ã¯0.0ã§åˆæœŸåŒ–ã—ã¾ã™ã€‚
 			float clearColor[] = {
 				0.0f, 0.0f, 0.0f, 0.0f
 			};
-			// ‰f‚èž‚Ý‰æ‘œ‚ð•`‰æ‚·‚é‚½‚ß‚ÌƒŒƒ“ƒ_ƒŠƒ“ƒOƒ^[ƒQƒbƒg‚ðì¬B
+			// æ˜ ã‚Šè¾¼ã¿ç”»åƒã‚’æç”»ã™ã‚‹ãŸã‚ã®ãƒ¬ãƒ³ãƒ€ãƒªãƒ³ã‚°ã‚¿ãƒ¼ã‚²ãƒƒãƒˆã‚’ä½œæˆã€‚
 			m_reflectionRt.Create(
 				w,
 				h,
@@ -51,16 +51,16 @@ namespace nsK2Engine {
 		}
 		m_blur.Init(&m_reflectionRt.GetRenderTargetTexture(), true);
 		{
-			// ÅI‡¬—p‚ÌƒXƒvƒ‰ƒCƒg‚ð‰Šú‰»‚·‚é
+			// æœ€çµ‚åˆæˆç”¨ã®ã‚¹ãƒ—ãƒ©ã‚¤ãƒˆã‚’åˆæœŸåŒ–ã™ã‚‹
 			SpriteInitData initData;
 			initData.m_textures[0] = &mainRenderTarget.GetRenderTargetTexture();
 			initData.m_textures[1] = &m_blur.GetBokeTexture();
 			initData.m_textures[2] = &albedoRenderTarget.GetRenderTargetTexture();
 
-			// ‰ð‘œ“x‚ÍmainRenderTarget‚Ì•‚Æ‚‚³
+			// è§£åƒåº¦ã¯mainRenderTargetã®å¹…ã¨é«˜ã•
 			initData.m_width = mainRenderTarget.GetWidth();
 			initData.m_height = mainRenderTarget.GetHeight();
-			// 2D—p‚ÌƒVƒF[ƒ_[‚ðŽg—p‚·‚é
+			// 2Dç”¨ã®ã‚·ã‚§ãƒ¼ãƒ€ãƒ¼ã‚’ä½¿ç”¨ã™ã‚‹
 			initData.m_fxFilePath = "Assets/shader/postEffect/ssr.fx";
 			initData.m_vsEntryPointFunc = "VSMain";
 			initData.m_psEntryPoinFunc = "PSFinal";
@@ -87,10 +87,10 @@ namespace nsK2Engine {
 			return;
 		}
 		g_graphicsEngine->BeginGPUEvent("SSR");
-		// ‚Ü‚¸‚Í‰f‚èž‚ÝƒCƒ[ƒW‚ðì¬‚·‚éB
-		// ƒŒƒ“ƒ_ƒŠƒ“ƒOƒ^[ƒQƒbƒg‚Æ‚µ‚Ä—˜—p‚Å‚«‚é‚Ü‚Å‘Ò‚Â
+		// ã¾ãšã¯æ˜ ã‚Šè¾¼ã¿ã‚¤ãƒ¡ãƒ¼ã‚¸ã‚’ä½œæˆã™ã‚‹ã€‚
+		// ãƒ¬ãƒ³ãƒ€ãƒªãƒ³ã‚°ã‚¿ãƒ¼ã‚²ãƒƒãƒˆã¨ã—ã¦åˆ©ç”¨ã§ãã‚‹ã¾ã§å¾…ã¤
 		rc.WaitUntilToPossibleSetRenderTarget(m_reflectionRt);
-		// ƒŒƒ“ƒ_ƒŠƒ“ƒOƒ^[ƒQƒbƒg‚ðÝ’è
+		// ãƒ¬ãƒ³ãƒ€ãƒªãƒ³ã‚°ã‚¿ãƒ¼ã‚²ãƒƒãƒˆã‚’è¨­å®š
 		rc.SetRenderTargetAndViewport(m_reflectionRt);
 		rc.ClearRenderTargetView(m_reflectionRt);
 
@@ -98,21 +98,21 @@ namespace nsK2Engine {
 		m_ssrCb.mViewProj = g_camera3D->GetViewProjectionMatrix();
 		m_ssrCb.mViewProjInv.Inverse(m_ssrCb.mViewProj);
 
-		// •`‰æ
+		// æç”»
 		m_reflectionSprite.Draw(rc);
-		// ƒŒƒ“ƒ_ƒŠƒ“ƒOƒ^[ƒQƒbƒg‚Ö‚Ì‘‚«ž‚ÝI—¹‘Ò‚¿
+		// ãƒ¬ãƒ³ãƒ€ãƒªãƒ³ã‚°ã‚¿ãƒ¼ã‚²ãƒƒãƒˆã¸ã®æ›¸ãè¾¼ã¿çµ‚äº†å¾…ã¡
 		rc.WaitUntilFinishDrawingToRenderTarget(m_reflectionRt);
 
-		// ‰f‚èž‚Ý‰æ‘œ‚ðƒKƒEƒVƒAƒ“ƒuƒ‰[‚Å‚Ú‚©‚µ‚ÄƒfƒmƒCƒY‚ðs‚¤B
+		// æ˜ ã‚Šè¾¼ã¿ç”»åƒã‚’ã‚¬ã‚¦ã‚·ã‚¢ãƒ³ãƒ–ãƒ©ãƒ¼ã§ã¼ã‹ã—ã¦ãƒ‡ãƒŽã‚¤ã‚ºã‚’è¡Œã†ã€‚
 		m_blur.ExecuteOnGPU(rc, 2.0f);
 
-		// ƒŒƒ“ƒ_ƒŠƒ“ƒOƒ^[ƒQƒbƒg‚Æ‚µ‚Ä—˜—p‚Å‚«‚é‚Ü‚Å‘Ò‚Â
+		// ãƒ¬ãƒ³ãƒ€ãƒªãƒ³ã‚°ã‚¿ãƒ¼ã‚²ãƒƒãƒˆã¨ã—ã¦åˆ©ç”¨ã§ãã‚‹ã¾ã§å¾…ã¤
 		rc.WaitUntilToPossibleSetRenderTarget(m_finalRt);
-		// ƒŒƒ“ƒ_ƒŠƒ“ƒOƒ^[ƒQƒbƒg‚ðÝ’è
+		// ãƒ¬ãƒ³ãƒ€ãƒªãƒ³ã‚°ã‚¿ãƒ¼ã‚²ãƒƒãƒˆã‚’è¨­å®š
 		rc.SetRenderTargetAndViewport(m_finalRt);
-		// ‰f‚èž‚Ý‰æ‘œ‚ÆƒƒCƒ“ƒV[ƒ“‚ð‡¬‚µ‚Ä‚¢‚­B
+		// æ˜ ã‚Šè¾¼ã¿ç”»åƒã¨ãƒ¡ã‚¤ãƒ³ã‚·ãƒ¼ãƒ³ã‚’åˆæˆã—ã¦ã„ãã€‚
 		m_finalSprite.Draw(rc);
-		// ƒŒƒ“ƒ_ƒŠƒ“ƒOƒ^[ƒQƒbƒg‚Ö‚Ì‘‚«ž‚ÝI—¹‘Ò‚¿
+		// ãƒ¬ãƒ³ãƒ€ãƒªãƒ³ã‚°ã‚¿ãƒ¼ã‚²ãƒƒãƒˆã¸ã®æ›¸ãè¾¼ã¿çµ‚äº†å¾…ã¡
 		rc.WaitUntilFinishDrawingToRenderTarget(m_finalRt);
 		g_graphicsEngine->EndGPUEvent();
 	}

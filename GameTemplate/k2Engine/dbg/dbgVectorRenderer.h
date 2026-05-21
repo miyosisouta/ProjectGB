@@ -1,4 +1,4 @@
-
+ï»¿
 #pragma once
 
 #include "graphics/MyRenderer.h"
@@ -6,22 +6,22 @@
 namespace nsK2Engine {
 	namespace nsDbg {
 		/// <summary>
-		/// ƒxƒNƒgƒ‹ƒŒƒ“ƒ_ƒ‰[
+		/// ãƒ™ã‚¯ãƒˆãƒ«ãƒ¬ãƒ³ãƒ€ãƒ©ãƒ¼
 		/// </summary>
 		class VectorRenderer : public IGameObject{
 		public:
 			/// <summary>
-			/// •`‰æƒf[ƒ^B
+			/// æç”»ãƒ‡ãƒ¼ã‚¿ã€‚
 			/// </summary>
 			struct SRenderData {
-				std::string name;						//–¼‘O
-				Vector3 vector;		//ƒxƒNƒgƒ‹B
-				Vector3 origin;		//Šî“_B
+				std::string name;						//åå‰
+				Vector3 vector;		//ãƒ™ã‚¯ãƒˆãƒ«ã€‚
+				Vector3 origin;		//åŸºç‚¹ã€‚
 			};
 			/// <summary>
-			/// •`‰æ‚·‚éƒxƒNƒgƒ‹‚ğ’Ç‰ÁB
+			/// æç”»ã™ã‚‹ãƒ™ã‚¯ãƒˆãƒ«ã‚’è¿½åŠ ã€‚
 			/// </summary>
-			/// <param name="renderData">•`‰æ‚·‚éƒxƒNƒgƒ‹‚Ìî•ñB</param>
+			/// <param name="renderData">æç”»ã™ã‚‹ãƒ™ã‚¯ãƒˆãƒ«ã®æƒ…å ±ã€‚</param>
 			void AddVector(SRenderData& renderData)
 			{
 				if (m_renderData.size() < MAX_VECTOR) {
@@ -29,53 +29,53 @@ namespace nsK2Engine {
 				}
 			}
 			/// <summary>
-			/// •`‰æ‚ğ—LŒø‚É‚·‚éB
+			/// æç”»ã‚’æœ‰åŠ¹ã«ã™ã‚‹ã€‚
 			/// </summary>
 			void EnableRender()
 			{
 				m_isRender = true;
 			}
 			/// <summary>
-			/// •`‰æ‚ğ–³Œø‚É‚·‚éB
+			/// æç”»ã‚’ç„¡åŠ¹ã«ã™ã‚‹ã€‚
 			/// </summary>
 			void DisableRender()
 			{
 				m_isRender = false;
 			}
 			/// <summary>
-			/// •`‰æ‚·‚éƒxƒNƒgƒ‹‚Ì–¼‘OƒŠƒXƒg‚ğİ’èB
+			/// æç”»ã™ã‚‹ãƒ™ã‚¯ãƒˆãƒ«ã®åå‰ãƒªã‚¹ãƒˆã‚’è¨­å®šã€‚
 			/// </summary>
 			void SetRenderVectorNameList(const std::vector<std::string>& list)
 			{
 				m_renderVectorNameList = list;
 			}
 			/// <summary>
-			/// Update()‚ªÀs‚³‚ê‚é’¼‘O‚Éˆê“x‚¾‚¯ŒÄ‚Î‚ê‚éˆ—B
+			/// Update()ãŒå®Ÿè¡Œã•ã‚Œã‚‹ç›´å‰ã«ä¸€åº¦ã ã‘å‘¼ã°ã‚Œã‚‹å‡¦ç†ã€‚
 			/// </summary>
 			/// <returns></returns>
 			bool Start() override;
 			/// <summary>
-			/// XV
+			/// æ›´æ–°
 			/// </summary>
 			void Update() override;
 			/// <summary>
-			/// •`‰æˆ—
+			/// æç”»å‡¦ç†
 			/// </summary>
 			/// <param name="rc"></param>
 			void Render(RenderContext& rc) override;
 		private:
 			/// <summary>
-			/// •`‰æ‚·‚éƒxƒNƒgƒ‹‚©”»’è‚·‚éB
+			/// æç”»ã™ã‚‹ãƒ™ã‚¯ãƒˆãƒ«ã‹åˆ¤å®šã™ã‚‹ã€‚
 			/// </summary>
-			/// <param name="renderData">•`‰æƒf[ƒ^</param>
-			/// <returns>true‚ª•Ô‚Á‚Ä‚«‚½‚ç•`‰æ‚·‚éB</returns>
+			/// <param name="renderData">æç”»ãƒ‡ãƒ¼ã‚¿</param>
+			/// <returns>trueãŒè¿”ã£ã¦ããŸã‚‰æç”»ã™ã‚‹ã€‚</returns>
 			bool IsRenderVector(const SRenderData& renderData) const;
 		private:
-			static const int MAX_VECTOR = 1000;	// •`‰æ‰Â”\‚ÈƒxƒNƒgƒ‹‚ÌÅ‘å”B
-			std::vector<SRenderData> m_renderData;			// •`‰æƒf[ƒ^B
-			bool m_isRender = true;								// •`‰æƒtƒ‰ƒO
-			std::vector<std::string> m_renderVectorNameList;// •`‰æ‚·‚éƒxƒNƒgƒ‹‚Ì–¼‘OƒŠƒXƒg
-			ModelRender m_modelRender;						// ƒ‚ƒfƒ‹ƒŒƒ“ƒ_ƒ‰[B
+			static const int MAX_VECTOR = 1000;	// æç”»å¯èƒ½ãªãƒ™ã‚¯ãƒˆãƒ«ã®æœ€å¤§æ•°ã€‚
+			std::vector<SRenderData> m_renderData;			// æç”»ãƒ‡ãƒ¼ã‚¿ã€‚
+			bool m_isRender = true;								// æç”»ãƒ•ãƒ©ã‚°
+			std::vector<std::string> m_renderVectorNameList;// æç”»ã™ã‚‹ãƒ™ã‚¯ãƒˆãƒ«ã®åå‰ãƒªã‚¹ãƒˆ
+			ModelRender m_modelRender;						// ãƒ¢ãƒ‡ãƒ«ãƒ¬ãƒ³ãƒ€ãƒ©ãƒ¼ã€‚
 		};
 	}
 }

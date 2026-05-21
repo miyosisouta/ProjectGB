@@ -1,4 +1,4 @@
-#include "stdafx.h"
+ï»¿#include "stdafx.h"
 #include "Actor.h"
 #include "ActorStatus.h"
 
@@ -11,10 +11,10 @@ bool Actor::Start()
 
 void Actor::Update()
 {
-	// ƒ‚ƒfƒ‹‚Ìƒgƒ‰ƒ“ƒXƒtƒH[ƒ€‚ğXV
+	// ãƒ¢ãƒ‡ãƒ«ã®ãƒˆãƒ©ãƒ³ã‚¹ãƒ•ã‚©ãƒ¼ãƒ ã‚’æ›´æ–°
 	transform_.UpdateTransform();
 
-	// XV‚µ‚½ƒgƒ‰ƒ“ƒXƒtƒH[ƒ€‚ğƒ‚ƒfƒ‹‚Éİ’è
+	// æ›´æ–°ã—ãŸãƒˆãƒ©ãƒ³ã‚¹ãƒ•ã‚©ãƒ¼ãƒ ã‚’ãƒ¢ãƒ‡ãƒ«ã«è¨­å®š
 	modelRender_.SetPosition(transform_.position);
 	modelRender_.SetScale(transform_.scale);
 	modelRender_.SetRotation(transform_.rotation);

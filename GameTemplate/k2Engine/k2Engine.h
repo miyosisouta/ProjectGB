@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 
 
 namespace nsK2Engine {
@@ -11,42 +11,42 @@ namespace nsK2Engine {
 	/// K2Engine
 	/// </summary>
 	/// <remark>
-	/// ‰ÍŒ´Šw‰€“à»‚ÌƒQ[ƒ€ƒGƒ“ƒWƒ“B
-	/// k2EngineLow‚ğƒx[ƒX‚ÉŠg’£‚³‚ê‚½ƒGƒ“ƒWƒ“‚Å‚·B
-	/// å‚ÉAƒŒƒ“ƒ_ƒŠƒ“ƒOƒGƒ“ƒWƒ“‚Ì‹@”\‚ğ’ñ‹Ÿ‚µ‚Ä‚¢‚Ü‚·B
+	/// æ²³åŸå­¦åœ’å†…è£½ã®ã‚²ãƒ¼ãƒ ã‚¨ãƒ³ã‚¸ãƒ³ã€‚
+	/// k2EngineLowã‚’ãƒ™ãƒ¼ã‚¹ã«æ‹¡å¼µã•ã‚ŒãŸã‚¨ãƒ³ã‚¸ãƒ³ã§ã™ã€‚
+	/// ä¸»ã«ã€ãƒ¬ãƒ³ãƒ€ãƒªãƒ³ã‚°ã‚¨ãƒ³ã‚¸ãƒ³ã®æ©Ÿèƒ½ã‚’æä¾›ã—ã¦ã„ã¾ã™ã€‚
 	/// 
-	/// ‚±‚ÌƒNƒ‰ƒX‚ÍƒVƒ“ƒOƒ‹ƒgƒ“ƒpƒ^[ƒ“‚ÅİŒv‚³‚ê‚Ä‚¢‚Ü‚·B
-	/// ƒVƒ“ƒOƒ‹ƒgƒ“ƒpƒ^[ƒ“‚Í‰º‹L‚Ì“ñ‚Â‚Ì‹@”\‚ğ’ñ‹Ÿ‚·‚éƒpƒ^[ƒ“‚Å‚·B
-	/// 1.@ƒOƒ[ƒoƒ‹‚ÈƒAƒNƒZƒXƒ|ƒCƒ“ƒg
-	///		->ƒOƒ[ƒoƒ‹•Ï”‚Ì‹@”\
-	/// 2@ƒCƒ“ƒXƒ^ƒ“ƒX‚Ì”‚ğˆê‚Â‚É§ŒÀ‚·‚é‹@”\B
-	/// ƒCƒ“ƒXƒ^ƒ“ƒX‚Ì¶¬‚ÍCreateInstance()A
-	/// ƒCƒ“ƒXƒ^ƒ“ƒX‚Ì”jŠü‚ÍDeleteInstance()A
-	/// ƒCƒ“ƒXƒ^ƒ“ƒX‚Ìæ“¾‚ÍCreateInstance()‚ğŒÄ‚Ño‚µ‚Ä‚­‚¾‚³‚¢B
+	/// ã“ã®ã‚¯ãƒ©ã‚¹ã¯ã‚·ãƒ³ã‚°ãƒ«ãƒˆãƒ³ãƒ‘ã‚¿ãƒ¼ãƒ³ã§è¨­è¨ˆã•ã‚Œã¦ã„ã¾ã™ã€‚
+	/// ã‚·ãƒ³ã‚°ãƒ«ãƒˆãƒ³ãƒ‘ã‚¿ãƒ¼ãƒ³ã¯ä¸‹è¨˜ã®äºŒã¤ã®æ©Ÿèƒ½ã‚’æä¾›ã™ã‚‹ãƒ‘ã‚¿ãƒ¼ãƒ³ã§ã™ã€‚
+	/// 1.ã€€ã‚°ãƒ­ãƒ¼ãƒãƒ«ãªã‚¢ã‚¯ã‚»ã‚¹ãƒã‚¤ãƒ³ãƒˆ
+	///		->ã‚°ãƒ­ãƒ¼ãƒãƒ«å¤‰æ•°ã®æ©Ÿèƒ½
+	/// 2ã€€ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹ã®æ•°ã‚’ä¸€ã¤ã«åˆ¶é™ã™ã‚‹æ©Ÿèƒ½ã€‚
+	/// ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹ã®ç”Ÿæˆã¯CreateInstance()ã€
+	/// ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹ã®ç ´æ£„ã¯DeleteInstance()ã€
+	/// ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹ã®å–å¾—ã¯CreateInstance()ã‚’å‘¼ã³å‡ºã—ã¦ãã ã•ã„ã€‚
 	/// </reramk>
 	class K2Engine {
 	private:
 		/// <summary>
-		/// ƒRƒ“ƒXƒgƒ‰ƒNƒ^B
+		/// ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿ã€‚
 		/// </summary>
 		
 		K2Engine(){}
 		/// <summary>
-		/// ƒfƒXƒgƒ‰ƒNƒ^B
+		/// ãƒ‡ã‚¹ãƒˆãƒ©ã‚¯ã‚¿ã€‚
 		/// </summary>
 		~K2Engine();
 	public:
 		/// <summary>
-		/// ‰Šú‰»ƒf[ƒ^B
+		/// åˆæœŸåŒ–ãƒ‡ãƒ¼ã‚¿ã€‚
 		/// </summary>
 		struct InitData {
-			HWND hwnd;					// ƒEƒBƒ“ƒhƒEƒnƒ“ƒhƒ‹B
-			UINT frameBufferWidth;		// ƒtƒŒ[ƒ€ƒoƒbƒtƒ@‚Ì•B
-			UINT frameBufferHeight;		// ƒtƒŒ[ƒ€ƒoƒbƒtƒ@‚Ì‚‚³B
-			bool isSoftShadow;			// ƒ\ƒtƒgƒVƒƒƒhƒE‚ğs‚¤H
+			HWND hwnd;					// ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦ãƒãƒ³ãƒ‰ãƒ«ã€‚
+			UINT frameBufferWidth;		// ãƒ•ãƒ¬ãƒ¼ãƒ ãƒãƒƒãƒ•ã‚¡ã®å¹…ã€‚
+			UINT frameBufferHeight;		// ãƒ•ãƒ¬ãƒ¼ãƒ ãƒãƒƒãƒ•ã‚¡ã®é«˜ã•ã€‚
+			bool isSoftShadow;			// ã‚½ãƒ•ãƒˆã‚·ãƒ£ãƒ‰ã‚¦ã‚’è¡Œã†ï¼Ÿ
 		};
 		/// <summary>
-		/// ƒCƒ“ƒXƒ^ƒ“ƒX‚Ìì¬B
+		/// ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹ã®ä½œæˆã€‚
 		/// </summary>
 		static void CreateInstance(const InitData& initData)
 		{
@@ -54,14 +54,14 @@ namespace nsK2Engine {
 			m_instance->Init(initData);
 		}
 		/// <summary>
-		/// ƒCƒ“ƒXƒ^ƒ“ƒX‚Ì”jŠüB
+		/// ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹ã®ç ´æ£„ã€‚
 		/// </summary>
 		static void DeleteInstance()
 		{
 			delete m_instance;
 		}
 		/// <summary>
-		/// ƒCƒ“ƒXƒ^ƒ“ƒX‚ğæ“¾B
+		/// ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹ã‚’å–å¾—ã€‚
 		/// </summary>
 		/// <returns></returns>
 		static K2Engine* GetInstance()
@@ -69,27 +69,27 @@ namespace nsK2Engine {
 			return m_instance;
 		}
 		/// <summary>
-		/// K2Engine‚ğ‰Šú‰»
+		/// K2Engineã‚’åˆæœŸåŒ–
 		/// </summary>
 		void Init(const InitData& initData);
 		/// <summary>
-		/// ƒGƒ“ƒWƒ“‚Ìˆ—‚ğÀsB
+		/// ã‚¨ãƒ³ã‚¸ãƒ³ã®å‡¦ç†ã‚’å®Ÿè¡Œã€‚
 		/// </summary>
 		void Execute();
 #ifdef K2_DEBUG
 		/// <summary>
-		/// ƒxƒNƒgƒ‹‚ÌƒfƒoƒbƒOo—Í
+		/// ãƒ™ã‚¯ãƒˆãƒ«ã®ãƒ‡ãƒãƒƒã‚°å‡ºåŠ›
 		/// </summary>
-		/// <param name="vector">ƒxƒNƒgƒ‹</param>
-		/// <param name="origin">‹N“_</param>
-		/// <param name="name">–¼‘O</param>
+		/// <param name="vector">ãƒ™ã‚¯ãƒˆãƒ«</param>
+		/// <param name="origin">èµ·ç‚¹</param>
+		/// <param name="name">åå‰</param>
 		void DrawVector(const Vector3& vector, const Vector3& origin, const char* name = "no name");
 		/// <summary>
-		/// ƒxƒNƒgƒ‹‚ÌƒfƒoƒbƒO•`‰æ‚ğ—LŒø‚É‚·‚éB
+		/// ãƒ™ã‚¯ãƒˆãƒ«ã®ãƒ‡ãƒãƒƒã‚°æç”»ã‚’æœ‰åŠ¹ã«ã™ã‚‹ã€‚
 		/// </summary>
 		void SetDrawVectorEnable();
 		/// <summary>
-		/// ƒxƒNƒgƒ‹‚ÌƒfƒoƒbƒO•`‰æ‚ğ–³Œø‚É‚·‚éB
+		/// ãƒ™ã‚¯ãƒˆãƒ«ã®ãƒ‡ãƒãƒƒã‚°æç”»ã‚’ç„¡åŠ¹ã«ã™ã‚‹ã€‚
 		/// </summary>
 		void SetDrawVectorDisable();
 #else
@@ -110,14 +110,14 @@ namespace nsK2Engine {
 
 		K2EngineLow m_k2EngineLow;							// 
 		CollisionObjectManager m_collisionObjectManager;	// 
-		RenderingEngine m_renderingEngine;					// ƒŒƒ“ƒ_ƒŠƒ“ƒOƒGƒ“ƒWƒ“B
+		RenderingEngine m_renderingEngine;					// ãƒ¬ãƒ³ãƒ€ãƒªãƒ³ã‚°ã‚¨ãƒ³ã‚¸ãƒ³ã€‚
 #ifdef K2_DEBUG
-		nsDbg::VectorRenderer* m_vectorRenderer = nullptr;	// ƒfƒoƒbƒOƒxƒNƒgƒ‹•`‰æˆ—
+		nsDbg::VectorRenderer* m_vectorRenderer = nullptr;	// ãƒ‡ãƒãƒƒã‚°ãƒ™ã‚¯ãƒˆãƒ«æç”»å‡¦ç†
 #endif // K2_DEBUG
 		static K2Engine* m_instance;
 	};
 
-	// ƒOƒ[ƒoƒ‹‚ÈƒAƒNƒZƒXƒ|ƒCƒ“ƒgB
+	// ã‚°ãƒ­ãƒ¼ãƒãƒ«ãªã‚¢ã‚¯ã‚»ã‚¹ãƒã‚¤ãƒ³ãƒˆã€‚
 	extern K2Engine* g_k2Engine;
 	extern RenderingEngine* g_renderingEngine;
 	extern SceneLight* g_sceneLight;

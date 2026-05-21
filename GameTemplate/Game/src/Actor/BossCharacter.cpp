@@ -1,4 +1,4 @@
-#include "stdafx.h"
+﻿#include "stdafx.h"
 #include "BossCharacter.h"
 #include "NPCController.h"
 #include "BossState.h"

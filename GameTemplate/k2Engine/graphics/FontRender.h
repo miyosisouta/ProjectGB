@@ -1,10 +1,10 @@
-#pragma once
+ï»¿#pragma once
 
 #include "Graphics/IRenderer.h"
 
 namespace nsK2Engine {
 	/// <summary>
-	/// ƒtƒHƒ“ƒgƒŒƒ“ƒ_\B
+	/// ãƒ•ã‚©ãƒ³ãƒˆãƒ¬ãƒ³ãƒ€â€•ã€‚
 	/// </summary>
 	class FontRender : public IRenderer
 	{
@@ -15,65 +15,65 @@ namespace nsK2Engine {
 
 		}
 		/// <summary>
-		/// •\¦‚·‚é•¶š‚ğİ’èB
+		/// è¡¨ç¤ºã™ã‚‹æ–‡å­—ã‚’è¨­å®šã€‚
 		/// </summary>
-		/// <param name="text">•\¦‚·‚é•¶šB</param>
+		/// <param name="text">è¡¨ç¤ºã™ã‚‹æ–‡å­—ã€‚</param>
 		void SetText(const wchar_t* text)
 		{
 			swprintf_s(m_text, text);
 		}
 		/// <summary>
-		/// •\¦‚·‚é•¶š‚ğæ“¾B
+		/// è¡¨ç¤ºã™ã‚‹æ–‡å­—ã‚’å–å¾—ã€‚
 		/// </summary>
-		/// <returns>•\¦‚·‚é•¶šB</returns>
+		/// <returns>è¡¨ç¤ºã™ã‚‹æ–‡å­—ã€‚</returns>
 		const wchar_t* GetText() const
 		{
 			return m_text;
 		}
 		/// <summary>
-		/// À•W‚ğİ’èBz‚Í0.0f‚ÅB
+		/// åº§æ¨™ã‚’è¨­å®šã€‚zã¯0.0fã§ã€‚
 		/// </summary>
-		/// <param name="position">À•WB</param>
+		/// <param name="position">åº§æ¨™ã€‚</param>
 		void SetPosition(float x, float y, float z)
 		{
 			SetPosition({ x, y, z });
 		}
 		/// <summary>
-		/// ‘å‚«‚³‚ğİ’èBz‚Í0.0f‚ÅB
+		/// å¤§ãã•ã‚’è¨­å®šã€‚zã¯0.0fã§ã€‚
 		/// </summary>
-		/// <param name="position">À•WB</param>
+		/// <param name="position">åº§æ¨™ã€‚</param>
 		void SetPosition(const Vector3& position)
 		{
 			m_position = position;
 		}
 		/// <summary>
-		/// À•W‚ğæ“¾B
+		/// åº§æ¨™ã‚’å–å¾—ã€‚
 		/// </summary>
-		/// <returns>À•WB</returns>
+		/// <returns>åº§æ¨™ã€‚</returns>
 		const Vector3& GetPosition() const
 		{
 			return m_position;
 		}
 		/// <summary>
-		/// ‘å‚«‚³‚ğİ’èB
+		/// å¤§ãã•ã‚’è¨­å®šã€‚
 		/// </summary>
-		/// <param name="scale">‘å‚«‚³B</param>
+		/// <param name="scale">å¤§ãã•ã€‚</param>
 		void SetScale(const float scale)
 		{
 			m_scale = scale;
 		}
 		/// <summary>
-		/// ‘å‚«‚³‚ğæ“¾B
+		/// å¤§ãã•ã‚’å–å¾—ã€‚
 		/// </summary>
-		/// <returns>‘å‚«‚³B</returns>
+		/// <returns>å¤§ãã•ã€‚</returns>
 		const float GetScale() const
 		{
 			return m_scale;
 		}
 		/// <summary>
-		/// F‚ğİ’èB
+		/// è‰²ã‚’è¨­å®šã€‚
 		/// </summary>
-		/// <param name="color">FB</param>
+		/// <param name="color">è‰²ã€‚</param>
 		void SetColor(float r, float g, float b, float a)
 		{
 			SetColor({ r, g, b, a });
@@ -83,87 +83,87 @@ namespace nsK2Engine {
 			m_color = color;
 		}
 		/// <summary>
-		/// F‚ğæ“¾B
+		/// è‰²ã‚’å–å¾—ã€‚
 		/// </summary>
-		/// <returns>FB</returns>
+		/// <returns>è‰²ã€‚</returns>
 		const Vector4& GetColor() const
 		{
 			return m_color;
 		}
 		/// <summary>
-		/// ‰ñ“]‚ğİ’èB
+		/// å›è»¢ã‚’è¨­å®šã€‚
 		/// </summary>
-		/// <param name="rotation">‰ñ“]B</param>
+		/// <param name="rotation">å›è»¢ã€‚</param>
 		void SetRotation(const float rotation)
 		{
 			m_rotation = rotation;
 		}
 		/// <summary>
-		/// ‰ñ“]‚ğæ“¾B
+		/// å›è»¢ã‚’å–å¾—ã€‚
 		/// </summary>
-		/// <returns>‰ñ“]B</returns>
+		/// <returns>å›è»¢ã€‚</returns>
 		const float GetRotation() const
 		{
 			return m_rotation;
 		}
 		/// <summary>
-		/// ƒsƒ{ƒbƒg‚ğİ’èB
+		/// ãƒ”ãƒœãƒƒãƒˆã‚’è¨­å®šã€‚
 		/// </summary>
 		/// <remark>
 		/// <param name="pivot">
-		/// ƒsƒ{ƒbƒgB
-		/// x = 0.5, y = 0.5‚Å‰æ‘œ‚Ì’†S‚ªŠî“_B
-		/// x = 0.0, y = 0.0‚Å‰æ‘œ‚Ì¶‰ºB
-		/// x = 1.0, y = 1.0‚Å‰æ‘œ‚Ì‰EãB
-		/// Unity‚ÌuGUI‚É€‹’B
+		/// ãƒ”ãƒœãƒƒãƒˆã€‚
+		/// x = 0.5, y = 0.5ã§ç”»åƒã®ä¸­å¿ƒãŒåŸºç‚¹ã€‚
+		/// x = 0.0, y = 0.0ã§ç”»åƒã®å·¦ä¸‹ã€‚
+		/// x = 1.0, y = 1.0ã§ç”»åƒã®å³ä¸Šã€‚
+		/// Unityã®uGUIã«æº–æ‹ ã€‚
 		/// </param>
 		/// </remark>
-		/// <param name="x">ƒsƒ{ƒbƒg‚ÌxÀ•W</param>
-		/// <param name="y">ƒsƒ{ƒbƒg‚ÌyÀ•W</param>
+		/// <param name="x">ãƒ”ãƒœãƒƒãƒˆã®xåº§æ¨™</param>
+		/// <param name="y">ãƒ”ãƒœãƒƒãƒˆã®yåº§æ¨™</param>
 		void SetPivot(float x, float y)
 		{
 			SetPivot({ x, y });
 		}
 		/// <summary>
-		/// ƒsƒ{ƒbƒg‚ğİ’èB
+		/// ãƒ”ãƒœãƒƒãƒˆã‚’è¨­å®šã€‚
 		/// </summary>
 		/// <param name="pivot">
-		/// ƒsƒ{ƒbƒgB
-		/// x = 0.5, y = 0.5‚Å‰æ‘œ‚Ì’†S‚ªŠî“_B
-		/// x = 0.0, y = 0.0‚Å‰æ‘œ‚Ì¶‰ºB
-		/// x = 1.0, y = 1.0‚Å‰æ‘œ‚Ì‰EãB
-		/// Unity‚ÌuGUI‚É€‹’B
+		/// ãƒ”ãƒœãƒƒãƒˆã€‚
+		/// x = 0.5, y = 0.5ã§ç”»åƒã®ä¸­å¿ƒãŒåŸºç‚¹ã€‚
+		/// x = 0.0, y = 0.0ã§ç”»åƒã®å·¦ä¸‹ã€‚
+		/// x = 1.0, y = 1.0ã§ç”»åƒã®å³ä¸Šã€‚
+		/// Unityã®uGUIã«æº–æ‹ ã€‚
 		/// </param>
 		void SetPivot(const Vector2& pivot)
 		{
 			m_pivot = pivot;
 		}
 		/// <summary>
-		/// ƒsƒ{ƒbƒg‚ğæ“¾B
+		/// ãƒ”ãƒœãƒƒãƒˆã‚’å–å¾—ã€‚
 		/// </summary>
-		/// <returns>ƒsƒ{ƒbƒgB</returns>
+		/// <returns>ãƒ”ãƒœãƒƒãƒˆã€‚</returns>
 		const Vector2& GetPivot() const
 		{
 			return m_pivot;
 		}
 		/// <summary>
-		/// •`‰æˆ—B
+		/// æç”»å‡¦ç†ã€‚
 		/// </summary>
-		/// <param name="rc">ƒŒƒ“ƒ_\ƒRƒ“ƒeƒLƒXƒgB</param>
+		/// <param name="rc">ãƒ¬ãƒ³ãƒ€â€•ã‚³ãƒ³ãƒ†ã‚­ã‚¹ãƒˆã€‚</param>
 		void Draw(RenderContext& rc);
 		/// <summary>
-		/// ‰e‚Ìƒpƒ‰ƒ[ƒ^‚ğİ’èB
+		/// å½±ã®ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿ã‚’è¨­å®šã€‚
 		/// </summary>
-		/// <param name="isDrawShadow">‰e‚ğ•`‰æ‚·‚éH</param>
-		/// <param name="shadowOffset">‰e‚ğ•`‰æ‚·‚é‚Æ‚«‚ÌƒsƒNƒZƒ‹‚ÌƒIƒtƒZƒbƒg—ÊB</param>
-		/// <param name="shadowColor">‰e‚ÌFB</param>
+		/// <param name="isDrawShadow">å½±ã‚’æç”»ã™ã‚‹ï¼Ÿ</param>
+		/// <param name="shadowOffset">å½±ã‚’æç”»ã™ã‚‹ã¨ãã®ãƒ”ã‚¯ã‚»ãƒ«ã®ã‚ªãƒ•ã‚»ãƒƒãƒˆé‡ã€‚</param>
+		/// <param name="shadowColor">å½±ã®è‰²ã€‚</param>
 		void SetShadowParam(bool isDrawShadow, float shadowOffset, const Vector4& shadowColor)
 		{
 			m_font.SetShadowParam(isDrawShadow, shadowOffset, shadowColor);
 		}
 	private:
 		/// <summary>
-		/// 2D•`‰æƒpƒX‚©‚çŒÄ‚Î‚ê‚éˆ—B
+		/// 2Dæç”»ãƒ‘ã‚¹ã‹ã‚‰å‘¼ã°ã‚Œã‚‹å‡¦ç†ã€‚
 		/// </summary>
 		/// <param name="rc"></param>
 		void OnRender2D(RenderContext& rc) override
@@ -174,12 +174,12 @@ namespace nsK2Engine {
 			m_font.End(rc);
 		}
 	private:
-		Vector3							m_position = Vector3::Zero;			//À•WB	
-		float							m_scale = 1.0f;						//•¶š‚Ì‘å‚«‚³B
-		Vector4							m_color = g_vec4White;				//•¶š‚ÌFAƒfƒtƒHƒ‹ƒg‚Å”’B
-		float							m_rotation = 0.0f;					//‰ñ“]B
-		Vector2							m_pivot = Sprite::DEFAULT_PIVOT;	//ƒsƒ{ƒbƒgB
-		wchar_t							m_text[MAX_TEXT_SIZE];				//•¶šB
-		Font							m_font;								//ƒtƒHƒ“ƒgB
+		Vector3							m_position = Vector3::Zero;			//åº§æ¨™ã€‚	
+		float							m_scale = 1.0f;						//æ–‡å­—ã®å¤§ãã•ã€‚
+		Vector4							m_color = g_vec4White;				//æ–‡å­—ã®è‰²ã€ãƒ‡ãƒ•ã‚©ãƒ«ãƒˆã§ç™½ã€‚
+		float							m_rotation = 0.0f;					//å›è»¢ã€‚
+		Vector2							m_pivot = Sprite::DEFAULT_PIVOT;	//ãƒ”ãƒœãƒƒãƒˆã€‚
+		wchar_t							m_text[MAX_TEXT_SIZE];				//æ–‡å­—ã€‚
+		Font							m_font;								//ãƒ•ã‚©ãƒ³ãƒˆã€‚
 	};
 }

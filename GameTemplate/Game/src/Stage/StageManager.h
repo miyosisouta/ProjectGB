@@ -1,4 +1,4 @@
-/**
+﻿/**
  * StageManager.h
  *
  * ステージ全体の管理（静的オブジェクト・コリジョン・草）。
@@ -21,6 +21,18 @@ private:
     std::unique_ptr<GrassObject>        grassObject_;
 
     Vector3 grassAreaPos_[2]; //!< 草生成範囲の座標（外部から参照される）
+
+    // 地面スプラットシェーダー用テクスチャ (Start() で一度だけロード)
+    // TODO: 各テクスチャを PNG から DDS に変換して差し替えること
+    //   kusa_ground.png   → Assets/Objects/Stage/Forest/ObjectData/kusa_ground.DDS
+    //   tuthi_ground.png  → Assets/Objects/Stage/Forest/ObjectData/tuthi_ground.DDS
+    //   fuyoudo_ground.png→ Assets/Objects/Stage/Forest/ObjectData/fuyoudo_ground.DDS
+    //   splat_map.png     → Assets/Objects/Stage/Forest/ObjectData/splat_map.DDS
+    //   (変換コマンド例: texconv <file>.png -f BC3_UNORM -o <outdir>)
+    Texture splatTex_;    //!< スプラットマップ (R=草, G=岩土, B=腐葉土)
+    Texture kusaTex_;     //!< 草テクスチャ
+    Texture tuthiTex_;    //!< 岩土テクスチャ
+    Texture fuyoudoTex_;  //!< 腐葉土テクスチャ
 
 #if defined(_DEBUG)
     bool isDisableGlass = false;

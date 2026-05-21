@@ -135,4 +135,9 @@ public:
 public:
     bool Start()override;
     void Update()override;
+
+#ifdef K2_DEBUG
+    static void SetUpdatePaused(bool isPaused);
+    static bool IsUpdatePaused();
+#endif
 };

@@ -1,7 +1,7 @@
-/**
+﻿/**
  * Transform.h
- * ���W�A��]�A�g�k���܂Ƃ߂�����
- * �e�q�\�����������W�v�Z�Ȃǂ����₷��
+ * 座標、回転、拡縮をまとめたもの
+ * 親子構造をした座標計算などをしやすい
  */
 #pragma once
 
@@ -9,21 +9,21 @@
 class Transform : public Noncopyable
 {
 public:
-	/** ���g�̌��݂̃p�����[�^ */
+	/** 自身の現在のパラメータ */
 	Vector3 localPosition;
 	Quaternion localRotation;
 	Vector3 localScale;
 
-	/** �e�g�����X�t�H�[�����l�������p�����[�^ */
-	// ���_�ƂȂ����
+	/** 親トランスフォームを考慮したパラメータ */
+	// 原点となるもの
 	Vector3 position;
 	Quaternion rotation;
 	Vector3 scale;
 
 
 	/**
-	 * private�ϐ�
-	 * ��{�I�Ɋ֐��ȊO����M��K�v�Ȃ�
+	 * private変数
+	 * 基本的に関数以外から弄る必要なし
 	 */
 private:
 	Matrix rotationMatrix_;
@@ -37,18 +37,18 @@ public:
 	Transform();
 	~Transform();
 
-	//�X�V����
+	//更新処理
 	void UpdateTransform();
-	//���[���h�s��X�V�AUpdateTransform�̕��ŌĂ΂��̂ŌĂяo���K�v�Ȃ�
+	//ワールド行列更新、UpdateTransformの方で呼ばれるので呼び出す必要なし
 	void UpdateWorldMatrix();
 
-	//�S�Ă̎q�g�����X�t�H�[���Ƃ̕R�Â����O��
+	//全ての子トランスフォームとの紐づけを外す
 	void Release();
 
-	//����̎q�g�����X�t�H�[���Ƃ̕R�Â����O��
+	//特定の子トランスフォームとの紐づけを外す
 	void RemoveChild(Transform* t);
 
-	//�e�g�����X�t�H�[����ݒ�
+	//親トランスフォームを設定
 	void SetParent(Transform* p)
 	{
 		parent_ = p;

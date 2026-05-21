@@ -1,4 +1,4 @@
-#include "stdafx.h"
+ï»¿#include "stdafx.h"
 #include "CameraController.h"
 #include "CameraManager.h"
 
@@ -13,63 +13,63 @@ void DebugCamera::OnEnter()
 
 void DebugCamera::Update()
 {
-	// fov’²®
+	// fovèª¿æ•´
 	if (g_pad[0]->IsPress(enButtonRB1)) {
 		float value = g_pad[0]->GetLStickYF();
 		cameraData_.fov += value * 0.05f;
 		return;
 	}
-	// ¶ƒXƒeƒBƒbƒN‚ÅˆÚ“®
+	// å·¦ã‚¹ãƒ†ã‚£ãƒƒã‚¯ã§ç§»å‹•
 	{
 		Vector3 inputDirection;
 		inputDirection.x = g_pad[0]->GetLStickXF();
 		inputDirection.z = g_pad[0]->GetLStickYF();
 
-		// ƒJƒƒ‰‚Ì‘O•ûŒü‚Æ‰E•ûŒü‚ÌƒxƒNƒgƒ‹‚ðŽæ“¾
+		// ã‚«ãƒ¡ãƒ©ã®å‰æ–¹å‘ã¨å³æ–¹å‘ã®ãƒ™ã‚¯ãƒˆãƒ«ã‚’å–å¾—
 		Vector3 forward = g_camera3D->GetForward();
 		Vector3 right = g_camera3D->GetRight();
 
-		// y•ûŒü‚É‚ÍˆÚ“®‚µ‚È‚¢
+		// yæ–¹å‘ã«ã¯ç§»å‹•ã—ãªã„
 		forward.y = 0.0f;
 		right.y = 0.0f;
 
-		// ¶ƒXƒeƒBƒbƒN‚Ì“ü—Í—Ê‚ð‰ÁŽZ
+		// å·¦ã‚¹ãƒ†ã‚£ãƒƒã‚¯ã®å…¥åŠ›é‡ã‚’åŠ ç®—
 		right *= inputDirection.x;
 		forward *= inputDirection.z;
 
 		Vector3 direction = right + forward;
 		direction.Normalize();
-		// ˆÚ“®‘¬“x’²®
+		// ç§»å‹•é€Ÿåº¦èª¿æ•´
 		direction.Scale(10.0f);
 
-		// •½sˆÚ“®
+		// å¹³è¡Œç§»å‹•
 		cameraData_.position += direction;
 		cameraData_.target += direction;
 	}
 	
-	// ƒJƒƒ‰‚Ìã‰º
+	// ã‚«ãƒ¡ãƒ©ã®ä¸Šä¸‹
 	{
 		float up = 0.0f;
-		if (g_pad[0]->IsPress(enButtonDown)) up = -1.0f;  // ‰º
-		if (g_pad[0]->IsPress(enButtonUp)) up = 1.0f;  // ãiD‚Ý‚Ìƒ{ƒ^ƒ“‚É•ÏXj
-		// ‚Ü‚½‚Í‰EƒXƒeƒBƒbƒN‰Ÿ‚µž‚Ý‚È‚Ç
+		if (g_pad[0]->IsPress(enButtonDown)) up = -1.0f;  // ä¸‹
+		if (g_pad[0]->IsPress(enButtonUp)) up = 1.0f;  // ä¸Šï¼ˆå¥½ã¿ã®ãƒœã‚¿ãƒ³ã«å¤‰æ›´ï¼‰
+		// ã¾ãŸã¯å³ã‚¹ãƒ†ã‚£ãƒƒã‚¯æŠ¼ã—è¾¼ã¿ãªã©
 
 		Vector3 upMove(0.0f, up * 10.0f, 0.0f);
 		cameraData_.position += upMove;
 		cameraData_.target += upMove;
 	}
 
-	// ‰EƒXƒeƒBƒbƒN‚Å‰ñ“]
+	// å³ã‚¹ãƒ†ã‚£ãƒƒã‚¯ã§å›žè»¢
 	{
 		float rotX = g_pad[0]->GetRStickXF() * 0.05f;
 		float rotY = g_pad[0]->GetRStickYF() * 0.05f;
 
-		// rotX‚ÅYŽ²‰ñ“]
+		// rotXã§Yè»¸å›žè»¢
 		Quaternion yRotation;
 		yRotation.SetRotationY(-rotX);
 		Vector3 toVector = cameraData_.position - cameraData_.target;
 		yRotation.Apply(toVector);
-		// rotY‚ÅXZŽ²‰ñ“]
+		// rotYã§XZè»¸å›žè»¢
 		Quaternion xzRotation;
 		xzRotation.SetRotation(g_camera3D->GetRight(), -rotY);
 		xzRotation.Apply(toVector);

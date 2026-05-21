@@ -1,18 +1,18 @@
-#pragma once
+ï»¿#pragma once
 
 #include "graphics/postEffect/PostEffectComponentBase.h"
 
 namespace nsK2Engine {
     /// <summary>
-    /// Ssao(ƒXƒNƒŠ[ƒ“ƒXƒy[ƒXƒAƒ“ƒrƒGƒ“ƒgƒIƒNƒ‹[ƒWƒ‡ƒ“)B
+    /// Ssao(ã‚¹ã‚¯ãƒªãƒ¼ãƒ³ã‚¹ãƒšãƒ¼ã‚¹ã‚¢ãƒ³ãƒ“ã‚¨ãƒ³ãƒˆã‚ªã‚¯ãƒ«ãƒ¼ã‚¸ãƒ§ãƒ³)ã€‚
     /// </summary>
     class Ssao : public PostEffectComponentBase
     {
     public:
         /// <summary>
-        /// ‰Šú‰»B
+        /// åˆæœŸåŒ–ã€‚
         /// </summary>
-        /// <param name="mainRenderTarget">ƒƒCƒ“ƒŒƒ“ƒ_[ƒ^[ƒQƒbƒgB</param>
+        /// <param name="mainRenderTarget">ãƒ¡ã‚¤ãƒ³ãƒ¬ãƒ³ãƒ€ãƒ¼ã‚¿ãƒ¼ã‚²ãƒƒãƒˆã€‚</param>
         void OnInit(
             RenderTarget& mainRenderTarget,
             RenderTarget& zprepassRenderTarget,
@@ -20,13 +20,13 @@ namespace nsK2Engine {
             RenderTarget& metallicSmoothRenderTarget,
             RenderTarget& albedoRenderTarget) override;
         /// <summary>
-        /// •`‰æB
+        /// æç”»ã€‚
         /// </summary>
-        /// <param name="rc">ƒŒƒ“ƒ_\ƒRƒ“ƒeƒLƒXƒgB</param>
-        /// <param name="mainRenderTarget">ƒƒCƒ“ƒŒƒ“ƒ_\ƒ^[ƒQƒbƒgB</param>
+        /// <param name="rc">ãƒ¬ãƒ³ãƒ€â€•ã‚³ãƒ³ãƒ†ã‚­ã‚¹ãƒˆã€‚</param>
+        /// <param name="mainRenderTarget">ãƒ¡ã‚¤ãƒ³ãƒ¬ãƒ³ãƒ€â€•ã‚¿ãƒ¼ã‚²ãƒƒãƒˆã€‚</param>
         void OnRender(RenderContext& rc, RenderTarget& mainRenderTarget) override;
         /// <summary>
-        /// ƒ|ƒXƒg‚ÌŒ‹‰Ê‚Ì‰æ‘œ‚ğƒƒCƒ“ƒŒƒ“ƒ_ƒŠƒ“ƒOƒ^[ƒQƒbƒg‚ÉƒRƒs[‚·‚éH
+        /// ãƒã‚¹ãƒˆã®çµæœã®ç”»åƒã‚’ãƒ¡ã‚¤ãƒ³ãƒ¬ãƒ³ãƒ€ãƒªãƒ³ã‚°ã‚¿ãƒ¼ã‚²ãƒƒãƒˆã«ã‚³ãƒ”ãƒ¼ã™ã‚‹ï¼Ÿ
         /// </summary>
         /// <returns></returns>
         bool IsCopyResultTextureToMainRenderTarget() const override
@@ -34,7 +34,7 @@ namespace nsK2Engine {
             return false;
         }
         /// <summary>
-        /// ƒ|ƒXƒgƒGƒtƒFƒNƒg‚ğÀs‚µ‚½Œ‹‰Ê‚Æ‚È‚éƒeƒNƒXƒ`ƒƒ‚ğæ“¾B
+        /// ãƒã‚¹ãƒˆã‚¨ãƒ•ã‚§ã‚¯ãƒˆã‚’å®Ÿè¡Œã—ãŸçµæœã¨ãªã‚‹ãƒ†ã‚¯ã‚¹ãƒãƒ£ã‚’å–å¾—ã€‚
         /// </summary>
         /// <returns></returns>
         Texture& GetResultTexture() override
@@ -43,13 +43,13 @@ namespace nsK2Engine {
         }
     private:
         struct SsaoBuffer {
-            Matrix view;//ƒrƒ…[s—ñB
-            Matrix proj;//ƒvƒƒWƒFƒNƒVƒ‡ƒ“s—ñB
-            Matrix invproj;//‹tƒvƒƒWƒFƒNƒVƒ‡ƒ“s—ñB
+            Matrix view;//ãƒ“ãƒ¥ãƒ¼è¡Œåˆ—ã€‚
+            Matrix proj;//ãƒ—ãƒ­ã‚¸ã‚§ã‚¯ã‚·ãƒ§ãƒ³è¡Œåˆ—ã€‚
+            Matrix invproj;//é€†ãƒ—ãƒ­ã‚¸ã‚§ã‚¯ã‚·ãƒ§ãƒ³è¡Œåˆ—ã€‚
         };
         RenderTarget m_ssaoRenderTarget;
-        Sprite m_ssaoSprite;					//SSAO—p‚ÌƒXƒvƒ‰ƒCƒgB
-        Sprite m_finalSprite;					//ÅI‡¬—p‚ÌƒXƒvƒ‰ƒCƒgB
-        SsaoBuffer m_cB;                    //‰ğ‘œ“x‚ğGPU‚É‘—‚é‚½‚ß‚Ì’è”ƒoƒbƒtƒ@\B
+        Sprite m_ssaoSprite;					//SSAOç”¨ã®ã‚¹ãƒ—ãƒ©ã‚¤ãƒˆã€‚
+        Sprite m_finalSprite;					//æœ€çµ‚åˆæˆç”¨ã®ã‚¹ãƒ—ãƒ©ã‚¤ãƒˆã€‚
+        SsaoBuffer m_cB;                    //è§£åƒåº¦ã‚’GPUã«é€ã‚‹ãŸã‚ã®å®šæ•°ãƒãƒƒãƒ•ã‚¡â€•ã€‚
     };
 }

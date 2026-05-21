@@ -1,11 +1,11 @@
-#include "k2EnginePreCompile.h"
+ï»¿#include "k2EnginePreCompile.h"
 #include "graphics/light/SceneLight.h"
 #include "graphics/light/VolumeSpotLight.h"
 
 namespace nsK2Engine {
     void SPointLight::Update()
     {
-        // g—p’†‚Ìƒ‰ƒCƒg‚ÍƒJƒƒ‰‹óŠÔ‚Å‚ÌÀ•W‚ğŒvZ‚·‚éB
+        // ä½¿ç”¨ä¸­ã®ãƒ©ã‚¤ãƒˆã¯ã‚«ãƒ¡ãƒ©ç©ºé–“ã§ã®åº§æ¨™ã‚’è¨ˆç®—ã™ã‚‹ã€‚
         if (!isUse) {
             return;
         }
@@ -14,7 +14,7 @@ namespace nsK2Engine {
     }
     void SSpotLight::Update()
     {
-        // g—p’†‚Ìƒ‰ƒCƒg‚ÍƒJƒƒ‰‹óŠÔ‚Å‚ÌÀ•W‚ğŒvZ‚·‚éB
+        // ä½¿ç”¨ä¸­ã®ãƒ©ã‚¤ãƒˆã¯ã‚«ãƒ¡ãƒ©ç©ºé–“ã§ã®åº§æ¨™ã‚’è¨ˆç®—ã™ã‚‹ã€‚
         if (!isUse) {
             return;
         }
@@ -26,7 +26,7 @@ namespace nsK2Engine {
     }
     void SceneLight::Init()
     {
-        // ‘¾—zŒõ
+        // å¤ªé™½å…‰
         m_light.directionalLight[0].color.x = 1.2f;
         m_light.directionalLight[0].color.y = 1.2f;
         m_light.directionalLight[0].color.z = 1.2f;
@@ -48,7 +48,7 @@ namespace nsK2Engine {
         m_light.directionalLight[1].direction.Normalize();
         m_light.directionalLight[1].castShadow = false;
 
-        // ’n–Ê‚©‚ç‚ÌÆ‚è•Ô‚µ
+        // åœ°é¢ã‹ã‚‰ã®ç…§ã‚Šè¿”ã—
         m_light.directionalLight[2].color.x = 0.6f;
         m_light.directionalLight[2].color.y = 0.6f;
         m_light.directionalLight[2].color.z = 0.6f;
@@ -64,13 +64,13 @@ namespace nsK2Engine {
         m_light.eyePos = g_camera3D->GetPosition();
         m_light.numPointLight = 0;
 
-        // ‘S‚Ä‚Ìƒ|ƒCƒ“ƒgƒ‰ƒCƒg‚ğ–¢g—p‚É‚·‚é
+        // å…¨ã¦ã®ãƒã‚¤ãƒ³ãƒˆãƒ©ã‚¤ãƒˆã‚’æœªä½¿ç”¨ã«ã™ã‚‹
         for (auto& pt : m_light.pointLights) {
             pt.UnUse();
             pt.SetAffectPowParam(1.0f);
             m_unusePointLightQueue.push_back(&pt);
         }
-        // ‚·‚×‚Ä‚ÌƒXƒ|ƒbƒgƒ‰ƒCƒg‚ğ–¢g—p‚É‚·‚éB
+        // ã™ã¹ã¦ã®ã‚¹ãƒãƒƒãƒˆãƒ©ã‚¤ãƒˆã‚’æœªä½¿ç”¨ã«ã™ã‚‹ã€‚
         int spNo = 0;
         for (auto& sp : m_light.spotLights) {
             sp.UnUse();

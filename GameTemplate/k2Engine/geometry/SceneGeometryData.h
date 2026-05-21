@@ -1,23 +1,23 @@
-#pragma once
+ï»¿#pragma once
 
 #include "geometry/GeometryData.h"
 
 namespace nsK2Engine {
     /// <summary>
-    /// ƒV[ƒ“‚ÌƒWƒIƒƒgƒŠî•ñ
+    /// ã‚·ãƒ¼ãƒ³ã®ã‚¸ã‚ªãƒ¡ãƒˆãƒªæƒ…å ±
     /// </summary>
     class SceneGeometryData : public Noncopyable {
     public:
         /// <summary>
-        /// Šô‰½Šwƒf[ƒ^‚ğ“o˜^
+        /// å¹¾ä½•å­¦ãƒ‡ãƒ¼ã‚¿ã‚’ç™»éŒ²
         /// </summary>
-        /// <param name="geomData">Šô‰½Šwƒf[ƒ^</param>
+        /// <param name="geomData">å¹¾ä½•å­¦ãƒ‡ãƒ¼ã‚¿</param>
         void RegisterGeometryData(GemometryData* geomData)
         {
             m_geometryDatas.push_back(geomData);
         }
         /// <summary>
-        /// Šô‰½Šwƒf[ƒ^‚Ì“o˜^‰ğœB
+        /// å¹¾ä½•å­¦ãƒ‡ãƒ¼ã‚¿ã®ç™»éŒ²è§£é™¤ã€‚
         /// </summary>
         /// <param name="geomData"></param>
         void UnregisterGeometryData(GemometryData* geomData)
@@ -32,7 +32,7 @@ namespace nsK2Engine {
             }
         }
         /// <summary>
-        /// Šô‰½Šwî•ñ‚ğXVB
+        /// å¹¾ä½•å­¦æƒ…å ±ã‚’æ›´æ–°ã€‚
         /// </summary>
         void Update();
         const Vector3& GetShadowCasterMaxPositionInViewFrustum() const
@@ -48,9 +48,9 @@ namespace nsK2Engine {
             return m_isBuildshadowCasterGeometryData;
         }
     private:
-        Vector3 m_shadowCasterMaxPositionInViewFrustum;     // ƒrƒ…[ƒtƒ‰ƒXƒ^ƒ€‚ÉŠÜ‚Ü‚ê‚Ä‚¢‚éƒVƒƒƒhƒEƒLƒƒƒXƒ^[‚ÌÅ‘åÀ•WB
-        Vector3 m_shadowCasterMinPositionInViewFrustum;     // ƒrƒ…[ƒtƒ‰ƒXƒ^ƒ€‚ÉŠÜ‚Ü‚ê‚Ä‚¢‚éƒVƒƒƒhƒEƒLƒƒƒXƒ^[‚ÌÅ¬À•WB
-        bool m_isBuildshadowCasterGeometryData = false;     // ƒVƒƒƒhƒEƒLƒƒƒXƒ^[‚ÉŠÖ‚·‚éƒWƒIƒƒgƒŠî•ñ‚ğ\’z‚Å‚«‚½H
-        std::list< GemometryData* > m_geometryDatas;        // ƒV[ƒ“‚ğ\¬‚·‚éƒWƒIƒƒgƒŠî•ñ‚ÌƒŠƒXƒgB
+        Vector3 m_shadowCasterMaxPositionInViewFrustum;     // ãƒ“ãƒ¥ãƒ¼ãƒ•ãƒ©ã‚¹ã‚¿ãƒ ã«å«ã¾ã‚Œã¦ã„ã‚‹ã‚·ãƒ£ãƒ‰ã‚¦ã‚­ãƒ£ã‚¹ã‚¿ãƒ¼ã®æœ€å¤§åº§æ¨™ã€‚
+        Vector3 m_shadowCasterMinPositionInViewFrustum;     // ãƒ“ãƒ¥ãƒ¼ãƒ•ãƒ©ã‚¹ã‚¿ãƒ ã«å«ã¾ã‚Œã¦ã„ã‚‹ã‚·ãƒ£ãƒ‰ã‚¦ã‚­ãƒ£ã‚¹ã‚¿ãƒ¼ã®æœ€å°åº§æ¨™ã€‚
+        bool m_isBuildshadowCasterGeometryData = false;     // ã‚·ãƒ£ãƒ‰ã‚¦ã‚­ãƒ£ã‚¹ã‚¿ãƒ¼ã«é–¢ã™ã‚‹ã‚¸ã‚ªãƒ¡ãƒˆãƒªæƒ…å ±ã‚’æ§‹ç¯‰ã§ããŸï¼Ÿ
+        std::list< GemometryData* > m_geometryDatas;        // ã‚·ãƒ¼ãƒ³ã‚’æ§‹æˆã™ã‚‹ã‚¸ã‚ªãƒ¡ãƒˆãƒªæƒ…å ±ã®ãƒªã‚¹ãƒˆã€‚
     };
 }

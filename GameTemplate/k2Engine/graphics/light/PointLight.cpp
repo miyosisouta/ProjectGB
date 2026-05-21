@@ -1,4 +1,4 @@
-#include "k2EnginePreCompile.h"
+ï»¿#include "k2EnginePreCompile.h"
 #include "graphics/light/PointLight.h"
 
 namespace nsK2Engine {
@@ -10,7 +10,7 @@ namespace nsK2Engine {
 		}
 	}
 	/// <summary>
-	/// ‰Šú‰»B
+	/// åˆæœŸåŒ–ã€‚
 	/// </summary>
 	void PointLight::Init()
 	{

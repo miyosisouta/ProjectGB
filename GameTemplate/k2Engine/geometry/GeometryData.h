@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 
 #include "geometry/AABB.h"
 
@@ -6,14 +6,14 @@ namespace nsK2Engine {
 	class ModelRender;
 
 	/// <summary>
-	/// ƒWƒIƒƒgƒŠî•ñ
+	/// ã‚¸ã‚ªãƒ¡ãƒˆãƒªæƒ…å ±
 	/// </summary>
 	class GemometryData {
 
 	public:
 		void Init(ModelRender* modelRender, int instanceId);
 		/// <summary>
-		/// ƒrƒ…[ƒtƒ‰ƒXƒ^ƒ€‚ÉŠÜ‚Ü‚ê‚Ä‚¢‚éH
+		/// ãƒ“ãƒ¥ãƒ¼ãƒ•ãƒ©ã‚¹ã‚¿ãƒ ã«å«ã¾ã‚Œã¦ã„ã‚‹ï¼Ÿ
 		/// </summary>
 		/// <returns></returns>
 		bool IsInViewFrustum() const
@@ -21,7 +21,7 @@ namespace nsK2Engine {
 			return m_isInViewFrustum;
 		}
 		/// <summary>
-		/// ƒ[ƒ‹ƒhÀ•WŒn‚Å‚ÌAABB‚ÌÅ‘åÀ•W‚ğæ“¾B
+		/// ãƒ¯ãƒ¼ãƒ«ãƒ‰åº§æ¨™ç³»ã§ã®AABBã®æœ€å¤§åº§æ¨™ã‚’å–å¾—ã€‚
 		/// </summary>
 		/// <returns></returns>
 		const Vector3& GetAabbMaxPositionInWorld() const
@@ -29,7 +29,7 @@ namespace nsK2Engine {
 			return m_aabbMax;
 		}
 		/// <summary>
-		/// ƒ[ƒ‹ƒhÀ•WŒn‚Å‚ÌAABB‚ÌÅ¬À•W‚ğæ“¾B
+		/// ãƒ¯ãƒ¼ãƒ«ãƒ‰åº§æ¨™ç³»ã§ã®AABBã®æœ€å°åº§æ¨™ã‚’å–å¾—ã€‚
 		/// </summary>
 		/// <returns></returns>
 		const Vector3& GetAabbMinPositionInWorld() const
@@ -37,21 +37,21 @@ namespace nsK2Engine {
 			return m_aabbMin;
 		}
 		/// <summary>
-		/// ƒVƒƒƒhƒEƒLƒƒƒXƒ^[‚ÌŠô‰½Šwƒf[ƒ^H
+		/// ã‚·ãƒ£ãƒ‰ã‚¦ã‚­ãƒ£ã‚¹ã‚¿ãƒ¼ã®å¹¾ä½•å­¦ãƒ‡ãƒ¼ã‚¿ï¼Ÿ
 		/// </summary>
 		/// <returns></returns>
 		bool IsShadowCaster() const;
 		/// <summary>
-		/// ƒWƒIƒƒgƒŠî•ñ‚ğXV
+		/// ã‚¸ã‚ªãƒ¡ãƒˆãƒªæƒ…å ±ã‚’æ›´æ–°
 		/// </summary>
 		void Update();
 	private:
-		bool m_isInViewFrustum = false;			// ƒrƒ…[ƒtƒ‰ƒXƒ^ƒ€‚ÉŠÜ‚Ü‚ê‚Ä‚¢‚é‚©B
+		bool m_isInViewFrustum = false;			// ãƒ“ãƒ¥ãƒ¼ãƒ•ãƒ©ã‚¹ã‚¿ãƒ ã«å«ã¾ã‚Œã¦ã„ã‚‹ã‹ã€‚
 		AABB m_aabb;							// AABB
-		Vector3 m_aabbWorldVertexPositions[8];	// AABB‚Ìƒ[ƒ‹ƒh‹óŠÔ‚Å‚Ì8’¸“_B
+		Vector3 m_aabbWorldVertexPositions[8];	// AABBã®ãƒ¯ãƒ¼ãƒ«ãƒ‰ç©ºé–“ã§ã®8é ‚ç‚¹ã€‚
 		Vector3 m_aabbMax;
 		Vector3 m_aabbMin;
-		ModelRender* m_modelRender = nullptr;	// ‚±‚ÌƒWƒIƒƒgƒŠî•ñ‚ÆŠÖ˜A‚Ã‚¢‚Ä‚¢‚éƒ‚ƒfƒ‹ƒŒƒ“ƒ_ƒ‰[B
+		ModelRender* m_modelRender = nullptr;	// ã“ã®ã‚¸ã‚ªãƒ¡ãƒˆãƒªæƒ…å ±ã¨é–¢é€£ã¥ã„ã¦ã„ã‚‹ãƒ¢ãƒ‡ãƒ«ãƒ¬ãƒ³ãƒ€ãƒ©ãƒ¼ã€‚
 		int m_instanceId = 0;
 	};
 }

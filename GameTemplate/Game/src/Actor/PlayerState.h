@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 #include "IState.h"
 
 class Player;
@@ -6,22 +6,22 @@ class NormalAttackBase;
 class AbilityBase;
 class UtilityBase;
 /*
- * State‚ÌŠî’êƒNƒ‰ƒX
+ * Stateã®åŸºåº•ã‚¯ãƒ©ã‚¹
  */
 class PlayerStateBase: public IState
 {	
 protected:
-	Player* player_ = nullptr; //!< ƒvƒŒƒCƒ„[
+	Player* player_ = nullptr; //!< ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼
 
 
 protected:
-	/** ˆÚ“®‘¬“x‚ğŒvZ‚·‚é‹¤’Êˆ— */
+	/** ç§»å‹•é€Ÿåº¦ã‚’è¨ˆç®—ã™ã‚‹å…±é€šå‡¦ç† */
 	Vector3 CalcMovementVelocity(float speed);
 
 public:
 	/*
-	 * ƒRƒ“ƒXƒgƒ‰ƒNƒ^
-	 * p : ƒvƒŒƒCƒ„[‚Ìî•ñ‚ğ“n‚·‚½‚ß
+	 * ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
+	 * p : ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®æƒ…å ±ã‚’æ¸¡ã™ãŸã‚
 	 */
 	PlayerStateBase(Player* p) : player_(p) {}
 	virtual ~PlayerStateBase() {}
@@ -35,7 +35,7 @@ public:
 };
 
 /*==========================================*/
-// ‘Ò‹@‚Ìó‘Ô
+// å¾…æ©Ÿã®çŠ¶æ…‹
 /*==========================================*/
 
 class IdleState : public PlayerStateBase
@@ -49,12 +49,12 @@ public:
 };
 
 /*==========================================*/
-// •à‚«‚Ìó‘Ô
+// æ­©ãã®çŠ¶æ…‹
 /*==========================================*/
 class WalkState : public PlayerStateBase
 {
 private:
-	/** •à‚«‚ÌSE‚ğÄ¶‚µ‚½Œo‰ßŠÔ */
+	/** æ­©ãã®SEã‚’å†ç”Ÿã—ãŸçµŒéæ™‚é–“ */
 	float walkSEElapsedTime_ = 0.0f;
 	float baseMoveSpeed_ = 0.0f;
 
@@ -67,12 +67,12 @@ public:
 };
 
 /*==========================================*/
-// ‘–‚éó‘Ô
+// èµ°ã‚‹çŠ¶æ…‹
 /*==========================================*/
 class RunState : public PlayerStateBase
 {
 private:
-	/** ‘–‚è‚ÌSE‚ğÄ¶‚µ‚½Œo‰ßŠÔ */
+	/** èµ°ã‚Šã®SEã‚’å†ç”Ÿã—ãŸçµŒéæ™‚é–“ */
 	float runSEElapsedTime_ = 0.0f;
 
 
@@ -86,7 +86,7 @@ public:
 
 
 /*==========================================*/
-// ’ÊíUŒ‚ó‘Ô
+// é€šå¸¸æ”»æ’ƒçŠ¶æ…‹
 /*==========================================*/
 class NormalAttackState : public PlayerStateBase
 {
@@ -106,7 +106,7 @@ public:
 };
 
 /*==========================================*/
-// “ÁêƒXƒLƒ‹ó‘Ô
+// ç‰¹æ®Šã‚¹ã‚­ãƒ«çŠ¶æ…‹
 /*==========================================*/
 class SpecialAbilityState : public PlayerStateBase
 {
@@ -128,7 +128,7 @@ public:
 };
 
 /*==========================================*/
-// “Áês“®ó‘Ô
+// ç‰¹æ®Šè¡Œå‹•çŠ¶æ…‹
 /*==========================================*/
 class UtilityState : public PlayerStateBase
 {
@@ -150,10 +150,10 @@ public:
 
 
 /************************************************************/
-// ‚±‚±‚©‚ç‚Í‹­§“I‚Èó‘Ô‚Ì‚à‚Ì‚ğ‘‚­
+// ã“ã“ã‹ã‚‰ã¯å¼·åˆ¶çš„ãªçŠ¶æ…‹ã®ã‚‚ã®ã‚’æ›¸ã
 
 /*==========================================*/
-// €–S‚Ìó‘Ô
+// æ­»äº¡ã®çŠ¶æ…‹
 /*==========================================*/
 
 class DeathState : public PlayerStateBase

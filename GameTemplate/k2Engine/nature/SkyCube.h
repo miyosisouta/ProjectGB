@@ -1,8 +1,8 @@
-#pragma once
+ï»¿#pragma once
 
 namespace nsK2Engine {
 	enum EnSkyCubeType {
-		enSkyCubeType_Day,		// ’‹ŠÔ
+		enSkyCubeType_Day,		// æ˜¼é–“
 		enSkyCubeType_Num,
 	};
 	/// <summary>
@@ -35,7 +35,7 @@ namespace nsK2Engine {
 			m_isDirty = true;
 		}
 		/// <summary>
-		/// ƒXƒJƒCƒLƒ…[ƒu‚Ìƒ^ƒCƒv‚ğİ’èB
+		/// ã‚¹ã‚«ã‚¤ã‚­ãƒ¥ãƒ¼ãƒ–ã®ã‚¿ã‚¤ãƒ—ã‚’è¨­å®šã€‚
 		/// </summary>
 		/// <param name="type"></param>
 		void SetType(EnSkyCubeType type) 
@@ -43,7 +43,7 @@ namespace nsK2Engine {
 			m_type = type;
 		}
 		/// <summary>
-		/// –¾‚é‚³‚ğİ’èB
+		/// æ˜ã‚‹ã•ã‚’è¨­å®šã€‚
 		/// </summary>
 		/// <param name="lum"></param>
 		void SetLuminance(float lum)

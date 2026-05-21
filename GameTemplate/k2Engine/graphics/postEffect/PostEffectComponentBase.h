@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 
 namespace nsK2Engine {
 	class PostEffectComponentBase : public Noncopyable {
@@ -12,21 +12,21 @@ namespace nsK2Engine {
 		);
 		void Render(RenderContext& rc, RenderTarget& mainRenderTarget);
 		/// <summary>
-		/// ƒ|ƒXƒgƒGƒtƒFƒNƒg‚ğ–³Œø‚É‚·‚éB
+		/// ãƒã‚¹ãƒˆã‚¨ãƒ•ã‚§ã‚¯ãƒˆã‚’ç„¡åŠ¹ã«ã™ã‚‹ã€‚
 		/// </summary>
 		void Disable()
 		{
 			m_isEnable = false;
 		}
 		/// <summary>
-		/// ƒ|ƒXƒgƒGƒtƒFƒNƒg‚ğ—LŒø‚É‚·‚éB
+		/// ãƒã‚¹ãƒˆã‚¨ãƒ•ã‚§ã‚¯ãƒˆã‚’æœ‰åŠ¹ã«ã™ã‚‹ã€‚
 		/// </summary>
 		void Enable()
 		{
 			m_isEnable = true;
 		}
 		/// <summary>
-		/// ƒ|ƒXƒgƒGƒtƒFƒNƒg‚ª—LŒø‚©”»’èB
+		/// ãƒã‚¹ãƒˆã‚¨ãƒ•ã‚§ã‚¯ãƒˆãŒæœ‰åŠ¹ã‹åˆ¤å®šã€‚
 		/// </summary>
 		/// <returns></returns>
 		bool IsEnable() const
@@ -47,7 +47,7 @@ namespace nsK2Engine {
 			return nullTexture;
 		}
 		/// <summary>
-		/// ƒ|ƒXƒg‚ÌŒ‹‰Ê‚ğƒƒCƒ“ƒŒƒ“ƒ_ƒŠƒ“ƒOƒ^[ƒQƒbƒg‚ÉƒRƒs[‚·‚éH
+		/// ãƒã‚¹ãƒˆã®çµæœã‚’ãƒ¡ã‚¤ãƒ³ãƒ¬ãƒ³ãƒ€ãƒªãƒ³ã‚°ã‚¿ãƒ¼ã‚²ãƒƒãƒˆã«ã‚³ãƒ”ãƒ¼ã™ã‚‹ï¼Ÿ
 		/// </summary>
 		/// <returns></returns>
 		virtual bool IsCopyResultTextureToMainRenderTarget() const
@@ -57,6 +57,6 @@ namespace nsK2Engine {
 		
 	private:
 		bool m_isEnable = true;
-		Sprite m_copyMainRtSprite;	// ƒƒCƒ“ƒŒƒ“ƒ_ƒŠƒ“ƒOƒ^[ƒQƒbƒg‚É•`‰æ‚·‚é‚½‚ß‚ÌƒXƒvƒ‰ƒCƒgB
+		Sprite m_copyMainRtSprite;	// ãƒ¡ã‚¤ãƒ³ãƒ¬ãƒ³ãƒ€ãƒªãƒ³ã‚°ã‚¿ãƒ¼ã‚²ãƒƒãƒˆã«æç”»ã™ã‚‹ãŸã‚ã®ã‚¹ãƒ—ãƒ©ã‚¤ãƒˆã€‚
 	};
 }

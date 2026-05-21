@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include "src/Actor/ActorStatus.h"
 #include <random>
 #include <algorithm>

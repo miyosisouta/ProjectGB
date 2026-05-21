@@ -1,7 +1,7 @@
-#pragma once
+ï»¿#pragma once
 #include "AbilityBase.h"
 /*
- * Bomb‚ÌŠî’êƒNƒ‰ƒX
+ * Bombã®åŸºåº•ã‚¯ãƒ©ã‚¹
  */
 class BombBase : public AbilityBase
 {	

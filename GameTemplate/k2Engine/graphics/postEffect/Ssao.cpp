@@ -1,4 +1,4 @@
-#include "k2EnginePreCompile.h"
+ï»¿#include "k2EnginePreCompile.h"
 #include "Ssao.h"
 #include "Graphics/RenderingEngine.h"
 
@@ -26,16 +26,16 @@ namespace nsK2Engine {
             color
         );
 
-        // ÅI‡¬—p‚ÌƒXƒvƒ‰ƒCƒg‚ğ‰Šú‰»‚·‚é
+        // æœ€çµ‚åˆæˆç”¨ã®ã‚¹ãƒ—ãƒ©ã‚¤ãƒˆã‚’åˆæœŸåŒ–ã™ã‚‹
         SpriteInitData spriteInitData;
         spriteInitData.m_textures[0] = &g_renderingEngine->GetZPrepassDepthTexture();
         spriteInitData.m_textures[1] = &g_renderingEngine->GetGBufferNormalTexture();
-        //todo ƒ[ƒ‹ƒhÀ•W‚ÌGBuffer‚Í”p~BƒAƒ‹ƒxƒh[“xƒeƒNƒXƒ`ƒƒ‚Ì[“x’l‚ğ—˜—p‚µ‚ÄAƒ[ƒ‹ƒhÀ•W‚ğ•œŒ³‚·‚é‚æ‚¤‚ÉB
+        //todo ãƒ¯ãƒ¼ãƒ«ãƒ‰åº§æ¨™ã®GBufferã¯å»ƒæ­¢ã€‚ã‚¢ãƒ«ãƒ™ãƒ‰æ·±åº¦ãƒ†ã‚¯ã‚¹ãƒãƒ£ã®æ·±åº¦å€¤ã‚’åˆ©ç”¨ã—ã¦ã€ãƒ¯ãƒ¼ãƒ«ãƒ‰åº§æ¨™ã‚’å¾©å…ƒã™ã‚‹ã‚ˆã†ã«ã€‚
         //spriteInitData.m_textures[2] = &g_renderingEngine->GetGBufferWorldTexture();
-        // ‰ğ‘œ“x‚ÍmainRenderTarget‚Ì•‚Æ‚‚³
+        // è§£åƒåº¦ã¯mainRenderTargetã®å¹…ã¨é«˜ã•
         spriteInitData.m_width = mainRenderTarget.GetWidth();
         spriteInitData.m_height = mainRenderTarget.GetHeight();
-        // 2D—p‚ÌƒVƒF[ƒ_[‚ğg—p‚·‚é
+        // 2Dç”¨ã®ã‚·ã‚§ãƒ¼ãƒ€ãƒ¼ã‚’ä½¿ç”¨ã™ã‚‹
         spriteInitData.m_fxFilePath = "Assets/shader/postEffect/ssao.fx";
         spriteInitData.m_vsEntryPointFunc = "VSMain";
         spriteInitData.m_psEntryPoinFunc = "PSMain";
@@ -43,7 +43,7 @@ namespace nsK2Engine {
         spriteInitData.m_alphaBlendMode = AlphaBlendMode_None;
         spriteInitData.m_colorBufferFormat[0] = m_ssaoRenderTarget.GetColorBufferFormat();
 
-        //‰ğ‘œ“x‚ğGPU‚É‘—‚é‚½‚ß‚Ì’è”ƒoƒbƒtƒ@‚ğİ’è‚·‚éB
+        //è§£åƒåº¦ã‚’GPUã«é€ã‚‹ãŸã‚ã®å®šæ•°ãƒãƒƒãƒ•ã‚¡ã‚’è¨­å®šã™ã‚‹ã€‚
         spriteInitData.m_expandConstantBuffer = (void*)&m_cB;
         spriteInitData.m_expandConstantBufferSize = sizeof(SsaoBuffer) +
             (16 - (sizeof(SsaoBuffer) % 16));
@@ -51,7 +51,7 @@ namespace nsK2Engine {
 
 
         spriteInitData.m_textures[0] = &m_ssaoRenderTarget.GetRenderTargetTexture();
-        // 2D—p‚ÌƒVƒF[ƒ_[‚ğg—p‚·‚é
+        // 2Dç”¨ã®ã‚·ã‚§ãƒ¼ãƒ€ãƒ¼ã‚’ä½¿ç”¨ã™ã‚‹
         spriteInitData.m_fxFilePath = "Assets/shader/sprite.fx";
         spriteInitData.m_vsEntryPointFunc = "VSMain";
         spriteInitData.m_psEntryPoinFunc = "PSMain";
@@ -63,36 +63,36 @@ namespace nsK2Engine {
 
     void Ssao::OnRender(RenderContext& rc, RenderTarget& mainRenderTarget)
     {
-        //ssaoƒŒƒ“ƒ_\ƒ^[ƒQƒbƒg‚ğB
-        //PRESENT‚©‚çRENDERTARGET‚ÖB
+        //ssaoãƒ¬ãƒ³ãƒ€â€•ã‚¿ãƒ¼ã‚²ãƒƒãƒˆã‚’ã€‚
+        //PRESENTã‹ã‚‰RENDERTARGETã¸ã€‚
         rc.WaitUntilToPossibleSetRenderTarget(m_ssaoRenderTarget);
-        // ƒŒƒ“ƒ_ƒŠƒ“ƒOƒ^[ƒQƒbƒg‚ğİ’è
+        // ãƒ¬ãƒ³ãƒ€ãƒªãƒ³ã‚°ã‚¿ãƒ¼ã‚²ãƒƒãƒˆã‚’è¨­å®š
         rc.SetRenderTargetAndViewport(m_ssaoRenderTarget);
 
-        //’è”ƒoƒbƒtƒ@[‚ğXVB
-        //ƒrƒ…[s—ñB
+        //å®šæ•°ãƒãƒƒãƒ•ã‚¡ãƒ¼ã‚’æ›´æ–°ã€‚
+        //ãƒ“ãƒ¥ãƒ¼è¡Œåˆ—ã€‚
         m_cB.view = g_camera3D->GetViewMatrix();
-        //ƒvƒƒWƒFƒNƒVƒ‡ƒ“s—ñB
+        //ãƒ—ãƒ­ã‚¸ã‚§ã‚¯ã‚·ãƒ§ãƒ³è¡Œåˆ—ã€‚
         m_cB.proj = g_camera3D->GetProjectionMatrix();
-        //ƒvƒƒWƒFƒNƒVƒ‡ƒ“s—ñ‚Ì‹ts—ñB
+        //ãƒ—ãƒ­ã‚¸ã‚§ã‚¯ã‚·ãƒ§ãƒ³è¡Œåˆ—ã®é€†è¡Œåˆ—ã€‚
         m_cB.invproj = g_camera3D->GetProjectionMatrixInv();
 
-        //•`‰æB
+        //æç”»ã€‚
         m_ssaoSprite.Draw(rc);
 
-        //ƒŒƒ“ƒ_\ƒ^[ƒQƒbƒg‚ğB
-        //ƒƒCƒ“ƒŒƒ“ƒ_\ƒ^[ƒQƒbƒg‚Éİ’èB
+        //ãƒ¬ãƒ³ãƒ€â€•ã‚¿ãƒ¼ã‚²ãƒƒãƒˆã‚’ã€‚
+        //ãƒ¡ã‚¤ãƒ³ãƒ¬ãƒ³ãƒ€â€•ã‚¿ãƒ¼ã‚²ãƒƒãƒˆã«è¨­å®šã€‚
         rc.SetRenderTarget(mainRenderTarget);
 
-        //ssaoƒŒƒ“ƒ_\ƒ^[ƒQƒbƒg‚ğB
-        //RENDERTARGET‚©‚çPRESENT‚ÖB
+        //ssaoãƒ¬ãƒ³ãƒ€â€•ã‚¿ãƒ¼ã‚²ãƒƒãƒˆã‚’ã€‚
+        //RENDERTARGETã‹ã‚‰PRESENTã¸ã€‚
         rc.WaitUntilFinishDrawingToRenderTarget(m_ssaoRenderTarget);
 
-        //ƒƒCƒ“ƒŒƒ“ƒ_\ƒ^[ƒQƒbƒg‚ğB
-        //PRESENT‚©‚çRENDERTARGET‚ÖB
+        //ãƒ¡ã‚¤ãƒ³ãƒ¬ãƒ³ãƒ€â€•ã‚¿ãƒ¼ã‚²ãƒƒãƒˆã‚’ã€‚
+        //PRESENTã‹ã‚‰RENDERTARGETã¸ã€‚
         rc.WaitUntilToPossibleSetRenderTarget(mainRenderTarget);
 
-        //•`‰æB
+        //æç”»ã€‚
         m_finalSprite.Draw(rc);
 
         rc.WaitUntilFinishDrawingToRenderTarget(mainRenderTarget);
