@@ -101,10 +101,12 @@ void SceneManager::GnangeNextScene(const uint32_t id)
 		// 3. ロード画面描画を終了
 		taskScheduler_->AddTimer(1.6f, [&]()
 			{
-				loadingScreen_->EndDraw();
-
 				isNextScene_ = false;
 			});
+		taskScheduler_->AddTimer(1.6f, [&]()
+			{
+				loadingScreen_->EndDraw();
+			}, true);
 	}
 }
 
