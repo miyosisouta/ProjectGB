@@ -21,6 +21,42 @@ namespace
 
 	static float playerHP = 10.0f;
 	static float bossHP = 10.0f;
+
+	/** 各アクションごとのボタンID */
+	struct ActionTypeButtonId
+	{
+		uint32_t buttonAId;
+		uint32_t buttonBId;
+		uint32_t buttonXId;
+		uint32_t buttonYId;
+		//
+		ActionTypeButtonId() {}
+		ActionTypeButtonId(const uint32_t aId, const uint32_t bId, const uint32_t xId, const uint32_t yId)
+			: buttonAId(aId), buttonBId(bId), buttonXId(xId), buttonYId(yId)
+		{
+		}
+	};
+
+	ActionTypeButtonId GetActionTypeButtonId(const int enAction)
+	{
+		switch (enAction)
+		{
+			case enActionSpecialSkill:
+			{
+				return ActionTypeButtonId(Hash32("AbilitySkillIcon/InGame_ButtonUI_Skill/inGame_ButtonIcon_A"), Hash32("AbilitySkillIcon/InGame_ButtonUI_Skill/inGame_ButtonIcon_B"), Hash32("AbilitySkillIcon/InGame_ButtonUI_Skill/inGame_ButtonIcon_X"), Hash32("AbilitySkillIcon/InGame_ButtonUI_Skill/inGame_ButtonIcon_Y"));
+			}
+			case enActionDash:
+			{
+				return ActionTypeButtonId(Hash32("InGame_ButtonUI_Run/inGame_ButtonIcon_A"), Hash32("InGame_ButtonUI_Run/inGame_ButtonIcon_B"), Hash32("InGame_ButtonUI_Run/inGame_ButtonIcon_X"), Hash32("InGame_ButtonUI_Run/inGame_ButtonIcon_Y"));
+			}
+			case enActionNormalSkill:
+			{
+				return ActionTypeButtonId(Hash32("InGame_ButtonUI_Attack/inGame_ButtonIcon_A"), Hash32("InGame_ButtonUI_Attack/inGame_ButtonIcon_B"), Hash32("InGame_ButtonUI_Attack/inGame_ButtonIcon_X"), Hash32("InGame_ButtonUI_Attack/inGame_ButtonIcon_Y"));
+			}
+		}
+		K2_ASSERT(false, "ここに来るはずはない");
+		return ActionTypeButtonId();
+	}
 }
 
 
@@ -146,6 +182,14 @@ void InGameMenu::Update()
 			}
 		}
 		abilitySkillIconScaleSequence_->Update(g_gameTime->GetFrameDeltaTime());
+		//// スキルボタンのキャンバス
+		//auto* abilitySkillButtonIconCanvas = GetUI<UICanvas>(Hash32("InGame_ButtonUI_Skill"));
+		//if (abilitySkillButtonIconCanvas) {
+		//	if (isReadyAbilityFrame) {
+		//		abilitySkillButtonIconScaleSequence_->Play(abilitySkillButtonIconCanvas);
+		//	}
+		//}
+		//abilitySkillButtonIconScaleSequence_->Update(g_gameTime->GetFrameDeltaTime());
 	}
 	
 
@@ -172,6 +216,13 @@ void InGameMenu::Update()
 		playerDamageScheduler_->Update(g_gameTime->GetFrameDeltaTime());
 	}
 
+	// 押されたボタンの表示
+	{
+		UpdateButtonWord(EnGameAction::enActionSpecialSkill);
+		UpdateButtonWord(EnGameAction::enActionDash);
+		UpdateButtonWord(EnGameAction::enActionNormalSkill);
+	}
+
 	MenuBase::Update();
 }
 
@@ -196,6 +247,14 @@ void InGameMenu::InitializeLogic()
 	UIAnimationFactory::Attach<UIScaleAnimation>(abilitySkillIconCanvas, Hash32("SkillReadyScaleDown"));
 	abilitySkillIconScaleSequence_ = std::make_unique<UIAnimationSequence>();
 	abilitySkillIconScaleSequence_->Add(Hash32("SkillReadyScaleUp")).Add(Hash32("SkillReadyScaleDown"));
+
+	//// アビリティアイコンのボタンUI
+	//// 押されたボタンのアニメーション
+	//auto* abilitySkillButtonCanvas = GetUI<UICanvas>(Hash32("InGame_ButtonUI_Skill"));
+	//UIAnimationFactory::Attach<UIScaleAnimation>(abilitySkillButtonCanvas, Hash32("SkillReadyScaleUp"));
+	//UIAnimationFactory::Attach<UIScaleAnimation>(abilitySkillButtonCanvas, Hash32("SkillReadyScaleDown"));
+	//abilitySkillButtonIconScaleSequence_ = std::make_unique<UIAnimationSequence>();
+	//abilitySkillButtonIconScaleSequence_->Add(Hash32("SkillReadyScaleUp")).Add(Hash32("SkillReadyScaleDown"));
 
 
 	// ボスHPのキャンバス
@@ -247,4 +306,37 @@ void InGameMenu::CreatePlayerDamageScheduler()
 			auto* normalColorDummy = GetUI<UIDummy>(Hash32("FlameNormalColorDummy"));
 			normalFlame->color = normalColorDummy->color;
 		});
+}
+
+void InGameMenu::UpdateButtonWord(const uint32_t enAction)
+{
+	const auto actionTypeButtonId = GetActionTypeButtonId(enAction);
+
+	// 非表示
+	auto* buttonA = GetUI<UIIcon>(actionTypeButtonId.buttonAId);
+	buttonA->isDraw = false;
+	auto* buttonB = GetUI<UIIcon>(actionTypeButtonId.buttonBId);
+	buttonB->isDraw = false;
+	auto* buttonX = GetUI<UIIcon>(actionTypeButtonId.buttonXId);
+	buttonX->isDraw = false;
+	auto* buttonY = GetUI<UIIcon>(actionTypeButtonId.buttonYId);
+	buttonY->isDraw = false;
+
+
+	// ボタン設定されたときにそのボタンをとってくる
+	const int key = KeyConfig::Get().GetBindButton(static_cast<EnGameAction>(enAction));
+
+	// 特定のボタンが押されたら表示
+	if (key == enButtonA) {
+		buttonA->isDraw = true;
+	}
+	if (key == enButtonB) {
+		buttonB->isDraw = true;
+	}
+	if (key == enButtonX) {
+		buttonX->isDraw = true;
+	}
+	if (key == enButtonY) {
+		buttonY->isDraw = true;
+	}
 }

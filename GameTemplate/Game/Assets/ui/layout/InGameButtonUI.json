@@ -1,0 +1,57 @@
+{
+  "canvas": {
+    "elements": [
+      {
+        "coment": "ボタン：A",
+        "type": "UIIcon",
+        "name": "inGame_ButtonIcon_A",
+        "asset": "Assets/ui/inGameUI/skillIcon/a_button.DDS",
+        "width": 40,
+        "height": 40,
+        "position": [0, 0, 0],
+        "scale": [1, 1, 1],
+        "rotation": 0,
+        "color": [1, 1, 1, 1],
+        "isDraw": false
+      },
+      {
+        "coment": "ボタン：B",
+        "type": "UIIcon",
+        "name": "inGame_ButtonIcon_B",
+        "asset": "Assets/ui/inGameUI/skillIcon/b_button.DDS",
+        "width": 40,
+        "height": 40,
+        "position": [0, 0, 0],
+        "scale": [1, 1, 1],
+        "rotation": 0,
+        "color": [1, 1, 1, 1],
+        "isDraw": false
+      },
+      {
+        "coment": "ボタン：X",
+        "type": "UIIcon",
+        "name": "inGame_ButtonIcon_X",
+        "asset": "Assets/ui/inGameUI/skillIcon/x_button.DDS",
+        "width": 40,
+        "height": 40,
+        "position": [0, 0, 0],
+        "scale": [1, 1, 1],
+        "rotation": 0,
+        "color": [1, 1, 1, 1],
+        "isDraw": false
+      },
+      {
+        "coment": "ボタン：Y",
+        "type": "UIIcon",
+        "name": "inGame_ButtonIcon_Y",
+        "asset": "Assets/ui/inGameUI/skillIcon/y_button.DDS",
+        "width": 40,
+        "height": 40,
+        "position": [0, 0, 0],
+        "scale": [1, 1, 1],
+        "rotation": 0,
+        "color": [1, 1, 1, 1]
+      }
+    ]
+  }
+}

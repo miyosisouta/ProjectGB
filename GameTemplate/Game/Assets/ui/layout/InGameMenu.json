@@ -129,21 +129,9 @@
         "type": "UIIcon",
         "name": "Attack_Icon_punch_back",
         "asset": "Assets/ui/inGameUI/skillIcon/back.DDS",
-        "width": 70,
-        "height": 70,
-        "position": [888, -450, 0],
-        "scale": [1, 1, 1],
-        "rotation": 0,
-        "color": [1, 1, 1, 1]
-      },
-      {
-        "coment": "攻撃アイコンのボタン表示",
-        "type": "UIIcon",
-        "name": "Attack_Icon_punch_Bbutton",
-        "asset": "Assets/ui/inGameUI/skillIcon/b_button.DDS",
-        "width": 40,
-        "height": 40,
-        "position": [890, -450, 0],
+        "width": 65,
+        "height": 65,
+        "position": [875, -455, 0],
         "scale": [1, 1, 1],
         "rotation": 0,
         "color": [1, 1, 1, 1]
@@ -193,21 +181,9 @@
         "type": "UIIcon",
         "name": "dodeg_Icon_run_back",
         "asset": "Assets/ui/inGameUI/skillIcon/back.DDS",
-        "width": 60,
-        "height": 60,
+        "width": 65,
+        "height": 65,
         "position": [680, -455, 0],
-        "scale": [1, 1, 1],
-        "rotation": 0,
-        "color": [1, 1, 1, 1]
-      },
-      {
-        "coment": "回避アイコンのボタン表示",
-        "type": "UIIcon",
-        "name": "dodeg_Icon_Bbutton",
-        "asset": "Assets/ui/inGameUI/skillIcon/a_button.DDS",
-        "width": 40,
-        "height": 40,
-        "position": [682, -455, 0],
         "scale": [1, 1, 1],
         "rotation": 0,
         "color": [1, 1, 1, 1]
@@ -217,8 +193,8 @@
         "type": "UIIcon",
         "name": "dodeg_Icon_back",
         "asset": "Assets/ui/inGameUI/skillIcon/back_run.DDS",
-        "width": 170,
-        "height": 170,
+        "width": 175,
+        "height": 175,
         "position": [600, -375, 0],
         "scale": [1, 1, 1],
         "rotation": 0,
@@ -294,6 +270,22 @@
         "name": "BossHPBar",
         "source": "Assets/ui/layout/BossHP.json",
         "position": [0, 410, 0],
+        "scale": [1, 1, 1]
+      },
+      {
+        "comment": "ボタン表示:回避",
+        "type": "UIPrefab",
+        "name": "InGame_ButtonUI_Run",
+        "source": "Assets/ui/layout/InGameButtonUI.json",
+        "position": [680, -455, 0],
+        "scale": [1, 1, 1]
+      },
+      {
+        "comment": "ボタン表示:攻撃",
+        "type": "UIPrefab",
+        "name": "InGame_ButtonUI_Attack",
+        "source": "Assets/ui/layout/InGameButtonUI.json",
+        "position": [875, -455, 0],
         "scale": [1, 1, 1]
       }
     ]
