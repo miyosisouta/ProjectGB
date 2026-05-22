@@ -40,14 +40,18 @@ struct SkillSlot
     float       motionValues_ = 0.0f;    //!< モーション倍率（本体 attack_ にかける係数）
     CoolDown    coolDown_;               //!< このスキル専用のクールダウン
     float       decreaseStamina_ = 0.0f; //!< スタミナ消費量
+    float       vibrationTime_ = 0.0f;   //!< バイブレーションの時間
+    float       vibrationForce_ = 0.0f;  //!< バイブレーションの強さ
 
     /** スキルスロットを初期化する */
-    void Init(const std::string& key, float motionValues, float coolDownTime, float decreaseStamina = 0.0f)
+    void Init(const std::string& key, float motionValues, float coolDownTime, float decreaseStamina = 0.0f, float vibTime = 0.0f, float vibForce = 0.0f)
     {
         key_                    = key;
         motionValues_           = motionValues;
         coolDown_.coolDownTime_ = coolDownTime;
-        decreaseStamina_ = decreaseStamina;
+        decreaseStamina_        = decreaseStamina;
+        vibrationTime_          = vibTime;
+        vibrationForce_         = vibForce;
     }
 
     /** 毎フレーム呼ぶ */
@@ -59,6 +63,8 @@ struct SkillSlot
     float GetMotionValues()     const { return motionValues_; }
     float GetCoolTimer()        const { return coolDown_.GetTimer(); }
     float GetDecreaseStamina()  const { return decreaseStamina_; }
+    float GetVibrationTime()  const { return vibrationTime_; }
+    float GetVibrationForce()  const { return vibrationForce_; }
     bool  CanUse()              const { return coolDown_.CanUse(); }
     bool  IsReadyFrame()        const { return coolDown_.IsReadyFrame(); }
 };
@@ -183,7 +189,7 @@ public:
         if (!param) { return; }
 
         SkillSlot slot;
-        slot.Init(skillKey, param->motionValues, param->cooldown, param->decreaseStamina);
+        slot.Init(skillKey, param->motionValues, param->cooldown, param->decreaseStamina, param->vibrationTime, param->vibrationForce);
         slots_[slotName] = slot;
     }
 
@@ -215,6 +221,20 @@ public:
     {
         auto it = slots_.find(slotName);
         return (it != slots_.end()) ? it->second.GetMotionValues() : 0.0f;
+    }
+
+    /** 指定スキルのバイブレーション時間を取得する */
+    float GetVibrationTimeValues(const std::string& skillKey) const
+    {
+        auto it = slots_.find(skillKey);
+        return (it != slots_.end()) ? it->second.GetVibrationTime() : 0.0f;
+    }
+
+    /** 指定スキルのバイブレーション力を取得する */
+    float GetVibrationForceValues(const std::string& skillKey) const
+    {
+        auto it = slots_.find(skillKey);
+        return (it != slots_.end()) ? it->second.GetVibrationForce() : 0.0f;
     }
 
     /** 指定スロットのスタミナ消費量を取得 */
@@ -265,7 +285,7 @@ public:
         for (const auto* param : skills)
         {
             SkillSlot slot;
-            slot.Init(param->key, param->motionValues, param->cooldown);
+            slot.Init(param->key, param->motionValues, param->cooldown,0.0f, param->vibrationTime, param->vibrationForce);
             slots_[param->key] = slot;
         }
     }
@@ -297,6 +317,20 @@ public:
     {
         auto it = slots_.find(skillKey);
         return (it != slots_.end()) ? it->second.GetMotionValues() : 0.0f;
+    }
+
+    /** 指定スキルのバイブレーション時間を取得する */
+    float GetVibrationTimeValues(const std::string& skillKey) const
+    {
+        auto it = slots_.find(skillKey);
+        return (it != slots_.end()) ? it->second.GetVibrationTime() : 0.0f;
+    }
+
+    /** 指定スキルのバイブレーション力を取得する */
+    float GetVibrationForceValues(const std::string& skillKey) const
+    {
+        auto it = slots_.find(skillKey);
+        return (it != slots_.end()) ? it->second.GetVibrationForce() : 0.0f;
     }
 
 public:
@@ -548,6 +582,12 @@ public:
     /** スキルのモーション倍率を取得する */
     float GetSkillMotionValues(const std::string& slotName) const { return skillStatus_.GetMotionValues(slotName); }
 
+    /** スキルのモーション倍率を取得する */
+    float GetVibrationTimeValues(const std::string& skillKey) const { return skillStatus_.GetVibrationTimeValues(skillKey); }
+
+    /** スキルのモーション倍率を取得する */
+    float GetVibrationForceValues(const std::string& skillKey) const { return skillStatus_.GetVibrationForceValues(skillKey); }
+
     /** スキルステータス全体へのアクセス */
     const PlayerSkillStatus& GetSkillStatus() const { return skillStatus_; }
           PlayerSkillStatus& GetSkillStatus()       { return skillStatus_; }
@@ -676,6 +716,12 @@ public:
 
     /** スキルのモーション倍率を取得する */
     float GetSkillMotionValues(const std::string& skillKey) const { return skillStatus_.GetMotionValues(skillKey); }
+    
+    /** スキルのモーション倍率を取得する */
+    float GetVibrationTimeValues(const std::string& skillKey) const { return skillStatus_.GetVibrationTimeValues(skillKey); }
+
+    /** スキルのモーション倍率を取得する */
+    float GetVibrationForceValues(const std::string& skillKey) const { return skillStatus_.GetVibrationForceValues(skillKey); }
 
     /** スキルステータス全体へのアクセス */
     const BossSkillStatus& GetSkillStatus() const { return skillStatus_; }
