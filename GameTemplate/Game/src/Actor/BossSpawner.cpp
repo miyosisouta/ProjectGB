@@ -175,3 +175,22 @@ void BossSpawner::SetUpdate(const bool flg)
 {
 	boss_->SetUpdate(flg);
 }
+
+void BossSpawner::SetControlEnabled(const bool flg)
+{
+	if (bossController_) {
+		if (flg) {
+			bossController_->Activate(); // コントローラが動くようにする
+		} else {
+			bossController_->Deactivate(); // コントローラが動かないようにする
+		}
+	}
+
+	if (boss_) {
+		boss_->SetMoveStop(!flg);
+		if (!flg) {
+			boss_->ChangeState(BossStateID::Idle); // カットシーン中に待機アニメーションをさせる
+			SetUpdate(true); // ボスが更新されるようにする
+		}
+	}
+}

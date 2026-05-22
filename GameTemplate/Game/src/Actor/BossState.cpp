@@ -13,7 +13,7 @@ namespace
 	constexpr float LONG_DISTANCE = 1500.0f;	// 遠距離
 
 	// 待機
-	constexpr float BOSS_RUN_END_TIME = 8.0f; // 待機時間終了
+	constexpr float BOSS_IDLE_END_TIME = 5.0f; // 待機時間終了
 
 	// ダッシュ
 	static const Vector3 BOSS_RUN_EFFECT_SCALE = Vector3(20.0f, 20.0f, 20.0f); // エフェクトサイズ
@@ -96,7 +96,7 @@ void BossIdleState::Enter()
 		taskScheduler_ = std::make_unique<TaskSchedulerSystem>();
 
 		// 時間設定
-		taskScheduler_->AddTimer(BOSS_RUN_END_TIME, [&]() {
+		taskScheduler_->AddTimer(BOSS_IDLE_END_TIME, [&]() {
 			isFinished_ = true;
 			});
 	}
@@ -106,7 +106,9 @@ void BossIdleState::Update()
 {
 	boss_->SetMoveVelocity(Vector3::Zero); // 移動速度を0に
 
-	if (taskScheduler_) { taskScheduler_->Update(g_gameTime->GetFrameDeltaTime()); }
+	if (taskScheduler_ && BattleManager::Get().IsPlayingScene()) { 
+		taskScheduler_->Update(g_gameTime->GetFrameDeltaTime()); 
+	}
 }
 
 void BossIdleState::Exit()

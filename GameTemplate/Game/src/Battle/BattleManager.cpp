@@ -34,11 +34,13 @@
 
 namespace
 {
+	/* 優先度 */
 	constexpr uint8_t PRIORITY_PLAYER            = 0;
 	constexpr uint8_t PRIORITY_PLAYER_CONTROLLER = 10;
 	constexpr uint8_t PRIORITY_STAGE             = 0;
 	constexpr uint8_t PRIORITY_SKYCUBE           = 0;
 
+	/* ディザリング */
 	constexpr float DITHERING_ENABLE_TRUE_VALUE  = 1.0f;
 	constexpr float DITHERING_ENABLE_FALSE_VALUE = 0.0f;
 }
@@ -54,7 +56,17 @@ BattleManager::BattleManager()
 	{
 		player_           = NewGO<Player>(PRIORITY_PLAYER, "player");
 		playerController_ = NewGO<PlayerController>(PRIORITY_PLAYER_CONTROLLER, "playerController");
-		playerController_->SetTarget(player_);
+		if (playerController_) 
+		{
+			playerController_->SetTarget(player_);
+			playerController_->Deactivate();
+		}
+		if (player_) 
+		{
+			auto* stateMachine = player_->GetStateMachine();
+			stateMachine->ResetInput();
+			player_->SetMoveVelocity(Vector3::Zero);
+		}
 	}
 
 	// ボス
@@ -67,6 +79,8 @@ BattleManager::BattleManager()
 		boss_ = new BossSpawner();
 		boss_->SetAttackTarger(player_);
 		boss_->SpawnBoss();
+
+		boss_->SetControlEnabled(false);
 	}
 
 	// キャラクター用設定
@@ -183,6 +197,10 @@ void BattleManager::Update()
 			if (menu && menu->IsCompletedStartCutSceen()) {
 				uiManager_.ReleaseCutSceneLayout();
 				uiManager_.InitTimer();
+
+				playerController_->Activate();
+				boss_->SetControlEnabled(true);
+				boss_->SetUpdate(true);
 				gameState_ = GameState::Playing;
 			}
 			break;
@@ -195,15 +213,15 @@ void BattleManager::Update()
 			MissionManager::Get().Update();
 
 			// ディザリング設定
-			g_ditherCBData.isEnable       = DITHERING_ENABLE_TRUE_VALUE;
-			g_ditherCBData.cameraWorldPos = CameraManager::Get().GetCurrentCameraData().position;
-			g_ditherCBData.playerWorldPos = player_->GetTransformPosition();
+			g_ditherCBData.isEnable       = DITHERING_ENABLE_TRUE_VALUE;							// ディザを有効に
+			g_ditherCBData.cameraWorldPos = CameraManager::Get().GetCurrentCameraData().position;	// カメラの現在の座標を取得
+			g_ditherCBData.playerWorldPos = player_->GetTransformPosition();						// プレイヤーの座標を取得
 
 			// カメラ更新
-			auto gameCamera = gameCameraController_->As<GameCamera>();
-			auto cameraData = gameCamera->GetCameraData();
-			cameraSteering_->Update(cameraData, g_gameTime->GetFrameDeltaTime());
-			gameCamera->SetState(cameraData);
+			auto gameCamera = gameCameraController_->As<GameCamera>();				// 型変換をしてカメラのインターフェースを取得
+			auto cameraData = gameCamera->GetCameraData();							// カメラデータを取得
+			cameraSteering_->Update(cameraData, g_gameTime->GetFrameDeltaTime());	// 現在のデータと経過時間をもとに更新
+			gameCamera->SetState(cameraData);										// データを設定
 
 			// スカイキューブをプレイヤーに追従
 			skyCube_->SetPosition(player_->GetTransformPosition());
@@ -219,16 +237,23 @@ void BattleManager::Update()
 			// ボス死亡 → クリア
 			if (auto* boss = FindGO<BossCharacter>("boss")) {
 				if (boss->GetStatus() && boss->GetStatus()->IsDead()) {
-					MissionManager::Get().NotifyBossDefeated();
-					SetupClearCutScene();
-					gameState_ = GameState::ResultClear;
+					MissionManager::Get().NotifyBossDefeated();	// ボス撃破のミッション
+					SetupClearCutScene();						// クリアカットシーン
+					if (player_) {
+						auto* stateMachine = player_->GetStateMachine();
+						stateMachine->ResetInput();					// ステートマシーンに設定してある入力関係の値をすべてリセット
+						player_->SetMoveVelocity(Vector3::Zero);	// プレイヤーの元の移動量を0に
+						playerController_->Deactivate();			// プレイヤーが操作できないようにする
+
+					}
+					gameState_ = GameState::ResultClear;		// クリアリザルトに移行
 				}
 			}
 
 			// プレイヤー死亡 / 時間切れ → ゲームオーバー
 			if (player_->GetStatus()->IsDead() || gameTimer_.IsTimeUp()) {
-				SetupOverCutScene();
-				gameState_ = GameState::ResultOver;
+				SetupOverCutScene();				// ゲームオーバーカットシーン
+				gameState_ = GameState::ResultOver;	// ゲームオーバーリザルトに移行
 			}
 			break;
 		}
