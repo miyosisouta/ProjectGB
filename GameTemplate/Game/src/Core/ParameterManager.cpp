@@ -129,8 +129,6 @@ void ParameterManager::LoadPlayerSkillStatusData(const char* path)
 			p.motionValues		= j.value("motionValues",       0);
 			p.cooldown			= j.value("cooldown",		 0.0f);
 			p.decreaseStamina	= j.value("decreaseStamina", 0.0f);
-			p.vibrationTime		= j.value("vibrationTime", 0.0f);
-			p.vibrationForce	= j.value("vibrationForce", 0.0f);
 		}
 	);
 }
@@ -147,9 +145,7 @@ void ParameterManager::LoadBossSkillStatusData(const char* path)
 		{
 			p.category = category;
 			p.key      = j.value("key",    "");
-			p.motionValues = j.value("motionValues",  0.0f);
-			p.vibrationTime = j.value("vibrationTime",  0.0f);
-			p.vibrationForce = j.value("vibrationForce",  0.0f);
+			p.motionValues = j.value("motionValues",  0);
 		}
 	);
 }

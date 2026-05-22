@@ -44,7 +44,7 @@ using namespace Microsoft::WRL;
 static const int MAX_FPS = 60;	// 最大FPS。USE_FPS_LIMITTERが有効なときに使用される。
 #define ENABLE_DXR_ON_RTX_ONLY	// 有効でDXRはRTXシリーズのみ有効。
 
-#if defined(_DEBUG)//1
+#if 1//defined(_DEBUG)
 	#define ENABLE_FPS_RENDER
 #endif
 

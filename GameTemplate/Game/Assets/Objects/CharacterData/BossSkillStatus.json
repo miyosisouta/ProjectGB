@@ -4,35 +4,28 @@
             "comment": "通常攻撃",
             "key": "NormalAttack",
             "motionValues": 40,
-            "vibrationTime": 0.3,
-            "vibrationForce": 0.3
+            "cooldown": 1.0
         },
         
         {
             "comment": "ヒットスタンプ",
             "key" : "HitStamp",
             "motionValues": 70,
-            "cooldown": 5.0,
-            "vibrationTime": 1.0,
-            "vibrationForce": 2.0
+            "cooldown": 5.0
         },
 
         {
             "comment":"回転攻撃",
             "key" : "SpinAttack",
             "motionValues": 60,
-            "cooldown": 5.0,
-            "vibrationTime": 0.5,
-            "vibrationForce": 0.6
+            "cooldown": 5.0
         },
 
         {
             "comment":"岩を投げる",
             "key" : "ThrowRock",
             "motionValues": 45,
-            "cooldown": 5.0,
-            "vibrationTime": 0.4,
-            "vibrationForce": 0.5
+            "cooldown": 5.0
         }
     ],
 
@@ -41,45 +34,35 @@
             "comment": "通常攻撃",
             "key": "NormalAttack",
             "motionValues": 30,
-            "cooldown": 1.0,
-            "vibrationTime": 0.3,
-            "vibrationForce": 0.3
+            "cooldown": 1.0
         },
         
         {
             "comment": "ヒットスタンプ",
             "key" : "HitStamp",
             "motionValues": 70,
-            "cooldown": 5.0,
-            "vibrationTime": 0.8,
-            "vibrationForce": 1.5
+            "cooldown": 5.0
         },
 
         {
             "comment":"回転攻撃",
             "key" : "SpinAttack",
             "motionValues": 50,
-            "cooldown": 5.0,
-            "vibrationTime": 0.5,
-            "vibrationForce": 0.6
+            "cooldown": 5.0
         },
 
         {
             "comment":"レーザー",
             "key" : "LaserWeak",
             "motionValues": 40,
-            "cooldown" : 1.0,
-            "vibrationTime": 0.5,
-            "vibrationForce": 0.5
+            "cooldown" : 1.0
         },
         
         {
             "comment":"レーザーチャージ",
             "key" : "LaserStrong",
             "motionValues": 80,
-            "cooldown" : 1.0,
-            "vibrationTime": 1.0,
-            "vibrationForce": 1.2
+            "cooldown" : 1.0
         }
     ]
 

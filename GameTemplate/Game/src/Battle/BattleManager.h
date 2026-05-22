@@ -90,7 +90,6 @@ private:
 	bool      isPlayingResult_    = false;
 
 
-
 	/*===================================================*/
 	/* セッター・ゲッター                                */
 	/*===================================================*/
@@ -168,8 +167,7 @@ public:
 public:
 	/** カットシーン中（Playing 以外）か */
 	bool IsCutScene()     const { return gameState_ != GameState::Playing; }
-	/** プレイ中か */
-	bool IsPlayingScene() const { return gameState_ == GameState::Playing; }
+
 	/** ゲーム演出が完全に終了したか */
 	bool IsFinishedGame() const { return gameState_ == GameState::Shutdown; }
 

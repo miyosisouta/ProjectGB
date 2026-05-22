@@ -43,6 +43,7 @@ namespace
 		return false;
 	}
 
+	// 押されたボタンがなにか
 	EnButton GetInputButton()
 	{
 

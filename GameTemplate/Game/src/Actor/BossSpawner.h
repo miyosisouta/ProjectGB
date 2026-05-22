@@ -36,9 +36,6 @@ public:
 
 	/** 更新の可否状態を設定 */
 	void SetUpdate(const bool flg);
-	
-	/** ボスコントローラーと移動制御を有効/無効にする */
-	void SetControlEnabled(const bool flg);
 
 
 public:

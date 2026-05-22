@@ -97,19 +97,6 @@ public:
 	inline bool IsAvoidRequested() { return avoidRequested_; }
 	inline void ClearAvoidRequest() { avoidRequested_ = false; }
 
-	// 入力処理をすべてリセット
-	void ResetInput() 
-	{
-		SetStickLAmount(0.0f);
-		SetDirection(Vector3::Zero);
-		ActionButtonA(false);
-		ActionButtonB(false);
-		ActionButtonX(false);
-		ActionButtonY(false);
-		SetAvoidRequested(false);
-	}
-
-
 public:
 	/* コンストラクタ */
 	StateMachine() {}

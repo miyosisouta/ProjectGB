@@ -6,20 +6,8 @@
         "type": "UIIcon",
         "name": "ButtonIconback",
         "asset": "Assets/ui/inGameUI/skillIcon/back.DDS",
-        "width": 70,
-        "height": 70,
-        "position": [93, -70, 0],
-        "scale": [1, 1, 1],
-        "rotation": 0,
-        "color": [1, 1, 1, 1]
-      },
-      {
-        "coment": "アビリティアイコンのボタン表示",
-        "type": "UIIcon",
-        "name": "buttonIcon",
-        "asset": "Assets/ui/inGameUI/skillIcon/y_button.DDS",
-        "width": 40,
-        "height": 40,
+        "width": 65,
+        "height": 65,
         "position": [93, -70, 0],
         "scale": [1, 1, 1],
         "rotation": 0,
@@ -72,6 +60,16 @@
         "position": [0, 0, 0],
         "scale": [0, 0, 0],
         "color": [0.3, 0.3, 0.3, 1.0]
+      },
+
+
+      {
+        "comment": "ボタン表示:スキル",
+        "type": "UIPrefab",
+        "name": "InGame_ButtonUI_Skill",
+        "source": "Assets/ui/layout/InGameButtonUI.json",
+        "position": [95, -70, 0],
+        "scale": [1, 1, 1]
       }
     ]
   }
