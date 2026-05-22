@@ -34,13 +34,18 @@
 
 namespace
 {
+	/* 優先度 */
 	constexpr uint8_t PRIORITY_PLAYER            = 0;
 	constexpr uint8_t PRIORITY_PLAYER_CONTROLLER = 10;
 	constexpr uint8_t PRIORITY_STAGE             = 0;
 	constexpr uint8_t PRIORITY_SKYCUBE           = 0;
 
+	/* ディザリング */
 	constexpr float DITHERING_ENABLE_TRUE_VALUE  = 1.0f;
 	constexpr float DITHERING_ENABLE_FALSE_VALUE = 0.0f;
+
+	/* ボス */
+	constexpr float BOSS_MOVE_START_TIME = 5.0f; // ボス行動開始時間 
 }
 
 BattleManager* BattleManager::myInstance_ = nullptr;
@@ -55,6 +60,19 @@ BattleManager::BattleManager()
 		player_           = NewGO<Player>(PRIORITY_PLAYER, "player");
 		playerController_ = NewGO<PlayerController>(PRIORITY_PLAYER_CONTROLLER, "playerController");
 		playerController_->SetTarget(player_);
+
+		playerController_->Deactivate();
+		if (player_) {
+			auto* stateMachine = player_->GetStateMachine();
+			stateMachine->SetStickLAmount(0.0f);
+			stateMachine->SetDirection(Vector3::Zero);
+			stateMachine->ActionButtonA(false);
+			stateMachine->ActionButtonB(false);
+			stateMachine->ActionButtonX(false);
+			stateMachine->ActionButtonY(false);
+			stateMachine->SetAvoidRequested(false);
+			player_->SetMoveVelocity(Vector3::Zero);
+		}
 	}
 
 	// ボス
@@ -67,6 +85,8 @@ BattleManager::BattleManager()
 		boss_ = new BossSpawner();
 		boss_->SetAttackTarger(player_);
 		boss_->SpawnBoss();
+
+		boss_->SetControlEnabled(false);
 	}
 
 	// キャラクター用設定
@@ -183,6 +203,10 @@ void BattleManager::Update()
 			if (menu && menu->IsCompletedStartCutSceen()) {
 				uiManager_.ReleaseCutSceneLayout();
 				uiManager_.InitTimer();
+
+				playerController_->Activate();
+				boss_->SetControlEnabled(true);
+				boss_->SetUpdate(true);
 				gameState_ = GameState::Playing;
 			}
 			break;

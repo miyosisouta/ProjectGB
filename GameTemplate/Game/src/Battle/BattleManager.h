@@ -79,6 +79,7 @@ private:
 	// --- カメラ ---
 	std::unique_ptr<CameraSteering>    cameraSteering_           = nullptr;
 	std::unique_ptr<TaskSchedulerSystem> cutSceneScheduler_      = nullptr;
+	std::unique_ptr<TaskSchedulerSystem> bossMoveStartScheduler_ = nullptr;
 	RefCameraController                gameCameraController_     = nullptr;
 	RefCameraController                bossEntryCameraController_ = nullptr;
 
@@ -88,6 +89,7 @@ private:
 	uint32_t  drawMask_         = UpdateGroup::All;  //!< 描画グループマスク
 	bool      isPlayingEntryBoss_ = true;
 	bool      isPlayingResult_    = false;
+
 
 
 	/*===================================================*/
@@ -167,7 +169,8 @@ public:
 public:
 	/** カットシーン中（Playing 以外）か */
 	bool IsCutScene()     const { return gameState_ != GameState::Playing; }
-
+	/** プレイ中か */
+	bool IsPlayingScene() const { return gameState_ == GameState::Playing; }
 	/** ゲーム演出が完全に終了したか */
 	bool IsFinishedGame() const { return gameState_ == GameState::Shutdown; }
 
