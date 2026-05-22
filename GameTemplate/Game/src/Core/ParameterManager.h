@@ -68,6 +68,8 @@ struct MasterPlayerSkillParameter : public IMasterParameter
 	float       motionValues;		//!< 攻撃力
 	float       cooldown;			//!< クールダウン (秒)
 	float		decreaseStamina;	//!< スタミナ消費量
+	float		vibrationTime;	//!< バイブレーション時間
+	float		vibrationForce; //!< バイブレーション力
 };
 
 /**
@@ -82,6 +84,8 @@ struct MasterBossSkillParameter : public IMasterParameter
 	std::string key;			//!< スキル識別キー
 	float       motionValues;   //!< 攻撃力
 	float       cooldown;		//!< クールダウン (秒)
+	float		vibrationTime;	//!< バイブレーション時間
+	float		vibrationForce; //!< バイブレーション力
 };
 
 struct MasterBattleCommonParameter : public IMasterParameter

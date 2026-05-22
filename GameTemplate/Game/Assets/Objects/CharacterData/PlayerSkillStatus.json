@@ -20,7 +20,9 @@
             "comment": "地雷",
             "key": "Landmine",
             "motionValues": 300,
-            "cooldown": 20.0
+            "cooldown": 20.0,
+            "vibrationTime": 0.8,
+            "vibrationForce": 2.0
         },
 
         {
