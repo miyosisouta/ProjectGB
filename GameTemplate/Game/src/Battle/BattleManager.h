@@ -79,7 +79,6 @@ private:
 	// --- カメラ ---
 	std::unique_ptr<CameraSteering>    cameraSteering_           = nullptr;
 	std::unique_ptr<TaskSchedulerSystem> cutSceneScheduler_      = nullptr;
-	std::unique_ptr<TaskSchedulerSystem> bossMoveStartScheduler_ = nullptr;
 	RefCameraController                gameCameraController_     = nullptr;
 	RefCameraController                bossEntryCameraController_ = nullptr;
 
