@@ -43,9 +43,6 @@ namespace
 	/* ディザリング */
 	constexpr float DITHERING_ENABLE_TRUE_VALUE  = 1.0f;
 	constexpr float DITHERING_ENABLE_FALSE_VALUE = 0.0f;
-
-	/* ボス */
-	constexpr float BOSS_MOVE_START_TIME = 5.0f; // ボス行動開始時間 
 }
 
 BattleManager* BattleManager::myInstance_ = nullptr;
