@@ -325,9 +325,12 @@ void CollisionHitManager::UpdateBossAttackPair(Pair& hitPair)
 	// ボスのステータスがあるならダメージ処理
 	if (boss->GetStatus()) {
 		float motion = bossStatus->GetSkillMotionValues("NormalAttack");
+		float vibrationTime = bossStatus->GetVibrationTimeValues("NormalAttack");
+		float vibrationForce = bossStatus->GetVibrationForceValues("NormalAttack");
 		int damage = Calculate(bossStatus, motion);
 		player->GetStatus()->Damage(damage);
 		UpdateTakeHitSound(); // 攻撃が当たったSEを流す
+		g_pad[0]->SetVibration(vibrationTime, vibrationForce);
 	}
 }
 
@@ -357,9 +360,12 @@ void CollisionHitManager::UpdateBossHitStampPair(Pair& hitPair)
 
 	if (boss->GetStatus()) {
 		float motion = bossStatus->GetSkillMotionValues("HitStamp");
+		float vibrationTime = bossStatus->GetVibrationTimeValues("HitStamp");
+		float vibrationForce = bossStatus->GetVibrationForceValues("HitStamp");
 		int damage = Calculate(bossStatus, motion);
 		player->GetStatus()->Damage(damage); // ダメージを与える
 		UpdateTakeHitSound(); // 攻撃が当たったSEを流す
+		g_pad[0]->SetVibration(vibrationTime, vibrationForce);
 	}
 }
 
@@ -390,9 +396,12 @@ void CollisionHitManager::UpdateBossSpinPair(Pair& hitPair)
 
 	if (boss->GetStatus()) {
 		float motion = bossStatus->GetSkillMotionValues("SpinAttack");
+		float vibrationTime = bossStatus->GetVibrationTimeValues("SpinAttack");
+		float vibrationForce = bossStatus->GetVibrationForceValues("SpinAttack");
 		int damage = Calculate(bossStatus, motion);
 		player->GetStatus()->Damage(damage);
 		UpdateTakeHitSound(); // 攻撃が当たったSEを流す
+		g_pad[0]->SetVibration(vibrationTime, vibrationForce);
 	}
 	
 
@@ -433,9 +442,12 @@ void CollisionHitManager::UpdateBossThrowRockPair(Pair& hitPair)
 
 	if (boss->GetStatus()) {
 		float motion = bossStatus->GetSkillMotionValues("ThrowRock");
+		float vibrationTime = bossStatus->GetVibrationTimeValues("ThrowRock");
+		float vibrationForce = bossStatus->GetVibrationForceValues("ThrowRock");
 		int damage = Calculate(bossStatus, motion);
 		player->GetStatus()->Damage(damage); // ダメージを与える
 		UpdateTakeHitSound(); // 攻撃が当たったSEを流す
+		g_pad[0]->SetVibration(vibrationTime, vibrationForce);
 	}
 }
 
@@ -464,9 +476,12 @@ void CollisionHitManager::UpdateBossLaserWeakPair(Pair& hitPair)
 
 	if (boss->GetStatus()) {
 		float motion = bossStatus->GetSkillMotionValues("LaserWeak");
+		float vibrationTime = bossStatus->GetVibrationTimeValues("LaserWeak");
+		float vibrationForce = bossStatus->GetVibrationForceValues("LaserWeak");
 		int damage = Calculate(bossStatus, motion);
 		player->GetStatus()->Damage(damage); // ダメージを与える
 		UpdateTakeHitSound(); // 攻撃が当たったSEを流す
+		g_pad[0]->SetVibration(vibrationTime, vibrationForce);
 	}
 }
 
@@ -495,9 +510,12 @@ void CollisionHitManager::UpdateBossLaserStrongPair(Pair& hitPair)
 
 	if (boss->GetStatus()) {
 		float motion = bossStatus->GetSkillMotionValues("LaserStrong");
+		float vibrationTime = bossStatus->GetVibrationTimeValues("LaserStrong");
+		float vibrationForce = bossStatus->GetVibrationForceValues("LaserStrong");
 		int damage = Calculate(bossStatus, motion);
 		player->GetStatus()->Damage(damage); // ダメージを与える
 		UpdateTakeHitSound(); // 攻撃が当たったSEを流す
+		g_pad[0]->SetVibration(vibrationTime, vibrationForce);
 	}
 }
 
@@ -532,9 +550,12 @@ void CollisionHitManager::UpdateCharacterLandminePlayerPair(Pair& hitPair)
 
 	auto* ownerStatus = owner->GetStatus()->As<PlayerStatus>();
 	float motion = ownerStatus->GetSkillMotionValues("SpecialAttack");
+	float vibrationTime = ownerStatus->GetVibrationTimeValues("SpecialAttack");
+	float vibrationForce = ownerStatus->GetVibrationForceValues("SpecialAttack");
 	int damage = Calculate(ownerStatus, motion);
 	player->GetStatus()->Damage(damage);
 	UpdateTakeHitSound();
+	g_pad[0]->SetVibration(vibrationTime, vibrationForce);
 }
 
 bool CollisionHitManager::ContainsCharacterLandmineBossPair(const Pair& hitPair)
