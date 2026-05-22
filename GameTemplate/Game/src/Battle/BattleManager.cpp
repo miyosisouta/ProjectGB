@@ -259,7 +259,6 @@ void BattleManager::Update()
 		}
 		case GameState::ResultClear:
 		{
-			g_ditherCBData.isEnable = DITHERING_ENABLE_FALSE_VALUE;
 			if (!UpdateResultClear()) gameState_ = GameState::Shutdown;
 			break;
 		}
@@ -271,6 +270,7 @@ void BattleManager::Update()
 		case GameState::Shutdown:
 		{
 			gameTimer_.Reset();
+			g_ditherCBData.isEnable = DITHERING_ENABLE_FALSE_VALUE;
 			break;
 		}
 	}
