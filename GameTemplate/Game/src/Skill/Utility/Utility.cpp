@@ -8,6 +8,11 @@ namespace
 	/* 回避 */
 	constexpr float TARGET_POS_FORWARD = 300.0f;
 	constexpr float AVOID_MOVE_SPEED = 1000.0f;
+
+	constexpr float AVOID_EFFECT_ROTAION = 180.0f;
+	static Vector3 AVOID_EFFECT_SCALE = Vector3(3.0f, 3.0f, 3.0f);
+	constexpr float AVOID_START_TIME = 0.1f;
+	constexpr float AVOID_END_TIME = 0.8f;
 }
 
 
@@ -24,7 +29,7 @@ void Avoid::Enter(Character* p)
 	// タスクスケージュールを作成
 	taskScheduler_ = std::make_unique<TaskSchedulerSystem>();
 
-	taskScheduler_->AddTimer(0.1f, [&, p]()
+	taskScheduler_->AddTimer(AVOID_START_TIME, [&, p]()
 		{
 			
 			Vector3 playerPos = p->transform_.position; // プレイヤーの現在の座標を取得
@@ -32,8 +37,8 @@ void Avoid::Enter(Character* p)
 			Vector3 forwardDir = p->GetStateMachine()->GetDirection();// プレイヤーが最後に向いていた方向を取得
 			
 			p->PlayAnimation(static_cast<int> (PlayerStateID::Avoid));
-			playerRot.AddRotationDegY(180.0f);
-			EffectManager::Get().PlayEffect(enEffectKind_Avoid, playerPos, playerRot, Vector3(3.0f, 3.0f, 3.0f));
+			playerRot.AddRotationDegY(AVOID_EFFECT_ROTAION);
+			EffectManager::Get().PlayEffect(enEffectKind_Avoid, playerPos, playerRot, AVOID_EFFECT_SCALE);
 
 			// 移動先の設定
 			targetPos_ = playerPos + (forwardDir * TARGET_POS_FORWARD);
@@ -46,7 +51,7 @@ void Avoid::Enter(Character* p)
 			SoundManager::Get().PlaySE(enSoundKind_Player_Utility);
 		});
 
-	taskScheduler_->AddTimer(0.8f, [&, p]()
+	taskScheduler_->AddTimer(AVOID_END_TIME, [&, p]()
 		{
 			// プレイヤーステータスの取得、無敵を削除
 			PlayerStatus* status = p->GetStatus()->As<PlayerStatus>();
