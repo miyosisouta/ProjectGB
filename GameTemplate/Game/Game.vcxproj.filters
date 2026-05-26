@@ -100,6 +100,7 @@
     <ClCompile Include="src\Scene\DebugGrassScene.cpp" />
     <ClCompile Include="src\Stage\GrassObject.cpp" />
     <ClCompile Include="src\Stage\GrassBendManager.cpp" />
+    <ClCompile Include="src\Actor\AttackRange.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Game.h" />
@@ -208,5 +209,6 @@
     <ClInclude Include="src\Scene\DebugGrassScene.h" />
     <ClInclude Include="src\Stage\GrassObject.h" />
     <ClInclude Include="src\Stage\GrassBendManager.h" />
+    <ClInclude Include="src\Actor\AttackRange.h" />
   </ItemGroup>
 </Project>

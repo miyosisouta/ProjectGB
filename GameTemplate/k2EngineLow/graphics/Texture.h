@@ -22,7 +22,8 @@ namespace nsK2EngineLow {
 		/// DDSファイルからテクスチャを初期化する。
 		/// </summary>
 		/// <param name="filePath">ロードするテクスチャのファイルパス。</param>
-		void InitFromDDSFile(const wchar_t* filePath);
+		/// <param name="loadFlags">DDS_LOADER_FLAGS。DDS_LOADER_FORCE_SRGB を渡すと sRGB 変換を強制する。</param>
+		void InitFromDDSFile(const wchar_t* filePath, unsigned int loadFlags = 0);
 		/// <summary>
 		/// メモリからテクスチャを初期化する。
 		/// </summary>
@@ -85,7 +86,7 @@ namespace nsK2EngineLow {
 		/// DDSファイルからテクスチャをロード。
 		/// </summary>
 		/// <param name="filePath">ファイルパス。</param>
-		void LoadTextureFromDDSFile(const wchar_t* filePath);
+		void LoadTextureFromDDSFile(const wchar_t* filePath, unsigned int loadFlags = 0);
 		/// <summary>
 		/// メモリからテクスチャをロード。
 		/// </summary>

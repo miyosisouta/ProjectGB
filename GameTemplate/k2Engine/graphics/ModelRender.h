@@ -205,6 +205,13 @@ namespace nsK2Engine {
 		/** GBufferパスで使うカスタムシェーダーのパスを設定する（Init()呼び出し前に設定すること）。 */
 		void SetGBufferFxOverride(const char* fxPath) { m_gBufferFxOverride = fxPath; }
 
+		/** GBufferモデルのアルベドテクスチャを tex に差し替える（Init() 後に呼ぶこと）。 */
+		void ChangeGBufferAlbedoMap(Texture& tex)
+		{
+			if (m_renderToGBufferModel.IsInited())
+				m_renderToGBufferModel.ChangeAlbedoMap(nullptr, tex);
+		}
+
 		/** GBufferパスの頂点シェーダーエントリーポイントを上書きする（Init()呼び出し前に設定すること）。 */
 		void SetVSEntryOverride(const char* entry) { m_vsEntryOverride = entry; }
 

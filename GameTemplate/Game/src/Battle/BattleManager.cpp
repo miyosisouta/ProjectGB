@@ -71,7 +71,7 @@ BattleManager::BattleManager()
 
 	// ボス
 	{
-		BossType stageType = BossType::enGorilla;
+		BossType stageType = BossType::enTurtle;
 		GameModeType mode  = GameModeType::enNormal;
 		CharacterDataBase::Get().SetStageType(stageType);
 		CharacterDataBase::Get().SetGameModeType(mode);
@@ -86,7 +86,7 @@ BattleManager::BattleManager()
 	// キャラクター用設定
 	{
 		CharacterDataBase::Get().SetPlayerNormalAttack(NormalAttackType::enBite);
-		CharacterDataBase::Get().SetPlayerAbility(AbilityType::enDefault);
+		CharacterDataBase::Get().SetPlayerAbility(AbilityType::enLandmine);
 		CharacterDataBase::Get().SetPlayerUtility(UtilityType::enAvoid);
 
 		player_->CreateSkill(

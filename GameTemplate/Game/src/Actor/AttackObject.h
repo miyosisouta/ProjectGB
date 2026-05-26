@@ -6,6 +6,7 @@
 class Character;
 class Player;
 class BossCharacter;
+class AttackRange;
 class AttackObjectBase
 {
 protected:
@@ -90,6 +91,7 @@ private:
 
 private:
     EffectHandle predictionEffectHandle_ = INVALID_EFFECT_HANDLE;
+    AttackRange* attackRangeIndicator_ = nullptr; //!< 爆発予測サークルインジケーター
     Phase phase_; // 状態
     Character* owner_ = nullptr; //!< 設置したキャラクター
     float motionValue_ = 0.0f; //!< 威力

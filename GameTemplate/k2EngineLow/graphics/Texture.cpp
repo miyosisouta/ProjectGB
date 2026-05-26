@@ -14,11 +14,11 @@ namespace nsK2EngineLow {
 	{
 		ReleaseD3D12Object(m_texture);
 	}
-	void Texture::InitFromDDSFile(const wchar_t* filePath)
+	void Texture::InitFromDDSFile(const wchar_t* filePath, unsigned int loadFlags)
 	{
 		Release();
 		//DDSファイルからテクスチャをロード。
-		LoadTextureFromDDSFile(filePath);
+		LoadTextureFromDDSFile(filePath, loadFlags);
 
 	}
 	void Texture::InitFromD3DResource(ID3D12Resource* texture)
@@ -69,7 +69,7 @@ namespace nsK2EngineLow {
 		m_texture = texture;
 		m_textureDesc = m_texture->GetDesc();
 	}
-	void Texture::LoadTextureFromDDSFile(const wchar_t* filePath)
+	void Texture::LoadTextureFromDDSFile(const wchar_t* filePath, unsigned int loadFlags)
 	{
 		Release();
 		auto device = g_graphicsEngine->GetD3DDevice();
@@ -82,7 +82,7 @@ namespace nsK2EngineLow {
 			filePath,
 			0,
 			D3D12_RESOURCE_FLAG_NONE,
-			0,
+			loadFlags,
 			&texture,
 			nullptr,
 			&m_isCubemap
