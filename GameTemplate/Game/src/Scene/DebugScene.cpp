@@ -12,7 +12,7 @@
 #include "src/Util/TaskSchedulerSystem.h"
 
 #include "src/UI/Layout.h"
-#include "src/UI/KeyConfigOptionMenu.h"
+#include "src/UI/BossSelectMenu.h"
 
 
 DebugScene::DebugScene()
@@ -29,7 +29,7 @@ DebugScene::~DebugScene()
 bool DebugScene::Start()
 {
 	layout_ = new Layout;
-	layout_->Initialize<KeyConfigOptionMenu>("Assets/ui/Layout/KeyConfigOptionMenu.json");
+	layout_->Initialize<BossSelectMenu>("Assets/ui/Layout/BossSelectMenu.json");
 
 	return true;
 }
@@ -37,7 +37,7 @@ bool DebugScene::Start()
 
 void DebugScene::Update()
 {
-	KeyConfigOptionMenu* menu = static_cast<KeyConfigOptionMenu*>(layout_->GetMenu());
+	BossSelectMenu* menu = static_cast<BossSelectMenu*>(layout_->GetMenu());
 	
 
 	layout_->Update();

@@ -138,7 +138,14 @@ BattleManager::BattleManager()
 	// 演出
 	{
 		cutSceneScheduler_ = std::make_unique<TaskSchedulerSystem>();
-		SetupEntryBossCutScene();
+		BossType stageType = CharacterDataBase::Get().GetStageType();
+
+		if (stageType == BossType::enGorilla) {
+			SetupEntryGolliraCutScene();
+		}
+		if (stageType == BossType::enTurtle) {
+			SetupEntryTurtleCutScene();
+		}		
 	}
 
 	// その他
@@ -361,7 +368,7 @@ bool BattleManager::UpdateResultOver()
 }
 
 
-void BattleManager::SetupEntryBossCutScene()
+void BattleManager::SetupEntryGolliraCutScene()
 {
 	const auto* param = ParameterManager::Get().GetParameter<MasterBattleCommonParameter>(0);
 
@@ -426,6 +433,74 @@ void BattleManager::SetupEntryBossCutScene()
 			auto* menu = uiManager_.GetCutSceneMenu();
 			menu->GetUI<UIIcon>(Hash32("gollira_nameB"))->isDraw = false;
 			menu->GetUI<UIIcon>(Hash32("gollira"))->isDraw       = false;
+		});
+}
+
+void BattleManager::SetupEntryTurtleCutScene()
+{
+	const auto* param = ParameterManager::Get().GetParameter<MasterBattleCommonParameter>(0);
+
+	isPlayingEntryBoss_ = true;
+
+	// カットシーン UI を生成
+	uiManager_.SetupCutScene<MenuBase>("Assets/ui/layout/BossEntryCutScene.json");
+
+	// 演出カメラ
+	CameraData initData;
+	initData.fov = Math::DegToRad(param->cameraParam.fovy);
+	initData.farClip = param->cameraParam.farClip;
+	auto gameCamera = std::make_shared<GameCamera>();
+	gameCamera->SetState(initData);
+	bossEntryCameraController_ = gameCamera;
+
+	CameraManager::Get().Register(GameCamera::ID(), bossEntryCameraController_);
+	CameraManager::Get().SwitchCamera(bossEntryCameraController_);
+
+	// カットシーンスケジューラー
+	cutSceneScheduler_->AddTimer(param->cutSceneParam.firstCutTime, [this, param]()
+		{
+			CameraData cameraData;
+			cameraData.position = param->cutSceneParam.firstCutCameraPos;
+			cameraData.target = param->cutSceneParam.cutSceneTargetPos;
+			bossEntryCameraController_->As<GameCamera>()->SetState(cameraData);
+
+			auto* menu = uiManager_.GetCutSceneMenu();
+			menu->GetUI<UIIcon>(Hash32("turtle"))->isDraw = true;
+			menu->GetUI<UIIcon>(Hash32("turtle_nameA"))->isDraw = true;
+		});
+
+	cutSceneScheduler_->AddTimer(param->cutSceneParam.secondCutTime, [this, param]()
+		{
+			CameraData cameraData;
+			cameraData.position = param->cutSceneParam.secondCutCameraPos;
+			cameraData.target = param->cutSceneParam.cutSceneTargetPos;
+			bossEntryCameraController_->As<GameCamera>()->SetState(cameraData);
+
+			auto* menu = uiManager_.GetCutSceneMenu();
+			menu->GetUI<UIIcon>(Hash32("turtle_nameC"))->isDraw = true;
+		});
+
+	cutSceneScheduler_->AddTimer(param->cutSceneParam.thirdCutTime, [this, param]()
+		{
+			CameraData cameraData;
+			cameraData.position = param->cutSceneParam.thirdCutCameraPos;
+			cameraData.target = param->cutSceneParam.cutSceneTargetPos;
+			bossEntryCameraController_->As<GameCamera>()->SetState(cameraData);
+
+			auto* menu = uiManager_.GetCutSceneMenu();
+			menu->GetUI<UIIcon>(Hash32("turtle_nameB"))->isDraw = true;
+		});
+
+	cutSceneScheduler_->AddTimer(param->cutSceneParam.endCutTime, [this]()
+		{
+			isPlayingEntryBoss_ = false;
+			CameraManager::Get().Unregister(GameCamera::ID());
+			CameraManager::Get().Register(GameCamera::ID(), gameCameraController_);
+			CameraManager::Get().SwitchCamera(gameCameraController_);
+
+			auto* menu = uiManager_.GetCutSceneMenu();
+			menu->GetUI<UIIcon>(Hash32("turtle_nameB"))->isDraw = false;
+			menu->GetUI<UIIcon>(Hash32("turtle"))->isDraw = false;
 		});
 }
 

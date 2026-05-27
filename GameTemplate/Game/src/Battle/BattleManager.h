@@ -182,7 +182,8 @@ private:
 	bool UpdateResultClear();
 	bool UpdateResultOver();
 
-	void SetupEntryBossCutScene();
+	void SetupEntryGolliraCutScene();
+	void SetupEntryTurtleCutScene();
 	void SetupStartCutScene();
 	void SetupClearCutScene();
 	void SetupOverCutScene();

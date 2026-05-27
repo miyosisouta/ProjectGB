@@ -582,6 +582,82 @@
             "duration": 0.5,
             "easing": "EaseOut",
             "loop": "PingPong"
+        },
+
+
+
+
+        {
+            "comment": "ボスゴリラ：アイコン拡大",
+            "key": "boss_gorillaIcon_scaleUp",
+            "valueType": "Vector3",
+            "startValue": { "x": 1.0, "y": 1.0, "z": 1.0},
+            "endValue":   { "x": 0.8, "y": 1.2, "z": 1.0},
+            "duration": 0.3,
+            "easing": "EaseOut",
+            "loop": "Once"
+        },
+        {
+            "comment": "ボスゴリラ：アイコン縮小",
+            "key": "boss_gorillaIcon_scaleDown",
+            "valueType": "Vector3",
+            "startValue": { "x": 0.8, "y": 1.2, "z": 1.0},
+            "endValue":   { "x": 1.2, "y": 0.8, "z": 1.0},
+            "duration": 0.3,
+            "easing": "EaseIn",
+            "loop": "Once"
+        },
+        {
+            "comment": "ボスゴリラ：アイコン通常",
+            "key": "boss_gorillaIcon_scaleNormal",
+            "valueType": "Vector3",
+            "startValue": { "x": 1.2, "y": 0.8, "z": 1.0},
+            "endValue":   { "x": 1.0, "y": 1.0, "z": 1.0},
+            "duration": 0.3,
+            "easing": "EaseOut",
+            "loop": "Once"
+        },
+
+
+        {
+            "comment": "ボスカメ：アイコン移動上",
+            "key": "boss_turtleIcon_posUp",
+            "valueType": "Vector3",
+            "startValue": { "x": 0, "y": 0, "z": 0},
+            "endValue":   { "x": 0, "y": 250, "z": 0},
+            "duration": 0.5,
+            "easing": "EaseIn",
+            "loop": "Once"
+        },
+        {
+            "comment": "ボスカメ：アイコン通常",
+            "key": "boss_turtleIcon_posNormal",
+            "valueType": "Vector3",
+            "startValue": { "x": 0, "y": 250, "z": 0},
+            "endValue":   { "x": 0, "y": 0, "z": 0},
+            "duration": 0.3,
+            "easing": "EaseIn",
+            "loop": "Once"
+        },
+        {
+            "comment": "ボスカメ：アイコン縮小",
+            "key": "boss_turtleIcon_scaleDown",
+            "valueType": "Vector3",
+            "startValue": { "x": 1.0, "y": 1.0, "z": 1.0},
+            "endValue":   { "x": 1.2, "y": 0.8, "z": 1.0},
+            "duration": 0.2,
+            "easing": "EaseIn",
+            "loop": "Once"
+        },
+        {
+            "comment": "ボスカメ：アイコン通常",
+            "key": "boss_turtleIcon_scaleNormal",
+            "valueType": "Vector3",
+            "startValue": { "x": 1.2, "y": 0.8, "z": 1.0},
+            "endValue":   { "x": 1.0, "y": 1.0, "z": 1.0},
+            "duration": 0.3,
+            "easing": "EaseOut",
+            "loop": "Once"
         }
     ]
 }

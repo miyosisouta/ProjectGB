@@ -540,6 +540,28 @@ public:
             });
     }
 
+    void AllPop()
+    {
+        if (isTransitioning_) return;
+        if (stack_.empty())   return;
+        isTransitioning_ = true;
+
+        auto& top = stack_.back();
+        if (top.callbacks.onExit) top.callbacks.onExit();
+
+        const UITransitionMode currentMode = top.mode;
+
+        StartExitAnim(top, [this, currentMode]()
+            {
+                while (!stack_.empty())
+                {
+                    if (stack_.back().callbacks.onDestroy)
+                        stack_.back().callbacks.onDestroy();
+                    stack_.pop_back();
+                }
+            });
+    }
+
 
     // ============================================
     // Update / Render
