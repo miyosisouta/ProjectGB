@@ -240,6 +240,18 @@ void InGameMenu::InitializeLogic()
 	auto* bossHPGauge = GetUI<UIIcon>(Hash32("BossHPBar/Boss_HP_gauge"));
 	bossHPGauge->SetPivot(Vector2(0.0f, 0.5f));
 
+	// ボスの名前が変わる
+	auto* bossGollira = GetUI<UIIcon>(Hash32("BossHPBar/Boss_HP_word"));
+	auto* bossTurtle = GetUI<UIIcon>(Hash32("BossHPBar/Boss_HP_word2"));
+	BossType stageType = CharacterDataBase::Get().GetStageType();
+	// ゴリラが選択されているとき
+	if (stageType == BossType::enGorilla) {
+		bossGollira->isDraw = true;
+	}
+	// カメが選択されているとき
+	if (stageType == BossType::enTurtle) {
+		bossTurtle->isDraw = true;
+	}
 
 	// アビリティアイコンのキャンバス
 	auto* abilitySkillIconCanvas = GetUI<UICanvas>(Hash32("AbilitySkillIcon"));
@@ -247,15 +259,6 @@ void InGameMenu::InitializeLogic()
 	UIAnimationFactory::Attach<UIScaleAnimation>(abilitySkillIconCanvas, Hash32("SkillReadyScaleDown"));
 	abilitySkillIconScaleSequence_ = std::make_unique<UIAnimationSequence>();
 	abilitySkillIconScaleSequence_->Add(Hash32("SkillReadyScaleUp")).Add(Hash32("SkillReadyScaleDown"));
-
-	//// アビリティアイコンのボタンUI
-	//// 押されたボタンのアニメーション
-	//auto* abilitySkillButtonCanvas = GetUI<UICanvas>(Hash32("InGame_ButtonUI_Skill"));
-	//UIAnimationFactory::Attach<UIScaleAnimation>(abilitySkillButtonCanvas, Hash32("SkillReadyScaleUp"));
-	//UIAnimationFactory::Attach<UIScaleAnimation>(abilitySkillButtonCanvas, Hash32("SkillReadyScaleDown"));
-	//abilitySkillButtonIconScaleSequence_ = std::make_unique<UIAnimationSequence>();
-	//abilitySkillButtonIconScaleSequence_->Add(Hash32("SkillReadyScaleUp")).Add(Hash32("SkillReadyScaleDown"));
-
 
 	// ボスHPのキャンバス
 	auto* bossHPCanvas = GetUI<UICanvas>(Hash32("BossHPBar"));

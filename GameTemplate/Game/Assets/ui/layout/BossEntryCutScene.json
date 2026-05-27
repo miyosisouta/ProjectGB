@@ -52,6 +52,61 @@
         "rotation": 0,
         "color": [1, 1, 1, 1],
         "isDraw": false
+      },
+
+
+
+      {
+        "coment": "ボス表示の帯:かめ",
+        "type": "UIIcon",
+        "name": "turtle",
+        "asset": "Assets/ui/inGameUI/boss/kame_obi.DDS",
+        "width": 1500,
+        "height": 173,
+        "position": [0, -250, 0],
+        "scale": [1, 1, 1],
+        "rotation": 0,
+        "color": [1, 1, 1, 1],
+        "isDraw": false
+      },
+      {
+        "coment": "かめ",
+        "type": "UIIcon",
+        "name": "turtle_nameA",
+        "asset": "Assets/ui/inGameUI/boss/kame_boss.DDS",
+        "width": 300,
+        "height": 130,
+        "position": [-400, -250, 0],
+        "scale": [1, 1, 1],
+        "rotation": 0,
+        "color": [1, 1, 1, 1],
+        "isDraw": false
+      },
+      {
+        "coment": "かめ",
+        "type": "UIIcon",
+        "name": "turtle_nameB",
+        "asset": "Assets/ui/inGameUI/boss/kame_boss.DDS",
+        "width": 300,
+        "height": 130,
+        "position": [0, -250, 0],
+        "scale": [1, 1, 1],
+        "rotation": 0,
+        "color": [1, 1, 1, 1],
+        "isDraw": false
+      },
+      {
+        "coment": "かめ",
+        "type": "UIIcon",
+        "name": "turtle_nameC",
+        "asset": "Assets/ui/inGameUI/boss/kame_boss.DDS",
+        "width": 300,
+        "height": 130,
+        "position": [400, -250, 0],
+        "scale": [1, 1, 1],
+        "rotation": 0,
+        "color": [1, 1, 1, 1],
+        "isDraw": false
       }
     ]
 }

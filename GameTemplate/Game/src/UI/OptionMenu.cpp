@@ -205,7 +205,7 @@ void OptionMenu::AnimationIconAttach()
 	//auto* sound = GetUI<UIIcon>(Hash32("icon_sound"));
 	UIAnimationFactory::Attach<UIRotationAnimation>(sound, Hash32("sound_rotation"));
 
-	//
+	// コントローラーアイコンのアニメーションアタッチ
 	auto* controller = GetUI<UIIcon>(Hash32("icon_controller"));
 	UIAnimationFactory::Attach<UIScaleAnimation>(controller, Hash32("Option_controllerIcon_scaleUp"));
 	//auto* controller = GetUI<UIIcon>(Hash32("icon_controller"));
@@ -217,7 +217,7 @@ void OptionMenu::AnimationIconAttach()
 	//auto* controller = GetUI<UIIcon>(Hash32("icon_controller"));
 	UIAnimationFactory::Attach<UIScaleAnimation>(controller, Hash32("controller_default"));
 
-	//
+	// カメラアイコンのアニメーションアタッチ
 	auto* camera = GetUI<UIIcon>(Hash32("icon_camera"));
 	UIAnimationFactory::Attach<UIScaleAnimation>(camera, Hash32("Option_cameraIcon_scaleUp"));
 	auto* gear1 = GetUI<UIIcon>(Hash32("icon_camera_gear"));

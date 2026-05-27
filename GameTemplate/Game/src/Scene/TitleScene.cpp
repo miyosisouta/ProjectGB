@@ -13,6 +13,7 @@
 
 #include "src/UI/Layout.h"
 #include "src/UI/TitleMenu.h"
+#include "src/UI/BossSelectMenu.h"
 #include "src/UI/OptionMenu.h"
 #include "src/UI/SoundOptionMenu.h"
 #include "src/UI/KeyConfigOptionMenu.h"
@@ -50,10 +51,12 @@ void TitleScene::Update()
 		if (titleMenu->IsAbuttonEnabled()) {
 			if (titleMenu->IsSelectStat()) {
 				if (g_pad[0]->IsTrigger(enButtonA)) {
-					SoundManager::Get().PlaySE(enSoundKind_Menu_Decide);
+					/*SoundManager::Get().PlaySE(enSoundKind_Menu_Decide);
 					isRequestScene = true;
 
-					UIScreenManager::Get().Pop();
+					UIScreenManager::Get().Pop();*/
+					// すぐ閉じる
+					UIScreenManager::Get().Push<BossSelectMenu>("Assets/ui/layout/BossSelectMenu.json", UITransitionMode::Push, UIScreenTransitionPreset::None());
 				}
 			}
 			if (titleMenu->IsSelectOption()) {
@@ -70,6 +73,43 @@ void TitleScene::Update()
 			}
 		}
 	}
+
+
+	// ボス選択メニューが有効な時(ゴリラorカメを選択)
+	auto* bossSelectMenu = dynamic_cast<BossSelectMenu*>(menu);
+
+	if (bossSelectMenu) {
+		if (g_pad[0]->IsTrigger(enButtonA)) {
+			BossType stageType = BossType::enGorilla;
+			GameModeType mode = GameModeType::enNormal;
+
+			if (bossSelectMenu->IsSelectGollira()) {
+				stageType = BossType::enGorilla;
+			}
+			else if (bossSelectMenu->IsSelectTurtle()) {
+				stageType = BossType::enTurtle;
+			}
+
+			CharacterDataBase::Get().SetStageType(stageType);
+			CharacterDataBase::Get().SetGameModeType(mode);
+
+			SoundManager::Get().PlaySE(enSoundKind_Menu_Decide);
+			isRequestScene = true;
+
+			UIScreenManager::Get().AllPop();
+		}
+	}
+
+
+	// ボス選択メニューが有効な時(タイトルに戻る)
+	if (bossSelectMenu) {
+		if (!UIScreenManager::Get().IsTransitioning() && g_pad[0]->IsTrigger(enButtonB)) {
+			SoundManager::Get().PlaySE(enSoundKind_Menu_Return);
+			UIScreenManager::Get().Pop();
+		}
+	}
+
+
 	// サウンドメニューが有効な時
 	auto* soundMenu = dynamic_cast<SoundOptionMenu*>(menu);
 	if (soundMenu) {

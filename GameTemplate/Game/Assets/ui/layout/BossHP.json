@@ -11,8 +11,26 @@
         "position": [0, 75, 0],
         "scale": [1, 1, 1],
         "rotation": 0,
-        "color": [1, 1, 1, 1]
+        "color": [1, 1, 1, 1],
+        "isDraw": false
       },
+      {
+        "coment": "ボスのHPの文字",
+        "type": "UIIcon",
+        "name": "Boss_HP_word2",
+        "asset": "Assets/ui/inGameUI/word/kame.DDS",
+        "width": 120,
+        "height": 80,
+        "position": [0, 75, 0],
+        "scale": [1, 1, 1],
+        "rotation": 0,
+        "color": [1, 1, 1, 1],
+        "isDraw": false
+      },
+
+
+
+
       {
         "coment": "ボスのHPゲージの背面",
         "type": "UIIcon",

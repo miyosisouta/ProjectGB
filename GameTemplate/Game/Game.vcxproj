@@ -291,6 +291,7 @@
     <ClCompile Include="src\Stage\StageBase.cpp" />
     <ClCompile Include="src\Stage\StageManager.cpp" />
     <ClCompile Include="src\UI\BootMenu.cpp" />
+    <ClCompile Include="src\UI\BossSelectMenu.cpp" />
     <ClCompile Include="src\UI\GameClearMenu.cpp" />
     <ClCompile Include="src\UI\GameOverMenu.cpp" />
     <ClCompile Include="src\UI\GameStartMenu.cpp" />
@@ -400,6 +401,7 @@
     <ClInclude Include="src\Stage\StageManager.h" />
     <ClInclude Include="src\Types.h" />
     <ClInclude Include="src\UI\BootMenu.h" />
+    <ClInclude Include="src\UI\BossSelectMenu.h" />
     <ClInclude Include="src\UI\GameClearMenu.h" />
     <ClInclude Include="src\UI\GameOverMenu.h" />
     <ClInclude Include="src\UI\GameStartMenu.h" />
