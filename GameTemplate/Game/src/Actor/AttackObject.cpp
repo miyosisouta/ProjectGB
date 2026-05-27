@@ -1,5 +1,6 @@
 ﻿#include "stdafx.h"
 #include "AttackObject.h"
+#include "AttackRange.h"
 #include "src/Actor/Character.h"
 #include "src/Actor/BossCharacter.h"
 #include "src/Stage/GrassBendManager.h"
@@ -8,6 +9,7 @@ namespace {
     /** Landmine */
     static Vector3 MODEL_LANDMINE_SCALE = Vector3(0.1f, 0.1f, 0.1f); // モデルの大きさ
     constexpr float LANDMINE_COLLISION_SIZE = 350.0f; // 爆発半径
+    constexpr float LANDMINE_INDICATOR_RADIUS = 85.0f; // 爆発予測サークルの半径
     constexpr float EFFECT_SCALE_FACTOR_DAMAGE_LING = 0.5f;
     constexpr float EFFECT_SCALE_FACTOR_EXPLOAD = 0.15f;
 }
@@ -168,6 +170,10 @@ LandmineObject::LandmineObject()
 
 LandmineObject::~LandmineObject()
 {
+    if (attackRangeIndicator_) {
+        DeleteGO(attackRangeIndicator_);
+        attackRangeIndicator_ = nullptr;
+    }
 }
 
 bool LandmineObject::Start()
@@ -188,13 +194,16 @@ bool LandmineObject::Start()
     taskScheduler_ = std::make_unique<TaskSchedulerSystem>();
 
     // 攻撃範囲の可視化
-    taskScheduler_->AddTimer(3.0f, [this, damageZoneEffectScale]() {
-        predictionEffectHandle_ = EffectManager::Get().PlayEffect(
-            enEffectKind_DamageZone_Ring,
-            transform_.position,
-            Quaternion::Identity,
-            damageZoneEffectScale
-        );
+    taskScheduler_->AddTimer(3.0f, [this]() {
+        attackRangeIndicator_ = NewGO<AttackRange>(0, "landmineRange");
+        AttackRange::InitParam param;
+        param.type       = AttackRange::Type::enCircle;
+        param.character  = AttackRange::Character::Boss;
+        param.pulseSpeed = 1.0f / 3.0f; // 3s display → ring reaches 0.85 at explosion
+        attackRangeIndicator_->SetInitParam(param);
+        attackRangeIndicator_->SetPosition(transform_.position);
+        attackRangeIndicator_->SetScale(Vector3(LANDMINE_INDICATOR_RADIUS, 1.0f, LANDMINE_INDICATOR_RADIUS));
+        attackRangeIndicator_->SetDraw(true);
 
         phase_ = Phase::enWarning;
         });
@@ -202,10 +211,10 @@ bool LandmineObject::Start()
 
     // 爆発
     taskScheduler_->AddTimer(6.0f, [this, exploadEffectScale,collisionScale]() {
-        // 攻撃予測エフェクトを停止
-        if (predictionEffectHandle_ != INVALID_EFFECT_HANDLE) {
-            EffectManager::Get().StopEffect(predictionEffectHandle_);
-            predictionEffectHandle_ = INVALID_EFFECT_HANDLE;
+        // 攻撃予測インジケーターを削除
+        if (attackRangeIndicator_) {
+            DeleteGO(attackRangeIndicator_);
+            attackRangeIndicator_ = nullptr;
         }
 
         // 爆発エフェクトを再生

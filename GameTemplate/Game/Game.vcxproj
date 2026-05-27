@@ -228,6 +228,7 @@
     <ClCompile Include="src\Actor\Actor.cpp" />
     <ClCompile Include="src\Actor\ActorStatus.cpp" />
     <ClCompile Include="src\Actor\AttackObject.cpp" />
+    <ClCompile Include="src\Actor\AttackRange.cpp" />
     <ClCompile Include="src\Actor\AttackObjectManager.cpp" />
     <ClCompile Include="src\Actor\BossCharacter.cpp" />
     <ClCompile Include="src\Actor\BossSpawner.cpp" />
@@ -332,6 +333,7 @@
     <ClInclude Include="src\Actor\ActorStatus.h" />
     <ClInclude Include="src\Actor\AttackObject.h" />
     <ClInclude Include="src\Actor\AttackObjectManager.h" />
+    <ClInclude Include="src\Actor\AttackRange.h" />
     <ClInclude Include="src\Actor\BossCharacter.h" />
     <ClInclude Include="src\Actor\BossSpawner.h" />
     <ClInclude Include="src\Actor\BossState.h" />

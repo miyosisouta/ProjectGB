@@ -2,6 +2,7 @@
 #include "IState.h"
 #include "src/Actor/Character.h"
 class BossCharacter;
+class AttackRange;
 /*
  * Stateの基底クラス
  */
@@ -120,7 +121,7 @@ private:
 	float verticalVelocity_ = 0.0f;  //!< 垂直速度
 	float gravity_ = 0.0f;        //!< 重力
 	bool createAttackCollision_ = false; //!< 攻撃用コリジョンを作成したかのフラグ
-	EffectHandle predictionEffectHandle_ = INVALID_EFFECT_HANDLE; //!< 攻撃予測エフェクトのハンドル
+	AttackRange* attackRange_ = nullptr; //!< 攻撃予測インジケーター
 	
 public:
 	/* 処理が終わりか */
@@ -141,10 +142,11 @@ public:
 class SpinState : public BossStateBase
 {
 private:
-	Vector3 targetPos_ = Vector3::Zero; //!< 攻撃対象の座標
-	bool isAttackStart_ = false; //!< 攻撃をスタートするか
-	EffectHandle spinEffectHandle_ = INVALID_EFFECT_HANDLE; //!< 回転エフェクトのハンドル
-	EffectHandle predictionEffectHandle_ = INVALID_EFFECT_HANDLE; //!< 攻撃予測用エフェクトのオハンドル
+	Vector3      targetPos_              = Vector3::Zero;       //!< 攻撃対象の座標
+	bool         isAttackStart_          = false;               //!< 攻撃をスタートするか
+	EffectHandle spinEffectHandle_       = INVALID_EFFECT_HANDLE; //!< 回転エフェクトのハンドル
+	AttackRange* attackRangeIndicator_   = nullptr;             //!< 攻撃予測ラインインジケーター
+	float        predictionElapsed_      = 0.0f;                //!< 予測表示の経過時間 (drawProgress 計算用)
 
 public:
 	/* 処理が終わりか */
@@ -177,6 +179,8 @@ private:
 	Phase phase_ = Phase::enReady; //!< 攻撃段階
 	Vector3 targetPos_ = Vector3::Zero; //!< 攻撃対象の座標
 	EffectHandle predictionEffectHandle_ = INVALID_EFFECT_HANDLE; // 予測エフェクトのハンドル
+	AttackRange* attackRangeIndicator_ = nullptr; //!< 攻撃予測ラインインジケーター
+	float predictionElapsed_ = 0.0f; //!< 予測表示の経過時間
 
 public:
 	/* 処理が終わりか */
@@ -224,8 +228,8 @@ private:
 	Mode mode_ = Mode::enMax; //!< 攻撃パターン
 	uint8_t weights_[enMax] = { 4,3,3 }; //!< 攻撃の重み
 	Vector3 targetPos_ = Vector3::Zero; //!< 攻撃対象の座標
-	EffectHandle predictionEffectHandle_= INVALID_EFFECT_HANDLE; //!< 予測エフェクトのハンドル
-	EffectHandle laserEffectHandle_ = INVALID_EFFECT_HANDLE; //!< 予測エフェクトのハンドル
+	EffectHandle laserEffectHandle_ = INVALID_EFFECT_HANDLE; //!< レーザーエフェクトのハンドル
+	AttackRange* attackRangeIndicator_ = nullptr; //!< 攻撃予測サークルインジケーター
 
 
 	Vector3 scale_ = Vector3::Zero; //!< 攻撃範囲
