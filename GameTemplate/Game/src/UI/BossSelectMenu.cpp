@@ -218,41 +218,41 @@ void BossSelectMenu::AnimationResetIcon()
 void BossSelectMenu::GolliraUpdateAnimation()
 {
 	// タスクスケジューラー
-	const int id = taskSchedulerSystem_->CreateLoopSequence(3.5f);
-	taskSchedulerSystem_->AddLoopTimer(id, 2.0f, [&]()
+	const int id = taskSchedulerSystem_->CreateLoopSequence(3.0f);
+	taskSchedulerSystem_->AddLoopTimer(id, 1.0f, [&]()
 		{
 			auto* gorilla = GetUI<UIIcon>(Hash32("boss_gorilla"));
 			auto* animation = gorilla->FindAnimation(Hash32("boss_gorillaIcon_scaleUp"));
 			animation->Clear();
 			animation->Play();
 		});
-	taskSchedulerSystem_->AddLoopTimer(id, 2.3f, [&]()
+	taskSchedulerSystem_->AddLoopTimer(id, 1.3f, [&]()
 		{
 			auto* gorilla = GetUI<UIIcon>(Hash32("boss_gorilla"));
 			auto* animation = gorilla->FindAnimation(Hash32("boss_gorillaIcon_scaleUp"));
 			animation->Stop();
 		}, false);
-	taskSchedulerSystem_->AddLoopTimer(id, 2.4f, [&]()
+	taskSchedulerSystem_->AddLoopTimer(id, 1.4f, [&]()
 		{
 			auto* gorilla = GetUI<UIIcon>(Hash32("boss_gorilla"));
 			auto* animation = gorilla->FindAnimation(Hash32("boss_gorillaIcon_scaleDown"));
 			animation->Clear();
 			animation->Play();
 		});
-	taskSchedulerSystem_->AddLoopTimer(id, 2.7f, [&]()
+	taskSchedulerSystem_->AddLoopTimer(id, 1.7f, [&]()
 		{
 			auto* gorilla = GetUI<UIIcon>(Hash32("boss_gorilla"));
 			auto* animation = gorilla->FindAnimation(Hash32("boss_gorillaIcon_scaleDown"));
 			animation->Stop();
 		}, false);
-	taskSchedulerSystem_->AddLoopTimer(id, 2.8f, [&]()
+	taskSchedulerSystem_->AddLoopTimer(id, 1.8f, [&]()
 		{
 			auto* gorilla = GetUI<UIIcon>(Hash32("boss_gorilla"));
 			auto* animation = gorilla->FindAnimation(Hash32("boss_gorillaIcon_scaleNormal"));
 			animation->Clear();
 			animation->Play();
 		});
-	taskSchedulerSystem_->AddLoopTimer(id, 3.1f, [&]()
+	taskSchedulerSystem_->AddLoopTimer(id, 2.1f, [&]()
 		{
 			auto* gorilla = GetUI<UIIcon>(Hash32("boss_gorilla"));
 			auto* animation = gorilla->FindAnimation(Hash32("boss_gorillaIcon_scaleNormal"));
@@ -263,7 +263,7 @@ void BossSelectMenu::GolliraUpdateAnimation()
 void BossSelectMenu::TurtleUpdateAnimation()
 {
 	// タスクスケジューラー
-	const int id = taskSchedulerSystem_->CreateLoopSequence(3.5f);
+	const int id = taskSchedulerSystem_->CreateLoopSequence(3.0f);
 	taskSchedulerSystem_->AddLoopTimer(id, 1.0f, [&]()
 		{
 			auto* gorilla = GetUI<UIIcon>(Hash32("boss_turtle"));

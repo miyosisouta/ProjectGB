@@ -1,0 +1,205 @@
+{
+  "canvas": {
+    "elements": [
+
+      {
+        "coment": "背景：フェード",
+        "type": "UIIcon",
+        "name": "fade",
+        "asset": "Assets/ui/skillSelectUI/window/tab/fade.DDS",
+        "width": 1920,
+        "height": 1080,
+        "position": [0, 0, 0],
+        "scale": [1, 1, 1],
+        "rotation": 0,
+        "color": [1, 1, 1, 1]
+      },
+
+
+      {
+        "coment": "ウィンドウ",
+        "type": "UIIcon",
+        "name": "window",
+        "asset": "Assets/ui/skillSelectUI/window/tab/back.DDS",
+        "width": 1000,
+        "height": 600,
+        "position": [0, 0, 0],
+        "scale": [1, 1, 1],
+        "rotation": 0,
+        "color": [1, 1, 1, 1]
+      },
+      {
+        "coment": "帯",
+        "type": "UIIcon",
+        "name": "windowObi",
+        "asset": "Assets/ui/skillSelectUI/window/tab/obi.DDS",
+        "width": 980,
+        "height": 100,
+        "position": [0, 230, 0],
+        "scale": [1, 1, 1],
+        "rotation": 0,
+        "color": [1, 1, 1, 1]
+      },
+      {
+        "coment": "危険マーク",
+        "type": "UIIcon",
+        "name": "error",
+        "asset": "Assets/ui/skillSelectUI/window/tab/kiken.DDS",
+        "width": 80,
+        "height": 70,
+        "position": [-430, 230, 0],
+        "scale": [1, 1, 1],
+        "rotation": 0,
+        "color": [1, 1, 1, 1]
+      },
+      
+
+
+      {
+        "coment": "ボタンの背景:もどる",
+        "type": "UIIcon",
+        "name": "buttonBack",
+        "asset": "Assets/ui/skillSelectUI/window/tab/backbutton.DDS",
+        "width": 350,
+        "height": 150,
+        "position": [-225, -150, 0],
+        "scale": [1, 1, 1],
+        "rotation": 0,
+        "color": [1, 1, 1, 1]
+      },
+      {
+        "coment": "ボタンの背景:はじめる",
+        "type": "UIIcon",
+        "name": "buttonStartBack",
+        "asset": "Assets/ui/skillSelectUI/window/tab/backbutton.DDS",
+        "width": 350,
+        "height": 150,
+        "position": [225, -150, 0],
+        "scale": [1, 1, 1],
+        "rotation": 0,
+        "color": [1, 1, 1, 1]
+      },
+
+
+      {
+        "coment": "ボタンの背景:もどる枠",
+        "type": "UIIcon",
+        "name": "buttonBackFrame",
+        "asset": "Assets/ui/skillSelectUI/window/tab/waku.DDS",
+        "width": 350,
+        "height": 150,
+        "position": [-225, -150, 0],
+        "scale": [1, 1, 1],
+        "rotation": 0,
+        "color": [0.2, 0.2, 0.2, 1]
+      },
+      {
+        "coment": "ボタンの背景:はじめる",
+        "type": "UIIcon",
+        "name": "buttonStartBackFrame",
+        "asset": "Assets/ui/skillSelectUI/window/tab/waku.DDS",
+        "width": 350,
+        "height": 150,
+        "position": [225, -150, 0],
+        "scale": [1, 1, 1],
+        "rotation": 0,
+        "color": [0.2, 0.2, 0.2, 1]
+      },
+
+
+      {
+        "coment": "文字：確認",
+        "type": "UIIcon",
+        "name": "word_cheak",
+        "asset": "Assets/ui/skillSelectUI/window/word/kakunin.DDS",
+        "width": 230,
+        "height": 70,
+        "position": [-260, 230, 0],
+        "scale": [1, 1, 1],
+        "rotation": 0,
+        "color": [1, 1, 1, 1]
+      },
+      {
+        "coment": "文字：このスキルで戦う？",
+        "type": "UIIcon",
+        "name": "word_question",
+        "asset": "Assets/ui/skillSelectUI/window/word/qestion.DDS",
+        "width": 710,
+        "height": 70,
+        "position": [0, 50, 0],
+        "scale": [1, 1, 1],
+        "rotation": 0,
+        "color": [1, 1, 1, 1]
+      },
+      {
+        "coment": "文字：もどる",
+        "type": "UIIcon",
+        "name": "word_back",
+        "asset": "Assets/ui/skillSelectUI/window/word/modoru.DDS",
+        "width": 180,
+        "height": 60,
+        "position": [-225, -150, 0],
+        "scale": [1, 1, 1],
+        "rotation": 0,
+        "color": [1, 1, 1, 1]
+      },
+      {
+        "coment": "文字：はじめる",
+        "type": "UIIcon",
+        "name": "word_start",
+        "asset": "Assets/ui/skillSelectUI/window/word/hajimeru.DDS",
+        "width": 260,
+        "height": 60,
+        "position": [225, -150, 0],
+        "scale": [1, 1, 1],
+        "rotation": 0,
+        "color": [1, 1, 1, 1]
+      },
+
+
+      {
+        "comment": "選択されているときのカラー",
+        "type": "UIDummy",
+        "name": "selectColorDummy",
+        "position": [0, 0, 0],
+        "scale": [0, 0, 0],
+        "color": [1, 0.9, 0.08, 1.0]
+      },
+      {
+        "comment": "選択されていないときのカラー",
+        "type": "UIDummy",
+        "name": "nonSelectColorDummy",
+        "position": [0, 0, 0],
+        "scale": [0, 0, 0],
+        "color": [0.3, 0.3, 0.3, 1.0]
+      },
+
+      {
+        "comment": "初期サイズ",
+        "type": "UIDummy",
+        "name": "scaleDummy",
+        "scale": [1, 1, 1]
+      },
+
+
+
+
+      {
+        "comment": "戻るボタンアイコン",
+        "type": "UIPrefab",
+        "name": "returnIcon",
+        "source": "Assets/ui/layout/RetrunButton.json",
+        "position": [790, -500, 0],
+        "scale": [1, 1, 1]
+      },
+      {
+        "comment": "決定ボタンアイコン",
+        "type": "UIPrefab",
+        "name": "decisionIcon",
+        "source": "Assets/ui/layout/DecisionButton.json",
+        "position": [560, -500, 0],
+        "scale": [1, 1, 1]
+      }
+    ]
+}
+}

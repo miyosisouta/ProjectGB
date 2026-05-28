@@ -658,6 +658,27 @@
             "duration": 0.3,
             "easing": "EaseOut",
             "loop": "Once"
+        },
+
+        {
+            "comment": "確認ウィンドウボタン：ボタン拡大",
+            "key": "checkWindowButton_scaleUp",
+            "valueType": "Vector3",
+            "startValue": { "x": 1.0, "y": 1.0, "z": 1.0},
+            "endValue":   { "x": 1.2, "y": 1.2, "z": 1.0},
+            "duration": 0.2,
+            "easing": "EaseIn",
+            "loop": "Once"
+        },
+        {
+            "comment": "確認ウィンドウ枠：枠拡大",
+            "key": "checkWindowFrame_scaleUp",
+            "valueType": "Vector3",
+            "startValue": { "x": 1.0, "y": 1.0, "z": 1.0},
+            "endValue":   { "x": 1.2, "y": 1.2, "z": 1.0},
+            "duration": 0.2,
+            "easing": "EaseIn",
+            "loop": "Once"
         }
     ]
 }

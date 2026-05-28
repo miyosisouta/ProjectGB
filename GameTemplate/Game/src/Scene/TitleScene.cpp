@@ -14,6 +14,8 @@
 #include "src/UI/Layout.h"
 #include "src/UI/TitleMenu.h"
 #include "src/UI/BossSelectMenu.h"
+#include "src/UI/SkillSelectMenu.h"
+#include "src/UI/CheckStartWindow.h"
 #include "src/UI/OptionMenu.h"
 #include "src/UI/SoundOptionMenu.h"
 #include "src/UI/KeyConfigOptionMenu.h"
@@ -80,9 +82,12 @@ void TitleScene::Update()
 
 	if (bossSelectMenu) {
 		if (g_pad[0]->IsTrigger(enButtonA)) {
+			// スキル選択画面
+			UIScreenManager::Get().Push<SkillSelectMenu>("Assets/ui/layout/SkillSelectMenu.json", UITransitionMode::Push, UIScreenTransitionPreset::FadeInOut());
+			// ボスを選択
 			BossType stageType = BossType::enGorilla;
 			GameModeType mode = GameModeType::enNormal;
-
+			// 選択されたボスになる
 			if (bossSelectMenu->IsSelectGollira()) {
 				stageType = BossType::enGorilla;
 			}
@@ -94,9 +99,9 @@ void TitleScene::Update()
 			CharacterDataBase::Get().SetGameModeType(mode);
 
 			SoundManager::Get().PlaySE(enSoundKind_Menu_Decide);
-			isRequestScene = true;
+			//isRequestScene = true;
 
-			UIScreenManager::Get().AllPop();
+			//UIScreenManager::Get().Pop();
 		}
 	}
 
@@ -106,6 +111,65 @@ void TitleScene::Update()
 		if (!UIScreenManager::Get().IsTransitioning() && g_pad[0]->IsTrigger(enButtonB)) {
 			SoundManager::Get().PlaySE(enSoundKind_Menu_Return);
 			UIScreenManager::Get().Pop();
+		}
+	}
+
+
+	// スキル選択メニューが有効な時
+	auto* skillSelectMenu = dynamic_cast<SkillSelectMenu*>(menu);
+
+	if (skillSelectMenu) {
+		if (g_pad[0]->IsTrigger(enButtonA)) {
+			AbilityType skillType = AbilityType::enDefault;
+			// アビリティの選択をする
+			if (skillSelectMenu->IsSelectSkillLandMine()) {
+				skillType = AbilityType::enLandmine;
+			}
+			else if (skillSelectMenu->IsSelectSkillBite()) {
+				skillType = AbilityType::enDefault;
+			}
+			else if (skillSelectMenu->IsSelectSkillFire()) {
+				skillType = AbilityType::enFireMagic;
+			}
+
+			CharacterDataBase::Get().SetPlayerAbility(skillType);
+
+			SoundManager::Get().PlaySE(enSoundKind_Menu_Decide);
+			// 確認ウィンドウの表示
+			UIScreenManager::Get().Push<CheckStartWindow>("Assets/ui/layout/CheckStartWindow.json", UITransitionMode::Push, UIScreenTransitionPreset::FadeInOut());
+			//isRequestScene = true;
+			// 全部のUIを消す
+			//UIScreenManager::Get().AllPop();
+		}
+	}
+
+	// スキル選択メニューが有効な時(戻る)
+	if (skillSelectMenu) {
+		if (!UIScreenManager::Get().IsTransitioning() && g_pad[0]->IsTrigger(enButtonB)) {
+			SoundManager::Get().PlaySE(enSoundKind_Menu_Return);
+			UIScreenManager::Get().Pop();
+		}
+	}
+
+	// 確認ウィンドウが有効な時
+	auto* checkStartWindow = dynamic_cast<CheckStartWindow*>(menu);
+
+	if (checkStartWindow) {
+		if (!UIScreenManager::Get().IsTransitioning()) {
+			if (g_pad[0]->IsTrigger(enButtonA)) {
+				// 選択されたらスキル選択にもどる
+				if (checkStartWindow->IsSelectBackButton()) {
+					//CheckStartWindow::SetCheckWindowClose(true);
+					SoundManager::Get().PlaySE(enSoundKind_Menu_Return);
+					UIScreenManager::Get().Pop();
+				}
+				// 選択されたらインゲーム
+				else if (checkStartWindow->IsSelectStartButton()) {
+					isRequestScene = true;
+					UIScreenManager::Get().AllPop();
+				}
+				SoundManager::Get().PlaySE(enSoundKind_Menu_Decide);
+			}
 		}
 	}
 
