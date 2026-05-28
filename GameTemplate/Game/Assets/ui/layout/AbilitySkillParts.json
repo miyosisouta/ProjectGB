@@ -39,18 +39,49 @@
         "rotation": 0,
         "color": [1, 1, 1, 1]
       },
+
+
+
       {
-        "coment": "アビリティアイコン",
+        "coment": "アビリティアイコン:ほえる",
         "type": "UIIcon",
-        "name": "SkillIcon",
+        "name": "SkillIcon_Howl",
         "asset": "Assets/ui/inGameUI/skillIcon/skill.DDS",
         "width": 140,
         "height": 140,
         "position": [0, -15, 0],
         "scale": [1, 1, 1],
         "rotation": 0,
-        "color": [1, 1, 1, 1]
+        "color": [1, 1, 1, 1],
+        "isDraw": false
       },
+      {
+        "coment": "アビリティアイコン:地雷",
+        "type": "UIIcon",
+        "name": "SkillIcon_landmine",
+        "asset": "Assets/ui/inGameUI/skillIcon/jirai.DDS",
+        "width": 120,
+        "height": 110,
+        "position": [0, -15, 0],
+        "scale": [1, 1, 1],
+        "rotation": 0,
+        "color": [1, 1, 1, 1],
+        "isDraw": false
+      },
+      {
+        "coment": "アビリティアイコン:火",
+        "type": "UIIcon",
+        "name": "SkillIcon_fire",
+        "asset": "Assets/ui/inGameUI/skillIcon/fire.DDS",
+        "width": 120,
+        "height": 110,
+        "position": [5, -15, 0],
+        "scale": [1, 1, 1],
+        "rotation": 0,
+        "color": [1, 1, 1, 1],
+        "isDraw": false
+      },
+
 
 
       {

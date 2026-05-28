@@ -292,6 +292,7 @@
     <ClCompile Include="src\Stage\StageManager.cpp" />
     <ClCompile Include="src\UI\BootMenu.cpp" />
     <ClCompile Include="src\UI\BossSelectMenu.cpp" />
+    <ClCompile Include="src\UI\CheckStartWindow.cpp" />
     <ClCompile Include="src\UI\GameClearMenu.cpp" />
     <ClCompile Include="src\UI\GameOverMenu.cpp" />
     <ClCompile Include="src\UI\GameStartMenu.cpp" />
@@ -303,6 +304,7 @@
     <ClCompile Include="src\UI\MissionMenu.cpp" />
     <ClCompile Include="src\UI\OptionMenu.cpp" />
     <ClCompile Include="src\UI\PauseMenu.cpp" />
+    <ClCompile Include="src\UI\SkillSelectMenu.cpp" />
     <ClCompile Include="src\UI\SoundOptionMenu.cpp" />
     <ClCompile Include="src\UI\TimerMenu.cpp" />
     <ClCompile Include="src\UI\TitleMenu.cpp" />
@@ -402,6 +404,7 @@
     <ClInclude Include="src\Types.h" />
     <ClInclude Include="src\UI\BootMenu.h" />
     <ClInclude Include="src\UI\BossSelectMenu.h" />
+    <ClInclude Include="src\UI\CheckStartWindow.h" />
     <ClInclude Include="src\UI\GameClearMenu.h" />
     <ClInclude Include="src\UI\GameOverMenu.h" />
     <ClInclude Include="src\UI\GameStartMenu.h" />
@@ -413,6 +416,7 @@
     <ClInclude Include="src\UI\MissionMenu.h" />
     <ClInclude Include="src\UI\OptionMenu.h" />
     <ClInclude Include="src\UI\PauseMenu.h" />
+    <ClInclude Include="src\UI\SkillSelectMenu.h" />
     <ClInclude Include="src\UI\SoundOptionMenu.h" />
     <ClInclude Include="src\UI\TimerMenu.h" />
     <ClInclude Include="src\UI\TitleMenu.h" />

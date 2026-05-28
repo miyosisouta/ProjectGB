@@ -12,7 +12,7 @@
 #include "src/Util/TaskSchedulerSystem.h"
 
 #include "src/UI/Layout.h"
-#include "src/UI/BossSelectMenu.h"
+#include "src/UI/CheckStartWindow.h"
 
 
 DebugScene::DebugScene()
@@ -29,7 +29,7 @@ DebugScene::~DebugScene()
 bool DebugScene::Start()
 {
 	layout_ = new Layout;
-	layout_->Initialize<BossSelectMenu>("Assets/ui/Layout/BossSelectMenu.json");
+	layout_->Initialize<CheckStartWindow>("Assets/ui/Layout/CheckStartWindow.json");
 
 	return true;
 }
@@ -37,7 +37,7 @@ bool DebugScene::Start()
 
 void DebugScene::Update()
 {
-	BossSelectMenu* menu = static_cast<BossSelectMenu*>(layout_->GetMenu());
+	CheckStartWindow* menu = static_cast<CheckStartWindow*>(layout_->GetMenu());
 	
 
 	layout_->Update();

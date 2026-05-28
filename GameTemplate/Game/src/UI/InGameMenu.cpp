@@ -253,6 +253,24 @@ void InGameMenu::InitializeLogic()
 		bossTurtle->isDraw = true;
 	}
 
+	// 選択されたスキルのアイコンを表示
+	auto* biteIcon = GetUI<UIIcon>(Hash32("AbilitySkillIcon/SkillIcon_Howl"));
+	auto* landmineIcon = GetUI<UIIcon>(Hash32("AbilitySkillIcon/SkillIcon_landmine"));
+	auto* fireIcon = GetUI<UIIcon>(Hash32("AbilitySkillIcon/SkillIcon_fire"));
+	AbilityType skillType = CharacterDataBase::Get().GetPlayerParam().ability;
+	// かみつきが選択されているとき
+	if (skillType == AbilityType::enDefault) {
+		biteIcon->isDraw = true;
+	}
+	// かみつきが選択されているとき
+	if (skillType == AbilityType::enLandmine) {
+		landmineIcon->isDraw = true;
+	}
+	// かみつきが選択されているとき
+	if (skillType == AbilityType::enFireMagic) {
+		fireIcon->isDraw = true;
+	}
+
 	// アビリティアイコンのキャンバス
 	auto* abilitySkillIconCanvas = GetUI<UICanvas>(Hash32("AbilitySkillIcon"));
 	UIAnimationFactory::Attach<UIScaleAnimation>(abilitySkillIconCanvas, Hash32("SkillReadyScaleUp"));

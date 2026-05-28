@@ -1,0 +1,319 @@
+{
+  "canvas": {
+    "elements": [
+      {
+        "comment": "オプションの背景",
+        "type": "UIPrefab",
+        "name": "optionBack",
+        "source": "Assets/ui/layout/optionBack.json",
+        "position": [0, 0, 0],
+        "scale": [1, 1, 1]
+      },
+
+
+     
+      {
+        "coment": "タイトルアイコン:剣",
+        "type": "UIIcon",
+        "name": "titleIcon_sword",
+        "asset": "Assets/ui/skillSelectUI/title/ken.DDS",
+        "width": 150,
+        "height": 140,
+        "position": [-800, 455, 0],
+        "scale": [1, 1, 1],
+        "rotation": 0,
+        "color": [1, 1, 1, 1]
+      },
+      {
+        "coment": "タイトル:スキル選択",
+        "type": "UIIcon",
+        "name": "titleName",
+        "asset": "Assets/ui/skillSelectUI/title/skillSelect.DDS",
+        "width": 500,
+        "height": 130,
+        "position": [-430, 455, 0],
+        "scale": [1, 1, 1],
+        "rotation": 0,
+        "color": [1, 1, 1, 1]
+      },
+
+
+      {
+        "coment": "地雷:背景",
+        "type": "UIIcon",
+        "name": "landine_back",
+        "asset": "Assets/ui/skillSelectUI/skillIcon/back.DDS",
+        "width": 550,
+        "height": 730,
+        "position": [ -600, -40, 0],
+        "scale": [1, 1, 1],
+        "rotation": 0,
+        "color": [1, 1, 1, 1]
+      },
+      {
+        "coment": "地雷:アイコンの背景",
+        "type": "UIIcon",
+        "name": "landmine_Icon_back",
+        "asset": "Assets/ui/skillSelectUI/skillIcon/skillback.DDS",
+        "width": 250,
+        "height": 250,
+        "position": [ -600, 150, 0],
+        "scale": [1, 1, 1],
+        "rotation": 0,
+        "color": [1, 1, 1, 1]
+      },
+      {
+        "coment": "地雷:アイコン",
+        "type": "UIIcon",
+        "name": "landmine_Icon",
+        "asset": "Assets/ui/skillSelectUI/skillIcon/jirai.DDS",
+        "width": 180,
+        "height": 170,
+        "position": [ -600, 150, 0],
+        "scale": [1, 1, 1],
+        "rotation": 0,
+        "color": [1, 1, 1, 1]
+      },
+      {
+        "coment": "地雷:名前",
+        "type": "UIIcon",
+        "name": "landmine_Name",
+        "asset": "Assets/ui/skillSelectUI/skillWord/jirai_word.DDS",
+        "width": 200,
+        "height": 70,
+        "position": [ -600, -40, 0],
+        "scale": [1, 1, 1],
+        "rotation": 0,
+        "color": [1, 1, 1, 1]
+      },
+      {
+        "coment": "地雷:説明",
+        "type": "UIIcon",
+        "name": "landmine_Description",
+        "asset": "Assets/ui/skillSelectUI/skillWord/jirai_setumei.DDS",
+        "width": 480,
+        "height": 120,
+        "position": [ -600, -200, 0],
+        "scale": [1, 1, 1],
+        "rotation": 0,
+        "color": [1, 1, 1, 1]
+      },
+
+
+
+
+
+      {
+        "coment": "吠える:背景",
+        "type": "UIIcon",
+        "name": "bite_back",
+        "asset": "Assets/ui/skillSelectUI/skillIcon/back.DDS",
+        "width": 550,
+        "height": 730,
+        "position": [0, -40, 0],
+        "scale": [1, 1, 1],
+        "rotation": 0,
+        "color": [1, 1, 1, 1]
+      },
+      {
+        "coment": "吠える:アイコンの背景",
+        "type": "UIIcon",
+        "name": "bite_Icon_back",
+        "asset": "Assets/ui/skillSelectUI/skillIcon/skillback.DDS",
+        "width": 250,
+        "height": 250,
+        "position": [0, 150, 0],
+        "scale": [1, 1, 1],
+        "rotation": 0,
+        "color": [1, 1, 1, 1]
+      },
+      {
+        "coment": "吠える:アイコン",
+        "type": "UIIcon",
+        "name": "bite_Icon",
+        "asset": "Assets/ui/skillSelectUI/skillIcon/wan.DDS",
+        "width": 200,
+        "height": 195,
+        "position": [ 5, 130, 0],
+        "scale": [1, 1, 1],
+        "rotation": 0,
+        "color": [1, 1, 1, 1]
+      },
+      {
+        "coment": "吠える:名前",
+        "type": "UIIcon",
+        "name": "bite_Name",
+        "asset": "Assets/ui/skillSelectUI/skillWord/wan_word.DDS",
+        "width": 200,
+        "height": 70,
+        "position": [ 0, -40, 0],
+        "scale": [1, 1, 1],
+        "rotation": 0,
+        "color": [1, 1, 1, 1]
+      },
+      {
+        "coment": "吠える:説明",
+        "type": "UIIcon",
+        "name": "bite_Description",
+        "asset": "Assets/ui/skillSelectUI/skillWord/wan_setumei.DDS",
+        "width": 480,
+        "height": 120,
+        "position": [ 0, -200, 0],
+        "scale": [1, 1, 1],
+        "rotation": 0,
+        "color": [1, 1, 1, 1]
+      },
+
+
+
+      
+      {
+        "coment": "炎:背景",
+        "type": "UIIcon",
+        "name": "fire_back",
+        "asset": "Assets/ui/skillSelectUI/skillIcon/back.DDS",
+        "width": 550,
+        "height": 730,
+        "position": [600, -40, 0],
+        "scale": [1, 1, 1],
+        "rotation": 0,
+        "color": [1, 1, 1, 1]
+      },
+      {
+        "coment": "炎:アイコンの背景",
+        "type": "UIIcon",
+        "name": "fire_Icon_back",
+        "asset": "Assets/ui/skillSelectUI/skillIcon/skillback.DDS",
+        "width": 250,
+        "height": 250,
+        "position": [600, 150, 0],
+        "scale": [1, 1, 1],
+        "rotation": 0,
+        "color": [1, 1, 1, 1]
+      },
+      {
+        "coment": "炎:アイコン",
+        "type": "UIIcon",
+        "name": "fire_Icon",
+        "asset": "Assets/ui/skillSelectUI/skillIcon/fire.DDS",
+        "width": 180,
+        "height": 170,
+        "position": [ 610, 150, 0],
+        "scale": [1, 1, 1],
+        "rotation": 0,
+        "color": [1, 1, 1, 1]
+      },
+      {
+        "coment": "炎:名前",
+        "type": "UIIcon",
+        "name": "fire_Name",
+        "asset": "Assets/ui/skillSelectUI/skillWord/fire_word.DDS",
+        "width": 200,
+        "height": 70,
+        "position": [ 600, -40, 0],
+        "scale": [1, 1, 1],
+        "rotation": 0,
+        "color": [1, 1, 1, 1]
+      },
+      {
+        "coment": "炎:説明",
+        "type": "UIIcon",
+        "name": "fire_Description",
+        "asset": "Assets/ui/skillSelectUI/skillWord/fire_setumei.DDS",
+        "width": 480,
+        "height": 120,
+        "position": [ 600, -200, 0],
+        "scale": [1, 1, 1],
+        "rotation": 0,
+        "color": [1, 1, 1, 1]
+      },
+
+
+
+
+
+      {
+        "coment": "タイトル:スキル選択",
+        "type": "UIIcon",
+        "name": "landmine_flame",
+        "asset": "Assets/ui/skillSelectUI/skillIcon/waku.DDS",
+        "width": 550,
+        "height": 730,
+        "position": [-600, -40, 0],
+        "scale": [1, 1, 1],
+        "rotation": 0,
+        "color": [1, 1, 1, 1],
+        "isDraw": false
+      },
+      {
+        "coment": "タイトル:スキル選択",
+        "type": "UIIcon",
+        "name": "bite_flame",
+        "asset": "Assets/ui/skillSelectUI/skillIcon/waku.DDS",
+        "width": 550,
+        "height": 730,
+        "position": [ 0, -40, 0],
+        "scale": [1, 1, 1],
+        "rotation": 0,
+        "color": [1, 1, 1, 1],
+        "isDraw": false
+      },
+      {
+        "coment": "タイトル:スキル選択",
+        "type": "UIIcon",
+        "name": "fire_flame",
+        "asset": "Assets/ui/skillSelectUI/skillIcon/waku.DDS",
+        "width": 550,
+        "height": 730,
+        "position": [ 600, -40, 0],
+        "scale": [1, 1, 1],
+        "rotation": 0,
+        "color": [1, 1, 1, 1],
+        "isDraw": false
+      },
+
+
+
+
+
+
+      {
+        "comment": "ダミー(はじめる座標取得用)",
+        "type": "UIDummy",
+        "name": "StartPositionDummy",
+        "position": [-210, -180, 0]
+      },
+      {
+        "comment": "ダミー(設定座標取得用)",
+        "type": "UIDummy",
+        "name": "OptionPositionDummy",
+        "position": [-135, -300, 0]
+      },
+      {
+        "comment": "ダミー(おわる座標取得用)",
+        "type": "UIDummy",
+        "name": "ExitPositionDummy",
+        "position": [-170, -420, 0]
+      },
+
+
+
+      {
+        "comment": "戻るボタンアイコン",
+        "type": "UIPrefab",
+        "name": "returnIcon",
+        "source": "Assets/ui/layout/RetrunButton.json",
+        "position": [790, -500, 0],
+        "scale": [1, 1, 1]
+      },
+      {
+        "comment": "決定ボタンアイコン",
+        "type": "UIPrefab",
+        "name": "decisionIcon",
+        "source": "Assets/ui/layout/DecisionButton.json",
+        "position": [560, -500, 0],
+        "scale": [1, 1, 1]
+      }
+    ]
+}
+}
