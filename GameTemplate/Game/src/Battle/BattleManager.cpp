@@ -71,10 +71,14 @@ BattleManager::BattleManager()
 
 	// ボス
 	{
-	/*	BossType stageType = BossType::enGorilla;
-		GameModeType mode  = GameModeType::enNormal;
-		CharacterDataBase::Get().SetStageType(stageType);
-		CharacterDataBase::Get().SetGameModeType(mode);*/
+#if defined(_DEBUG)
+		if (CharacterDataBase::Get().GetStageType() == BossType::enNone) {
+			CharacterDataBase::Get().SetStageType(BossType::enGorilla);
+		}
+		if (CharacterDataBase::Get().GetGameModeType() == GameModeType::enNone) {
+			CharacterDataBase::Get().SetGameModeType(GameModeType::enNormal);
+		}
+#endif
 
 		boss_ = new BossSpawner();
 		boss_->SetAttackTarger(player_);

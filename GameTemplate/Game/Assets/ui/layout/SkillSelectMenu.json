@@ -19,7 +19,7 @@
         "asset": "Assets/ui/skillSelectUI/title/ken.DDS",
         "width": 150,
         "height": 140,
-        "position": [-800, 455, 0],
+        "position": [-850, 455, 0],
         "scale": [1, 1, 1],
         "rotation": 0,
         "color": [1, 1, 1, 1]
@@ -29,9 +29,9 @@
         "type": "UIIcon",
         "name": "titleName",
         "asset": "Assets/ui/skillSelectUI/title/skillSelect.DDS",
-        "width": 500,
-        "height": 130,
-        "position": [-430, 455, 0],
+        "width": 490,
+        "height": 100,
+        "position": [-490, 450, 0],
         "scale": [1, 1, 1],
         "rotation": 0,
         "color": [1, 1, 1, 1]

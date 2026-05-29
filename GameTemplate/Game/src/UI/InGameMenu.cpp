@@ -75,6 +75,8 @@ void InGameMenu::Update()
 	int playerMaxHP = 0;
 	int bossHP = 0;
 	int bossMaxHP = 0;
+	float stamina = 0.0f;
+	float maxStamina = 1.0f;
 	auto* player = FindGO<Player>("player");
 	auto* boss = FindGO<BossCharacter>("boss");
 
@@ -90,6 +92,9 @@ void InGameMenu::Update()
 
 		playerHP = playerStatus->GetHP();
 		playerMaxHP = playerStatus->GetMaxHP();
+
+		stamina = playerStatus->GetStamina();
+		maxStamina = playerStatus->GetMaxStamina();
 
 		isTakeDamagePlayer = playerStatus->IsTakeDamage();
 	}
@@ -223,12 +228,40 @@ void InGameMenu::Update()
 		UpdateButtonWord(EnGameAction::enActionNormalSkill);
 	}
 
+	// スタミナの計算
+	float staminaRate = stamina / maxStamina;
+	
+	staminaGauge_.SetProgressRange(0.0, staminaRate);
+	staminaGauge_.Update();
+
+	// スタミナの色を変える
+	if (staminaRate >= 1.0f)
+	{
+		staminaGauge_.SetGaugeColor(Vector4(0.0f, 0.0f, 0.0f, 0.0f));
+		
+	}
+	else if (staminaRate >= 0.5f)
+	{
+		staminaGauge_.SetGaugeColor({ 0.3f,1.0f,0.3f,1.0f });
+		
+	}
+	else if (staminaRate >= 0.25f)
+	{
+		staminaGauge_.SetGaugeColor({ 1.0f,1.0f,0.3f,1.0f });
+	}
+	else
+	{
+		staminaGauge_.SetGaugeColor({ 1.0f,0.3f,0.3f,1.0f });
+	}
+
+
 	MenuBase::Update();
 }
 
 
 void InGameMenu::Render(RenderContext& rc)
 {
+	staminaGauge_.Draw(rc);
 	MenuBase::Render(rc);
 }
 
@@ -285,6 +318,15 @@ void InGameMenu::InitializeLogic()
 	UIAnimationFactory::Attach<UITranslateOffsetAnimation>(bossHPCanvas, Hash32("HitBossPositionUp2"));
 	bossHitHPPositionSequence_ = std::make_unique<UIAnimationSequence>();
 	bossHitHPPositionSequence_->Add(Hash32("HitBossPositionUp")).Add(Hash32("HitBossPositionDown"));
+
+	// スタミナ
+	staminaGauge_.Init(150.0, 150.0);
+	staminaGauge_.SetPosition({80.0f,50.0f,0.0f});
+	staminaGauge_.SetScale({ 0.5f, 0.5f, 1.0f });
+	staminaGauge_.SetThickness(0.2f, 0.12f);
+	staminaGauge_.SetProgressRangeDeg(0, 360);
+	staminaGauge_.SetGaugeColor({ 0.3f,1.0f,0.3f,1.0f });
+	//staminaGauge_.SetBgColor({ 0.3f,0.3f,0.3f,0.0f });
 }
 
 

@@ -53,6 +53,8 @@ void UIManager::Update()
 	if ((updateMask_ & Timer)    && timerLayout_)    timerLayout_->Update();
 	if ((updateMask_ & CutScene) && cutSceneLayout_) cutSceneLayout_->Update();
 	if ( updateMask_ & Screen)                       UIScreenManager::Get().Update();
+
+	//status_->As<PlayerStatus>()->IsExhausted();
 }
 
 

@@ -30,8 +30,8 @@
         "name": "titleSelect_Word",
         "asset": "Assets/ui/bossSelectUI/title/title.DDS",
         "width": 350,
-        "height": 125,
-        "position": [-590, 455, 0],
+        "height": 100,
+        "position": [-560, 450, 0],
         "scale": [1, 1, 1],
         "rotation": 0,
         "color": [1, 1, 1, 1]

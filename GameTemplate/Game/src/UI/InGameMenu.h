@@ -14,6 +14,9 @@ private:
 	std::unique_ptr<UIAnimationSequence> bossHitHPPositionSequence_ = nullptr;
 	std::unique_ptr<TaskSchedulerSystem> playerDamageScheduler_ = nullptr;
 
+	// スタミナの情報を取得するためにいるプレイヤーステートとゲージレンダー
+	GaugeRender staminaGauge_;
+
 public:
 	void Update() override;
 	void Render(RenderContext& rc) override;
