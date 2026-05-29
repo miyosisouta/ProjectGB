@@ -19,7 +19,7 @@
         "asset": "Assets/ui/optionUI/title/haguruma.DDS",
         "width": 150,
         "height": 140,
-        "position": [-850, 455, 0],
+        "position": [-850, 450, 0],
         "scale": [1, 1, 1],
         "rotation": 0,
         "color": [1, 1, 1, 1]
@@ -29,9 +29,9 @@
         "type": "UIIcon",
         "name": "title_ward",
         "asset": "Assets/ui/optionUI/title/option.DDS",
-        "width": 250,
-        "height": 125,
-        "position": [-610, 455, 0],
+        "width": 220,
+        "height": 100,
+        "position": [-620, 450, 0],
         "scale": [1, 1, 1],
         "rotation": 0,
         "color": [1, 1, 1, 1]
