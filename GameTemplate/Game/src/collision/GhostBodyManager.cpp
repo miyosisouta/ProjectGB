@@ -20,6 +20,11 @@ GhostBodyManager::GhostBodyManager()
 
 GhostBodyManager::~GhostBodyManager()
 {
+	for (auto* body : bodyList_) {
+		if (body && body->GetBulletObject()) {
+			PhysicsWorld::Get().RemoveCollisionObject(*body->GetBulletObject());
+		}
+	}
 	broadphase_.reset();
 	bodyList_.clear();
 }
