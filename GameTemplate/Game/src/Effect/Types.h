@@ -18,7 +18,8 @@ enum enEffectKind
 	enEffectKind_Wind_Blast_Weak,
 	enEffectKind_Wind_Blast_Strong,
 	enEffectKind_Fire_Bress,
-	enEffectKind_Avoid,				// 5
+	enEffectKind_Avoid,				
+	enEffectKind_AttackHitPlayer,	// 6
 
 	/* ボス */
 	enEffectKind_Wind_Blast_Boss,
@@ -26,8 +27,9 @@ enum enEffectKind
 	enEffectkind_Spin, 
 	enEffectKind_Raser,
 	enEffectKind_DamageZone_Ring,
-	enEffectKind_DamageZone_Box,	
-	enEffectKind_Max				// 10
+	enEffectKind_DamageZone_Box,
+	enEffectKind_AttackHitBoss,		// 13
+	enEffectKind_Max				
 };
 
 
@@ -44,7 +46,7 @@ struct EffectInformation
 static EffectInformation effectInformation[enEffectKind_Max] =
 {
 	/* 共通エフェクト */
-	EffectInformation(u"Assets/Effect/Dash_Wind.efk"),
+	EffectInformation(u"Assets/Effect/Dash_Wind.efk"),			// 0
 	EffectInformation(u"Assets/Effect/Expload.efk"),
 
 	/* プレイヤー */
@@ -52,6 +54,7 @@ static EffectInformation effectInformation[enEffectKind_Max] =
 	EffectInformation(u"Assets/Effect/Wind_Blast_Strong.efk"),
 	EffectInformation(u"Assets/Effect/Fire_Bress.efk"),
 	EffectInformation(u"Assets/Effect/Avoid.efk"),
+	EffectInformation(u"Assets/Effect/HitPlayer.efk"),			// 6
 
 	/* ボス */
 	EffectInformation(u"Assets/Effect/Wind_Blast_Boss.efk"),
@@ -60,5 +63,6 @@ static EffectInformation effectInformation[enEffectKind_Max] =
 	EffectInformation(u"Assets/Effect/Thunder.efk"),
 	EffectInformation(u"Assets/Effect/DamageZone_Ring.efk"),
 	EffectInformation(u"Assets/Effect/DamageZone_Box.efk"),
+	EffectInformation(u"Assets/Effect/HitBoss.efk")				// 13
 };
 
