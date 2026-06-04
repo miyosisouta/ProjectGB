@@ -6,6 +6,7 @@
 #include "src/Actor/Player.h"
 #include "src/Util/DamageCalculator.h"
 #include "src/Actor/AttackObject.h"
+#include "src/Core/ParameterManager.h"
 
 
 namespace
@@ -34,11 +35,6 @@ namespace
 		}
 		return nullptr;
 	}
-
-	/* 定数 */
-	constexpr uint8_t NORMAL_ATTACK_DAMAGE = 10;
-	constexpr uint8_t SKILL_ATTACK_DAMAGE = 15;
-	constexpr float SPIN_KNOCK_BACK = 300.0f;
 
 	GhostBody* GetGhostBodyById(CollisionHitManager::Pair& pair, const uint32_t id)
 	{
@@ -70,24 +66,12 @@ namespace
 
 		Vector3 effectPos = isHit ? hit.point : end;
 		// 攻撃範囲が広い場合にY座標が高くなりすぎるのを防ぐ
-		if (effectPos.y > 75.0f) {
-			effectPos.y = 75.0f;
+		const float yCap = ParameterManager::Get().GetCollisionHitParam()->effectYCap;
+		if (effectPos.y > yCap) {
+			effectPos.y = yCap;
 		}
 		return effectPos;
 	}
-
-
-	/* プレイヤー */
-	static const Vector3 PLAYER_NORMAL_SKILL_HIT_EFFECT_SCALE = Vector3(50.0f);
-	static const Vector3 PLAYER_SKILL_HIT_EFFECT_SCALE = Vector3(85.0f);
-
-	/* ボス攻撃がプレイヤーに当たった時のエフェクトスケール */
-	static const Vector3 BOSS_NORMAL_ATK_HIT_SCALE      = Vector3(50.0f);
-	static const Vector3 BOSS_HIT_STAMP_HIT_SCALE       = Vector3(70.0f);
-	static const Vector3 BOSS_SPIN_HIT_SCALE            = Vector3(55.0f);
-	static const Vector3 BOSS_THROW_ROCK_HIT_SCALE      = Vector3(55.0f);
-	static const Vector3 BOSS_LASER_WEAK_HIT_SCALE      = Vector3(55.0f);
-	static const Vector3 BOSS_LASER_STRONG_HIT_SCALE    = Vector3(70.0f);
 }
 
 
@@ -314,7 +298,8 @@ void CollisionHitManager::UpdatePlayerNormalAttackPair(Pair& hitPair)
 	GhostBody* attackBody = GetGhostBodyById(hitPair, CharacterID::PlayerNormalAtkID());
 	GhostBody* bossBody   = GetGhostBodyById(hitPair, CharacterID::BossID());
 	Vector3 effectPos = CalcBossSurfacePos(attackBody, bossBody);
-	EffectManager::Get().PlayEffect(enEffectKind_AttackHitBoss, effectPos, Quaternion::Identity, PLAYER_NORMAL_SKILL_HIT_EFFECT_SCALE);
+	float scale = ParameterManager::Get().GetCollisionHitParam()->playerNormalAttackEffectScale;
+	EffectManager::Get().PlayEffect(enEffectKind_AttackHitBoss, effectPos, Quaternion::Identity, Vector3(scale));
 }
 
 
@@ -351,7 +336,8 @@ void CollisionHitManager::UpdatePlayerSkillAttackPair(Pair& hitPair)
 	GhostBody* attackBody = GetGhostBodyById(hitPair, CharacterID::PlayerSkillAtkID());
 	GhostBody* bossBody   = GetGhostBodyById(hitPair, CharacterID::BossID());
 	Vector3 effectPos = CalcBossSurfacePos(attackBody, bossBody);
-	EffectManager::Get().PlayEffect(enEffectKind_AttackHitBoss, effectPos, Quaternion::Identity, PLAYER_SKILL_HIT_EFFECT_SCALE);
+	float scale = ParameterManager::Get().GetCollisionHitParam()->playerSkillAttackEffectScale;
+	EffectManager::Get().PlayEffect(enEffectKind_AttackHitBoss, effectPos, Quaternion::Identity, Vector3(scale));
 }
 
 
@@ -398,7 +384,8 @@ void CollisionHitManager::UpdateBossAttackPair(Pair& hitPair)
 	GhostBody* bossAtkBody = GetGhostBodyById(hitPair, CharacterID::BossNormalAtkID());
 	GhostBody* playerBody  = GetGhostBodyById(hitPair, CharacterID::PlayerID());
 	Vector3 effectPos = CalcPlayerHitPos(bossAtkBody, playerBody);
-	EffectManager::Get().PlayEffect(enEffectKind_AttackHitPlayer, effectPos, Quaternion::Identity, BOSS_NORMAL_ATK_HIT_SCALE);
+	float scale = ParameterManager::Get().GetCollisionHitParam()->bossNormalAttackEffectScale;
+	EffectManager::Get().PlayEffect(enEffectKind_AttackHitPlayer, effectPos, Quaternion::Identity, Vector3(scale));
 }
 
 
@@ -439,7 +426,8 @@ void CollisionHitManager::UpdateBossHitStampPair(Pair& hitPair)
 	GhostBody* bossAtkBody = GetGhostBodyById(hitPair, CharacterID::BossHitStampAtkID());
 	GhostBody* playerBody  = GetGhostBodyById(hitPair, CharacterID::PlayerID());
 	Vector3 effectPos = CalcPlayerHitPos(bossAtkBody, playerBody);
-	EffectManager::Get().PlayEffect(enEffectKind_AttackHitPlayer, effectPos, Quaternion::Identity, BOSS_HIT_STAMP_HIT_SCALE);
+	float scale = ParameterManager::Get().GetCollisionHitParam()->bossHitStampEffectScale;
+	EffectManager::Get().PlayEffect(enEffectKind_AttackHitPlayer, effectPos, Quaternion::Identity, Vector3(scale));
 }
 
 
@@ -486,14 +474,16 @@ void CollisionHitManager::UpdateBossSpinPair(Pair& hitPair)
 	Vector3 dir= playerPos - bossPos;
 	dir.Normalize();
 
+	const auto* hitParam = ParameterManager::Get().GetCollisionHitParam();
+
 	// ノックバック
-	Vector3 knockBackVelocity = dir * SPIN_KNOCK_BACK;
+	Vector3 knockBackVelocity = dir * hitParam->spinKnockBack;
 
 	// エフェクト
 	GhostBody* bossAtkBody = GetGhostBodyById(hitPair, CharacterID::BossSpinAtkID());
 	GhostBody* playerBody  = GetGhostBodyById(hitPair, CharacterID::PlayerID());
 	Vector3 effectPos = CalcPlayerHitPos(bossAtkBody, playerBody);
-	EffectManager::Get().PlayEffect(enEffectKind_AttackHitPlayer, effectPos, Quaternion::Identity, BOSS_SPIN_HIT_SCALE);
+	EffectManager::Get().PlayEffect(enEffectKind_AttackHitPlayer, effectPos, Quaternion::Identity, Vector3(hitParam->bossSpinEffectScale));
 }
 
 bool CollisionHitManager::ContainsBossThrowRockPair(const Pair& hitPair)
@@ -533,7 +523,8 @@ void CollisionHitManager::UpdateBossThrowRockPair(Pair& hitPair)
 	GhostBody* bossAtkBody = GetGhostBodyById(hitPair, CharacterID::BossThrowRockAtkID());
 	GhostBody* playerBody  = GetGhostBodyById(hitPair, CharacterID::PlayerID());
 	Vector3 effectPos = CalcPlayerHitPos(bossAtkBody, playerBody);
-	EffectManager::Get().PlayEffect(enEffectKind_AttackHitPlayer, effectPos, Quaternion::Identity, BOSS_THROW_ROCK_HIT_SCALE);
+	float scale = ParameterManager::Get().GetCollisionHitParam()->bossThrowRockEffectScale;
+	EffectManager::Get().PlayEffect(enEffectKind_AttackHitPlayer, effectPos, Quaternion::Identity, Vector3(scale));
 }
 
 bool CollisionHitManager::ContainsBossLaserWeakPair(const Pair& hitPair)
@@ -573,7 +564,8 @@ void CollisionHitManager::UpdateBossLaserWeakPair(Pair& hitPair)
 	GhostBody* bossAtkBody = GetGhostBodyById(hitPair, CharacterID::BossLaserWeakAtkID());
 	GhostBody* playerBody  = GetGhostBodyById(hitPair, CharacterID::PlayerID());
 	Vector3 effectPos = CalcPlayerHitPos(bossAtkBody, playerBody);
-	EffectManager::Get().PlayEffect(enEffectKind_AttackHitPlayer, effectPos, Quaternion::Identity, BOSS_LASER_WEAK_HIT_SCALE);
+	float scale = ParameterManager::Get().GetCollisionHitParam()->bossLaserWeakEffectScale;
+	EffectManager::Get().PlayEffect(enEffectKind_AttackHitPlayer, effectPos, Quaternion::Identity, Vector3(scale));
 }
 
 bool CollisionHitManager::ContainsBossLaserStrongPair(const Pair& hitPair)
@@ -613,7 +605,8 @@ void CollisionHitManager::UpdateBossLaserStrongPair(Pair& hitPair)
 	GhostBody* bossAtkBody = GetGhostBodyById(hitPair, CharacterID::BossLaserStrongAtkID());
 	GhostBody* playerBody  = GetGhostBodyById(hitPair, CharacterID::PlayerID());
 	Vector3 effectPos = CalcPlayerHitPos(bossAtkBody, playerBody);
-	EffectManager::Get().PlayEffect(enEffectKind_AttackHitPlayer, effectPos, Quaternion::Identity, BOSS_LASER_STRONG_HIT_SCALE);
+	float scale = ParameterManager::Get().GetCollisionHitParam()->bossLaserStrongEffectScale;
+	EffectManager::Get().PlayEffect(enEffectKind_AttackHitPlayer, effectPos, Quaternion::Identity, Vector3(scale));
 }
 
 

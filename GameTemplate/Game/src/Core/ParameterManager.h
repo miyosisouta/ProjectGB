@@ -103,6 +103,7 @@ struct MasterBattleCommonParameter : public IMasterParameter
 		float rotSpeed = 0.0f;		//!< 回転速度
 		bool invert = false;		//!< 反転させるか否か
 		float sensitivity = 0.0f;	//!< 感度
+		float lookAtOffsetY = 0.0f;	//!< 注視点のY軸オフセット
 	};
 	
 	struct GameTimerParam
@@ -147,6 +148,153 @@ struct MasterGrassBendParameter : public IMasterParameter
 	float       recoverySpeed;//!< 将来の回復速度拡張用
 };
 
+/**
+ * プレイヤーステートパラメーター
+ * PlayerStateParameter.json の "PlayerState" 配列から読み込む
+ */
+struct MasterPlayerStateParameter : public IMasterParameter
+{
+	appParameter(MasterPlayerStateParameter);
+
+	float walkSeInterval;     //!< 歩きSEの再生間隔 (秒)
+	float walkLoopTime;       //!< ループシーケンスの基準時間 (秒)
+	float walkEffectScale;    //!< 歩きエフェクトスケール (一様)
+	float runSeInterval;      //!< 走りSEの再生間隔 (秒)
+	float deathAnimationTime; //!< 死亡アニメーション終了までの時間 (秒)
+	float moveThreshold;      //!< 移動入力の最小閾値
+};
+
+/**
+ * NPCコントローラーパラメーター
+ * NPCControllerParameter.json の "NPCController" 配列から読み込む
+ */
+struct MasterNPCControllerParameter : public IMasterParameter
+{
+	appParameter(MasterNPCControllerParameter);
+
+	int   attackLotteryMax; //!< 攻撃行動抽選の合計確率 (各フェーズの重み合計と一致させること)
+	float shortDistance;    //!< 近距離判定の距離閾値
+	float midDistance;      //!< 中距離判定の距離閾値
+	float longDistance;     //!< 遠距離判定の距離閾値
+};
+
+/**
+ * ボススポーナーパラメーター
+ * BossSpawnerParameter.json の "BossSpawner" 配列から読み込む
+ */
+struct MasterBossSpawnerParameter : public IMasterParameter
+{
+	appParameter(MasterBossSpawnerParameter);
+
+	float modeAttackMultiplier; //!< 高攻撃モードの攻撃力倍率
+	float modeHpMultiplier;     //!< タイムアタックモードのHP倍率
+};
+
+/**
+ * スキルパラメーター
+ * SkillParameter.json の "Skill" 配列から読み込む
+ * "key" フィールドでスキルを識別する (例: "Bite", "Avoid", "FireMagic")
+ */
+struct MasterSkillParameter : public IMasterParameter
+{
+	appParameter(MasterSkillParameter);
+
+	std::string key; //!< スキル識別キー
+
+	// Bite (通常攻撃)
+	float collisionForward;          //!< コリジョンの前方オフセット
+	float collisionHeight;           //!< コリジョンの高さオフセット
+
+	// Avoid (回避)
+	float targetPosForward;          //!< 回避の目標位置 (前方距離)
+	float avoidMoveSpeed;            //!< 回避の移動速度
+	float avoidEffectRotation;       //!< 回避エフェクトの回転角度 (度)
+	float avoidEffectScale;          //!< 回避エフェクトスケール (一様)
+	float avoidStartTime;            //!< 回避処理の開始タイミング (秒)
+	float avoidEndTime;              //!< 回避処理の終了タイミング (秒)
+
+	// FireMagic (炎魔法)
+	float effectScaleFactor;         //!< エフェクトスケール倍率
+	float fireMagicCollisionSize;    //!< 炎魔法コリジョンの縦幅・横幅
+	float fireMagicCollisionDepth;   //!< 炎魔法コリジョンの奥行き
+	float fireMagicCollisionForward; //!< 炎魔法コリジョンの前方オフセット
+	float fireMagicCollisionHeight;  //!< 炎魔法コリジョンの高さオフセット
+	float fireMagicAttackStartTime;  //!< 炎魔法の攻撃判定開始時間 (秒)
+	float fireMagicAttackEndTime;    //!< 炎魔法の攻撃判定終了時間 (秒)
+};
+
+/**
+ * 攻撃オブジェクトパラメーター
+ * AttackObjectParameter.json の "AttackObject" 配列から読み込む
+ */
+struct MasterAttackObjectParameter : public IMasterParameter
+{
+	appParameter(MasterAttackObjectParameter);
+
+	float landmineModelScale;          //!< 地雷モデルスケール (一様)
+	float landmineCollisionSize;       //!< 地雷コリジョンサイズ (爆発半径)
+	float landmineIndicatorRadius;     //!< 地雷インジケーター半径
+	float effectScaleFactorDamageLing; //!< ダメージエフェクトスケール倍率
+	float effectScaleFactorExplode;    //!< 爆発エフェクトスケール倍率
+};
+
+/**
+ * ステージマネージャーパラメーター
+ * StageManagerParameter.json の "StageManager" 配列から読み込む
+ */
+struct MasterStageManagerParameter : public IMasterParameter
+{
+	appParameter(MasterStageManagerParameter);
+
+	float ditheringAlphaGround;   //!< 地面のディザリングα値
+	float ditheringAlphaFence;    //!< 柵のディザリングα値
+	float ditheringAlphaTree;     //!< 木のディザリングα値
+	float splatMapGrassLuminance; //!< 草の明るさ倍率
+	float splatMapClayLuminance;  //!< 土の明るさ倍率
+	float splatMapHumusLuminance; //!< 腐葉土の明るさ倍率
+	float splatMapWholeLuminance; //!< 全体の明るさ倍率
+	float splatMapSaturation;     //!< 彩度
+	float collisionUp;            //!< コリジョンの高さオフセット
+	float meterToCentimeter;      //!< メートル→センチメートル変換係数
+};
+
+/**
+ * コリジョンヒットパラメーター
+ * CollisionHitParameter.json の "CollisionHit" 配列から読み込む
+ */
+struct MasterCollisionHitParameter : public IMasterParameter
+{
+	appParameter(MasterCollisionHitParameter);
+
+	float spinKnockBack;                 //!< スピン攻撃のノックバック力
+	float effectYCap;                    //!< プレイヤーヒットエフェクトのY座標上限
+	float playerNormalAttackEffectScale; //!< プレイヤー通常攻撃ヒットエフェクトスケール
+	float playerSkillAttackEffectScale;  //!< プレイヤースキル攻撃ヒットエフェクトスケール
+	float bossNormalAttackEffectScale;   //!< ボス通常攻撃ヒットエフェクトスケール
+	float bossHitStampEffectScale;       //!< ボスヒットスタンプヒットエフェクトスケール
+	float bossSpinEffectScale;           //!< ボス回転攻撃ヒットエフェクトスケール
+	float bossThrowRockEffectScale;      //!< ボス岩投げヒットエフェクトスケール
+	float bossLaserWeakEffectScale;      //!< ボス弱レーザーヒットエフェクトスケール
+	float bossLaserStrongEffectScale;    //!< ボス強レーザーヒットエフェクトスケール
+};
+
+/**
+ * ミッションパラメーター
+ * MissionParameter.json の "Mission" 配列から読み込む
+ * "key" フィールドでボスを識別する (例: "Gorilla", "Turtle")
+ */
+struct MasterMissionParameter : public IMasterParameter
+{
+	appParameter(MasterMissionParameter);
+
+	std::string key;                    //!< ボス識別キー (例: "Gorilla", "Turtle")
+	float       targetTime;             //!< 目標タイム (秒)
+	uint8_t     abilityTargetCount;     //!< 特殊スキル目標使用回数
+	uint8_t     utilityTargetCount;     //!< 汎用スキル目標使用回数
+	uint8_t     normalAttackTargetCount;//!< 通常攻撃目標使用回数
+	float       goalHpRate;             //!< 目標HP残存率 (0.0〜1.0)
+};
+
 /** defineの使用終了 */
 #undef appParameter
 
@@ -177,6 +325,14 @@ public:
 	void LoadBossSkillStatusData(const char* path);
 	void LoadBattleCommonParamData(const char* path);
 	void LoadGrassBendParamData(const char* path);
+	void LoadMissionParamData(const char* path);
+	void LoadCollisionHitParamData(const char* path);
+	void LoadPlayerStateParamData(const char* path);
+	void LoadNPCControllerParamData(const char* path);
+	void LoadBossSpawnerParamData(const char* path);
+	void LoadSkillParamData(const char* path);
+	void LoadAttackObjectParamData(const char* path);
+	void LoadStageManagerParamData(const char* path);
 
 public:
 	/**
@@ -393,6 +549,62 @@ public:
 				return p.key == key;
 			}
 		);
+	}
+
+	/** keyでミッションパラメーターを取得するショートカット */
+	const MasterMissionParameter* GetMissionParam(const std::string& key)
+	{
+		return FindParameter<MasterMissionParameter>(
+			[&key](const MasterMissionParameter& p) {
+				return p.key == key;
+			}
+		);
+	}
+
+	/** コリジョンヒットパラメーターを取得するショートカット */
+	const MasterCollisionHitParameter* GetCollisionHitParam()
+	{
+		return GetParameter<MasterCollisionHitParameter>(0);
+	}
+
+	/** プレイヤーステートパラメーターを取得するショートカット */
+	const MasterPlayerStateParameter* GetPlayerStateParam()
+	{
+		return GetParameter<MasterPlayerStateParameter>(0);
+	}
+
+	/** NPCコントローラーパラメーターを取得するショートカット */
+	const MasterNPCControllerParameter* GetNPCControllerParam()
+	{
+		return GetParameter<MasterNPCControllerParameter>(0);
+	}
+
+	/** ボススポーナーパラメーターを取得するショートカット */
+	const MasterBossSpawnerParameter* GetBossSpawnerParam()
+	{
+		return GetParameter<MasterBossSpawnerParameter>(0);
+	}
+
+	/** keyでスキルパラメーターを取得するショートカット */
+	const MasterSkillParameter* GetSkillParam(const std::string& key)
+	{
+		return FindParameter<MasterSkillParameter>(
+			[&key](const MasterSkillParameter& p) {
+				return p.key == key;
+			}
+		);
+	}
+
+	/** 攻撃オブジェクトパラメーターを取得するショートカット */
+	const MasterAttackObjectParameter* GetAttackObjectParam()
+	{
+		return GetParameter<MasterAttackObjectParameter>(0);
+	}
+
+	/** ステージマネージャーパラメーターを取得するショートカット */
+	const MasterStageManagerParameter* GetStageManagerParam()
+	{
+		return GetParameter<MasterStageManagerParameter>(0);
 	}
 
 

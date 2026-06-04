@@ -1,0 +1,13 @@
+{
+    "NPCController": [
+        {
+            "comment": "NPC行動選択パラメーター (攻撃重みの合計と attackLotteryMax を一致させること)",
+
+            "attackLotteryMax": 10,
+
+            "shortDistance": 500.0,
+            "midDistance": 1000.0,
+            "longDistance": 1500.0
+        }
+    ]
+}

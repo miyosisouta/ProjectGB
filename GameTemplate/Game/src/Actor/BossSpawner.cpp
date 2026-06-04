@@ -5,11 +5,6 @@
 #include "src/Actor/Player.h"
 #include "src/Actor/PlayerController.h"
 
-namespace
-{
-	const float MODE_ATTACK_MULTIPLIER = 1.5f; // 攻撃力の倍率
-	const float MODE_HP_MULTIPLIER = 2.0f; // 体力の倍率
-}
 
 
 BossSpawner::BossSpawner()
@@ -111,16 +106,17 @@ BossParam BossSpawner::CreateBossData(BossType type, GameModeType mode)
 
 
 	// モード
+	const auto* modeParam = ParameterManager::Get().GetBossSpawnerParam();
 	switch (mode)
 	{
 	case GameModeType::enHighAttack: /* 攻撃力が高いモード */
 	{
-		param.attack_ = static_cast<int>(param.attack_ * MODE_ATTACK_MULTIPLIER);
+		param.attack_ = static_cast<int>(param.attack_ * modeParam->modeAttackMultiplier);
 		break;
 	}
 	case GameModeType::enTimeAttack: /* 防御力が高いモード */
 	{
-		param.maxHp_ = static_cast<int>(param.maxHp_ * MODE_HP_MULTIPLIER);
+		param.maxHp_ = static_cast<int>(param.maxHp_ * modeParam->modeHpMultiplier);
 
 		// TODO : 仮で最大体力を設定
 		param.maxHp_ = 5.0f;

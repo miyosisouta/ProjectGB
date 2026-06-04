@@ -37,6 +37,7 @@ public:
 
 		float pitchMin = Math::DegToRad(-10.0f);	//!< 仰角の下限
 		float pitchMax = Math::DegToRad(30.0f);		//!< 仰角の上限
+		float lookAtOffsetY = 0.0f;					//!< 注視点のY軸オフセット
 	};
 
 

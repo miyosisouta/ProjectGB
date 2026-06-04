@@ -2,20 +2,7 @@
 #include "MissionManager.h"
 #include "MissionEvent.h"
 #include "MissionType.h"
-
-
-namespace
-{
-    /* ゴリラ */
-    constexpr float GOLLIRA_TARGET_TIME             = 120.0f; //!< 目標タイム
-    constexpr uint8_t GOLLIRA_ABILITY_TARGET_COUNT  = 5; //!< 特殊スキル目標使用回数
-    constexpr uint8_t GOLLIRA_UTILITY_TARGET_COUNT  = 1; //!< 汎用スキル目標使用回数
-
-    /* カメ */
-    constexpr float TURTLE_TARGET_TIME = 180.0f; // 目標タイム
-    constexpr uint8_t TURTLE_NORMAL_ATTACK_COUNT = 10; //!< 通常攻撃の目標使用回数
-    constexpr float TURTLE_GOAL_HP = 0.3f; // 目標HP残存量
-}
+#include "../Core/ParameterManager.h"
 
 
 MissionManager* MissionManager::instance_ = nullptr;
@@ -95,44 +82,44 @@ void MissionManager::AddMission(std::unique_ptr<Mission> mission)
 
 void MissionManager::SetupGorilla()
 {
-    //TODO : jsonで設定できるようにする予定
+    const auto* param = ParameterManager::Get().GetMissionParam("Gorilla");
 
     AddMission(std::make_unique<Mission>(
-        MissionID::enGorillaTime,                                       // IDを設定
-        L"時間内討伐",                                                  // 名前を設定
-        std::make_unique<ConditionKillUnderTime>(GOLLIRA_TARGET_TIME)   // クリア条件を設定
+        MissionID::enGorillaTime,                                           // IDを設定
+        L"時間内討伐",                                                      // 名前を設定
+        std::make_unique<ConditionKillUnderTime>(param->targetTime)         // クリア条件を設定
     ));
     AddMission(std::make_unique<Mission>(
         MissionID::enGorillaAbility,
         L"特殊スキル使用",
-        std::make_unique<ConditionUseAbilityCount>(GOLLIRA_ABILITY_TARGET_COUNT)
+        std::make_unique<ConditionUseAbilityCount>(param->abilityTargetCount)
     ));
     AddMission(std::make_unique<Mission>(
         MissionID::enGorillaUtility,
         L"汎用スキル使用",
-        std::make_unique<ConditionUseUtilityCount>(GOLLIRA_UTILITY_TARGET_COUNT)
+        std::make_unique<ConditionUseUtilityCount>(param->utilityTargetCount)
     ));
 }
 
 
 void MissionManager::SetupTurtle()
 {
-    //TODO : jsonで設定できるようにする予定
+    const auto* param = ParameterManager::Get().GetMissionParam("Turtle");
 
     AddMission(std::make_unique<Mission>(
-        MissionID::enTurtleTime,                                        // IDを設定
-        L"時間内討伐",                                                  // 名前を設定
-        std::make_unique<ConditionKillUnderTime>(TURTLE_TARGET_TIME)    // クリア条件を設定
+        MissionID::enTurtleTime,                                            // IDを設定
+        L"時間内討伐",                                                      // 名前を設定
+        std::make_unique<ConditionKillUnderTime>(param->targetTime)         // クリア条件を設定
     ));
     AddMission(std::make_unique<Mission>(
         MissionID::enTurtleNormalAttack,
         L"通常攻撃使用",
-        std::make_unique<ConditionUseNormalAttackCount>(TURTLE_NORMAL_ATTACK_COUNT)
+        std::make_unique<ConditionUseNormalAttackCount>(param->normalAttackTargetCount)
     ));
     AddMission(std::make_unique<Mission>(
         MissionID::enTurtleHpRate,
         L"HP30%以上でクリア",
-        std::make_unique<ConditionClearWithHpRate>(TURTLE_GOAL_HP)
+        std::make_unique<ConditionClearWithHpRate>(param->goalHpRate)
     ));
 }
 

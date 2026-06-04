@@ -1,0 +1,20 @@
+{
+    "CollisionHit": [
+        {
+            "comment": "コリジョンヒット関連パラメーター",
+
+            "spinKnockBack": 300.0,
+            "effectYCap": 75.0,
+
+            "playerNormalAttackEffectScale": 50.0,
+            "playerSkillAttackEffectScale": 85.0,
+
+            "bossNormalAttackEffectScale": 50.0,
+            "bossHitStampEffectScale": 70.0,
+            "bossSpinEffectScale": 55.0,
+            "bossThrowRockEffectScale": 55.0,
+            "bossLaserWeakEffectScale": 55.0,
+            "bossLaserStrongEffectScale": 70.0
+        }
+    ]
+}

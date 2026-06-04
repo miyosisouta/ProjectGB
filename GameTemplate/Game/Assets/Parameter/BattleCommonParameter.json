@@ -9,6 +9,7 @@
             "distance":600.0,
             "rotSpeed":0.5,
             "sensitivity": 1.0,
+            "lookAtOffsetY": 75.0,
             
             "scale":400.0, 
 

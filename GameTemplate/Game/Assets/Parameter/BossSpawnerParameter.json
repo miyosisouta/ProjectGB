@@ -1,0 +1,10 @@
+{
+    "BossSpawner": [
+        {
+            "comment": "ボス強化モードのパラメーター",
+
+            "modeAttackMultiplier": 1.5,
+            "modeHpMultiplier": 2.0
+        }
+    ]
+}
