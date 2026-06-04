@@ -39,6 +39,55 @@ namespace
 	constexpr uint8_t NORMAL_ATTACK_DAMAGE = 10;
 	constexpr uint8_t SKILL_ATTACK_DAMAGE = 15;
 	constexpr float SPIN_KNOCK_BACK = 300.0f;
+
+	GhostBody* GetGhostBodyById(CollisionHitManager::Pair& pair, const uint32_t id)
+	{
+		if (pair.a->GetOwnerId() == id) return pair.a;
+		if (pair.b->GetOwnerId() == id) return pair.b;
+		return nullptr;
+	}
+
+	// 攻撃ボディ位置からボスのコリジョン表面座標を計算する
+	// 攻撃体はヒット検出時点でボス表面付近に位置するため、その座標をそのまま使う
+	Vector3 CalcBossSurfacePos(GhostBody* attackBody, GhostBody* bossBody)
+	{
+		return attackBody->GetPosition();
+	}
+
+	// ボス攻撃ボディからプレイヤーのGhostBodyにRayを飛ばしてヒット地点を返す
+	Vector3 CalcPlayerHitPos(GhostBody* bossAtkBody, GhostBody* playerBody)
+	{
+		Vector3 start = bossAtkBody->GetPosition();
+		Vector3 end   = playerBody->GetPosition();
+
+		nsK2EngineLow::RaycastHit hit;
+		bool isHit = PhysicsWorld::Get().Raycast(
+			start, end, hit, 0xFFFFFFFF,
+			[playerBody](const btCollisionObject& obj) {
+				return &obj == playerBody->GetBulletObject();
+			}
+		);
+
+		Vector3 effectPos = isHit ? hit.point : end;
+		// 攻撃範囲が広い場合にY座標が高くなりすぎるのを防ぐ
+		if (effectPos.y > 75.0f) {
+			effectPos.y = 75.0f;
+		}
+		return effectPos;
+	}
+
+
+	/* プレイヤー */
+	static const Vector3 PLAYER_NORMAL_SKILL_HIT_EFFECT_SCALE = Vector3(50.0f);
+	static const Vector3 PLAYER_SKILL_HIT_EFFECT_SCALE = Vector3(85.0f);
+
+	/* ボス攻撃がプレイヤーに当たった時のエフェクトスケール */
+	static const Vector3 BOSS_NORMAL_ATK_HIT_SCALE      = Vector3(50.0f);
+	static const Vector3 BOSS_HIT_STAMP_HIT_SCALE       = Vector3(70.0f);
+	static const Vector3 BOSS_SPIN_HIT_SCALE            = Vector3(55.0f);
+	static const Vector3 BOSS_THROW_ROCK_HIT_SCALE      = Vector3(55.0f);
+	static const Vector3 BOSS_LASER_WEAK_HIT_SCALE      = Vector3(55.0f);
+	static const Vector3 BOSS_LASER_STRONG_HIT_SCALE    = Vector3(70.0f);
 }
 
 
@@ -260,6 +309,12 @@ void CollisionHitManager::UpdatePlayerNormalAttackPair(Pair& hitPair)
 		bossCharacter->GetStatus()->Damage(damage);
 		UpdateAttackHitSound(); // 攻撃が当たったSEを流す
 	}
+
+	// エフェクト: 攻撃判定からボスのコリジョン表面座標を求めて再生
+	GhostBody* attackBody = GetGhostBodyById(hitPair, CharacterID::PlayerNormalAtkID());
+	GhostBody* bossBody   = GetGhostBodyById(hitPair, CharacterID::BossID());
+	Vector3 effectPos = CalcBossSurfacePos(attackBody, bossBody);
+	EffectManager::Get().PlayEffect(enEffectKind_AttackHitBoss, effectPos, Quaternion::Identity, PLAYER_NORMAL_SKILL_HIT_EFFECT_SCALE);
 }
 
 
@@ -291,6 +346,12 @@ void CollisionHitManager::UpdatePlayerSkillAttackPair(Pair& hitPair)
 		bossCharacter->GetStatus()->Damage(damage);
 		UpdateAttackHitSound(); // 攻撃が当たったSEを流す
 	}
+
+	// エフェクト: 攻撃判定からボスのコリジョン表面座標を求めて再生
+	GhostBody* attackBody = GetGhostBodyById(hitPair, CharacterID::PlayerSkillAtkID());
+	GhostBody* bossBody   = GetGhostBodyById(hitPair, CharacterID::BossID());
+	Vector3 effectPos = CalcBossSurfacePos(attackBody, bossBody);
+	EffectManager::Get().PlayEffect(enEffectKind_AttackHitBoss, effectPos, Quaternion::Identity, PLAYER_SKILL_HIT_EFFECT_SCALE);
 }
 
 
@@ -332,6 +393,12 @@ void CollisionHitManager::UpdateBossAttackPair(Pair& hitPair)
 		UpdateTakeHitSound(); // 攻撃が当たったSEを流す
 		g_pad[0]->SetVibration(vibrationTime, vibrationForce);
 	}
+
+	// エフェクト
+	GhostBody* bossAtkBody = GetGhostBodyById(hitPair, CharacterID::BossNormalAtkID());
+	GhostBody* playerBody  = GetGhostBodyById(hitPair, CharacterID::PlayerID());
+	Vector3 effectPos = CalcPlayerHitPos(bossAtkBody, playerBody);
+	EffectManager::Get().PlayEffect(enEffectKind_AttackHitPlayer, effectPos, Quaternion::Identity, BOSS_NORMAL_ATK_HIT_SCALE);
 }
 
 
@@ -367,6 +434,12 @@ void CollisionHitManager::UpdateBossHitStampPair(Pair& hitPair)
 		UpdateTakeHitSound(); // 攻撃が当たったSEを流す
 		g_pad[0]->SetVibration(vibrationTime, vibrationForce);
 	}
+
+	// エフェクト
+	GhostBody* bossAtkBody = GetGhostBodyById(hitPair, CharacterID::BossHitStampAtkID());
+	GhostBody* playerBody  = GetGhostBodyById(hitPair, CharacterID::PlayerID());
+	Vector3 effectPos = CalcPlayerHitPos(bossAtkBody, playerBody);
+	EffectManager::Get().PlayEffect(enEffectKind_AttackHitPlayer, effectPos, Quaternion::Identity, BOSS_HIT_STAMP_HIT_SCALE);
 }
 
 
@@ -415,6 +488,12 @@ void CollisionHitManager::UpdateBossSpinPair(Pair& hitPair)
 
 	// ノックバック
 	Vector3 knockBackVelocity = dir * SPIN_KNOCK_BACK;
+
+	// エフェクト
+	GhostBody* bossAtkBody = GetGhostBodyById(hitPair, CharacterID::BossSpinAtkID());
+	GhostBody* playerBody  = GetGhostBodyById(hitPair, CharacterID::PlayerID());
+	Vector3 effectPos = CalcPlayerHitPos(bossAtkBody, playerBody);
+	EffectManager::Get().PlayEffect(enEffectKind_AttackHitPlayer, effectPos, Quaternion::Identity, BOSS_SPIN_HIT_SCALE);
 }
 
 bool CollisionHitManager::ContainsBossThrowRockPair(const Pair& hitPair)
@@ -449,6 +528,12 @@ void CollisionHitManager::UpdateBossThrowRockPair(Pair& hitPair)
 		UpdateTakeHitSound(); // 攻撃が当たったSEを流す
 		g_pad[0]->SetVibration(vibrationTime, vibrationForce);
 	}
+
+	// エフェクト
+	GhostBody* bossAtkBody = GetGhostBodyById(hitPair, CharacterID::BossThrowRockAtkID());
+	GhostBody* playerBody  = GetGhostBodyById(hitPair, CharacterID::PlayerID());
+	Vector3 effectPos = CalcPlayerHitPos(bossAtkBody, playerBody);
+	EffectManager::Get().PlayEffect(enEffectKind_AttackHitPlayer, effectPos, Quaternion::Identity, BOSS_THROW_ROCK_HIT_SCALE);
 }
 
 bool CollisionHitManager::ContainsBossLaserWeakPair(const Pair& hitPair)
@@ -483,6 +568,12 @@ void CollisionHitManager::UpdateBossLaserWeakPair(Pair& hitPair)
 		UpdateTakeHitSound(); // 攻撃が当たったSEを流す
 		g_pad[0]->SetVibration(vibrationTime, vibrationForce);
 	}
+
+	// エフェクト
+	GhostBody* bossAtkBody = GetGhostBodyById(hitPair, CharacterID::BossLaserWeakAtkID());
+	GhostBody* playerBody  = GetGhostBodyById(hitPair, CharacterID::PlayerID());
+	Vector3 effectPos = CalcPlayerHitPos(bossAtkBody, playerBody);
+	EffectManager::Get().PlayEffect(enEffectKind_AttackHitPlayer, effectPos, Quaternion::Identity, BOSS_LASER_WEAK_HIT_SCALE);
 }
 
 bool CollisionHitManager::ContainsBossLaserStrongPair(const Pair& hitPair)
@@ -517,6 +608,12 @@ void CollisionHitManager::UpdateBossLaserStrongPair(Pair& hitPair)
 		UpdateTakeHitSound(); // 攻撃が当たったSEを流す
 		g_pad[0]->SetVibration(vibrationTime, vibrationForce);
 	}
+
+	// エフェクト
+	GhostBody* bossAtkBody = GetGhostBodyById(hitPair, CharacterID::BossLaserStrongAtkID());
+	GhostBody* playerBody  = GetGhostBodyById(hitPair, CharacterID::PlayerID());
+	Vector3 effectPos = CalcPlayerHitPos(bossAtkBody, playerBody);
+	EffectManager::Get().PlayEffect(enEffectKind_AttackHitPlayer, effectPos, Quaternion::Identity, BOSS_LASER_STRONG_HIT_SCALE);
 }
 
 

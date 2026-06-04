@@ -19,6 +19,7 @@ namespace
 
         if (disRate(gen) < attacker->GetCritical()) {
             baseDamage *= attacker->GetCriticalDamageMultiplier();
+
         }
 
         // 3. 乱数ブレ (±5%)
