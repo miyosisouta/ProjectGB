@@ -3,17 +3,6 @@
 #include "src/Actor/Player.h"
 #include "src/Actor/ActorStatus.h"
 
-namespace 
-{
-	/* 回避 */
-	constexpr float TARGET_POS_FORWARD = 300.0f;
-	constexpr float AVOID_MOVE_SPEED = 1000.0f;
-
-	constexpr float AVOID_EFFECT_ROTAION = 180.0f;
-	static Vector3 AVOID_EFFECT_SCALE = Vector3(3.0f, 3.0f, 3.0f);
-	constexpr float AVOID_START_TIME = 0.1f;
-	constexpr float AVOID_END_TIME = 0.8f;
-}
 
 
 void Avoid::Enter(Character* p)
@@ -29,19 +18,21 @@ void Avoid::Enter(Character* p)
 	// タスクスケージュールを作成
 	taskScheduler_ = std::make_unique<TaskSchedulerSystem>();
 
-	taskScheduler_->AddTimer(AVOID_START_TIME, [&, p]()
+	const auto* sp = ParameterManager::Get().GetSkillParam("Avoid");
+	const Vector3 effectScale(sp->avoidEffectScale);
+
+	taskScheduler_->AddTimer(sp->avoidStartTime, [&, p, sp, effectScale]()
 		{
-			
 			Vector3 playerPos = p->transform_.position; // プレイヤーの現在の座標を取得
 			Quaternion playerRot = p->GetStateMachine()->GetRotation(); // プレイヤーの回転を取得
 			Vector3 forwardDir = p->GetStateMachine()->GetDirection();// プレイヤーが最後に向いていた方向を取得
-			
+
 			p->PlayAnimation(static_cast<int> (PlayerStateID::Avoid));
-			playerRot.AddRotationDegY(AVOID_EFFECT_ROTAION);
-			EffectManager::Get().PlayEffect(enEffectKind_Avoid, playerPos, playerRot, AVOID_EFFECT_SCALE);
+			playerRot.AddRotationDegY(sp->avoidEffectRotation);
+			EffectManager::Get().PlayEffect(enEffectKind_Avoid, playerPos, playerRot, effectScale);
 
 			// 移動先の設定
-			targetPos_ = playerPos + (forwardDir * TARGET_POS_FORWARD);
+			targetPos_ = playerPos + (forwardDir * sp->targetPosForward);
 
 			// プレイヤーステータスの取得、無敵を設定
 			PlayerStatus* status = p->GetStatus()->As<PlayerStatus>();
@@ -51,7 +42,7 @@ void Avoid::Enter(Character* p)
 			SoundManager::Get().PlaySE(enSoundKind_Player_Utility);
 		});
 
-	taskScheduler_->AddTimer(AVOID_END_TIME, [&, p]()
+	taskScheduler_->AddTimer(sp->avoidEndTime, [&, p]()
 		{
 			// プレイヤーステータスの取得、無敵を削除
 			PlayerStatus* status = p->GetStatus()->As<PlayerStatus>();
@@ -73,7 +64,7 @@ void Avoid::Update(Character* p)
 		Vector3 diff = targetPos_ - p->GetTransformPosition();
 
 		// 1フレームで進む距離（スピード × DeltaTime）
-		float moveAmount = AVOID_MOVE_SPEED * g_gameTime->GetFrameDeltaTime();
+		float moveAmount = ParameterManager::Get().GetSkillParam("Avoid")->avoidMoveSpeed * g_gameTime->GetFrameDeltaTime();
 
 		Vector3 moveVelocity;
 		// ゴールまでの距離が、1フレームで進む距離より短ければ（到着寸前なら）

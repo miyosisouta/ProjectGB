@@ -1,0 +1,20 @@
+{
+    "StageManager": [
+        {
+            "comment": "ステージ描画・コリジョンパラメーター",
+
+            "ditheringAlphaGround": 1.0,
+            "ditheringAlphaFence": 0.5,
+            "ditheringAlphaTree": 0.2,
+
+            "splatMapGrassLuminance": 1.0,
+            "splatMapClayLuminance": 1.0,
+            "splatMapHumusLuminance": 1.0,
+            "splatMapWholeLuminance": 3.0,
+            "splatMapSaturation": 2.5,
+
+            "collisionUp": 600.0,
+            "meterToCentimeter": 100.0
+        }
+    ]
+}

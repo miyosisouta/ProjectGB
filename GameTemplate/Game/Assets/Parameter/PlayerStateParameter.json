@@ -1,0 +1,17 @@
+{
+    "PlayerState": [
+        {
+            "comment": "プレイヤーステート関連パラメーター",
+
+            "walkSeInterval": 0.3,
+            "walkLoopTime": 0.0,
+            "walkEffectScale": 10.0,
+
+            "runSeInterval": 0.1,
+
+            "deathAnimationTime": 2.0,
+
+            "moveThreshold": 0.01
+        }
+    ]
+}

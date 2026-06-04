@@ -11,18 +11,18 @@
             "collisionSizeHeight": 100.0,
             "charaConSizeRadius":28.0,
             "charaConSizeHeight":100.0,
-            "hp": 200,
+            "hp": 300,
             "attack": 30,
-            "criticalRate":30,
-            "criticalDamageMultiplier": 1.3,
+            "criticalRate":20,
+            "criticalDamageMultiplier": 1.5,
             "stamina": 100.0,
             "drainPerSec": 10.0,
-            "recoverPerSec": 10.0,
-            "exhaustedRecoverPerSec": 8.0,
-            "exhaustedThreshold": 0.75,
+            "recoverPerSec": 12.0,
+            "exhaustedRecoverPerSec": 10.0,
+            "exhaustedThreshold": 0.5,
             "exhaustedSpeedRate": 0.5,
-            "walkSpeedBase": 100.0,
-            "runSpeedBase": 300.0
+            "walkSpeedBase": 150.0,
+            "runSpeedBase": 350.0
         },
         
         {
@@ -37,7 +37,7 @@
             "charaConSizeRadius":110.0,
             "charaConSizeHeight":110.0,
             "hp": 1000,
-            "attack": 50,
+            "attack": 40,
             "criticalRate": 5,
             "criticalDamageMultiplier": 1.8
         },
@@ -54,7 +54,7 @@
             "charaConSizeRadius":110.0,
             "charaConSizeHeight":50.0,
             "hp": 1500,
-            "attack": 40,
+            "attack": 30,
             "criticalRate": 10,
             "criticalDamageMultiplier": 1.5
         }

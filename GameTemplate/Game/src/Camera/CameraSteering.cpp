@@ -41,5 +41,5 @@ void CameraSteering::Update(CameraData& data, const float deltaTime)
     // カメラ座標を決定してCameraDataに書き込む
     const Vector3 targetPos = targetCharacter_->transform_.position;
     data.position = targetPos + toVector_;
-    data.target = targetPos;
+    data.target = targetPos + Vector3(0.0f, config_.lookAtOffsetY, 0.0f);
 }

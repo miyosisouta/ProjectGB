@@ -3,7 +3,7 @@
         {
             "comment": "かみつき攻撃",
             "key": "Bite",
-            "motionValues": 30,
+            "motionValues": 35,
             "cooldown": 1.0
         }
     ],
@@ -12,8 +12,8 @@
         {
             "comment": "デフォルト攻撃",
             "key": "DefaultAttack",
-            "motionValues": 100,
-            "cooldown": 5.0
+            "motionValues": 120,
+            "cooldown": 6.0
         },
 
         {
@@ -29,7 +29,7 @@
             "comment":"魔法",
             "key": "FireMagic",
             "motionValues": 175,
-            "cooldown": 10.0
+            "cooldown": 8.0
         }
     ],
 

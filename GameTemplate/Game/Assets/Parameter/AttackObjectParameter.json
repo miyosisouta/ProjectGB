@@ -1,0 +1,13 @@
+{
+    "AttackObject": [
+        {
+            "comment": "地雷オブジェクトパラメーター",
+
+            "landmineModelScale": 0.1,
+            "landmineCollisionSize": 350.0,
+            "landmineIndicatorRadius": 85.0,
+            "effectScaleFactorDamageLing": 0.5,
+            "effectScaleFactorExplode": 0.15
+        }
+    ]
+}

@@ -173,6 +173,177 @@ void ParameterManager::LoadGrassBendParamData(const char* path)
 	);
 }
 
+// ============================================================
+//  PlayerStateParameter.json 読み込みヘルパー
+// ============================================================
+void ParameterManager::LoadPlayerStateParamData(const char* path)
+{
+	ParameterManager::Get().LoadParameterFromArray<MasterPlayerStateParameter>(
+		path,
+		"PlayerState",
+		[](const nlohmann::json& j, MasterPlayerStateParameter& p)
+		{
+			p.walkSeInterval     = j.value("walkSeInterval",     0.0f);
+			p.walkLoopTime       = j.value("walkLoopTime",       0.0f);
+			p.walkEffectScale    = j.value("walkEffectScale",    0.0f);
+			p.runSeInterval      = j.value("runSeInterval",      0.0f);
+			p.deathAnimationTime = j.value("deathAnimationTime", 0.0f);
+			p.moveThreshold      = j.value("moveThreshold",      0.0f);
+		}
+	);
+}
+
+// ============================================================
+//  NPCControllerParameter.json 読み込みヘルパー
+// ============================================================
+void ParameterManager::LoadNPCControllerParamData(const char* path)
+{
+	ParameterManager::Get().LoadParameterFromArray<MasterNPCControllerParameter>(
+		path,
+		"NPCController",
+		[](const nlohmann::json& j, MasterNPCControllerParameter& p)
+		{
+			p.attackLotteryMax = j.value("attackLotteryMax", 0);
+			p.shortDistance    = j.value("shortDistance",    0.0f);
+			p.midDistance      = j.value("midDistance",      0.0f);
+			p.longDistance     = j.value("longDistance",     0.0f);
+		}
+	);
+}
+
+// ============================================================
+//  BossSpawnerParameter.json 読み込みヘルパー
+// ============================================================
+void ParameterManager::LoadBossSpawnerParamData(const char* path)
+{
+	ParameterManager::Get().LoadParameterFromArray<MasterBossSpawnerParameter>(
+		path,
+		"BossSpawner",
+		[](const nlohmann::json& j, MasterBossSpawnerParameter& p)
+		{
+			p.modeAttackMultiplier = j.value("modeAttackMultiplier", 0.0f);
+			p.modeHpMultiplier     = j.value("modeHpMultiplier",     0.0f);
+		}
+	);
+}
+
+// ============================================================
+//  SkillParameter.json 読み込みヘルパー
+// ============================================================
+void ParameterManager::LoadSkillParamData(const char* path)
+{
+	ParameterManager::Get().LoadParameterFromArray<MasterSkillParameter>(
+		path,
+		"Skill",
+		[](const nlohmann::json& j, MasterSkillParameter& p)
+		{
+			p.key                      = j.value("key",                      "");
+			p.collisionForward         = j.value("collisionForward",         0.0f);
+			p.collisionHeight          = j.value("collisionHeight",          0.0f);
+			p.targetPosForward         = j.value("targetPosForward",         0.0f);
+			p.avoidMoveSpeed           = j.value("avoidMoveSpeed",           0.0f);
+			p.avoidEffectRotation      = j.value("avoidEffectRotation",      0.0f);
+			p.avoidEffectScale         = j.value("avoidEffectScale",         0.0f);
+			p.avoidStartTime           = j.value("avoidStartTime",           0.0f);
+			p.avoidEndTime             = j.value("avoidEndTime",             0.0f);
+			p.effectScaleFactor        = j.value("effectScaleFactor",        0.0f);
+			p.fireMagicCollisionSize   = j.value("fireMagicCollisionSize",   0.0f);
+			p.fireMagicCollisionDepth  = j.value("fireMagicCollisionDepth",  0.0f);
+			p.fireMagicCollisionForward= j.value("fireMagicCollisionForward",0.0f);
+			p.fireMagicCollisionHeight = j.value("fireMagicCollisionHeight", 0.0f);
+			p.fireMagicAttackStartTime = j.value("fireMagicAttackStartTime", 0.0f);
+			p.fireMagicAttackEndTime   = j.value("fireMagicAttackEndTime",   0.0f);
+		}
+	);
+}
+
+// ============================================================
+//  AttackObjectParameter.json 読み込みヘルパー
+// ============================================================
+void ParameterManager::LoadAttackObjectParamData(const char* path)
+{
+	ParameterManager::Get().LoadParameterFromArray<MasterAttackObjectParameter>(
+		path,
+		"AttackObject",
+		[](const nlohmann::json& j, MasterAttackObjectParameter& p)
+		{
+			p.landmineModelScale          = j.value("landmineModelScale",          0.0f);
+			p.landmineCollisionSize       = j.value("landmineCollisionSize",       0.0f);
+			p.landmineIndicatorRadius     = j.value("landmineIndicatorRadius",     0.0f);
+			p.effectScaleFactorDamageLing = j.value("effectScaleFactorDamageLing", 0.0f);
+			p.effectScaleFactorExplode    = j.value("effectScaleFactorExplode",    0.0f);
+		}
+	);
+}
+
+// ============================================================
+//  StageManagerParameter.json 読み込みヘルパー
+// ============================================================
+void ParameterManager::LoadStageManagerParamData(const char* path)
+{
+	ParameterManager::Get().LoadParameterFromArray<MasterStageManagerParameter>(
+		path,
+		"StageManager",
+		[](const nlohmann::json& j, MasterStageManagerParameter& p)
+		{
+			p.ditheringAlphaGround   = j.value("ditheringAlphaGround",   0.0f);
+			p.ditheringAlphaFence    = j.value("ditheringAlphaFence",    0.0f);
+			p.ditheringAlphaTree     = j.value("ditheringAlphaTree",     0.0f);
+			p.splatMapGrassLuminance = j.value("splatMapGrassLuminance", 0.0f);
+			p.splatMapClayLuminance  = j.value("splatMapClayLuminance",  0.0f);
+			p.splatMapHumusLuminance = j.value("splatMapHumusLuminance", 0.0f);
+			p.splatMapWholeLuminance = j.value("splatMapWholeLuminance", 0.0f);
+			p.splatMapSaturation     = j.value("splatMapSaturation",     0.0f);
+			p.collisionUp            = j.value("collisionUp",            0.0f);
+			p.meterToCentimeter      = j.value("meterToCentimeter",      0.0f);
+		}
+	);
+}
+
+// ============================================================
+//  CollisionHitParameter.json 読み込みヘルパー
+// ============================================================
+void ParameterManager::LoadCollisionHitParamData(const char* path)
+{
+	ParameterManager::Get().LoadParameterFromArray<MasterCollisionHitParameter>(
+		path,
+		"CollisionHit",
+		[](const nlohmann::json& j, MasterCollisionHitParameter& p)
+		{
+			p.spinKnockBack                 = j.value("spinKnockBack",                 0.0f);
+			p.effectYCap                    = j.value("effectYCap",                    0.0f);
+			p.playerNormalAttackEffectScale = j.value("playerNormalAttackEffectScale", 0.0f);
+			p.playerSkillAttackEffectScale  = j.value("playerSkillAttackEffectScale",  0.0f);
+			p.bossNormalAttackEffectScale   = j.value("bossNormalAttackEffectScale",   0.0f);
+			p.bossHitStampEffectScale       = j.value("bossHitStampEffectScale",       0.0f);
+			p.bossSpinEffectScale           = j.value("bossSpinEffectScale",           0.0f);
+			p.bossThrowRockEffectScale      = j.value("bossThrowRockEffectScale",      0.0f);
+			p.bossLaserWeakEffectScale      = j.value("bossLaserWeakEffectScale",      0.0f);
+			p.bossLaserStrongEffectScale    = j.value("bossLaserStrongEffectScale",    0.0f);
+		}
+	);
+}
+
+// ============================================================
+//  MissionParameter.json 読み込みヘルパー
+// ============================================================
+void ParameterManager::LoadMissionParamData(const char* path)
+{
+	ParameterManager::Get().LoadParameterFromArray<MasterMissionParameter>(
+		path,
+		"Mission",
+		[](const nlohmann::json& j, MasterMissionParameter& p)
+		{
+			p.key                    = j.value("key",                    "");
+			p.targetTime             = j.value("targetTime",             0.0f);
+			p.abilityTargetCount     = j.value("abilityTargetCount",     static_cast<uint8_t>(0));
+			p.utilityTargetCount     = j.value("utilityTargetCount",     static_cast<uint8_t>(0));
+			p.normalAttackTargetCount= j.value("normalAttackTargetCount",static_cast<uint8_t>(0));
+			p.goalHpRate             = j.value("goalHpRate",             0.0f);
+		}
+	);
+}
+
 void ParameterManager::LoadBattleCommonParamData(const char* path)
 {
 	ParameterManager::Get().LoadParameterFromArray<MasterBattleCommonParameter>(
@@ -188,6 +359,7 @@ void ParameterManager::LoadBattleCommonParamData(const char* path)
 			p.cameraParam.rotSpeed	= j.value("rotSpeed",	0.0f);
 			p.cameraParam.invert = j.value("invert", false);
 			p.cameraParam.sensitivity = j.value("sensitivity", 0.0f);
+			p.cameraParam.lookAtOffsetY = j.value("lookAtOffsetY", 0.0f);
 
 			p.skyCubeScale = j.value("scale", 0);
 

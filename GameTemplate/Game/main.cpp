@@ -30,24 +30,24 @@ void ReportLiveObjects()
 
 	DXGIGetDebugInterface(__uuidof(IDXGIDebug), (void**)&pDxgiDebug);
 
-	// o—ÍB
+	// ï¿½oï¿½ÍB
 	pDxgiDebug->ReportLiveObjects(DXGI_DEBUG_D3D12, DXGI_DEBUG_RLO_DETAIL);
 }
 
 ///////////////////////////////////////////////////////////////////
-// ƒEƒBƒ“ƒhƒEƒvƒƒOƒ‰ƒ€‚ÌƒƒCƒ“ŠÖ”B
+// ï¿½Eï¿½Bï¿½ï¿½ï¿½hï¿½Eï¿½vï¿½ï¿½ï¿½Oï¿½ï¿½ï¿½ï¿½ï¿½Ìƒï¿½ï¿½Cï¿½ï¿½ï¿½Öï¿½ï¿½B
 ///////////////////////////////////////////////////////////////////
 int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLine, int nCmdShow)
 {
-	//ƒQ[ƒ€‚Ì‰Šú‰»B
+	//ï¿½Qï¿½[ï¿½ï¿½ï¿½Ìï¿½ï¿½ï¿½ï¿½ï¿½ï¿½B
 	InitGame(hInstance, hPrevInstance, lpCmdLine, nCmdShow, TEXT("Game"));
 	//////////////////////////////////////
-	// ‚±‚±‚©‚ç‰Šú‰»‚ğs‚¤ƒR[ƒh‚ğ‹Lq‚·‚éB
+	// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ç‰ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½sï¿½ï¿½ï¿½Rï¿½[ï¿½hï¿½ï¿½ï¿½Lï¿½qï¿½ï¿½ï¿½ï¿½B
 	//////////////////////////////////////
 
 	g_renderingEngine->DisableRaytracing();
 
-	// ƒRƒŠƒWƒ‡ƒ“
+	// ï¿½Rï¿½ï¿½ï¿½Wï¿½ï¿½ï¿½ï¿½
 	CollisionHitManager::Initialize();
 	GhostBodyManager::Initialize();
 	GhostBodyManager::Get().RegisterCallback([](GhostBody* a, GhostBody* b)
@@ -55,41 +55,49 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 			CollisionHitManager::Get().RegisterHitPair(a, b);
 		});
 
-	// ƒLƒƒƒ‰ƒNƒ^[ƒf[ƒ^
+	// ï¿½Lï¿½ï¿½ï¿½ï¿½ï¿½Nï¿½^ï¿½[ï¿½fï¿½[ï¿½^
 	CharacterDataBase::CreateInstance();
 
-	// ƒpƒ‰ƒ[ƒ^
+	// ï¿½pï¿½ï¿½ï¿½ï¿½ï¿½[ï¿½^
 	ParameterManager::CreateInstance();
 	ParameterManager::Get().LoadCharacterStatusData("Assets/Objects/CharacterData/CharacterStatusData.json");
 	ParameterManager::Get().LoadPlayerSkillStatusData("Assets/Objects/CharacterData/PlayerSkillStatus.json");
 	ParameterManager::Get().LoadBossSkillStatusData("Assets/Objects/CharacterData/BossSkillStatus.json");
 	ParameterManager::Get().LoadBattleCommonParamData("Assets/Parameter/BattleCommonParameter.json");
 	ParameterManager::Get().LoadGrassBendParamData("Assets/Objects/Stage/Forest/ObjectData/grass_attack_params.json");
+	ParameterManager::Get().LoadMissionParamData("Assets/Parameter/MissionParameter.json");
+	ParameterManager::Get().LoadCollisionHitParamData("Assets/Parameter/CollisionHitParameter.json");
+	ParameterManager::Get().LoadPlayerStateParamData("Assets/Parameter/PlayerStateParameter.json");
+	ParameterManager::Get().LoadNPCControllerParamData("Assets/Parameter/NPCControllerParameter.json");
+	ParameterManager::Get().LoadBossSpawnerParamData("Assets/Parameter/BossSpawnerParameter.json");
+	ParameterManager::Get().LoadSkillParamData("Assets/Parameter/SkillParameter.json");
+	ParameterManager::Get().LoadAttackObjectParamData("Assets/Parameter/AttackObjectParameter.json");
+	ParameterManager::Get().LoadStageManagerParamData("Assets/Parameter/StageManagerParameter.json");
 
-	// ƒL[ƒRƒ“ƒtƒBƒO
+	// ï¿½Lï¿½[ï¿½Rï¿½ï¿½ï¿½tï¿½Bï¿½O
 	KeyConfig::CreateInstance();
 	KeyConfig::Get().ResetToDefault();
 
-	// ƒJƒƒ‰
+	// ï¿½Jï¿½ï¿½ï¿½ï¿½
 	CameraManager::Initialize();
 	CameraManager::Get().Setup(g_camera3D);
 
-	// UIAnimationƒNƒ‰ƒX‚Ì¶¬
+	// UIAnimationï¿½Nï¿½ï¿½ï¿½Xï¿½Ìï¿½ï¿½ï¿½
 	UIAnimationParameter::Get().Load("Assets/ui/uiAnimation/UIAnimation.json");
-	//GameƒNƒ‰ƒX‚ÌƒIƒuƒWƒFƒNƒg‚ğì¬B
+	//Gameï¿½Nï¿½ï¿½ï¿½Xï¿½ÌƒIï¿½uï¿½Wï¿½Fï¿½Nï¿½gï¿½ï¿½ï¿½ì¬ï¿½B
 	NewGO<Game>(0, "game");	
-	// EffectManagerƒNƒ‰ƒX‚ÌƒIƒuƒWƒFƒNƒg‚ğ¶¬
+	// EffectManagerï¿½Nï¿½ï¿½ï¿½Xï¿½ÌƒIï¿½uï¿½Wï¿½Fï¿½Nï¿½gï¿½ğ¶ï¿½
 	NewGO<EffectManagerObject>(20, "effect");
-	//SoundManagerƒNƒ‰ƒX‚ÌƒIƒuƒWƒFƒNƒg‚ğ¶¬
+	//SoundManagerï¿½Nï¿½ï¿½ï¿½Xï¿½ÌƒIï¿½uï¿½Wï¿½Fï¿½Nï¿½gï¿½ğ¶ï¿½
 	NewGO<SoundManagerObject>(30, "sound");
-	// SceneManagerƒNƒ‰ƒX‚ÌƒIƒuƒWƒFƒNƒg‚ğ¶¬
+	// SceneManagerï¿½Nï¿½ï¿½ï¿½Xï¿½ÌƒIï¿½uï¿½Wï¿½Fï¿½Nï¿½gï¿½ğ¶ï¿½
 	NewGO<SceneMangerObject>(0, "sceneManager");
 
 	//////////////////////////////////////
-	// ‰Šú‰»‚ğs‚¤ƒR[ƒh‚ğ‘‚­‚Ì‚Í‚±‚±‚Ü‚ÅIII
+	// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½sï¿½ï¿½ï¿½Rï¿½[ï¿½hï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ì‚Í‚ï¿½ï¿½ï¿½ï¿½Ü‚ÅIï¿½Iï¿½I
 	//////////////////////////////////////
 	
-	// ‚±‚±‚©‚çƒQ[ƒ€ƒ‹[ƒvB
+	// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Qï¿½[ï¿½ï¿½ï¿½ï¿½ï¿½[ï¿½vï¿½B
 	while (DispatchWindowMessage())
 	{
 		K2Engine::GetInstance()->Execute();
@@ -97,7 +105,7 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 		CameraManager::Get().Update(g_gameTime->GetFrameDeltaTime());
 
 
-		// ƒfƒoƒbƒO—pƒJƒƒ‰‚ÌØ‚è‘Ö‚¦
+		// ï¿½fï¿½oï¿½bï¿½Oï¿½pï¿½Jï¿½ï¿½ï¿½ï¿½ï¿½ÌØ‚ï¿½Ö‚ï¿½
 #if defined(_DEBUG)
 		static bool isTriggerDebugCameraKey = false;
 		if (GetAsyncKeyState(VK_F2)) {

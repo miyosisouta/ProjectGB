@@ -5,14 +5,6 @@
 #include "src/Actor/BossCharacter.h"
 #include "src/Stage/GrassBendManager.h"
 
-namespace {
-    /** Landmine */
-    static Vector3 MODEL_LANDMINE_SCALE = Vector3(0.1f, 0.1f, 0.1f); // モデルの大きさ
-    constexpr float LANDMINE_COLLISION_SIZE = 350.0f; // 爆発半径
-    constexpr float LANDMINE_INDICATOR_RADIUS = 85.0f; // 爆発予測サークルの半径
-    constexpr float EFFECT_SCALE_FACTOR_DAMAGE_LING = 0.5f;
-    constexpr float EFFECT_SCALE_FACTOR_EXPLOAD = 0.15f;
-}
 /*=======================================*/
 /* 攻撃用オブジェクトの基底クラス */
 /*=======================================*/
@@ -157,7 +149,8 @@ void LandmineObject::Setup(Vector3 targetPos, float motionValue)
 {
     motionValue_ = motionValue;
     transform_.localPosition = targetPos;
-    transform_.localScale = MODEL_LANDMINE_SCALE;
+    const float modelScale = ParameterManager::Get().GetAttackObjectParam()->landmineModelScale;
+    transform_.localScale = Vector3(modelScale);
     transform_.UpdateTransform();
 
     predictionEffectHandle_ = INVALID_EFFECT_HANDLE;
@@ -185,9 +178,10 @@ bool LandmineObject::Start()
     model_.Update();
 
     // エフェクトサイズ
-    Vector3 damageZoneEffectScale = LANDMINE_COLLISION_SIZE * EFFECT_SCALE_FACTOR_DAMAGE_LING;
-    Vector3 exploadEffectScale = LANDMINE_COLLISION_SIZE * EFFECT_SCALE_FACTOR_EXPLOAD;
-    float collisionScale = LANDMINE_COLLISION_SIZE;
+    const auto* ap = ParameterManager::Get().GetAttackObjectParam();
+    Vector3 damageZoneEffectScale = ap->landmineCollisionSize * ap->effectScaleFactorDamageLing;
+    Vector3 exploadEffectScale    = ap->landmineCollisionSize * ap->effectScaleFactorExplode;
+    float collisionScale          = ap->landmineCollisionSize;
 
 
     // タスクスケジューラーを作成
@@ -202,7 +196,8 @@ bool LandmineObject::Start()
         param.pulseSpeed = 1.0f / 3.0f; // 3s display → ring reaches 0.85 at explosion
         attackRangeIndicator_->SetInitParam(param);
         attackRangeIndicator_->SetPosition(transform_.position);
-        attackRangeIndicator_->SetScale(Vector3(LANDMINE_INDICATOR_RADIUS, 1.0f, LANDMINE_INDICATOR_RADIUS));
+        const float indicatorRadius = ParameterManager::Get().GetAttackObjectParam()->landmineIndicatorRadius;
+        attackRangeIndicator_->SetScale(Vector3(indicatorRadius, 1.0f, indicatorRadius));
         attackRangeIndicator_->SetDraw(true);
 
         phase_ = Phase::enWarning;

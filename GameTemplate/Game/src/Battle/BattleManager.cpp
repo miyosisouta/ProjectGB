@@ -121,6 +121,7 @@ BattleManager::BattleManager()
 		initConfig.height         = param->cameraParam.height;
 		initConfig.rotationSpeedX = param->cameraParam.rotSpeed;
 		initConfig.rotationSpeedY = param->cameraParam.rotSpeed;
+		initConfig.lookAtOffsetY  = param->cameraParam.lookAtOffsetY;
 		CameraData initData;
 		initData.fov      = Math::DegToRad(param->cameraParam.fovy);
 		initData.nearClip = param->cameraParam.nearClip;

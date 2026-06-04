@@ -86,16 +86,6 @@ namespace bossRuleData
     }
 }
 
-namespace
-{
-    constexpr int ATTACK_LOTTERY_MAX = 10;  //!< 抽選合計確率
-
-    /** 距離ごとの定数 */
-    constexpr float SHORT_DISTANCE = 500.0f;        //!< 近距離
-    constexpr float MID_DISTANCE = 1000.0f;          //!< 中距離
-    constexpr float LONG_DISTANCE = 1500.0f;        //!< 遠距離
-    
-}
 
 
 /* ========================================== */
@@ -194,7 +184,8 @@ void NPCController::SelectActionNode()
 
 
     // どの攻撃を使うか抽選
-    int actionLottery = rand() % ATTACK_LOTTERY_MAX;
+    const int lotteryMax = ParameterManager::Get().GetNPCControllerParam()->attackLotteryMax;
+    int actionLottery = rand() % lotteryMax;
 
 
     // 現在の距離フェーズに対応するルールを取得
@@ -225,22 +216,10 @@ void NPCController::SelectActionNode()
 
 DistancePhase NPCController::ChackDistancePhase(float distance)
 {
-    if (distance < SHORT_DISTANCE) 
-    { 
-        return DistancePhase::enShortAttackType; 
-    } // 近距離タイプ
-    if (distance < MID_DISTANCE)
-    {
-        return DistancePhase::enMidAttackType;
-    }
-    // 中距離タイプ
-    if (distance < LONG_DISTANCE) { 
-        return DistancePhase::enLongAttackType; 
-    }   // 遠距離タイプ
-    if (distance > LONG_DISTANCE)
-    { 
-        return DistancePhase::enOutRange; 
-    }    // 射程範囲外
+    const auto* p = ParameterManager::Get().GetNPCControllerParam();
 
-    return DistancePhase::enLongAttackType;
+    if (distance < p->shortDistance) { return DistancePhase::enShortAttackType; } // 近距離タイプ
+    if (distance < p->midDistance)   { return DistancePhase::enMidAttackType; }   // 中距離タイプ
+    if (distance < p->longDistance)  { return DistancePhase::enLongAttackType; }  // 遠距離タイプ
+    return DistancePhase::enOutRange;                                              // 射程範囲外
 }

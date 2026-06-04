@@ -15,22 +15,6 @@ bool          StageManager::s_disableGrassLoad_ = false;
 
 namespace
 {
-    /* ディザリング時の透明度 */
-    constexpr float DITHERING_ALPHA_GROUND = 1.0f; // 地面
-    constexpr float DITHERING_ALPHA_FENCE  = 0.5f; // 柵
-    constexpr float DITHERING_ALPHA_TREE   = 0.2f; // 木
-
-    /* スプラットマップ */
-    constexpr float SPLAT_MAP_GRASS_LUMINANCE = 1.0f;   // 草の明るさ
-    constexpr float SPLAT_MAP_CLAY_LUMINANCE = 1.0f;    // 土の明るさ
-    constexpr float SPLAT_MAP_HUMUS_LUMINANCE = 1.0f;   // 腐葉土の明るさ
-    constexpr float SPLAT_MAP_WHOLE_LUMINANCE = 3.0f;   // 全体の明るさ
-    constexpr float SPLAT_MAP_SATURATION = 2.5f; // 彩度
-
-    /* その他 */
-    constexpr float COLLISION_UP        = 600.0f; // コリジョンの高さ
-    constexpr float METER_TO_CENTIMETER = 100.0f; // メートル
-
     /* 草の配置JSONパス */
     const char* GRASS_JSON_PATH = "Assets/Objects/Stage/Forest/ObjectData/grass_placement.json";
 }
@@ -53,9 +37,10 @@ void StageManager::StageTKLLoader(const char* path)
             assetPath = "Assets/Objects/Stage/Forest/ObjectData/tree.tkm";
         }
         else if (data.ForwardMatchName(L"collisionBox")) {
+            const auto* sp = ParameterManager::Get().GetStageManagerParam();
             auto collision = new PhysicalBody();
-            Vector3 pos = Vector3(data.position.x, data.position.y + COLLISION_UP, data.position.z);
-            collision->CreateBox(data.scale * METER_TO_CENTIMETER, pos, enCollisionAttr_Ground);
+            Vector3 pos = Vector3(data.position.x, data.position.y + sp->collisionUp, data.position.z);
+            collision->CreateBox(data.scale * sp->meterToCentimeter, pos, enCollisionAttr_Ground);
             collisionList_.push_back(collision);
             return true;
         }
@@ -66,6 +51,7 @@ void StageManager::StageTKLLoader(const char* path)
 
         if (!assetPath.empty()) {
             auto* obj = new StaticObject();
+            const auto* sp = ParameterManager::Get().GetStageManagerParam();
 
             // スプラットシェーダーは Init() より前にセットアップする必要がある
             if (data.ForwardMatchName(L"ground")) {
@@ -76,19 +62,19 @@ void StageManager::StageTKLLoader(const char* path)
 
             // 固有値の設定
             if (data.ForwardMatchName(L"ground")) {
-                obj->SetDitherAlpha(DITHERING_ALPHA_GROUND); // ディザのアルファ値
+                obj->SetDitherAlpha(sp->ditheringAlphaGround); // ディザのアルファ値
                 obj->SetName("ground"); // 名前
                 // スプラットカラー調整 (p0=草, p1=岩土, p2=腐葉土の明るさ倍率, p3=全体HSV明るさ)
-                obj->SetSplatColorParams(SPLAT_MAP_GRASS_LUMINANCE, SPLAT_MAP_CLAY_LUMINANCE, SPLAT_MAP_HUMUS_LUMINANCE, SPLAT_MAP_WHOLE_LUMINANCE);
+                obj->SetSplatColorParams(sp->splatMapGrassLuminance, sp->splatMapClayLuminance, sp->splatMapHumusLuminance, sp->splatMapWholeLuminance);
                 // スプラット彩度調整 (1.0=変化なし, 1.5=鮮やか)
-                obj->SetSplatSaturation(SPLAT_MAP_SATURATION);
+                obj->SetSplatSaturation(sp->splatMapSaturation);
             }
             else if (data.ForwardMatchName(L"fence")) {
-                obj->SetDitherAlpha(DITHERING_ALPHA_FENCE); // ディザのアルファ値
+                obj->SetDitherAlpha(sp->ditheringAlphaFence); // ディザのアルファ値
                 obj->SetName("fence"); // 名前
             }
             else if (data.ForwardMatchName(L"Tree")) {
-                obj->SetDitherAlpha(DITHERING_ALPHA_TREE); // ディザのアルファ値
+                obj->SetDitherAlpha(sp->ditheringAlphaTree); // ディザのアルファ値
                 obj->SetName("Tree"); // 名前
             }
 
