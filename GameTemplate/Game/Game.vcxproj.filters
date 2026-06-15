@@ -215,5 +215,6 @@
     <ClInclude Include="system\system.h" />
     <ClInclude Include="src\UI\SkillSelectMenu.h" />
     <ClInclude Include="src\UI\CheckStartWindow.h" />
+    <ClInclude Include="src\Util\DamageNotify.h" />
   </ItemGroup>
 </Project>

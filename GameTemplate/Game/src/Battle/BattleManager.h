@@ -28,12 +28,13 @@
  */
 
 #pragma once
+#include "src/Actor/ActorStatus.h"
+#include "src/Actor/Player.h"
 #include "src/Camera/CameraController.h"
 #include "src/Camera/CameraSteering.h"
-#include "src/Util/GameTimer.h"
-#include "src/Actor/Player.h"
-#include "src/Actor/ActorStatus.h"
 #include "src/UI/UIManager.h"
+#include "src/Util/GameTimer.h"
+#include "src/Util/DamageNotify.h"
 
 
 class PlayerController;
@@ -63,22 +64,6 @@ private:
 		float fovDeg      = 60.0f;   //!< 視野角
 	};
 
-public:
-	/* ダメージ通知の種別 */
-	enum class DamageNotifyType
-	{
-		AttackHit,  // プレイヤーがボスに与えたダメージ
-		TakeHit,    // プレイヤーが受けたダメージ
-	};
-
-	/* ダメージ通知1件分 */
-	struct DamageNotify
-	{
-		int              damage = 0;
-		DamageNotifyType type = DamageNotifyType::AttackHit;
-		bool             isCritical = false; // クリティカルフラグ
-	};
-
 
 private:
 	// --- 各ゲームオブジェクト ---
@@ -97,6 +82,10 @@ private:
 	std::unique_ptr<TaskSchedulerSystem> cutSceneScheduler_      = nullptr;
 	RefCameraController                gameCameraController_     = nullptr;
 	RefCameraController                bossEntryCameraController_ = nullptr;
+
+	// --- ダメージ ---
+	DamageNotifyQueue damageNotifyQueue_; //!< ダメージ通知管理
+
 
 private:
 	GameState gameState_        = GameState::Entry;
@@ -143,41 +132,26 @@ public:
 	}
 
 
-	/**
-	* ダメージ通知を積む
-	* CollisionHitManager のダメージ確定後に呼ぶ
-	* 上限を超えた場合は古い通知を上書きせず捨てる
-	*/
-	void PushDamageNotify(int damage, DamageNotifyType type, bool isCritical = false)
-	{
-		// 上限に達していたら捨てる
-		if (notifyCount_ >= kMaxNotify) return;
+	public:
+		/**
+		 * ダメージ通知を積む
+		 * CollisionHitManager のコールバックから呼ばれる
+		 */
+		void PushDamageNotify(int damage, DamageNotifyType type, bool isCritical)
+		{
+			damageNotifyQueue_.Push(damage, type, isCritical);
+		}
 
-		// 書き込み位置にセット
-		damageNotifyBuffer_[notifyTail_].damage = damage;
-		damageNotifyBuffer_[notifyTail_].type = type;
-		damageNotifyBuffer_[notifyTail_].isCritical = isCritical;
-
-		// 書き込み位置を1つ進める（末端に達したら先頭に戻る）
-		notifyTail_ = (notifyTail_ + 1) % kMaxNotify;
-		notifyCount_++;
-	}
-
-	/**
-	 * ダメージ通知を1件取得する
-	 * 取得と同時に通知は自動的に削除される
-	 */
-	DamageNotify PopDamageNotify()
-	{
-		if (notifyCount_ <= 0) return { -1, DamageNotifyType::AttackHit }; // 通知なし
-
-		DamageNotify notify = damageNotifyBuffer_[notifyHead_];
-
-		notifyHead_ = (notifyHead_ + 1) % kMaxNotify;
-		notifyCount_--;
-
-		return notify;
-	}
+		/**
+		 * ダメージ通知を1件取得する
+		 * 取得と同時に通知は自動的に削除される
+		 * UI側はこれを呼ぶだけでよい
+		 * @return 通知1件分の構造体（通知がなければ damage が -1）
+		 */
+		DamageNotify PopDamageNotify()
+		{
+			return damageNotifyQueue_.Pop();
+		}
 
 
 	/**

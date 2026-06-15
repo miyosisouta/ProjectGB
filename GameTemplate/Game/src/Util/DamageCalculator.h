@@ -3,7 +3,7 @@
 #include <random>
 #include <algorithm>
 
-// 計算結果をまとめる構造体
+// ダメージ計算結果
 struct DamageResult
 {
     int  damage = 0;
@@ -17,7 +17,7 @@ namespace
         DamageResult result;
         if (!attacker) return result;
 
-        // 1. 基礎ダメージ
+        // 1. 基礎ダメージ (モーション値は % 扱いとする。100.0f で 1.0倍)
         float baseDamage = attacker->GetAttack() * (motionValue / 100.0f);
 
         // 2. クリティカル判定
@@ -34,6 +34,7 @@ namespace
         std::uniform_real_distribution<float> disVariance(0.95f, 1.05f);
         baseDamage *= disVariance(gen);
 
+        // 最低1ダメージ保証
         result.damage = static_cast<int>(max(1.0f, baseDamage));
         return result;
     }

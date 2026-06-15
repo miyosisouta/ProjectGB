@@ -291,7 +291,7 @@ void CollisionHitManager::UpdatePlayerNormalAttackPair(Pair& hitPair)
 		float motion = playerStatus->GetSkillMotionValues("NormalAttack");
 		DamageResult result = Calculate(playerStatus, motion);
 		bossCharacter->GetStatus()->Damage(result.damage);
-		BattleManager::Get().PushDamageNotify(result.damage, BattleManager::DamageNotifyType::AttackHit, result.isCritical); // ボスへのダメージ通知
+		if (onDamageNotify) onDamageNotify(result.damage, DamageNotifyType::AttackHit, result.isCritical); // ダメージの情報を通知
 		UpdateAttackHitSound(); // 攻撃が当たったSEを流す
 	}
 
@@ -330,7 +330,7 @@ void CollisionHitManager::UpdatePlayerSkillAttackPair(Pair& hitPair)
 		float motion = playerStatus->GetSkillMotionValues("SpecialAttack");
 		DamageResult result = Calculate(playerStatus, motion);
 		bossCharacter->GetStatus()->Damage(result.damage);
-		BattleManager::Get().PushDamageNotify(result.damage, BattleManager::DamageNotifyType::AttackHit, result.isCritical); // ボスへのダメージ通知
+		if (onDamageNotify) onDamageNotify(result.damage, DamageNotifyType::AttackHit, result.isCritical); // ダメージの情報を通知
 		UpdateAttackHitSound(); // 攻撃が当たったSEを流す
 	}
 
@@ -378,7 +378,7 @@ void CollisionHitManager::UpdateBossAttackPair(Pair& hitPair)
 		float vibrationForce = bossStatus->GetVibrationForceValues("NormalAttack");
 		DamageResult result = Calculate(bossStatus, motion);
 		player->GetStatus()->Damage(result.damage);
-		BattleManager::Get().PushDamageNotify(result.damage, BattleManager::DamageNotifyType::TakeHit, result.isCritical);   // プレイヤーへのダメージ通知
+		if (onDamageNotify) onDamageNotify(result.damage, DamageNotifyType::TakeHit, result.isCritical); // ダメージの情報を通知
 		UpdateTakeHitSound(); // 攻撃が当たったSEを流す
 		g_pad[0]->SetVibration(vibrationTime, vibrationForce);
 	}
@@ -421,7 +421,7 @@ void CollisionHitManager::UpdateBossHitStampPair(Pair& hitPair)
 		float vibrationForce = bossStatus->GetVibrationForceValues("HitStamp");
 		DamageResult result = Calculate(bossStatus, motion);
 		player->GetStatus()->Damage(result.damage); // ダメージを与える
-		BattleManager::Get().PushDamageNotify(result.damage, BattleManager::DamageNotifyType::TakeHit, result.isCritical);   // プレイヤーへのダメージ通知
+		if (onDamageNotify) onDamageNotify(result.damage, DamageNotifyType::TakeHit, result.isCritical); // ダメージの情報を通知
 		UpdateTakeHitSound(); // 攻撃が当たったSEを流す
 		g_pad[0]->SetVibration(vibrationTime, vibrationForce);
 	}
@@ -465,7 +465,7 @@ void CollisionHitManager::UpdateBossSpinPair(Pair& hitPair)
 		float vibrationForce = bossStatus->GetVibrationForceValues("SpinAttack");
 		DamageResult result = Calculate(bossStatus, motion);
 		player->GetStatus()->Damage(result.damage);
-		BattleManager::Get().PushDamageNotify(result.damage, BattleManager::DamageNotifyType::TakeHit, result.isCritical);   // プレイヤーへのダメージ通知
+		if (onDamageNotify) onDamageNotify(result.damage, DamageNotifyType::TakeHit, result.isCritical); // ダメージの情報を通知
 		UpdateTakeHitSound(); // 攻撃が当たったSEを流す
 		g_pad[0]->SetVibration(vibrationTime, vibrationForce);
 	}
@@ -520,7 +520,7 @@ void CollisionHitManager::UpdateBossThrowRockPair(Pair& hitPair)
 		float vibrationForce = bossStatus->GetVibrationForceValues("ThrowRock");
 		DamageResult result = Calculate(bossStatus, motion);
 		player->GetStatus()->Damage(result.damage); // ダメージを与える
-		BattleManager::Get().PushDamageNotify(result.damage, BattleManager::DamageNotifyType::TakeHit, result.isCritical);   // プレイヤーへのダメージ通知
+		if (onDamageNotify) onDamageNotify(result.damage, DamageNotifyType::TakeHit, result.isCritical); // ダメージの情報を通知
 		UpdateTakeHitSound(); // 攻撃が当たったSEを流す
 		g_pad[0]->SetVibration(vibrationTime, vibrationForce);
 	}
@@ -562,7 +562,7 @@ void CollisionHitManager::UpdateBossLaserWeakPair(Pair& hitPair)
 		float vibrationForce = bossStatus->GetVibrationForceValues("LaserWeak");
 		DamageResult result = Calculate(bossStatus, motion);
 		player->GetStatus()->Damage(result.damage); // ダメージを与える
-		BattleManager::Get().PushDamageNotify(result.damage, BattleManager::DamageNotifyType::TakeHit, result.isCritical);   // プレイヤーへのダメージ通知
+		if (onDamageNotify) onDamageNotify(result.damage, DamageNotifyType::TakeHit, result.isCritical); // ダメージの情報を通知
 		UpdateTakeHitSound(); // 攻撃が当たったSEを流す
 		g_pad[0]->SetVibration(vibrationTime, vibrationForce);
 	}
@@ -604,7 +604,7 @@ void CollisionHitManager::UpdateBossLaserStrongPair(Pair& hitPair)
 		float vibrationForce = bossStatus->GetVibrationForceValues("LaserStrong");
 		DamageResult result = Calculate(bossStatus, motion);
 		player->GetStatus()->Damage(result.damage); // ダメージを与える
-		BattleManager::Get().PushDamageNotify(result.damage, BattleManager::DamageNotifyType::TakeHit, result.isCritical);   // プレイヤーへのダメージ通知
+		if (onDamageNotify) onDamageNotify(result.damage, DamageNotifyType::TakeHit, result.isCritical); // ダメージの情報を通知
 		UpdateTakeHitSound(); // 攻撃が当たったSEを流す
 		g_pad[0]->SetVibration(vibrationTime, vibrationForce);
 	}
@@ -652,7 +652,7 @@ void CollisionHitManager::UpdateCharacterLandminePlayerPair(Pair& hitPair)
 	float vibrationForce = ownerStatus->GetVibrationForceValues("SpecialAttack");
 	DamageResult result = Calculate(ownerStatus, motion);
 	player->GetStatus()->Damage(result.damage);
-	BattleManager::Get().PushDamageNotify(result.damage, BattleManager::DamageNotifyType::TakeHit, result.isCritical);   // プレイヤーへのダメージ通知
+	if (onDamageNotify) onDamageNotify(result.damage, DamageNotifyType::TakeHit, result.isCritical); // ダメージの情報を通知
 	UpdateTakeHitSound();
 	g_pad[0]->SetVibration(vibrationTime, vibrationForce);
 }
@@ -678,7 +678,7 @@ void CollisionHitManager::UpdateCharacterLandmineBossPair(Pair& hitPair)
 	float motion = ownerStatus->GetSkillMotionValues("SpecialAttack");
 	DamageResult result = Calculate(ownerStatus, motion);
 	boss->GetStatus()->Damage(result.damage);
-	BattleManager::Get().PushDamageNotify(result.damage, BattleManager::DamageNotifyType::AttackHit, result.isCritical);   // プレイヤーへのダメージ通知
+	if (onDamageNotify) onDamageNotify(result.damage, DamageNotifyType::AttackHit, result.isCritical); // ダメージの情報を通知
 	UpdateAttackHitSound();
 }
 
