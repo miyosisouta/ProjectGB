@@ -63,6 +63,22 @@ private:
 		float fovDeg      = 60.0f;   //!< 視野角
 	};
 
+public:
+	/* ダメージ通知の種別 */
+	enum class DamageNotifyType
+	{
+		AttackHit,  // プレイヤーがボスに与えたダメージ
+		TakeHit,    // プレイヤーが受けたダメージ
+	};
+
+	/* ダメージ通知1件分 */
+	struct DamageNotify
+	{
+		int              damage = 0;
+		DamageNotifyType type = DamageNotifyType::AttackHit;
+		bool             isCritical = false; // クリティカルフラグ
+	};
+
 
 private:
 	// --- 各ゲームオブジェクト ---
@@ -89,6 +105,14 @@ private:
 	bool      isPlayingEntryBoss_ = true;
 	bool      isPlayingResult_    = false;
 
+
+private:
+	/* ダメージ通知バッファ用変数 */
+	static constexpr int kMaxNotify = 16;			//!< 通知の最大件数
+	DamageNotify damageNotifyBuffer_[kMaxNotify];	//!< 固定長の通知バッファ
+	int notifyHead_ = 0;							//!< 読み取り位置
+	int notifyTail_ = 0;							//!< 書き込み位置
+	int notifyCount_ = 0;							//!< 現在の通知件数
 
 
 	/*===================================================*/
@@ -117,6 +141,44 @@ public:
 		cameraSteering_->SetDistance(option.distance);
 		gameCameraController_->As<GameCamera>()->SetFovDeg(option.fovDeg);
 	}
+
+
+	/**
+	* ダメージ通知を積む
+	* CollisionHitManager のダメージ確定後に呼ぶ
+	* 上限を超えた場合は古い通知を上書きせず捨てる
+	*/
+	void PushDamageNotify(int damage, DamageNotifyType type, bool isCritical = false)
+	{
+		// 上限に達していたら捨てる
+		if (notifyCount_ >= kMaxNotify) return;
+
+		// 書き込み位置にセット
+		damageNotifyBuffer_[notifyTail_].damage = damage;
+		damageNotifyBuffer_[notifyTail_].type = type;
+		damageNotifyBuffer_[notifyTail_].isCritical = isCritical;
+
+		// 書き込み位置を1つ進める（末端に達したら先頭に戻る）
+		notifyTail_ = (notifyTail_ + 1) % kMaxNotify;
+		notifyCount_++;
+	}
+
+	/**
+	 * ダメージ通知を1件取得する
+	 * 取得と同時に通知は自動的に削除される
+	 */
+	DamageNotify PopDamageNotify()
+	{
+		if (notifyCount_ <= 0) return { -1, DamageNotifyType::AttackHit }; // 通知なし
+
+		DamageNotify notify = damageNotifyBuffer_[notifyHead_];
+
+		notifyHead_ = (notifyHead_ + 1) % kMaxNotify;
+		notifyCount_--;
+
+		return notify;
+	}
+
 
 	/**
 	 * 更新・描画のグループマスクを設定する。
