@@ -218,5 +218,6 @@
     <ClInclude Include="src\UI\CheckStartWindow.h" />
     <ClInclude Include="src\UI\CameraOptionMenu.h" />
     <ClInclude Include="src\json\json.hpp" />
+    <ClInclude Include="src\Util\DamageNotify.h" />
   </ItemGroup>
 </Project>

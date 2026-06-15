@@ -164,6 +164,13 @@ BattleManager::BattleManager()
 		MissionManager::CreateInstance();
 		MissionManager::Get().InitByBossType(CharacterDataBase::Get().GetStageType());
 		GrassBendManager::Initialize();
+
+		// ダメージ通知のコールバックを登録する
+		// BattleManagerが存在するときだけ通知が届く
+		CollisionHitManager::Get().onDamageNotify = [this](int damage, DamageNotifyType type, bool isCritical)
+			{
+				PushDamageNotify(damage, type, isCritical);
+			};
 	}
 }
 
