@@ -292,6 +292,7 @@
     <ClCompile Include="src\Stage\StageManager.cpp" />
     <ClCompile Include="src\UI\BootMenu.cpp" />
     <ClCompile Include="src\UI\BossSelectMenu.cpp" />
+    <ClCompile Include="src\UI\CameraOptionMenu.cpp" />
     <ClCompile Include="src\UI\CheckStartWindow.cpp" />
     <ClCompile Include="src\UI\GameClearMenu.cpp" />
     <ClCompile Include="src\UI\GameOverMenu.cpp" />
@@ -372,6 +373,7 @@
     <ClInclude Include="src\Core\PouseMenu.h" />
     <ClInclude Include="src\Effect\EffectManager.h" />
     <ClInclude Include="src\Effect\Types.h" />
+    <ClInclude Include="src\json\json.hpp" />
     <ClInclude Include="src\Math\Transform.h" />
     <ClInclude Include="src\Memory\Array.h" />
     <ClInclude Include="src\Scene\BootScene.h" />
@@ -404,6 +406,7 @@
     <ClInclude Include="src\Types.h" />
     <ClInclude Include="src\UI\BootMenu.h" />
     <ClInclude Include="src\UI\BossSelectMenu.h" />
+    <ClInclude Include="src\UI\CameraOptionMenu.h" />
     <ClInclude Include="src\UI\CheckStartWindow.h" />
     <ClInclude Include="src\UI\GameClearMenu.h" />
     <ClInclude Include="src\UI\GameOverMenu.h" />

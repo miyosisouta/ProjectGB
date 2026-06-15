@@ -123,7 +123,6 @@
       },
 
 
-
       {
         "coment": "攻撃アイコンのボタン表示の背景",
         "type": "UIIcon",
@@ -286,6 +285,14 @@
         "name": "InGame_ButtonUI_Attack",
         "source": "Assets/ui/layout/InGameButtonUI.json",
         "position": [875, -455, 0],
+        "scale": [1, 1, 1]
+      },
+      {
+        "comment": "ダメージ表示",
+        "type": "UIPrefab",
+        "name": "InGame_Boss_HitDamage",
+        "source": "Assets/ui/layout/DamageUI.json",
+        "position": [0, 0, 0],
         "scale": [1, 1, 1]
       }
     ]

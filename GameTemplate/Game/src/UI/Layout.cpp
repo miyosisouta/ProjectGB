@@ -138,13 +138,25 @@ namespace
         const int digitCount = item["digit"].get<int>();
         const float w = item["width"].get<float>();
         const float h = item["height"].get<float>();
+        const float spacing = item["spacing"].get<float>();
         const Vector3 position = ParseVector3(item["position"]);
         const Vector3 scale = ParseVector3(item["scale"]);
         const Vector4 color = ParseVector4(item["color"]);
         const Quaternion rotation = ParseRotation(item["rotation"].get<float>());
+        
+        // 数字の配置
+        std::string alignStr = item["align"];
+        Align align = Align::Center;
+        if (alignStr == "left") {
+            align = Align::Left;
+        }
+        else if (alignStr == "right") {
+            align = Align::Right;
+        }
+        text->SetAlign(align);
 
         // 初期値の数値は0としておく
-        text->Initialize(assetName.c_str(), digitCount, 0, w, h, position, scale, rotation);
+        text->Initialize(assetName.c_str(), digitCount, 0, w, h, spacing, position, scale, rotation);
         text->color = color;
     }
     void InitializeUIParts(UIDummy* dummy, const nlohmann::json& item)

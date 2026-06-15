@@ -679,6 +679,59 @@
             "duration": 0.2,
             "easing": "EaseIn",
             "loop": "Once"
+        },
+
+
+
+        {
+            "comment": "ダメージ表示:ダメージ移動上",
+            "key": "damageDisplay_posUp1",
+            "valueType": "Vector3",
+            "startValue": { "x": 0, "y": 0, "z": 0},
+            "endValue":   { "x": 0, "y": 10, "z": 0},
+            "duration": 0.2,
+            "easing": "EaseIn",
+            "loop": "Once"
+        },
+        {
+            "comment": "ダメージ表示:ダメージ拡大",
+            "key": "damageDisplay_scaleUp",
+            "valueType": "Vector3",
+            "startValue": { "x": 0.3, "y": 0.3, "z": 1.0},
+            "endValue":   { "x": 1.0, "y": 1.0, "z": 1.0},
+            "duration": 0.2,
+            "easing": "Linear",
+            "loop": "Once"
+        },
+        {
+            "comment": "ダメージ表示:ダメージ移動下",
+            "key": "damageDisplay_posDown",
+            "valueType": "Vector3",
+            "startValue": { "x": 0, "y": 10, "z": 0},
+            "endValue":   { "x": 0, "y": 0, "z": 0},
+            "duration": 0.2,
+            "easing": "EaseOut",
+            "loop": "Once"
+        },
+        {
+            "comment": "ダメージ表示:ダメージ移動上",
+            "key": "damageDisplay_posUp2",
+            "valueType": "Vector3",
+            "startValue": { "x": 0, "y": 0, "z": 0},
+            "endValue":   { "x": 0, "y": 40, "z": 0},
+            "duration": 0.4,
+            "easing": "EaseIn",
+            "loop": "Once"
+        },
+        {
+            "comment": "ダメージ表示:ダメージフェード",
+            "key": "damageDisplay_fade",
+            "valueType": "Vector4",
+            "startValue": { "x": 1.0, "y": 1.0, "z": 1.0, "w": 1.0},
+            "endValue":   { "x": 1.0, "y": 1.0, "z": 1.0, "w": 0.0},
+            "duration": 0.4,
+            "easing": "EaseIn",
+            "loop": "Once"
         }
     ]
 }
