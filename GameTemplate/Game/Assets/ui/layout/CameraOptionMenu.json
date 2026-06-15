@@ -1,0 +1,91 @@
+{
+  "canvas": {
+    "elements": [
+      {
+        "comment": "オプションの背景",
+        "type": "UIPrefab",
+        "name": "optionBack",
+        "source": "Assets/ui/layout/OptionBack.json",
+        "position": [0, 0, 0],
+        "scale": [1, 1, 1]
+      },
+
+
+
+      {
+        "coment": "タイトル:アイコン",
+        "type": "UIIcon",
+        "name": "title_icon",
+        "asset": "Assets/ui/cameraOptionUI/title/camera.DDS",
+        "width": 160,
+        "height": 120,
+        "position": [-840, 455, 0],
+        "scale": [1, 1, 1],
+        "rotation": 0,
+        "color": [1, 1, 1, 1]
+      },
+      {
+        "coment": "タイトル:文字",
+        "type": "UIIcon",
+        "name": "title_ward",
+        "asset": "Assets/ui/CameraOptionUI/title/title.DDS",
+        "width": 350,
+        "height": 120,
+        "position": [-545, 455, 0],
+        "scale": [1, 1, 1],
+        "rotation": 0,
+        "color": [1, 1, 1, 1]
+      },
+
+
+
+     {
+        "coment": "タイトル:文字",
+        "type": "UIIcon",
+        "name": "kari",
+        "asset": "Assets/ui/CameraOptionUI/kari/junbi.DDS",
+        "width": 350,
+        "height": 100,
+        "position": [0, 200, 0],
+        "scale": [1, 1, 1],
+        "rotation": 0,
+        "color": [1, 1, 1, 1]
+      },
+      {
+        "coment": "タイトル:文字",
+        "type": "UIIcon",
+        "name": "kari2",
+        "asset": "Assets/ui/CameraOptionUI/kari/rei.DDS",
+        "width": 220,
+        "height": 500,
+        "position": [0, -150, 0],
+        "scale": [1, 1, 1],
+        "rotation": 0,
+        "color": [1, 1, 1, 1]
+      },
+
+
+
+      
+
+
+      {
+        "comment": "戻るボタンアイコン",
+        "type": "UIPrefab",
+        "name": "returnIcon",
+        "source": "Assets/ui/layout/RetrunButton.json",
+        "position": [790, -500, 0],
+        "scale": [1, 1, 1]
+      },
+      {
+        "comment": "決定ボタンアイコン",
+        "type": "UIPrefab",
+        "name": "decisionIcon",
+        "source": "Assets/ui/layout/DecisionButton.json",
+        "position": [560, -500, 0],
+        "scale": [1, 1, 1]
+      }
+
+    ]
+}
+}

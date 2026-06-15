@@ -12,7 +12,7 @@
 #include "src/Util/TaskSchedulerSystem.h"
 
 #include "src/UI/Layout.h"
-#include "src/UI/CheckStartWindow.h"
+#include "src/UI/InGameMenu.h"
 
 
 DebugScene::DebugScene()
@@ -29,7 +29,7 @@ DebugScene::~DebugScene()
 bool DebugScene::Start()
 {
 	layout_ = new Layout;
-	layout_->Initialize<CheckStartWindow>("Assets/ui/Layout/CheckStartWindow.json");
+	layout_->Initialize<InGameMenu>("Assets/ui/Layout/InGameMenu.json");
 
 	return true;
 }
@@ -37,9 +37,9 @@ bool DebugScene::Start()
 
 void DebugScene::Update()
 {
-	CheckStartWindow* menu = static_cast<CheckStartWindow*>(layout_->GetMenu());
+	//taskScheduler_->Update(g_gameTime->GetFrameDeltaTime());
+	InGameMenu* menu = static_cast<InGameMenu*>(layout_->GetMenu());
 	
-
 	layout_->Update();
 }
 

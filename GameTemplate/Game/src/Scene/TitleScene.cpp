@@ -20,6 +20,7 @@
 #include "src/UI/SoundOptionMenu.h"
 #include "src/UI/KeyConfigOptionMenu.h"
 #include "src/UI/WarningButtonWindow.h"
+#include "src/UI/CameraOptionMenu.h"
 #include "src/UI/UIScreenManager.h"
 
 
@@ -203,7 +204,7 @@ void TitleScene::Update()
 		if (optionMenu->IsSelectCamera()) {
 			if (g_pad[0]->IsTrigger(enButtonA)) {
 				SoundManager::Get().PlaySE(enSoundKind_Menu_Decide);
-				UIScreenManager::Get().Push<SoundOptionMenu>("Assets/ui/layout/SoundOptionMenu.json", UITransitionMode::Push, UIScreenTransitionPreset::FadeInOut());
+				UIScreenManager::Get().Push<CameraOptionMenu>("Assets/ui/layout/CameraOptionMenu.json", UITransitionMode::Push, UIScreenTransitionPreset::FadeInOut());
 			}
 		}
 	}
@@ -254,6 +255,16 @@ void TitleScene::Update()
 				SoundManager::Get().PlaySE(enSoundKind_Menu_Return);
 				UIScreenManager::Get().Pop();
 			}
+		}
+	}
+
+
+	// カメラオプションメニューが有効な時 戻る
+	auto* cameraOptionMenu = dynamic_cast<CameraOptionMenu*>(menu);
+	if (cameraOptionMenu) {
+		if (!UIScreenManager::Get().IsTransitioning() && g_pad[0]->IsTrigger(enButtonB)) {
+			SoundManager::Get().PlaySE(enSoundKind_Menu_Return);
+			UIScreenManager::Get().Pop();
 		}
 	}
 

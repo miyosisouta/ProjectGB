@@ -264,13 +264,14 @@ void UIDigit::Render(RenderContext& rc)
 }
 
 
-void UIDigit::Initialize(const char* assetName, const int digit, const int number, const float widht, const float height, const Vector3& position, const Vector3& scale, const Quaternion& rotation)
+void UIDigit::Initialize(const char* assetName, const int digit, const int number, const float widht, const float height, const float spacing, const Vector3& position, const Vector3& scale, const Quaternion& rotation)
 {
 	assetPath_ = assetName;
 	digit_ = digit;
 	number_ = number;
 	w_ = widht;
 	h_ = height;
+	digitSpacing_ = spacing;
 
 	transform.localPosition = position;
 	transform.localScale = scale;
@@ -317,8 +318,36 @@ void UIDigit::UpdateNumber(const int targetDigit, const int number)
 void UIDigit::UpdatePosition(const int index)
 {
 	SpriteRender* render = renderList_[index];
+
+	// 数字間隔の計算
+	const float step = w_ + digitSpacing_;
+	const float totalWidth = (renderList_.size() - 1) * step;
+	// 文字揃えの初期位置
+	float offset = 0.0f;
+	// 文字揃えの計算
+	switch (align_)
+	{
+		// 左揃え
+	case Align::Left:
+		offset = 0.0f;
+		break;
+
+		// 中央揃え
+	case Align::Center:
+		offset = totalWidth * 0.5f;
+		break;
+
+		// 右揃え
+	case Align::Right:
+		offset = totalWidth;
+		break;
+	}
 	Vector3 position = transform.position;
-	position.x -= w_ * index;
+	// 文字揃え位置
+	position.x += offset;
+	// 間隔と文字揃えの配置
+	position.x -= step * index;
+
 	render->SetPosition(position);
 }
 

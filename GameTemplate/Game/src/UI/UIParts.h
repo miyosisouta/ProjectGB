@@ -285,11 +285,23 @@ public:
 // ============================================
 // UI桁表示(スコア表示などで使用)
 // ============================================
+
+/** 文字の位置を変えれる(左寄り・中央・右寄り) */
+enum class Align
+{
+	Left,
+	Center,
+	Right
+};
+
 class UIDigit : public UIBase
 {
 private:
 	/** 画像表示機能の可変長配列 */
 	std::vector<SpriteRender*> renderList_;
+	/** 数字の配置(初期値は中央) */
+	Align align_ = Align::Center;
+
 	/** 表示される数字 */
 	int number_ = 0;
 	int requestNumber_ = 0;
@@ -299,6 +311,9 @@ private:
 
 	int w_ = 0;
 	int h_ = 0;
+
+	/** 数字同士の間隔 */
+	int digitSpacing_ = 0;
 
 
 
@@ -322,11 +337,14 @@ public:
 	 * ・位置
 	 * ・大きさ
 	 * ・回転
+	 * ・文字間隔
 	 */
-	void Initialize(const char* assetPath, const int digit, const int number, const float widht, const float height, const Vector3& position, const Vector3& scale, const Quaternion& rotation);
+	void Initialize(const char* assetPath, const int digit, const int number, const float widht, const float height, const float spacing, const Vector3& position, const Vector3& scale, const Quaternion& rotation);
 
 	/** 数字を設定 */
 	void SetNumber(const int number) { requestNumber_ = number; }
+	/** 数字の配置を設定 */
+	void SetAlign(Align align) { align_ = align; }
 
 	std::vector<SpriteRender*>& GetSpriteRenderList() { return renderList_; }
 

@@ -1,0 +1,54 @@
+{
+  "canvas": {
+    "elements": [
+      {
+        "comment": "クリティカル",
+        "type": "UIIcon",
+        "name": "criticalHit",
+        "asset": "Assets/ui/inGameUI/damage/critical.DDS",
+        "width": 170,
+        "height": 120,
+        "position": [-5, 5, 0],
+        "scale": [1, 1, 1],
+        "rotation": 0,
+        "color": [1, 1, 1, 1],
+        "isDraw": false                                             
+      },
+      
+      {
+        "comment": "ダメージ",
+        "type": "UIDigit",
+        "name": "damageNumber",
+        "asset": "Assets/ui/inGameUI/num",
+        "width": 40,
+        "height": 40,
+        "digit": 1,
+        "spacing": -10,
+        "align": "center",
+        "position": [0, 0, 0],
+        "scale": [1, 1, 1],
+        "rotation": 0,
+        "color": [1, 1, 1, 0],
+        "isDraw": false
+      },
+
+
+
+      {
+        "coment": "初期化用：ダメージ数字",
+        "type": "UIDummy",
+        "name": "InitDamageNumber",
+        "position": [0, 0, 0],
+        "color": [1, 1, 1, 1]
+      },
+      {
+        "coment": "初期化用：クリティカルダメージ",
+        "type": "UIDummy",
+        "name": "InitCriticalDamage",
+        "position": [0, 5, 0],
+        "scale": [1, 1, 1],
+        "color": [1, 1, 1, 1]
+      }
+    ]
+  }
+}

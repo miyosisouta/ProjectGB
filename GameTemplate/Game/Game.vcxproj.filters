@@ -103,6 +103,7 @@
     <ClCompile Include="system\system.cpp" />
     <ClCompile Include="src\UI\SkillSelectMenu.cpp" />
     <ClCompile Include="src\UI\CheckStartWindow.cpp" />
+    <ClCompile Include="src\UI\CameraOptionMenu.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Game.h" />
@@ -215,6 +216,8 @@
     <ClInclude Include="system\system.h" />
     <ClInclude Include="src\UI\SkillSelectMenu.h" />
     <ClInclude Include="src\UI\CheckStartWindow.h" />
+    <ClInclude Include="src\UI\CameraOptionMenu.h" />
+    <ClInclude Include="src\json\json.hpp" />
     <ClInclude Include="src\Util\DamageNotify.h" />
   </ItemGroup>
 </Project>
