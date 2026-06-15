@@ -10,6 +10,7 @@
 
 class GhostBody;
 
+#include "src/Util/DamageNotify.h"
 
 /**
  * ペアの衝突状態
@@ -100,6 +101,11 @@ private:
 	/** アクティブペアの状態マップ */
 	std::unordered_map<PairKey, PairInfo, PairKeyHash> activePairs_;
 
+public:
+	// ダメージ通知コールバック
+	// BattleManagerなど外部から登録する
+	// 登録がなければ何も起きない
+	std::function<void(int, DamageNotifyType, bool)> onDamageNotify;
 
 private:
 	CollisionHitManager();

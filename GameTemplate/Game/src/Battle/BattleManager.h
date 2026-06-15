@@ -28,12 +28,13 @@
  */
 
 #pragma once
+#include "src/Actor/ActorStatus.h"
+#include "src/Actor/Player.h"
 #include "src/Camera/CameraController.h"
 #include "src/Camera/CameraSteering.h"
-#include "src/Util/GameTimer.h"
-#include "src/Actor/Player.h"
-#include "src/Actor/ActorStatus.h"
 #include "src/UI/UIManager.h"
+#include "src/Util/GameTimer.h"
+#include "src/Util/DamageNotify.h"
 
 
 class PlayerController;
@@ -82,6 +83,10 @@ private:
 	RefCameraController                gameCameraController_     = nullptr;
 	RefCameraController                bossEntryCameraController_ = nullptr;
 
+	// --- ダメージ ---
+	DamageNotifyQueue damageNotifyQueue_; //!< ダメージ通知管理
+
+
 private:
 	GameState gameState_        = GameState::Entry;
 	uint32_t  updateMask_       = UpdateGroup::All;  //!< 更新グループマスク
@@ -89,6 +94,14 @@ private:
 	bool      isPlayingEntryBoss_ = true;
 	bool      isPlayingResult_    = false;
 
+
+private:
+	/* ダメージ通知バッファ用変数 */
+	static constexpr int kMaxNotify = 16;			//!< 通知の最大件数
+	DamageNotify damageNotifyBuffer_[kMaxNotify];	//!< 固定長の通知バッファ
+	int notifyHead_ = 0;							//!< 読み取り位置
+	int notifyTail_ = 0;							//!< 書き込み位置
+	int notifyCount_ = 0;							//!< 現在の通知件数
 
 
 	/*===================================================*/
@@ -117,6 +130,29 @@ public:
 		cameraSteering_->SetDistance(option.distance);
 		gameCameraController_->As<GameCamera>()->SetFovDeg(option.fovDeg);
 	}
+
+
+	public:
+		/**
+		 * ダメージ通知を積む
+		 * CollisionHitManager のコールバックから呼ばれる
+		 */
+		void PushDamageNotify(int damage, DamageNotifyType type, bool isCritical)
+		{
+			damageNotifyQueue_.Push(damage, type, isCritical);
+		}
+
+		/**
+		 * ダメージ通知を1件取得する
+		 * 取得と同時に通知は自動的に削除される
+		 * UI側はこれを呼ぶだけでよい
+		 * @return 通知1件分の構造体（通知がなければ damage が -1）
+		 */
+		DamageNotify PopDamageNotify()
+		{
+			return damageNotifyQueue_.Pop();
+		}
+
 
 	/**
 	 * 更新・描画のグループマスクを設定する。
