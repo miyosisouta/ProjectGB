@@ -11,11 +11,14 @@
             "sensitivity": 1.0,
             "lookAtOffsetY": 75.0,
             
+           
             "scale":400.0, 
 
+            "comment" : "ゲーム時間",
             "limitTime":300.0,
             "warningTime":240.0,
 
+            "comment" : "カットシーン",
             "firstCutTime":1.0,
             "secondCutTime":2.0,
             "thirdCutTime":3.0,

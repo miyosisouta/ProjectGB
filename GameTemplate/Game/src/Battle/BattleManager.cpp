@@ -18,6 +18,7 @@
 #include "src/Stage/StageManager.h"
 
 #include "src/Camera/CameraManager.h"
+#include "src/Camera/CameraConfig.h"
 #include "src/Camera/CameraSteering.h"
 
 #include "src/collision/GhostBodyManager.h"
@@ -118,7 +119,7 @@ BattleManager::BattleManager()
 		cameraSteering_ = std::make_unique<CameraSteering>();
 
 		CameraSteering::Config initConfig;
-		initConfig.distance       = param->cameraParam.distance;
+		initConfig.distance       = CameraConfig::Get().GetDistance();
 		initConfig.height         = param->cameraParam.height;
 		initConfig.rotationSpeedX = param->cameraParam.rotSpeed;
 		initConfig.rotationSpeedY = param->cameraParam.rotSpeed;
@@ -135,8 +136,9 @@ BattleManager::BattleManager()
 		gameCameraController_ = gameCamera;
 
 		CameraOption initOption;
-		initOption.sensitivity = param->cameraParam.sensitivity;
-		initOption.distance    = param->cameraParam.distance;
+		initOption.invert      = CameraConfig::Get().GetInvert();
+		initOption.sensitivity = CameraConfig::Get().GetSensitivity();
+		initOption.distance    = CameraConfig::Get().GetDistance();
 		initOption.fovDeg      = param->cameraParam.fovy;
 		SetCameraOption(initOption);
 	}
