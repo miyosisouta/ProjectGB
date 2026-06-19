@@ -13,6 +13,12 @@ enum class MissionState
 	enFailed
 };
 
+enum class MissionUpdateType
+{
+	enCount,   //!< 回数カウント系（countUpdatedThisFrame_ で検知）
+	enOneShot, //!< 一回で出る系（クリア・失敗時のみ）
+};
+
 enum class MissionID
 {
     /* なにもない */

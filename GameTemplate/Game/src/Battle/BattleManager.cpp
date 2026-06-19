@@ -28,6 +28,7 @@
 #include "src/UI/GameClearMenu.h"
 #include "src/UI/GameOverMenu.h"
 #include "src/UI/GameStartMenu.h"
+#include "src/UI/MissionMenu.h"
 #include "src/UI/TimerMenu.h"
 #include "../../k2Engine/graphics/DitherCBData.h"
 
@@ -150,7 +151,7 @@ BattleManager::BattleManager()
 		}
 		if (stageType == BossType::enTurtle) {
 			SetupEntryTurtleCutScene();
-		}		
+		}
 	}
 
 	// その他
@@ -229,6 +230,36 @@ void BattleManager::Update()
 			gameTimer_.Update();
 			boss_->Update();
 			GrassBendManager::Get().Update(g_gameTime->GetFrameDeltaTime());
+
+			// ミッションの状態をUIに通知（MissionManager::Update()の前に読む）
+			if (auto* missionMenu = uiManager_.GetMissionMenu())
+			{
+				const int missionCount = MissionManager::Get().GetMissionCount();
+				for (int idx = 0; idx < missionCount; idx++)
+				{
+					auto* mission = MissionManager::Get().GetMissionByIndex(idx); // missionの数を取得
+					if (!mission) continue; // missionがないなら処理を終了する
+
+					// 特定のミッションはクリアしているか
+					if (mission->IsCleared())
+					{
+						// クリア済み：アニメーション未再生ならクリア演出を1回だけ再生
+						if (!mission->IsClearAnimationPlayed())
+						{
+							missionMenu->TriggerClear(mission->GetUISlot(), mission->GetCurrentCount());
+							mission->SetClearAnimationPlayed();
+						}
+					}
+					// クリアしていないもので、カウントアップさせるタイプのミッションの進捗が進行しているなら
+					else if (mission->GetUpdateType() == MissionUpdateType::enCount
+						     && mission->IsCountUpdatedThisFrame())
+					{
+						// カウント増加：このフレームだけtrueなのでUpdate()前に読む
+						missionMenu->TriggerMission(mission->GetUISlot(), mission->GetCurrentCount());
+					}
+				}
+			}
+
 			MissionManager::Get().Update();
 
 			// ディザリング設定
@@ -257,6 +288,7 @@ void BattleManager::Update()
 			if (auto* boss = FindGO<BossCharacter>("boss")) {
 				if (boss->GetStatus() && boss->GetStatus()->IsDead()) {
 					MissionManager::Get().NotifyBossDefeated();	// ボス撃破のミッション
+
 					SetupClearCutScene();						// クリアカットシーン
 					if (player_) {
 						auto* stateMachine = player_->GetStateMachine();

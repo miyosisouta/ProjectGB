@@ -41,6 +41,12 @@ void UIManager::ReleaseCutSceneLayout()
 }
 
 
+MissionMenu* UIManager::GetMissionMenu() const
+{
+	return missionLayout_ ? static_cast<MissionMenu*>(missionLayout_->GetMenu()) : nullptr;
+}
+
+
 TimerMenu* UIManager::GetTimerMenu() const
 {
 	return timerLayout_ ? static_cast<TimerMenu*>(timerLayout_->GetMenu()) : nullptr;
