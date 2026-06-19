@@ -457,4 +457,17 @@ public:
 		}
 		return nullptr;
 	}
+
+	/** 生成された順にcanvasを出す */
+	void MoveToFront(const uint32_t key)
+	{
+		for (auto it = uiList_.begin(); it != uiList_.end(); ++it)
+		{
+			if ((*it)->GetKey() == key)
+			{
+				std::rotate(it, it + 1, uiList_.end());
+				return;
+			}
+		}
+	}
 };

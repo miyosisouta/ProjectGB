@@ -158,6 +158,9 @@ namespace
         // 初期値の数値は0としておく
         text->Initialize(assetName.c_str(), digitCount, 0, w, h, spacing, position, scale, rotation);
         text->color = color;
+        if (item.contains("isDraw")) {
+            text->isDraw = item["isDraw"].get<bool>();
+        }
     }
     void InitializeUIParts(UIDummy* dummy, const nlohmann::json& item)
     {

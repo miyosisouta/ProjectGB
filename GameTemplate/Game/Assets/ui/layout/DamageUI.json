@@ -4,32 +4,139 @@
       {
         "comment": "クリティカル",
         "type": "UIIcon",
-        "name": "criticalHit",
+        "name": "criticalHit0",
         "asset": "Assets/ui/inGameUI/damage/critical.DDS",
         "width": 170,
         "height": 120,
-        "position": [-5, 5, 0],
+        "position": [0, 0, 0],
+        "scale": [1, 1, 1],
+        "rotation": 0,
+        "color": [1, 1, 1, 1],
+        "isDraw": false                                             
+      },
+      {
+        "comment": "クリティカル",
+        "type": "UIIcon",
+        "name": "criticalHit1",
+        "asset": "Assets/ui/inGameUI/damage/critical.DDS",
+        "width": 170,
+        "height": 120,
+        "position": [0, 0, 0],
+        "scale": [1, 1, 1],
+        "rotation": 0,
+        "color": [1, 1, 1, 1],
+        "isDraw": false                                             
+      },
+      {
+        "comment": "クリティカル",
+        "type": "UIIcon",
+        "name": "criticalHit2",
+        "asset": "Assets/ui/inGameUI/damage/critical.DDS",
+        "width": 170,
+        "height": 120,
+        "position": [0, 0, 0],
         "scale": [1, 1, 1],
         "rotation": 0,
         "color": [1, 1, 1, 1],
         "isDraw": false                                             
       },
       
+
       {
         "comment": "ダメージ",
         "type": "UIDigit",
-        "name": "damageNumber",
+        "name": "damageNumber0",
         "asset": "Assets/ui/inGameUI/num",
-        "width": 40,
+        "width": 37,
         "height": 40,
         "digit": 1,
-        "spacing": -10,
+        "spacing": -11,
         "align": "center",
         "position": [0, 0, 0],
         "scale": [1, 1, 1],
         "rotation": 0,
-        "color": [1, 1, 1, 0],
+        "color": [1, 1, 1, 1],
         "isDraw": false
+      },
+      {
+        "comment": "ダメージ",
+        "type": "UIDigit",
+        "name": "damageNumber1",
+        "asset": "Assets/ui/inGameUI/num",
+        "width": 37,
+        "height": 40,
+        "digit": 1,
+        "spacing": -11,
+        "align": "center",
+        "position": [0, 0, 0],
+        "scale": [1, 1, 1],
+        "rotation": 0,
+        "color": [1, 1, 1, 1],
+        "isDraw": false
+      },
+      {
+        "comment": "ダメージ",
+        "type": "UIDigit",
+        "name": "damageNumber2",
+        "asset": "Assets/ui/inGameUI/num",
+        "width": 37,
+        "height": 40,
+        "digit": 1,
+        "spacing": -11,
+        "align": "center",
+        "position": [0, 0, 0],
+        "scale": [1, 1, 1],
+        "rotation": 0,
+        "color": [1, 1, 1, 1],
+        "isDraw": false
+      },
+
+
+
+      {
+        "coment": "オフセット用：ダメージ数字",
+        "type": "UIDummy",
+        "name": "DamageNumOffset0",
+        "position": [-40, 0, 0],
+        "color": [1, 1, 1, 1]
+      },
+      {
+        "coment": "オフセット用：ダメージ数字",
+        "type": "UIDummy",
+        "name": "DamageNumOffset1",
+        "position": [0, 0, 0],
+        "color": [1, 1, 1, 1]
+      },
+      {
+        "coment": "オフセット用：ダメージ数字",
+        "type": "UIDummy",
+        "name": "DamageNumOffset2",
+        "position": [40, 0, 0],
+        "color": [1, 1, 1, 1]
+      },
+      {
+        "coment": "オフセット用：クリティカルダメージ",
+        "type": "UIDummy",
+        "name": "CriticalOffset0",
+        "position": [-40, 3, 0],
+        "scale": [1, 1, 1],
+        "color": [1, 1, 1, 1]
+      },
+      {
+        "coment": "オフセット用：クリティカルダメージ",
+        "type": "UIDummy",
+        "name": "CriticalOffset1",
+        "position": [0, 3, 0],
+        "scale": [1, 1, 1],
+        "color": [1, 1, 1, 1]
+      },
+      {
+        "coment": "オフセット用：クリティカルダメージ",
+        "type": "UIDummy",
+        "name": "CriticalOffset2",
+        "position": [40, 3, 0],
+        "scale": [1, 1, 1],
+        "color": [1, 1, 1, 1]
       },
 
 
@@ -39,15 +146,17 @@
         "type": "UIDummy",
         "name": "InitDamageNumber",
         "position": [0, 0, 0],
-        "color": [1, 1, 1, 1]
+        "color": [1, 1, 1, 1],
+        "isDraw": false
       },
       {
         "coment": "初期化用：クリティカルダメージ",
         "type": "UIDummy",
         "name": "InitCriticalDamage",
-        "position": [0, 5, 0],
+        "position": [0, 3, 0],
         "scale": [1, 1, 1],
-        "color": [1, 1, 1, 1]
+        "color": [1, 1, 1, 1],
+        "isDraw": false
       }
     ]
   }
