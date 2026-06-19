@@ -58,6 +58,7 @@ private:
                 return mission.get();
             }
         }
+        return nullptr;
     }
 
 
@@ -103,6 +104,14 @@ public:
         return !missions_.empty();
     }
 
+
+public:
+    /** インデックスでミッションを取得（BattleManager から直接状態を読むために公開） */
+    Mission* GetMissionByIndex(int index)
+    {
+        if (index < 0 || index >= static_cast<int>(missions_.size())) return nullptr;
+        return missions_[index].get();
+    }
 
 private:
     std::vector<std::unique_ptr<Mission>> missions_; //!< ミッション管理用変数

@@ -16,7 +16,9 @@ class Mission
 public:
 	Mission(MissionID id,
         std::wstring name,
-		std::unique_ptr<MissionConditionBase> condition);
+		std::unique_ptr<MissionConditionBase> condition,
+		MissionUpdateType updateType,
+		int uiSlot);
 
 public:
     /** 更新処理 */
@@ -29,6 +31,8 @@ public:
 public:
     /** ミッションのIDを取得 */
     MissionID GetID() const { return id_; }
+    /** ミッションの更新タイプを取得 */
+    MissionUpdateType GetUpdateType() const { return updateType_; }
     /** ミッションの現在の状態を取得する */
     MissionState GetState()const { return state_; }
 
@@ -49,6 +53,15 @@ public:
 
     /** カウントが増えた瞬間のフレームだけtrueを返す */
     bool IsCountUpdatedThisFrame()const { return countUpdatedThisFrame_; }
+
+    /** このミッションを表示するUIスロット番号を取得（1=mission_1, 2=mission_2, 3=mission_3） */
+    int  GetUISlot() const { return uiSlot_; }
+
+    /** クリアアニメーションを再生済みか */
+    bool IsClearAnimationPlayed() const { return clearAnimationPlayed_; }
+
+    /** クリアアニメーション再生済みフラグを立てる */
+    void SetClearAnimationPlayed() { clearAnimationPlayed_ = true; }
 
 
     /* ======================================== */
@@ -76,8 +89,11 @@ private:
     std::wstring name_; //!< ミッション名
     std::unique_ptr<MissionConditionBase> condition_; //!< 達成条件
     MissionState state_ = MissionState::enActive; //!< ミッションの現在の状態
+    MissionUpdateType updateType_ = MissionUpdateType::enOneShot; //!< 更新タイプ
+    int uiSlot_ = 0;                                               //!< UIスロット番号
 
-    bool clearedThisFrame_ = false; //!< クリアした瞬間のフレームだけtrue
-    bool failedThisFrame_ = false; //!< 失敗した瞬間のフレームだけtrue
+    bool clearedThisFrame_ = false;      //!< クリアした瞬間のフレームだけtrue
+    bool failedThisFrame_ = false;       //!< 失敗した瞬間のフレームだけtrue
     bool countUpdatedThisFrame_ = false; //!< カウントが増えた瞬間のフレームだけtrue
+    bool clearAnimationPlayed_ = false;  //!< クリアアニメーション再生済みフラグ
 };

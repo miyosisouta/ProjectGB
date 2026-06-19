@@ -1,16 +1,16 @@
-{
+﻿{
     "Mission": [
         {
-            "comment": "ゴリラミッション",
+            "comment": "ゴリラのミッション",
             "key": "Gorilla",
-            "targetTime": 150.0,
+            "targetTime": 120.0,
             "abilityTargetCount": 5,
             "utilityTargetCount": 1
         },
         {
-            "comment": "カメミッション",
+            "comment": "亀のミッション",
             "key": "Turtle",
-            "targetTime": 120.0,
+            "targetTime": 180.0,
             "normalAttackTargetCount": 10,
             "goalHpRate": 0.3
         }
