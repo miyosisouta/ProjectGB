@@ -246,6 +246,7 @@
     <ClCompile Include="src\Battle\MissionEvent.cpp" />
     <ClCompile Include="src\Battle\MissionManager.cpp" />
     <ClCompile Include="src\Camera\CameraCommon.cpp" />
+    <ClCompile Include="src\Camera\CameraConfig.cpp" />
     <ClCompile Include="src\Camera\CameraController.cpp" />
     <ClCompile Include="src\Camera\CameraManager.cpp" />
     <ClCompile Include="src\Camera\CameraSteering.cpp" />
@@ -355,6 +356,7 @@
     <ClInclude Include="src\Battle\MissionManager.h" />
     <ClInclude Include="src\Battle\MissionType.h" />
     <ClInclude Include="src\Camera\CameraCommon.h" />
+    <ClInclude Include="src\Camera\CameraConfig.h" />
     <ClInclude Include="src\Camera\CameraController.h" />
     <ClInclude Include="src\Camera\CameraManager.h" />
     <ClInclude Include="src\Camera\CameraSteering.h" />

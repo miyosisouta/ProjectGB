@@ -18,6 +18,7 @@
 
 #include "src/Camera/CameraManager.h"
 #include "src/Camera/CameraController.h"
+#include "src/Camera/CameraConfig.h"
 
 
 void ReportLiveObjects()
@@ -73,6 +74,10 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 	ParameterManager::Get().LoadSkillParamData("Assets/Parameter/SkillParameter.json");
 	ParameterManager::Get().LoadAttackObjectParamData("Assets/Parameter/AttackObjectParameter.json");
 	ParameterManager::Get().LoadStageManagerParamData("Assets/Parameter/StageManagerParameter.json");
+
+	// カメラコンフィグ
+	CameraConfig::CreateInstance();
+	CameraConfig::Get().Initialize();
 
 	// �L�[�R���t�B�O
 	KeyConfig::CreateInstance();
@@ -133,6 +138,7 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 	GhostBodyManager::Finalize();
 	CollisionHitManager::Finalize();
 	KeyConfig::Finalize();
+	CameraConfig::Finalize();
 
 	K2Engine::DeleteInstance();
 
