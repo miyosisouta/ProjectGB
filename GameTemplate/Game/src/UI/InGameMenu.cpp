@@ -71,17 +71,10 @@ void InGameMenu::Update()
 	bool isReadyAbilityFrame = false;
 	bool isTakeDamagePlayer = false;
 	bool isTakeDamageBoss = false;
-	bool isCriticalDamage = false;
 	int playerHP = 0;
 	int playerMaxHP = 0;
 	int bossHP = 0;
 	int bossMaxHP = 0;
-
-	/*int attakDamage = 0;
-	int criticalDamage = 0;*/
-
-	
-
 	float stamina = 0.0f;
 	float maxStamina = 1.0f;
 	auto* player = FindGO<Player>("player");
@@ -104,28 +97,6 @@ void InGameMenu::Update()
 		maxStamina = playerStatus->GetMaxStamina();
 
 		isTakeDamagePlayer = playerStatus->IsTakeDamage();
-
-		int bossHitDamage = playerStatus->GetAttack();
-		auto* damageNum = GetUI<UIDigit>(Hash32("InGame_Boss_HitDamage/damageNumber"));
-		damageNum->isDraw = false;
-		damageNum->SetNumber(bossHitDamage);
-
-		// もしクリティカルダメージが発生したら
-		isCriticalDamage = (playerStatus->GetCritical()) ? true : false;
-		if (isCriticalDamage) {
-			//float bossCriticalDamage = playerStatus->GetCritical();
-
-			int attakDamage = playerStatus->GetAttack();
-			float criticalRitu = playerStatus->GetCriticalDamageMultiplier();
-			int criticalDamage = attakDamage * criticalRitu;
-
-			auto* criticalDamageNum = GetUI<UIDigit>(Hash32("InGame_Boss_HitDamage/damageNumber"));
-			criticalDamageNum->isDraw = false;
-			criticalDamageNum->SetNumber(criticalDamage);
-		}
-		
-		
-
 	}
 
 	if (boss){
@@ -216,14 +187,6 @@ void InGameMenu::Update()
 			}
 		}
 		abilitySkillIconScaleSequence_->Update(g_gameTime->GetFrameDeltaTime());
-		//// スキルボタンのキャンバス
-		//auto* abilitySkillButtonIconCanvas = GetUI<UICanvas>(Hash32("InGame_ButtonUI_Skill"));
-		//if (abilitySkillButtonIconCanvas) {
-		//	if (isReadyAbilityFrame) {
-		//		abilitySkillButtonIconScaleSequence_->Play(abilitySkillButtonIconCanvas);
-		//	}
-		//}
-		//abilitySkillButtonIconScaleSequence_->Update(g_gameTime->GetFrameDeltaTime());
 	}
 	
 
@@ -236,40 +199,47 @@ void InGameMenu::Update()
 		}
 	}
 
+	//ボスのダメージ表示
+	// 一定時間内の連続表示を抑制。ダメージ表示の重複を防ぐ
+	if (damageNotifyCoolDown_ > 0.0f) {
+		damageNotifyCoolDown_ -= g_gameTime->GetFrameDeltaTime();
+	}
+	// ダメージ通知を取得
+	DamageNotify notify = BattleManager::Get().PopDamageNotify();
+	// プレイヤーの攻撃が当たったときのみダメージ表示
+	if (notify.damage > 0 && notify.type == DamageNotifyType::AttackHit)
+	{
+		// クールダウン終了じにダメージ表示
+		if (damageNotifyCoolDown_ <= 0.0f)
+		{
+			UpdateBossHitDamage(notify);
+			// 次の表示まで待機
+			damageNotifyCoolDown_ = damageNotifyCoolDownTime;
+		}
+	}
+
 	// ボスが被ダメをしたらHPバーが動く
 	auto* bossHPCanvas = GetUI<UICanvas>(Hash32("BossHPBar"));
-
-	// ボスが被ダメージを受けたときのダメージ値
-	//auto* playerStatus = player->GetStatus()->As<PlayerStatus>();
-	/*int bossHitDamage = playerStatus->GetAttack();
-	auto* damageNum = GetUI<UIDigit>(Hash32("InGame_Boss_HitDamage/damageNumber"));
-	damageNum->SetNumber(bossHitDamage);*/
-
 	if (bossHPCanvas) {
 
 		if (isTakeDamageBoss)
 		{
-			// リセット
-			BossHitAnimationResetIcon();
-
 			bossHitHPPositionSequence_->Play(bossHPCanvas);
-			BossHitAnimationScheduler();
-
-			if (isCriticalDamage) {
-				BossCriticalHitAnimationScheduler();
-			}
 		}
 		
 	}
 	bossHitHPPositionSequence_->Update(g_gameTime->GetFrameDeltaTime());
-	if (bossHitDamageScheduler_) {
-		bossHitDamageScheduler_->Update(g_gameTime->GetFrameDeltaTime());
+	// ダメージ＆クリティカル表示のアニメーション
+	for(int i = 0; i < DAMAGE_POOL_SIZE; i++)
+	{
+		if (bossHitDamageScheduler_[i]) {
+			bossHitDamageScheduler_[i]->Update(g_gameTime->GetFrameDeltaTime());
+		}
+		if (bossCriticalHitDamageScheduler_[i]) {
+			bossCriticalHitDamageScheduler_[i]->Update(g_gameTime->GetFrameDeltaTime());
+		}
 	}
-	if (bossCriticalHitDamageScheduler_) {
-		bossCriticalHitDamageScheduler_->Update(g_gameTime->GetFrameDeltaTime());
-	}
-
-
+	
 	if (playerDamageScheduler_) {
 		playerDamageScheduler_->Update(g_gameTime->GetFrameDeltaTime());
 	}
@@ -321,6 +291,13 @@ void InGameMenu::Render(RenderContext& rc)
 
 void InGameMenu::InitializeLogic()
 {
+	// スケジューラーの初期化 
+	for (int i = 0; i < DAMAGE_POOL_SIZE; i++)
+	{
+		bossHitDamageScheduler_[i] = std::make_unique<TaskSchedulerSystem>();
+		bossCriticalHitDamageScheduler_[i] = std::make_unique<TaskSchedulerSystem>();
+	}
+	
 	auto* playerHPGauge = GetUI<UIIcon>(Hash32("Player_HP_gauge"));
 	playerHPGauge->SetPivot(Vector2(0.0f, 0.5f));
 	auto* bossHPGauge = GetUI<UIIcon>(Hash32("BossHPBar/Boss_HP_gauge"));
@@ -424,161 +401,309 @@ void InGameMenu::CreatePlayerDamageScheduler()
 		});
 }
 
-void InGameMenu::BossHitAnimationScheduler()
+void InGameMenu::BossHitAnimationScheduler(int poolIndex)
 {
-	// ボスの被ダメージ
-	bossHitDamageScheduler_ = std::make_unique<TaskSchedulerSystem>();
+	// poolIndexに対応したダメージ数字UIを取得
+	const uint32_t damageNumAssets[DAMAGE_POOL_SIZE] = {
+		Hash32("InGame_Boss_HitDamage/damageNumber0"),
+		Hash32("InGame_Boss_HitDamage/damageNumber1"),
+		Hash32("InGame_Boss_HitDamage/damageNumber2"),
+	};
+	const uint32_t currentHash = damageNumAssets[poolIndex];
+
+	// ダメージ表示用スケジューラーの取得
+	auto& scheduler = bossHitDamageScheduler_[poolIndex];
+	// スケジューラーリセット
+	bossHitDamageScheduler_[poolIndex]->Reset();
 	// ヒットダメージの表示
-	//const int id = bossHitDamageScheduler_->CreateLoopSequence(1.0f);
-	bossHitDamageScheduler_->AddTimer(0.0f, [this]
+	bossHitDamageScheduler_[poolIndex]->AddTimer(0.0f, [this, currentHash]
 		{
 			// アニメーション
-			auto* bossDamage = GetUI<UIDigit>(Hash32("InGame_Boss_HitDamage/damageNumber"));
+			auto* bossDamage = GetUI<UIDigit>(currentHash);
 			bossDamage->isDraw = true;
+			K2_LOG("Scheduler isDraw = true, color.w = %f", bossDamage->color.w);
 			UIAnimationFactory::Attach<UITranslateOffsetAnimation>(bossDamage, Hash32("damageDisplay_posUp1"));
 			auto* animation = bossDamage->FindAnimation(Hash32("damageDisplay_posUp1"));
-			animation->Clear();
-			animation->Play();
+			K2_LOG("bossDamage=%p", bossDamage);
+			K2_LOG("anim=%p", animation);
+			if (animation) {
+				animation->Clear();
+				animation->Play();
+			}
 		});
-	bossHitDamageScheduler_->AddTimer(0.2f, [this]
+	bossHitDamageScheduler_[poolIndex]->AddTimer(0.2f, [this, currentHash]
 		{
-			auto* bossDamage = GetUI<UIDigit>(Hash32("InGame_Boss_HitDamage/damageNumber"));
+			auto* bossDamage = GetUI<UIDigit>(currentHash);
 			auto* animation = bossDamage->FindAnimation(Hash32("damageDisplay_posUp1"));
-			animation->Stop();
+			if (animation) {
+				animation->Stop();
+			}
 		});
-	bossHitDamageScheduler_->AddTimer(0.2f, [this]
+	bossHitDamageScheduler_[poolIndex]->AddTimer(0.2f, [this, currentHash]
 		{
 			// アニメーション
-			auto* bossDamage = GetUI<UIDigit>(Hash32("InGame_Boss_HitDamage/damageNumber"));
+			auto* bossDamage = GetUI<UIDigit>(currentHash);
 			UIAnimationFactory::Attach<UITranslateOffsetAnimation>(bossDamage, Hash32("damageDisplay_posDown"));
 			auto* animation = bossDamage->FindAnimation(Hash32("damageDisplay_posDown"));
-			animation->Clear();
-			animation->Play();
+			if (animation) {
+				animation->Clear();
+				animation->Play();
+			}
 		});
-	bossHitDamageScheduler_->AddTimer(0.4f, [this]
+	bossHitDamageScheduler_[poolIndex]->AddTimer(0.4f, [this, currentHash]
 		{
-			auto* bossDamage = GetUI<UIDigit>(Hash32("InGame_Boss_HitDamage/damageNumber"));
+			auto* bossDamage = GetUI<UIDigit>(currentHash);
 			auto* animation = bossDamage->FindAnimation(Hash32("damageDisplay_posDown"));
-			animation->Stop();
+			if (animation) {
+				animation->Stop();
+			}
 		});
-	bossHitDamageScheduler_->AddTimer(0.7f, [this]
+	bossHitDamageScheduler_[poolIndex]->AddTimer(0.7f, [this, currentHash]
 		{
 			// アニメーション
-			auto* bossDamage = GetUI<UIDigit>(Hash32("InGame_Boss_HitDamage/damageNumber"));
+			auto* bossDamage = GetUI<UIDigit>(currentHash);
 			UIAnimationFactory::Attach<UITranslateOffsetAnimation>(bossDamage, Hash32("damageDisplay_posUp2"));
 			UIAnimationFactory::Attach<UIColorAnimation>(bossDamage, Hash32("damageDisplay_fade"));
 			auto* animation = bossDamage->FindAnimation(Hash32("damageDisplay_posUp2"));
 			auto* fadeAnim = bossDamage->FindAnimation(Hash32("damageDisplay_fade"));
-			animation->Clear();
-			fadeAnim->Clear();
-			animation->Play();
-			fadeAnim->Play();
+			if (animation  && fadeAnim) {
+				animation->Clear();
+				fadeAnim->Clear();
+				animation->Play();
+				fadeAnim->Play();
+			}
 		});
-	bossHitDamageScheduler_->AddTimer(1.1f, [this]
+	bossHitDamageScheduler_[poolIndex]->AddTimer(1.1f, [this, currentHash]
 		{
-			auto* bossDamage = GetUI<UIDigit>(Hash32("InGame_Boss_HitDamage/damageNumber"));
+			auto* bossDamage = GetUI<UIDigit>(currentHash);
 			auto* animation = bossDamage->FindAnimation(Hash32("damageDisplay_posUp2"));
 			auto* fadeAnim = bossDamage->FindAnimation(Hash32("damageDisplay_fade"));
-			animation->Stop();
-			fadeAnim->Stop();
-			bossDamage->isDraw = false;
+			if (animation && fadeAnim) {
+				animation->Stop();
+				fadeAnim->Stop();
+				bossDamage->isDraw = false;
+			}
 		});
 }
 
-void InGameMenu::BossCriticalHitAnimationScheduler()
+void InGameMenu::BossCriticalHitAnimationScheduler(int poolIndex)
 {
-	// ボスのクリティカル被ダメージ
-	bossCriticalHitDamageScheduler_ = std::make_unique<TaskSchedulerSystem>();
-	// ボスのクリティカル被ダメ時(スタート)
-	bossCriticalHitDamageScheduler_->AddTimer(0.05f, [this]
+	// poolIndexに対応したクリティカルUIを取得
+	const uint32_t ciriticalAssets[DAMAGE_POOL_SIZE] = {
+		Hash32("InGame_Boss_HitDamage/criticalHit0"),
+		Hash32("InGame_Boss_HitDamage/criticalHit1"),
+		Hash32("InGame_Boss_HitDamage/criticalHit2"),
+	};
+	const uint32_t currentHash = ciriticalAssets[poolIndex];
+	// リセット
+	bossCriticalHitDamageScheduler_[poolIndex]->Reset();
+	// ボスのクリティカル被ダメ
+	bossCriticalHitDamageScheduler_[poolIndex]->AddTimer(0.05f, [this, currentHash]
 		{
 			// アニメーション
-			auto* bossCriticalDamage = GetUI<UIIcon>(Hash32("InGame_Boss_HitDamage/criticalHit"));
-			auto* bossCriticalDamageScale = GetUI<UIIcon>(Hash32("InGame_Boss_HitDamage/criticalHit"));
+			auto* bossCriticalDamage = GetUI<UIIcon>(currentHash);
+			auto* bossCriticalDamageScale = GetUI<UIIcon>(currentHash);
 			bossCriticalDamage->isDraw = true;
 			UIAnimationFactory::Attach<UITranslateOffsetAnimation>(bossCriticalDamage, Hash32("damageDisplay_posUp1"));
 			UIAnimationFactory::Attach<UIScaleAnimation>(bossCriticalDamageScale, Hash32("damageDisplay_scaleUp"));
 			auto* animation = bossCriticalDamage->FindAnimation(Hash32("damageDisplay_posUp1"));
 			auto* scaleAnim = bossCriticalDamageScale->FindAnimation(Hash32("damageDisplay_scaleUp"));
-			animation->Clear();
-			scaleAnim->Clear();
-			animation->Play();
-			scaleAnim->Play();
+			if (animation && scaleAnim) {
+				animation->Clear();
+				scaleAnim->Clear();
+				animation->Play();
+				scaleAnim->Play();
+			}
 		});
-	bossCriticalHitDamageScheduler_->AddTimer(0.25f, [this]
+	bossCriticalHitDamageScheduler_[poolIndex]->AddTimer(0.25f, [this, currentHash]
 		{
-			auto* bossCriticalDamage = GetUI<UIIcon>(Hash32("InGame_Boss_HitDamage/criticalHit"));
-			auto* bossCriticalDamageScale = GetUI<UIIcon>(Hash32("InGame_Boss_HitDamage/criticalHit"));
+			auto* bossCriticalDamage = GetUI<UIIcon>(currentHash);
+			auto* bossCriticalDamageScale = GetUI<UIIcon>(currentHash);
 			auto* animation = bossCriticalDamage->FindAnimation(Hash32("damageDisplay_posUp1"));
 			auto* scaleAnim = bossCriticalDamageScale->FindAnimation(Hash32("damageDisplay_scaleUp"));
-			animation->Stop();
-			scaleAnim->Stop();
+			if (animation && scaleAnim) {
+				animation->Stop();
+				scaleAnim->Stop();
+			}
 		});
-	bossCriticalHitDamageScheduler_->AddTimer(0.25f, [this]
+	bossCriticalHitDamageScheduler_[poolIndex]->AddTimer(0.25f, [this, currentHash]
 		{
 			// アニメーション
-			auto* bossCriticalDamage = GetUI<UIIcon>(Hash32("InGame_Boss_HitDamage/criticalHit"));
+			auto* bossCriticalDamage = GetUI<UIIcon>(currentHash);
 			UIAnimationFactory::Attach<UITranslateOffsetAnimation>(bossCriticalDamage, Hash32("damageDisplay_posDown"));
 			auto* animation = bossCriticalDamage->FindAnimation(Hash32("damageDisplay_posDown"));
-			animation->Clear();
-			animation->Play();
+			if (animation) {
+				animation->Clear();
+				animation->Play();
+			}
 		});
-	bossCriticalHitDamageScheduler_->AddTimer(0.45f, [this]
+	bossCriticalHitDamageScheduler_[poolIndex]->AddTimer(0.45f, [this, currentHash]
 		{
-			auto* bossCriticalDamage = GetUI<UIIcon>(Hash32("InGame_Boss_HitDamage/criticalHit"));
+			auto* bossCriticalDamage = GetUI<UIIcon>(currentHash);
 			auto* animation = bossCriticalDamage->FindAnimation(Hash32("damageDisplay_posDown"));
-			animation->Stop();
+			if (animation) {
+				animation->Stop();
+			}
 		});
-	bossCriticalHitDamageScheduler_->AddTimer(0.7f, [this]
+	bossCriticalHitDamageScheduler_[poolIndex]->AddTimer(0.7f, [this, currentHash]
 		{
 			// アニメーション
-			auto* bossCriticalDamage = GetUI<UIIcon>(Hash32("InGame_Boss_HitDamage/criticalHit"));
+			auto* bossCriticalDamage = GetUI<UIIcon>(currentHash);
 			UIAnimationFactory::Attach<UITranslateOffsetAnimation>(bossCriticalDamage, Hash32("damageDisplay_posUp2"));
 			UIAnimationFactory::Attach<UIColorAnimation>(bossCriticalDamage, Hash32("damageDisplay_fade"));
 			auto* animation = bossCriticalDamage->FindAnimation(Hash32("damageDisplay_posUp2"));
 			auto* fadeAnim = bossCriticalDamage->FindAnimation(Hash32("damageDisplay_fade"));
-			animation->Clear();
-			fadeAnim->Clear();
-			animation->Play();
-			fadeAnim->Play();
+			if (animation && fadeAnim) {
+				animation->Clear();
+				fadeAnim->Clear();
+				animation->Play();
+				fadeAnim->Play();
+			}
 		});
-	bossCriticalHitDamageScheduler_->AddTimer(1.1f, [this]
+	bossCriticalHitDamageScheduler_[poolIndex]->AddTimer(1.1f, [this, currentHash]
 		{
-			auto* bossCriticalDamage = GetUI<UIIcon>(Hash32("InGame_Boss_HitDamage/criticalHit"));
+			auto* bossCriticalDamage = GetUI<UIIcon>(currentHash);
 			auto* animation = bossCriticalDamage->FindAnimation(Hash32("damageDisplay_posUp2"));
 			auto* fadeAnim = bossCriticalDamage->FindAnimation(Hash32("damageDisplay_fade"));
-			animation->Stop();
-			fadeAnim->Stop();
-			bossCriticalDamage->isDraw = false;
+			if (animation && fadeAnim) {
+				animation->Stop();
+				fadeAnim->Stop();
+				bossCriticalDamage->isDraw = false;
+			}
 		});
 }
 
-void InGameMenu::BossHitAnimationResetIcon()
+void InGameMenu::UpdateBossHitDamage(const DamageNotify& notify)
 {
+	// ボスの取得
+	auto* boss = FindGO<BossCharacter>("boss");
+	if (!boss) { return; }
+
+	//ダメージ表示用UI
+	const uint32_t damageNumAssets[DAMAGE_POOL_SIZE] = {
+		Hash32("InGame_Boss_HitDamage/damageNumber0"),
+		Hash32("InGame_Boss_HitDamage/damageNumber1"),
+		Hash32("InGame_Boss_HitDamage/damageNumber2"),
+	};
+
+	// 今回使うダメージ表示UI
+	const int currentIndex = damagePoolIndex_;
+
+	// ダメージ数字UIの取得
+	auto* damageNum = GetUI<UIDigit>(damageNumAssets[currentIndex]);
+	if (!damageNum) { return; }
+
+	// 次に使用するダメージ表示UIの決定
+	damagePoolIndex_ = (damagePoolIndex_ + 1) % DAMAGE_POOL_SIZE;
+
+	// ボスのワールド3D座標を取得
+	Vector3 worldPos = boss->GetTransformPosition();
+	// ダメージ表示の位置を計算するためのスクリーン座標
+	Vector2 screenPos;
+	// ボスの3D空間座標→2D画面上の座標変換
+	g_camera3D->CalcScreenPositionFromWorldPosition(screenPos, worldPos);
+	
+	// NDC座標→スクリーン座標への変換（CalcScreenPositionFromWorldPositionの不足分を補う）
+	float half_w = (float)g_graphicsEngine->GetFrameBufferWidth() * 0.5f;
+	float half_h = (float)g_graphicsEngine->GetFrameBufferHeight() * 0.5f;
+	screenPos.x = screenPos.x + half_w;
+	screenPos.y = -screenPos.y + half_h;  // Y軸反転
+
+	// ダメージ表示の位置をボスの位置へ
+	auto* canvas = GetUI<UICanvas>(Hash32("InGame_Boss_HitDamage"));
+	if (canvas)
+	{
+		// 最新のダメージ表示が最前面にくる
+		canvas->MoveToFront(damageNumAssets[currentIndex]);
+		// ダメージ表示をボスの画面上の位置に合わせる
+		canvas->transform.localPosition.x = screenPos.x - half_w;
+		canvas->transform.localPosition.y = screenPos.y - half_h;
+	}
+
+	// UIアニメーションの初期化
+	BossHitAnimationResetIcon(currentIndex);
+	// ダメージ数値の設定
+	damageNum->SetNumber(notify.damage);
+	// 通常ダメージのアニメーション
+	BossHitAnimationScheduler(currentIndex);
+	// クリティカルダメージのアニメーション
+	if (notify.isCritical)
+	{
+		BossCriticalHitAnimationScheduler(currentIndex);
+	}
+}
+
+void InGameMenu::BossHitAnimationResetIcon(int poolIndex)
+{
+	// ダメージ数字UI
+	const uint32_t damageNumAssets[DAMAGE_POOL_SIZE] = {
+		Hash32("InGame_Boss_HitDamage/damageNumber0"),
+		Hash32("InGame_Boss_HitDamage/damageNumber1"),
+		Hash32("InGame_Boss_HitDamage/damageNumber2"),
+	};
+	// ダメージ数字UI：オフセット用
+	const uint32_t damageOffsetAssets[DAMAGE_POOL_SIZE] = {
+		Hash32("InGame_Boss_HitDamage/DamageNumOffset0"),
+		Hash32("InGame_Boss_HitDamage/DamageNumOffset1"),
+		Hash32("InGame_Boss_HitDamage/DamageNumOffset2"),
+	};
+
 	// ボスの被ダメ
-	auto* damageNumber = GetUI<UIDigit>(Hash32("InGame_Boss_HitDamage/damageNumber"));
+	auto* damageNumber = GetUI<UIDigit>(damageNumAssets[poolIndex]);
 	auto* damageNumberInit = GetUI<UIDummy>(Hash32("InGame_Boss_HitDamage/InitDamageNumber"));
+	auto* damageOffsetDummy = GetUI<UIDummy>(damageOffsetAssets[poolIndex]);
 	// アニメーション停止
-	if (auto* animation = GetUI<UIDigit>(Hash32("InGame_Boss_HitDamage/damageNumber")))
+	if (auto* animation = GetUI<UIDigit>(damageNumAssets[poolIndex]))
 	{
 		animation->StopSpriteAnimation();
 	}
 	// 初期値
 	damageNumber->transform.localPosition = damageNumberInit->transform.localPosition;
+	// .jsonオフセット
+	if (damageOffsetDummy) 
+	{
+		damageNumber->transform.localPosition.x += damageOffsetDummy->transform.localPosition.x;
+		damageNumber->transform.localPosition.y += damageOffsetDummy->transform.localPosition.y;
+	}
 	damageNumber->color.w = damageNumberInit->color.w;
+	K2_LOG("ResetIcon color.w = %f", damageNumber->color.w);
+	damageNumber->isDraw = false;
+	K2_LOG("ResetIcon isDraw = %d", (int)damageNumber->isDraw);
+
+
+	// クリティカルUI
+	const uint32_t criticalAssets[DAMAGE_POOL_SIZE] = {
+		Hash32("InGame_Boss_HitDamage/criticalHit0"),
+		Hash32("InGame_Boss_HitDamage/criticalHit1"),
+		Hash32("InGame_Boss_HitDamage/criticalHit2"),
+	};
+	// クリティカルUI：オフセット
+	const uint32_t criticalOffsetAssets[DAMAGE_POOL_SIZE] = {
+		Hash32("InGame_Boss_HitDamage/CriticalOffset0"),
+		Hash32("InGame_Boss_HitDamage/CriticalOffset1"),
+		Hash32("InGame_Boss_HitDamage/CriticalOffset2"),
+	};
 
 	// ボスのクリティカルダメ
-	auto* criticalDamage = GetUI<UIIcon>(Hash32("InGame_Boss_HitDamage/criticalHit"));
+	auto* criticalDamage = GetUI<UIIcon>(criticalAssets[poolIndex]);
 	auto* criticaldamageInit = GetUI<UIDummy>(Hash32("InGame_Boss_HitDamage/InitCriticalDamage"));
+	auto* criticalOffsetDummy = GetUI<UIDummy>(criticalOffsetAssets[poolIndex]);
 	// アニメーション停止
-	if (auto* animation = GetUI<UIIcon>(Hash32("InGame_Boss_HitDamage/criticalHit")))
+	if (auto* animation = GetUI<UIIcon>(criticalAssets[poolIndex]))
 	{
 		animation->StopSpriteAnimation();
 	}
 	// 初期値
 	criticalDamage->transform.localPosition = criticaldamageInit->transform.localPosition;
+	// .jsonのオフセット
+	if (criticalOffsetDummy)
+	{
+		criticalDamage->transform.localPosition.x += criticalOffsetDummy->transform.localPosition.x;
+		criticalDamage->transform.localPosition.y += criticalOffsetDummy->transform.localPosition.y;
+	}
 	criticalDamage->transform.localScale = criticaldamageInit->transform.localScale;
 	criticalDamage->color.w = criticaldamageInit->color.w;
+	criticalDamage->isDraw = false;
 }
 
 

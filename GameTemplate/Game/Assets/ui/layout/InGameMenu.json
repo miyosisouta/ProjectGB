@@ -292,7 +292,7 @@
         "type": "UIPrefab",
         "name": "InGame_Boss_HitDamage",
         "source": "Assets/ui/layout/DamageUI.json",
-        "position": [0, 0, 0],
+        "position": [0, 100, 0],
         "scale": [1, 1, 1]
       }
     ]

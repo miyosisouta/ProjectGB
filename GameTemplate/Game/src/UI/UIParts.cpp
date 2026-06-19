@@ -224,6 +224,8 @@ UIDigit::~UIDigit()
 void UIDigit::Update()
 {
 	ComputeFinalColor();
+	// 非表示の場合は数字UIの更新処理をしない
+	if (!isDraw) { return; }
 	if (number_ != requestNumber_) {
 		number_ = requestNumber_;
 		digit_ = ComputeDigit();
@@ -257,6 +259,7 @@ void UIDigit::Update()
 
 void UIDigit::Render(RenderContext& rc)
 {
+	if (!isDraw) { return; }
 	for (SpriteRender* spriteRender : renderList_)
 	{
 		spriteRender->Draw(rc);
