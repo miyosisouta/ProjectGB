@@ -14,7 +14,7 @@ namespace
 	constexpr float LONG_DISTANCE = 1500.0f;	// 遠距離
 
 	// 待機
-	constexpr float BOSS_IDLE_END_TIME = 5.0f; // 待機時間終了
+	constexpr float BOSS_IDLE_END_TIME = 6.0f; // 待機時間終了
 
 	// ダッシュ
 	static const Vector3 BOSS_RUN_EFFECT_SCALE = Vector3(20.0f, 20.0f, 20.0f); // エフェクトサイズ
@@ -34,7 +34,7 @@ namespace
 	static Vector3 ATTACK_HEIGHT = Vector3(0.0f,3000.0f,0.0f);	// 高さ
 	constexpr float BOSS_HITSTAMP_UP_BEGIN_TIME = 0.5f;			// ジャンプする時間
 	constexpr float BOSS_HITSTAMP_OVERHEAD_MOVE_TIME = 2.0f;	// 頭上で移動する時間
-	constexpr float BOSS_HITSTAMP_FALL_BEGIN_TIME = 4.0f;		// 落ち始める時間
+	constexpr float BOSS_HITSTAMP_FALL_BEGIN_TIME = 5.0f;		// 落ち始める時間
 	constexpr float BOSS_HITSTAMP_VERTICAL_VELOCITY = 1500.0f;	// 垂直速度
 	constexpr float BOSS_HITSTAMP_UP_SPEED = 600.0f;			// ヒットスタンプ時飛び上がる際のベース速度
 	constexpr float BOSS_HITSTAMP_DOWN_SPEED = 800.0f;			// ヒットスタンプ時着地する際のベース速度
@@ -43,8 +43,8 @@ namespace
 	constexpr float GRAVITY_POWER = -800.0f;					// 重力の強さ
 	
 	// 回転攻撃
-	constexpr float SPIN_ATTACK_START_TIME = 1.5f;				// 攻撃開始時間
-	constexpr float SPIN_ATTACK_END_TIME = 5.0f;				// 攻撃終了時間
+	constexpr float SPIN_ATTACK_START_TIME = 3.0f;				// 攻撃開始時間
+	constexpr float SPIN_ATTACK_END_TIME = 7.5f;				// 攻撃終了時間
 	constexpr float BOSS_SPIN_ATTACK_SPEED = 300.0f;			// 回転攻撃のベース速度
 	constexpr float OVER_MOVE_DISTANCE_SPIN_ATTACK = 300.0f;	// 回転攻撃のターゲットの位置からさらに進む距離
 	constexpr float ATTACK_SPIN_COLLISION_SIZE = 250.0f;		// 回転攻撃のコリジョンサイズ
@@ -59,15 +59,15 @@ namespace
 	constexpr float ROCK_THROW_INDICATOR_BASE_SIZE = 200.0f;	// タイリング基準サイズ (長さ軸)
 	constexpr float ROCK_THROW_INDICATOR_FORWARD = 600.0f;		// インジケーター中心の前方オフセット
 	constexpr float ROCK_THROW_RANGE_SIZE = 33.0f;				// 攻撃予測ラインの横幅サイズ
-	constexpr float ROCK_THROW_BEGIN_TIME = 1.5f;				// 岩を投げる時間
-	constexpr float ROCK_THROW_END_TIME = 2.0f;					// 処理の終了時間
+	constexpr float ROCK_THROW_BEGIN_TIME = 2.5f;				// 岩を投げる時間
+	constexpr float ROCK_THROW_END_TIME = 4.0f;					// 処理の終了時間
 	constexpr float OVER_MOVE_DISTANCE_THROW_ROCK = 200.0f;		// プレイヤーのいる位置からさらに奥
 	constexpr float ATTACK_ROCK_COLLISION_SIZE = 100.0f;		// コリジョンサイズ
 
 	// レーザー
 	constexpr float LASER_ATTACK_TIME = 1.0f;		// レーザーの攻撃時間
-	constexpr float LASER_SHOT_TIME_NORMAL = 2.0f;	// レーザーの攻撃まで時間(通常)
-	constexpr float LASER_SHOT_TIME_CHARGE = 5.0f;	// レーザーの攻撃まで時間(チャージ) 
+	constexpr float LASER_SHOT_TIME_NORMAL = 3.0f;	// レーザーの攻撃まで時間(通常)
+	constexpr float LASER_SHOT_TIME_CHARGE = 6.0f;	// レーザーの攻撃まで時間(チャージ) 
 	constexpr uint8_t LASER_SHOT_COUNT_NORMAL = 1;	// レーザーの本数(通常)
 	constexpr uint8_t LASER_SHOT_COUNT_MULT = 3;	// レーザーの本数(マルチモード)
 	static const Vector3 LASER_SHOT_SCALE_CHARGE = Vector3(1.75f, 1.75f, 1.75f); // レーザーのチャージ時の大きさ
@@ -344,6 +344,9 @@ void HitStampState::Enter()
 		if (attackRange_)
 		{
 			attackRange_->SetPosition(Vector3(fixedAttackPos_.x, 0.5f, fixedAttackPos_.z));
+			// カウントダウン半分の時点で外円到達し、残り半分は外円に張り付いて表示
+			const float countdown = BOSS_HITSTAMP_FALL_BEGIN_TIME - BOSS_HITSTAMP_OVERHEAD_MOVE_TIME;
+			attackRange_->SetPulseCountdown(countdown * 0.5f);
 			attackRange_->SetDraw(true);
 		}
 		phase_ = Phase::Hover;
@@ -890,9 +893,11 @@ void LaserState::Enter()
 					? LASER_INDICATOR_RADIUS_CHARGE : LASER_INDICATOR_RADIUS_NORMAL;
 				attackRangeIndicator_ = NewGO<AttackRange>(0, "laserRange");
 				AttackRange::InitParam laserParam;
-				laserParam.type       = AttackRange::Type::enCircle;
-				laserParam.character  = AttackRange::Character::Boss;
-				laserParam.pulseSpeed = (mode_ == Mode::enCharge) ? 0.42f : 1.05f;
+				laserParam.type      = AttackRange::Type::enCircle;
+				laserParam.character = AttackRange::Character::Boss;
+				// カウントダウン半分の時点で外円到達、残り半分は外円に張り付いて表示
+				const float laserCountdown = (mode_ == Mode::enCharge) ? LASER_SHOT_TIME_CHARGE : LASER_SHOT_TIME_NORMAL;
+				laserParam.pulseSpeed = 2.0f / laserCountdown;
 				attackRangeIndicator_->SetInitParam(laserParam);
 				attackRangeIndicator_->SetPosition(targetPos_);
 				attackRangeIndicator_->SetScale(Vector3(indicatorRadius, 1.0f, indicatorRadius));
