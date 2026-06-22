@@ -108,8 +108,6 @@ void SoundOptionMenu::Update()
 
 	// 選択中
 	{
-		// 黄色の背景
-		auto* selectFrame = GetUI<UIIcon>(Hash32("flame"));
 		// 青緑の枠
 		auto* selectFrame2 = GetUI<UIIcon>(Hash32("flame2"));
 		float posY = 250.0f;
@@ -119,32 +117,27 @@ void SoundOptionMenu::Update()
 			case MASTER_VOLUME_TYPE:
 			{
 				posY = 250.0f;
-				selectFrame->isDraw = true;
 				selectFrame2->isDraw = true;
 				break;
 			}
 			case BGM_VOLUME_TYPE:
 			{
 				posY = 250.0f - offsetY;
-				selectFrame->isDraw = true;
 				selectFrame2->isDraw = true;
 				break;
 			}
 			case SE_VOLUME_TYPE:
 			{
 				posY = 250.0f - (offsetY *2.0f);
-				selectFrame->isDraw = true;
 				selectFrame2->isDraw = true;
 				break;
 			}
 			default:
 			{
-				selectFrame->isDraw = false;
 				selectFrame2->isDraw = false;
 				break;
 			}
 		}
-		selectFrame->transform.localPosition.y = posY;
 		selectFrame2->transform.localPosition.y = posY;
 	}
 

@@ -91,6 +91,9 @@ void CheckStartWindow::Render(RenderContext& rc)
 
 void CheckStartWindow::InitializeLogic()
 {
+	// 選択状態を「もどる」にリセット
+	selectButtonType = BACK_WINDOW;
+
 	taskScheduler = std::make_unique<TaskSchedulerSystem>();	
 	// 最初のみアニメーション
 	BackButtonAnim();
@@ -98,6 +101,11 @@ void CheckStartWindow::InitializeLogic()
 	auto* frameBack = GetUI<UIIcon>(Hash32("buttonBackFrame"));
 	auto* selectFrame = GetUI<UIDummy>(Hash32("selectColorDummy"));
 	frameBack->color = selectFrame->color;
+
+	// はじめる枠はデフォルトカラーに
+	auto* flameStart = GetUI<UIIcon>(Hash32("buttonStartBackFrame"));
+	auto* noSelectFrame = GetUI<UIDummy>(Hash32("nonSelectColorDummy"));
+	flameStart->color = noSelectFrame->color;
 }
 
 

@@ -43,3 +43,5 @@ void CameraSteering::Update(CameraData& data, const float deltaTime)
     data.position = targetPos + toVector_;
     data.target = targetPos + Vector3(0.0f, config_.lookAtOffsetY, 0.0f);
 }
+
+

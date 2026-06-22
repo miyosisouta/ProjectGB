@@ -157,6 +157,12 @@ void TitleScene::Update()
 
 	if (checkStartWindow) {
 		if (!UIScreenManager::Get().IsTransitioning()) {
+			// Bボタンで直接スキル選択に戻る
+			if (g_pad[0]->IsTrigger(enButtonB)) {
+				SoundManager::Get().PlaySE(enSoundKind_Menu_Return);
+				UIScreenManager::Get().Pop();
+			}
+
 			if (g_pad[0]->IsTrigger(enButtonA)) {
 				// 選択されたらスキル選択にもどる
 				if (checkStartWindow->IsSelectBackButton()) {

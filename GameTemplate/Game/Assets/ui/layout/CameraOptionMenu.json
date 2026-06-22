@@ -28,7 +28,7 @@
         "coment": "タイトル:文字",
         "type": "UIIcon",
         "name": "title_ward",
-        "asset": "Assets/ui/CameraOptionUI/title/title.DDS",
+        "asset": "Assets/ui/cameraOptionUI/title/title.DDS",
         "width": 350,
         "height": 120,
         "position": [-545, 455, 0],
@@ -38,27 +38,309 @@
       },
 
 
-
-     {
-        "coment": "タイトル:文字",
+      {
+        "comment": "白色の帯(カメラの数分ある)",
         "type": "UIIcon",
-        "name": "kari",
-        "asset": "Assets/ui/CameraOptionUI/kari/junbi.DDS",
-        "width": 350,
-        "height": 100,
-        "position": [0, 200, 0],
+        "name": "FadeA",
+        "asset": "Assets/ui/option/button/fade2.DDS",
+        "width": 1800,
+        "height": 150,
+        "position": [0, 250, 0],
         "scale": [1, 1, 1],
         "rotation": 0,
         "color": [1, 1, 1, 1]
       },
       {
-        "coment": "タイトル:文字",
+        "comment": "白色の帯(カメラの数分ある)",
         "type": "UIIcon",
-        "name": "kari2",
-        "asset": "Assets/ui/CameraOptionUI/kari/rei.DDS",
-        "width": 220,
-        "height": 500,
-        "position": [0, -150, 0],
+        "name": "FadeB",
+        "asset": "Assets/ui/option/button/fade2.DDS",
+        "width": 1800,
+        "height": 150,
+        "position": [0, 25, 0],
+        "scale": [1, 1, 1],
+        "rotation": 0,
+        "color": [1, 1, 1, 1]
+      },
+      {
+        "comment": "白色の帯(カメラの数分ある)",
+        "type": "UIIcon",
+        "name": "FadeC",
+        "asset": "Assets/ui/option/button/fade2.DDS",
+        "width": 1800,
+        "height": 150,
+        "position": [0, -200, 0],
+        "scale": [1, 1, 1],
+        "rotation": 0,
+        "color": [1, 1, 1, 1]
+      },
+
+
+      {
+        "comment": "選択中の緑色の枠",
+        "type": "UIIcon",
+        "name": "flame",
+        "asset": "Assets/ui/option/button/walu.DDS",
+        "width": 1800,
+        "height": 75,
+        "position": [0, 250, 0],
+        "scale": [1, 2, 1],
+        "rotation": 0,
+        "color": [1, 1, 1, 1]
+      },
+      
+
+
+
+      {
+        "comment": "カメラ感度のバー",
+        "type": "UIIcon",
+        "name": "Ber_back1",
+        "asset": "Assets/ui/cameraOptionUI/bar/ber_back.DDS",
+        "width": 85,
+        "height": 57.5,
+        "position": [96, 250, 0],
+        "scale": [12, 1, 1],
+        "rotation": 0,
+        "color": [1, 1, 1, 1]
+      },
+      {
+        "comment": "カメラ感度：文字",
+        "type": "UIIcon",
+         "name": "sens_ward",
+        "asset": "Assets/ui/cameraOptionUI/word/sens.DDS",
+        "width": 200,
+        "height": 65,
+        "position": [-600, 250, 0],
+        "scale": [1, 1, 1],
+        "rotation": 0,
+        "color": [1, 1, 1, 1]
+      },
+      {
+        "type": "UIIcon",
+        "name": "Ber_back_Right1",
+        "asset": "Assets/ui/cameraOptionUI/bar/ber_lr.DDS",
+        "width": 25,
+        "height": 53,
+        "position": [600, 250.5, 0],
+        "scale": [1, 1, 1],
+        "rotation": 180,
+        "color": [1, 1, 1, 1]
+      },
+      {
+        "type": "UIIcon",
+        "name": "Ber_back_left1",
+        "asset": "Assets/ui/cameraOptionUI/bar/ber_lr.DDS",
+        "width": 25,
+        "height": 53,
+        "position": [-396, 250.5, 0],
+        "scale": [1, 1, 1],
+        "rotation": 0,
+        "color": [1, 1, 1, 1]
+      },
+      {
+        "type": "UIIcon",
+        "name": "Ber_green_left1",
+        "asset": "Assets/ui/cameraOptionUI/bar/ber_green_lr.DDS",
+        "width": 23,
+        "height": 45,
+        "position": [-392, 250.5, 0],
+        "scale": [1, 1, 1],
+        "rotation": 0,
+        "color": [1, 1, 1, 1]
+      },
+      {
+        "type": "UIIcon",
+        "name": "Ber_greenback1",
+        "asset": "Assets/ui/cameraOptionUI/bar/ber_green_white.DDS",
+        "width": 81,
+        "height": 45,
+        "position": [-383, 250, 0],
+        "scale": [12, 1, 1],
+        "rotation": 0,
+        "color": [0.14, 0.9, 0.48, 1]
+      },
+      {
+        "type": "UIIcon",
+        "name": "bar_maru1",
+        "asset": "Assets/ui/cameraOptionUI/bar/ber_maru.DDS",
+        "width": 60,
+        "height": 60,
+        "position": [600, 250, 0],
+        "scale": [1, 1, 1],
+        "rotation": 0,
+        "color": [1, 1, 1, 1]
+      },
+      {
+        "type": "UIIcon",
+        "name": "bar_waku1",
+        "asset": "Assets/ui/cameraOptionUI/bar/ber_waku.DDS",
+        "width": 65,
+        "height": 65,
+        "position": [600, 250, 0],
+        "scale": [1, 1, 1],
+        "rotation": 0,
+        "color": [1, 1, 1, 1]
+      },
+
+  
+
+
+      {
+        "comment": "カメラ距離：文字",
+        "type": "UIIcon",
+        "name": "length_ward",
+        "asset": "Assets/ui/cameraOptionUI/word/length.DDS",
+        "width": 200,
+        "height": 65,
+        "position": [-600, 25, 0],
+        "scale": [1, 1, 1],
+        "rotation": 0,
+        "color": [1, 1, 1, 1]
+      },
+      {
+        "comment": "カメラ距離：ちかいの背景",
+        "type": "UIIcon",
+        "name": "distans_back_near",
+        "asset": "Assets/ui/cameraOptionUI/button/distans_back.DDS",
+        "width": 325,
+        "height": 65,
+        "position": [-240, 25, 0],
+        "scale": [1, 1, 1],
+        "rotation": 0,
+        "color": [0.54, 0.55, 0.55, 1]
+      },
+      {
+        "comment": "カメラ距離：ふつうの背景",
+        "type": "UIIcon",
+        "name": "distans_back_normal",
+        "asset": "Assets/ui/cameraOptionUI/button/distance_back_normal.DDS",
+        "width": 325,
+        "height": 65,
+        "position": [ 95, 25, 0],
+        "scale": [1, 1, 1],
+        "rotation": 0,
+        "color": [0.54, 0.55, 0.55, 1]
+      },
+      {
+        "comment": "カメラ距離：とおいの背景",
+        "type": "UIIcon",
+        "name": "distans_back_far",
+        "asset": "Assets/ui/cameraOptionUI/button/distans_back.DDS",
+        "width": 325,
+        "height": 65,
+        "position": [430, 25, 0],
+        "scale": [1, 1, 1],
+        "rotation": 180,
+        "color": [0.54, 0.55, 0.55, 1]
+      },
+      {
+        "comment": "カメラ距離：ちかいを選択中",
+        "type": "UIIcon",
+        "name": "selected_back_near",
+        "asset": "Assets/ui/cameraOptionUI/button/distans_back.DDS",
+        "width": 325,
+        "height": 65,
+        "position": [-240, 25, 0],
+        "scale": [1, 1, 1],
+        "rotation": 0,
+        "color": [0.14, 0.9, 0.48, 1],
+        "isDraw": false
+      },
+      {
+        "comment": "カメラ距離：ふつうを選択中",
+        "type": "UIIcon",
+        "name": "selected_back_normal",
+        "asset": "Assets/ui/cameraOptionUI/button/distance_back_normal.DDS",
+        "width": 325,
+        "height": 65,
+        "position": [ 95, 25, 0],
+        "scale": [1, 1, 1],
+        "rotation": 0,
+        "color": [0.14, 0.9, 0.48, 1],
+        "isDraw": false
+      },
+      {
+        "comment": "カメラ距離：とおいを選択中",
+        "type": "UIIcon",
+        "name": "selected_back_far",
+        "asset": "Assets/ui/cameraOptionUI/button/distans_back.DDS",
+        "width": 325,
+        "height": 65,
+        "position": [430, 25, 0],
+        "scale": [1, 1, 1],
+        "rotation": 180,
+        "color": [0.14, 0.9, 0.48, 1],
+        "isDraw": false
+      },
+      {
+        "comment": "カメラ距離：ちかいの枠",
+        "type": "UIIcon",
+        "name": "selected_flame_near",
+        "asset": "Assets/ui/cameraOptionUI/button/distans_flame.DDS",
+        "width": 325,
+        "height": 65,
+        "position": [-240, 25, 0],
+        "scale": [1, 1, 1],
+        "rotation": 0,
+        "color": [1, 1, 1, 1]
+      },
+      {
+        "comment": "カメラ距離：ふつうの枠",
+        "type": "UIIcon",
+        "name": "selected_flame_normal",
+        "asset": "Assets/ui/cameraOptionUI/button/distans_flame_normal.DDS",
+        "width": 325,
+        "height": 65,
+        "position": [ 95, 25, 0],
+        "scale": [1, 1, 1],
+        "rotation": 0,
+        "color": [1, 1, 1, 1]
+      },
+      {
+        "comment": "カメラ距離：とおいの枠",
+        "type": "UIIcon",
+        "name": "selected_flame_far",
+        "asset": "Assets/ui/cameraOptionUI/button/distans_flame.DDS",
+        "width": 325,
+        "height": 65,
+        "position": [430, 25, 0],
+        "scale": [1, 1, 1],
+        "rotation": 180,
+        "color": [1, 1, 1, 1]
+      },
+      {
+        "comment": "カメラ距離：ちかいの文字",
+        "type": "UIIcon",
+        "name": "distans_near",
+        "asset": "Assets/ui/cameraOptionUI/word/near_ward.DDS",
+        "width": 110,
+        "height": 45,
+        "position": [-240, 25, 0],
+        "scale": [1, 1, 1],
+        "rotation": 0,
+        "color": [1, 1, 1, 1]
+      },
+      {
+        "comment": "カメラ距離：ふつうの文字",
+        "type": "UIIcon",
+        "name": "distans_normal",
+        "asset": "Assets/ui/cameraOptionUI/word/normal_ward.DDS",
+        "width": 110,
+        "height": 45,
+        "position": [ 95, 25, 0],
+        "scale": [1, 1, 1],
+        "rotation": 0,
+        "color": [1, 1, 1, 1]
+      },
+      {
+        "comment": "カメラ距離：とおいの文字",
+        "type": "UIIcon",
+        "name": "distans_far",
+        "asset": "Assets/ui/cameraOptionUI/word/far_ward.DDS",
+        "width": 110,
+        "height": 45,
+        "position": [430, 25, 0],
         "scale": [1, 1, 1],
         "rotation": 0,
         "color": [1, 1, 1, 1]
@@ -66,9 +348,134 @@
 
 
 
-      
 
 
+      {
+        "comment": "左右反転：文字",
+        "type": "UIIcon",
+        "name": "inversion_ward",
+        "asset": "Assets/ui/cameraOptionUI/word/inversion.DDS",
+        "width": 190,
+        "height": 65,
+        "position": [-600, -200, 0],
+        "scale": [1, 1, 1],
+        "rotation": 0,
+        "color": [1, 1, 1, 1]
+      },
+      {
+        "comment": "左右反転：ボタンオフの背景",
+        "type": "UIIcon",
+        "name": "inversion_button_off",
+        "asset": "Assets/ui/cameraOptionUI/button/onoff_back.DDS",
+        "width": 500,
+        "height": 65,
+        "position": [-160, -200, 0],
+        "scale": [1, 1, 1],
+        "rotation": 0,
+        "color": [0.54, 0.55, 0.55, 1]
+      },
+      {
+        "comment": "左右反転：ボタンオンの背景",
+        "type": "UIIcon",
+        "name": "inversion_button_on",
+        "asset": "Assets/ui/cameraOptionUI/button/onoff_back.DDS",
+        "width": 500,
+        "height": 65,
+        "position": [350, -200, 0],
+        "scale": [1, 1, 1],
+        "rotation": 180,
+        "color": [0.54, 0.55, 0.55, 1]
+      },
+      {
+        "comment": "左右反転：ボタンオフを選択中",
+        "type": "UIIcon",
+        "name": "inversion_selected_button_off",
+        "asset": "Assets/ui/cameraOptionUI/button/onoff_back.DDS",
+        "width": 500,
+        "height": 65,
+        "position": [-160, -200, 0],
+        "scale": [1, 1, 1],
+        "rotation": 0,
+        "color": [0.14, 0.9, 0.48, 1],
+        "isDraw": false
+      },
+      {
+        "comment": "左右反転：ボタンオンを選択中",
+        "type": "UIIcon",
+        "name": "inversion_selected_button_on",
+        "asset": "Assets/ui/cameraOptionUI/button/onoff_back.DDS",
+        "width": 500,
+        "height": 65,
+        "position": [350, -200, 0],
+        "scale": [1, 1, 1],
+        "rotation": 180,
+        "color": [0.14, 0.9, 0.48, 1],
+        "isDraw": false
+      },
+
+      {
+        "comment": "左右反転：ボタンオフの枠",
+        "type": "UIIcon",
+        "name": "inversion_flame_off",
+        "asset": "Assets/ui/cameraOptionUI/button/onoff.DDS",
+        "width": 500,
+        "height": 65,
+        "position": [-160, -200, 0],
+        "scale": [1, 1, 1],
+        "rotation": 0,
+        "color": [1, 1, 1, 1]
+      },
+      {
+        "comment": "左右反転：ボタンオンの枠",
+        "type": "UIIcon",
+        "name": "inversion_flame_on",
+        "asset": "Assets/ui/cameraOptionUI/button/onoff.DDS",
+        "width": 500,
+        "height": 65,
+        "position": [350, -200, 0],
+        "scale": [1, 1, 1],
+        "rotation": 180,
+        "color": [1, 1, 1, 1]
+      },
+      {
+        "comment": "左右反転：文字オフ",
+        "type": "UIIcon",
+        "name": "inversion_word_off",
+        "asset": "Assets/ui/cameraOptionUI/word/off_text.DDS",
+        "width": 75,
+        "height": 45,
+        "position": [-160, -200, 0],
+        "scale": [1, 1, 1],
+        "rotation": 0,
+        "color": [1, 1, 1, 1]
+      },
+      {
+        "comment": "左右反転：文字オン",
+        "type": "UIIcon",
+        "name": "inversion_word_on",
+        "asset": "Assets/ui/cameraOptionUI/word/on_text.DDS",
+        "width": 75,
+        "height": 45,
+        "position": [ 350, -200, 0],
+        "scale": [1, 1, 1],
+        "rotation": 0,
+        "color": [1, 1, 1, 1]
+      },
+
+
+ 
+       
+     
+
+    
+      {
+        "comment": "デフォルトアイコン",
+        "type": "UIPrefab",
+        "name": "DefaultIcon",
+        "source": "Assets/ui/layout/DefaultButton.json",
+        "position": [0, -420, 0],
+        "scale": [1, 1, 1]
+      },
       {
         "comment": "戻るボタンアイコン",
         "type": "UIPrefab",
@@ -85,7 +492,6 @@
         "position": [560, -500, 0],
         "scale": [1, 1, 1]
       }
-
     ]
-}
+  }
 }

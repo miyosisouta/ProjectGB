@@ -133,10 +133,18 @@ BattleManager::BattleManager()
 		gameCamera->SetState(initData);
 		gameCameraController_ = gameCamera;
 
-		CameraOption initOption;
+		/*CameraOption initOption;
 		initOption.sensitivity = param->cameraParam.sensitivity;
 		initOption.distance    = param->cameraParam.distance;
 		initOption.fovDeg      = param->cameraParam.fovy;
+		SetCameraOption(initOption);*/
+
+		// CameraManagerに保存された設定値を反映する
+		CameraOption initOption;
+		initOption.sensitivity = CameraManager::Get().GetSensitivityValue();
+		initOption.distance = CameraManager::Get().GetDistance();
+		initOption.invert = CameraManager::Get().GetInvert();
+		initOption.fovDeg = param->cameraParam.fovy;
 		SetCameraOption(initOption);
 	}
 
