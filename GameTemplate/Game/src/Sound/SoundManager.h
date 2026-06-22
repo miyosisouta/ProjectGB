@@ -38,6 +38,8 @@ class SoundManager
 private:
     /** BGM用のサウンドソースインスタンスを保持 */
     SoundSource* bgm_ = nullptr;
+    /** BGM音量スケール（ユーザー設定音量に掛け合わせる倍率） */
+    float bgmVolumeScale_ = 1.0f;
     /** SE用のサウンドソースインスタンスを保持 */
     std::map<SoundHandle, SoundSource*> seList_;
     /**
@@ -69,6 +71,12 @@ public:
     void PlayBGM(const int kind);
     /** BGM停止 */
     void StopBGM();
+    /** 現在のBGM音量にスケールを掛ける（PlayBGM呼び出し後に使用） */
+    void SetBGMVolumeScale(float scale)
+    {
+        bgmVolumeScale_ = scale;
+        if (bgm_) bgm_->SetVolume(ComputeVolume(SoundVolumeType::BGM) * bgmVolumeScale_);
+    }
 
     /** SE再生 */
     SoundHandle PlaySE(const int kind, const bool isLood = false, const bool is3D = false);
