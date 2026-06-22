@@ -159,6 +159,9 @@ void SoundOptionMenu::Render(RenderContext& rc)
 
 void SoundOptionMenu::InitializeLogic()
 {
+	// 選択状態を一番上(マスター音量)にリセット
+	selectVolumetType = MASTER_VOLUME_TYPE;
+
 	taskScheduler = std::make_unique<TaskSchedulerSystem>();
 
 	const int id = taskScheduler->CreateLoopSequence(20.0f);

@@ -396,6 +396,11 @@ bool BattleManager::UpdateResultClear()
 
 	auto* menu = dynamic_cast<GameClearMenu*>(uiManager_.GetCutSceneMenu());
 	if (menu && menu->IsEnd()) {
+		// 初期値に戻る
+		CameraManager::Get().ResetToDefault();
+		SoundManager::Get().ResetToDefault();
+		KeyConfig::Get().ResetToDefault();
+
 		isPlayingResult_ = false;
 	}
 
@@ -409,6 +414,11 @@ bool BattleManager::UpdateResultOver()
 
 	auto* menu = dynamic_cast<GameOverMenu*>(uiManager_.GetCutSceneMenu());
 	if (menu && menu->IsEnd()) {
+		// 初期値に戻る
+		CameraManager::Get().ResetToDefault();
+		SoundManager::Get().ResetToDefault();
+		KeyConfig::Get().ResetToDefault();
+
 		isPlayingResult_ = false;
 	}
 

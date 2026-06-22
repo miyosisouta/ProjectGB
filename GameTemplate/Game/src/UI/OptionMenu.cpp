@@ -121,7 +121,7 @@ void OptionMenu::Render(RenderContext& rc)
 
 void OptionMenu::InitializeLogic()
 {
-	// 選択をサウンドにリセット
+	// 選択状態を一番左(サウンド設定)にリセット
 	selectOptionType = SOUND_OPTION_TYPE;
 
 	// スケジューラーの生成

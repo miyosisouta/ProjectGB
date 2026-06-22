@@ -289,7 +289,8 @@ void CameraOptionMenu::Render(RenderContext& rc)
 
 void CameraOptionMenu::InitializeLogic()
 {
-	taskScheduler = std::make_unique<TaskSchedulerSystem>();
+	// 選択状態を一番上(カメラ感度)にリセット
+	selectCameraType = CAMERA_SENS_TYPE;
 
 	// カメラ設定の初期値を読み込む
 	sensitiityStage_ = static_cast<float>(CameraManager::Get().GetSensitivityStage());
@@ -309,6 +310,8 @@ void CameraOptionMenu::InitializeLogic()
 	// 反転の初期選択
 	selectInversionType = CameraManager::Get().GetInvert() ? BUTTON_ON : BUTTON_OFF;
 
+	// タスクスケジューラーの生成
+	taskScheduler = std::make_unique<TaskSchedulerSystem>();
 	const int id = taskScheduler->CreateLoopSequence(20.0f);
 	{
 		nikukyuList[0] = GetUI<UIIcon>(Hash32("optionBack/nikukyu1"));

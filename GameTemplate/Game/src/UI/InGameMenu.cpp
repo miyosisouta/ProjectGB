@@ -691,9 +691,7 @@ void InGameMenu::BossHitAnimationResetIcon(int poolIndex)
 		damageNumber->transform.localPosition.y += damageOffsetDummy->transform.localPosition.y;
 	}
 	damageNumber->color.w = damageNumberInit->color.w;
-	K2_LOG("ResetIcon color.w = %f", damageNumber->color.w);
 	damageNumber->isDraw = false;
-	K2_LOG("ResetIcon isDraw = %d", (int)damageNumber->isDraw);
 
 
 	// クリティカルUI
