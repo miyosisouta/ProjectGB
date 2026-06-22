@@ -18,6 +18,7 @@
 #include "src/Stage/StageManager.h"
 
 #include "src/Camera/CameraManager.h"
+#include "src/Camera/CameraConfig.h"
 #include "src/Camera/CameraSteering.h"
 
 #include "src/collision/GhostBodyManager.h"
@@ -28,6 +29,7 @@
 #include "src/UI/GameClearMenu.h"
 #include "src/UI/GameOverMenu.h"
 #include "src/UI/GameStartMenu.h"
+#include "src/UI/MissionMenu.h"
 #include "src/UI/TimerMenu.h"
 #include "../../k2Engine/graphics/DitherCBData.h"
 
@@ -117,7 +119,7 @@ BattleManager::BattleManager()
 		cameraSteering_ = std::make_unique<CameraSteering>();
 
 		CameraSteering::Config initConfig;
-		initConfig.distance       = param->cameraParam.distance;
+		initConfig.distance       = CameraConfig::Get().GetDistance();
 		initConfig.height         = param->cameraParam.height;
 		initConfig.rotationSpeedX = param->cameraParam.rotSpeed;
 		initConfig.rotationSpeedY = param->cameraParam.rotSpeed;
@@ -132,12 +134,6 @@ BattleManager::BattleManager()
 		auto gameCamera = std::make_shared<GameCamera>();
 		gameCamera->SetState(initData);
 		gameCameraController_ = gameCamera;
-
-		/*CameraOption initOption;
-		initOption.sensitivity = param->cameraParam.sensitivity;
-		initOption.distance    = param->cameraParam.distance;
-		initOption.fovDeg      = param->cameraParam.fovy;
-		SetCameraOption(initOption);*/
 
 		// CameraManagerに保存された設定値を反映する
 		CameraOption initOption;
@@ -158,7 +154,7 @@ BattleManager::BattleManager()
 		}
 		if (stageType == BossType::enTurtle) {
 			SetupEntryTurtleCutScene();
-		}		
+		}
 	}
 
 	// その他
@@ -237,6 +233,36 @@ void BattleManager::Update()
 			gameTimer_.Update();
 			boss_->Update();
 			GrassBendManager::Get().Update(g_gameTime->GetFrameDeltaTime());
+
+			// ミッションの状態をUIに通知（MissionManager::Update()の前に読む）
+			if (auto* missionMenu = uiManager_.GetMissionMenu())
+			{
+				const int missionCount = MissionManager::Get().GetMissionCount();
+				for (int idx = 0; idx < missionCount; idx++)
+				{
+					auto* mission = MissionManager::Get().GetMissionByIndex(idx); // missionの数を取得
+					if (!mission) continue; // missionがないなら処理を終了する
+
+					// 特定のミッションはクリアしているか
+					if (mission->IsCleared())
+					{
+						// クリア済み：アニメーション未再生ならクリア演出を1回だけ再生
+						if (!mission->IsClearAnimationPlayed())
+						{
+							missionMenu->TriggerClear(mission->GetUISlot(), mission->GetCurrentCount());
+							mission->SetClearAnimationPlayed();
+						}
+					}
+					// クリアしていないもので、カウントアップさせるタイプのミッションの進捗が進行しているなら
+					else if (mission->GetUpdateType() == MissionUpdateType::enCount
+						     && mission->IsCountUpdatedThisFrame())
+					{
+						// カウント増加：このフレームだけtrueなのでUpdate()前に読む
+						missionMenu->TriggerMission(mission->GetUISlot(), mission->GetCurrentCount());
+					}
+				}
+			}
+
 			MissionManager::Get().Update();
 
 			// ディザリング設定
@@ -265,6 +291,7 @@ void BattleManager::Update()
 			if (auto* boss = FindGO<BossCharacter>("boss")) {
 				if (boss->GetStatus() && boss->GetStatus()->IsDead()) {
 					MissionManager::Get().NotifyBossDefeated();	// ボス撃破のミッション
+
 					SetupClearCutScene();						// クリアカットシーン
 					if (player_) {
 						auto* stateMachine = player_->GetStateMachine();
@@ -296,6 +323,7 @@ void BattleManager::Update()
 		}
 		case GameState::Shutdown:
 		{
+			SoundManager::Get().StopBGM();
 			gameTimer_.Reset();
 			g_ditherCBData.isEnable = DITHERING_ENABLE_FALSE_VALUE;
 			break;
@@ -533,16 +561,44 @@ void BattleManager::SetupStartCutScene()
 
 void BattleManager::SetupClearCutScene()
 {
-	isPlayingResult_ = true;
-	cutSceneScheduler_->Reset();
+	isPlayingResult_ = true; // リザルトを再生したフラグをtrueに
+	cutSceneScheduler_->Reset(); // カットシーンのタスクスケジューラーをリセット
+
+	SoundManager::Get().PlayBGM(enSoundKind_GameClear); // ゲームクリア時のBGMを再生
+
+	// スタックしてあるミッションのuiAnimationを全て破棄
+	if (auto* missionMenu = uiManager_.GetMissionMenu())
+	{
+		missionMenu->ClearNotificationQueue();
+	}
+
+	// ゲームクリア時のuiAnimationをセットアップ
 	uiManager_.SetupCutScene<GameClearMenu>("Assets/ui/layout/GameClearMenu.json");
+
+	// リザルト中はタイマーを非表示
+	if (auto* timerMenu = uiManager_.GetTimerMenu())
+	{
+		timerMenu->GetCanvas()->isDraw = false;
+	}
 }
 
 
 void BattleManager::SetupOverCutScene()
 {
-	isPlayingResult_ = true;
-	cutSceneScheduler_->Reset();
+	isPlayingResult_ = true; // リザルトを再生したフラグをtrueに
+	cutSceneScheduler_->Reset(); // カットシーンのタスクスケジューラーをリセット
+
+	// ゲームオーバーのBGMを再生
+	SoundManager::Get().PlayBGM(enSoundKind_GameOver);
+	SoundManager::Get().SetBGMVolumeScale(1.5f); // ボリューム調整
+
+	// スタックしてあるミッションのuiAnimationを全て破棄
+	if (auto* missionMenu = uiManager_.GetMissionMenu())
+	{
+		missionMenu->ClearNotificationQueue();
+	}
+
+	// ゲームオーバー時のuiAnimationをセットアップ
 	uiManager_.SetupCutScene<GameOverMenu>("Assets/ui/layout/GameOverMenu.json");
 }
 
@@ -550,7 +606,7 @@ void BattleManager::SetupOverCutScene()
 #ifdef K2_DEBUG
 void BattleManager::UpdateDebugGroupInput()
 {
-	// F1〜F4 のトリガー検出（前フレームの押下状態を static で保持）
+	// F1、F2〜F5 のトリガー検出
 	static bool prev[4] = {};
 
 	struct Entry { int vKey; uint32_t group; const char* label; };

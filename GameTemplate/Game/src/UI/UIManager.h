@@ -18,6 +18,7 @@
 #include "Layout.h"
 
 class TimerMenu;
+class MissionMenu;
 
 
 class UIManager
@@ -89,6 +90,9 @@ public:
 	{
 		return cutSceneLayout_ ? cutSceneLayout_->GetMenu() : nullptr;
 	}
+
+	/** Mission Menu を取得 */
+	MissionMenu* GetMissionMenu() const;
 
 	/** Timer Menu を取得 */
 	TimerMenu* GetTimerMenu() const;

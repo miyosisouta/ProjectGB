@@ -1,0 +1,149 @@
+{
+  "canvas": {
+    "elements": [
+      {
+        "coment": "ミッション背景",
+        "type": "UIIcon",
+        "name": "mission_back",
+        "asset": "Assets/ui/inGameUI/mission/mission_back.DDS",
+        "width": 500,
+        "height": 40,
+        "position": [0, 0, 0],
+        "scale": [1, 1, 1],
+        "rotation": 0,
+        "color": [0.71, 0.71, 0.71, 1]
+      },
+      {
+        "coment": "ミッション白帯",
+        "type": "UIIcon",
+        "name": "mission_obi",
+        "asset": "Assets/ui/inGameUI/mission/obi.DDS",
+        "width": 420,
+        "height": 34,
+        "position": [10, 0, 0],
+        "scale": [1, 1, 1],
+        "rotation": 0,
+        "color": [1, 1, 1, 1]
+      },
+      {
+        "coment": "メダル（金：クリア済み）",
+        "type": "UIIcon",
+        "name": "medal_gold",
+        "asset": "Assets/ui/inGameUI/mission/medaru.DDS",
+        "width": 30,
+        "height": 35,
+        "position": [-220, 0, 0],
+        "scale": [1, 1, 1],
+        "rotation": 0,
+        "color": [1, 1, 1, 1],
+        "isDraw": false
+      },
+      {
+        "coment": "メダル（未クリア）",
+        "type": "UIIcon",
+        "name": "medal_no",
+        "asset": "Assets/ui/inGameUI/mission/medaru_back.DDS",
+        "width": 30,
+        "height": 35,
+        "position": [-220, 0, 0],
+        "scale": [1, 1, 1],
+        "rotation": 0,
+        "color": [1, 1, 1, 1]
+      },
+      {
+        "coment": "ゴリラ：2分以内クリア",
+        "type": "UIIcon",
+        "name": "text_gorilla_time",
+        "asset": "Assets/ui/inGameUI/mission/time_secondMinute.DDS",
+        "width": 250,
+        "height": 34,
+        "position": [-30, 0, 0],
+        "scale": [1, 1, 1],
+        "rotation": 0,
+        "color": [1, 1, 1, 1],
+        "isDraw": false
+      },
+      {
+        "coment": "ゴリラ：特殊スキルを使った（slot3 / skill.DDS）",
+        "type": "UIIcon",
+        "name": "text_gorilla_ability",
+        "asset": "Assets/ui/inGameUI/mission/skill.DDS",
+        "width": 250,
+        "height": 34,
+        "position": [15, 0, 0],
+        "scale": [1.5, 1.10, 1],
+        "rotation": 0,
+        "color": [1, 1, 1, 1],
+        "isDraw": false
+      },
+      {
+        "coment": "ゴリラ：汎用スキルを使った（slot2 / kaihi.DDS）",
+        "type": "UIIcon",
+        "name": "text_gorilla_utility",
+        "asset": "Assets/ui/inGameUI/mission/kaihi.DDS",
+        "width": 250,
+        "height": 34,
+        "position": [15, 0, 0],
+        "scale": [1.5, 1, 1],
+        "rotation": 0,
+        "color": [1, 1, 1, 1],
+        "isDraw": false
+      },
+      {
+        "coment": "カメ：3分以内クリア",
+        "type": "UIIcon",
+        "name": "text_turtle_time",
+        "asset": "Assets/ui/inGameUI/mission/time_thirdMinute.DDS",
+        "width": 250,
+        "height": 34,
+        "position": [-30, 0, 0],
+        "scale": [1, 1, 1],
+        "rotation": 0,
+        "color": [1, 1, 1, 1],
+        "isDraw": false
+      },
+      {
+        "coment": "カメ：通常攻撃10回以上",
+        "type": "UIIcon",
+        "name": "text_turtle_normalAttack",
+        "asset": "Assets/ui/inGameUI/mission/NormalAttack.DDS",
+        "width": 250,
+        "height": 34,
+        "position": [15, 0, 0],
+        "scale": [1.5, 1.10, 1],
+        "rotation": 0,
+        "color": [1, 1, 1, 1],
+        "isDraw": false
+      },
+      {
+        "coment": "カメ：HP30%以上でクリア",
+        "type": "UIIcon",
+        "name": "text_turtle_hp",
+        "asset": "Assets/ui/inGameUI/mission/hpRemain30.DDS",
+        "width": 250,
+        "height": 34,
+        "position": [15, 0, 0],
+        "scale": [1.5, 1, 1],
+        "rotation": 0,
+        "color": [1, 1, 1, 1],
+        "isDraw": false
+      },
+      {
+        "coment": "カウント制ミッション：現在のカウント数",
+        "type": "UIDigit",
+        "name": "mission_count",
+        "asset": "Assets/ui/suuji",
+        "width": 35,
+        "height": 35,
+        "digit": 2,
+        "spacing": -15,
+        "align": "Light",
+        "position": [130, -3.5, 0],
+        "scale": [0.95, 0.95, 1.0],
+        "rotation": 0,
+        "color": [0, 0, 0, 1],
+        "isDraw": false
+      }
+    ]
+  }
+}

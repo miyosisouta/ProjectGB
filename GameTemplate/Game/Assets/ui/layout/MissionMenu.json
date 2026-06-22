@@ -62,24 +62,25 @@
       {
         "coment": "ミッション：2分以内にクリア",
         "type": "UIIcon",
-        "name": "mission_1",
-        "asset": "Assets/ui/inGameUI/mission/time.DDS",
+        "name": "gollira_mission_1",
+        "asset": "Assets/ui/inGameUI/mission/time_secondMinute.DDS",
         "width": 250,
         "height": 34,
         "position": [-30, 0, 0],
         "scale": [1, 1, 1],
         "rotation": 0,
-        "color": [1, 1, 1, 1]
+        "color": [1, 1, 1, 1],
+        "isDraw": false
       },
       {
         "coment": "ミッション：回避できた",
         "type": "UIIcon",
-        "name": "mission_2",
+        "name": "gollira_mission_2",
         "asset": "Assets/ui/inGameUI/mission/kaihi.DDS",
         "width": 250,
         "height": 34,
-        "position": [-30, 0, 0],
-        "scale": [1, 1, 1],
+        "position": [15, 0, 0],
+        "scale": [1.5, 1, 1],
         "rotation": 0,
         "color": [1, 1, 1, 1],
         "isDraw": false
@@ -87,8 +88,56 @@
       {
         "coment": "ミッション：スキル使った",
         "type": "UIIcon",
-        "name": "mission_3",
+        "name": "gollira_mission_3",
         "asset": "Assets/ui/inGameUI/mission/skill.DDS",
+        "width": 250,
+        "height": 34,
+        "position": [15, 0, 0],
+        "scale": [1.5, 1.10, 1],
+        "rotation": 0,
+        "color": [1, 1, 1, 1],
+        "isDraw": false
+      },
+      {
+        "coment": "ミッション : スキルを使ったの回数カウント",
+        "type": "UIDigit",
+        "name": "skill_count",
+        "asset": "Assets/ui/suuji",
+        "width": 35,
+        "height": 35,
+        "digit": 2,
+        "spacing": -15,
+        "align": "Light",
+        "position": [130, -3.5, 0],
+        "scale": [0.95, 0.95, 1.0],
+        "rotation": 0,
+        "color": [0, 0, 0, 1],
+        "isDraw": false
+      },
+      {
+        "coment": "ミッション : 回避を使ったの回数カウント",
+        "type": "UIDigit",
+        "name": "kaihi_count",
+        "asset": "Assets/ui/suuji",
+        "width": 35,
+        "height": 35,
+        "digit": 2,
+        "spacing": -15,
+        "align": "Light",
+        "position": [130, -3.5, 0],
+        "scale": [0.95, 0.95, 1.0],
+        "rotation": 0,
+        "color": [0, 0, 0, 1],
+        "isDraw": false
+      },
+
+
+
+      {
+        "coment": "カメミッション：3分以内にクリア",
+        "type": "UIIcon",
+        "name": "turtle_mission_1",
+        "asset": "Assets/ui/inGameUI/mission/time_thirdMinute.DDS",
         "width": 250,
         "height": 34,
         "position": [-30, 0, 0],
@@ -97,8 +146,48 @@
         "color": [1, 1, 1, 1],
         "isDraw": false
       },
-
-
+      {
+        "coment": "カメミッション：通常攻撃10回以上",
+        "type": "UIIcon",
+        "name": "turtle_mission_2",
+        "asset": "Assets/ui/inGameUI/mission/NormalAttack.DDS",
+        "width": 250,
+        "height": 34,
+        "position": [15, 0, 0],
+        "scale": [1.5, 1.10, 1],
+        "rotation": 0,
+        "color": [1, 1, 1, 1],
+        "isDraw": false
+      },
+      {
+        "coment": "カメミッション：HP30%以上でクリア",
+        "type": "UIIcon",
+        "name": "turtle_mission_3",
+        "asset": "Assets/ui/inGameUI/mission/hpRemain30.DDS",
+        "width": 250,
+        "height": 34,
+        "position": [-30, 0, 0],
+        "scale": [1.5, 1, 1],
+        "rotation": 0,
+        "color": [1, 1, 1, 1],
+        "isDraw": false
+      },
+      {
+        "coment": "ミッション : 通常攻撃回数カウント",
+        "type": "UIDigit",
+        "name": "normalAttack_count",
+        "asset": "Assets/ui/suuji",
+        "width": 35,
+        "height": 35,
+        "digit": 2,
+        "spacing": -15,
+        "align": "Light",
+        "position": [130, -3.5, 0],
+        "scale": [0.95, 0.95, 1.0],
+        "rotation": 0,
+        "color": [0, 0, 0, 1],
+        "isDraw": false
+      },
 
       {
         "coment": "ミッション：エフェクト丸",
@@ -113,7 +202,6 @@
         "color": [1, 1, 1, 1],
         "isDraw": false
       },
-      
 
       
       
