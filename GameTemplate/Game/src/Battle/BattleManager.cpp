@@ -322,6 +322,7 @@ void BattleManager::Update()
 		}
 		case GameState::Shutdown:
 		{
+			SoundManager::Get().StopBGM();
 			gameTimer_.Reset();
 			g_ditherCBData.isEnable = DITHERING_ENABLE_FALSE_VALUE;
 			break;
@@ -559,16 +560,44 @@ void BattleManager::SetupStartCutScene()
 
 void BattleManager::SetupClearCutScene()
 {
-	isPlayingResult_ = true;
-	cutSceneScheduler_->Reset();
+	isPlayingResult_ = true; // リザルトを再生したフラグをtrueに
+	cutSceneScheduler_->Reset(); // カットシーンのタスクスケジューラーをリセット
+
+	SoundManager::Get().PlayBGM(enSoundKind_GameClear); // ゲームクリア時のBGMを再生
+
+	// スタックしてあるミッションのuiAnimationを全て破棄
+	if (auto* missionMenu = uiManager_.GetMissionMenu())
+	{
+		missionMenu->ClearNotificationQueue();
+	}
+
+	// ゲームクリア時のuiAnimationをセットアップ
 	uiManager_.SetupCutScene<GameClearMenu>("Assets/ui/layout/GameClearMenu.json");
+
+	// リザルト中はタイマーを非表示
+	if (auto* timerMenu = uiManager_.GetTimerMenu())
+	{
+		timerMenu->GetCanvas()->isDraw = false;
+	}
 }
 
 
 void BattleManager::SetupOverCutScene()
 {
-	isPlayingResult_ = true;
-	cutSceneScheduler_->Reset();
+	isPlayingResult_ = true; // リザルトを再生したフラグをtrueに
+	cutSceneScheduler_->Reset(); // カットシーンのタスクスケジューラーをリセット
+
+	// ゲームオーバーのBGMを再生
+	SoundManager::Get().PlayBGM(enSoundKind_GameOver);
+	SoundManager::Get().SetBGMVolumeScale(1.5f); // ボリューム調整
+
+	// スタックしてあるミッションのuiAnimationを全て破棄
+	if (auto* missionMenu = uiManager_.GetMissionMenu())
+	{
+		missionMenu->ClearNotificationQueue();
+	}
+
+	// ゲームオーバー時のuiAnimationをセットアップ
 	uiManager_.SetupCutScene<GameOverMenu>("Assets/ui/layout/GameOverMenu.json");
 }
 
@@ -576,7 +605,7 @@ void BattleManager::SetupOverCutScene()
 #ifdef K2_DEBUG
 void BattleManager::UpdateDebugGroupInput()
 {
-	// F1〜F4 のトリガー検出（前フレームの押下状態を static で保持）
+	// F1、F2〜F5 のトリガー検出
 	static bool prev[4] = {};
 
 	struct Entry { int vKey; uint32_t group; const char* label; };

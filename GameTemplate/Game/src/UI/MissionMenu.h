@@ -27,6 +27,7 @@ private:
 	std::unique_ptr<UIAnimationSequence> mission3Sequence_     = nullptr;
 	std::unique_ptr<UIAnimationSequence> missionClearSequence_ = nullptr;
 	std::unique_ptr<UIAnimationSequence> skillCountSequence_        = nullptr;
+	std::unique_ptr<UIAnimationSequence> kaihiCountSequence_       = nullptr;
 	std::unique_ptr<UIAnimationSequence> normalAttackCountSequence_ = nullptr;
 
 	std::unique_ptr<UIAnimationSequence> turtle1Sequence_      = nullptr;
@@ -49,6 +50,14 @@ public:
 
 	void TriggerMission(int slot, int count = 0);
 	void TriggerClear(int slot, int count = 0);
+
+	/** リザルト遷移時にキューに積まれた未再生アニメーションを破棄する */
+	void ClearNotificationQueue()
+	{
+		notificationQueue_ = {};
+		isPlaying_         = false;
+		pendingPlayNext_   = false;
+	}
 
 
 private:

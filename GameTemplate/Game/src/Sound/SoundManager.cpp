@@ -57,7 +57,7 @@ void SoundManager::Update()
 	if (isChangeVolume_) {
 		// BGMのボリュームを変更する必要があるなら変更
 		if (bgm_ != nullptr) {
-			bgm_->SetVolume(ComputeVolume(SoundVolumeType::BGM));
+			bgm_->SetVolume(ComputeVolume(SoundVolumeType::BGM) * bgmVolumeScale_);
 		}
 		isChangeVolume_ = false;
 	}
@@ -76,6 +76,7 @@ void SoundManager::PlayBGM(const int kind)
 		bgm_->Stop();
 	}
 	// 初期化
+	bgmVolumeScale_ = 1.0f;
 	bgm_->Init(kind);
 	bgm_->SetVolume(ComputeVolume(SoundVolumeType::BGM));
 	bgm_->Play(true);	// BGMなのでループ再生する

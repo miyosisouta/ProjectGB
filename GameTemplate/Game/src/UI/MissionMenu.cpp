@@ -48,6 +48,7 @@ void MissionMenu::Update()
 	mission3Sequence_->Update(deltaTime);
 	missionClearSequence_->Update(deltaTime);
 	skillCountSequence_->Update(deltaTime);
+	kaihiCountSequence_->Update(deltaTime);
 	normalAttackCountSequence_->Update(deltaTime);
 	turtle1Sequence_->Update(deltaTime);
 	turtle2Sequence_->Update(deltaTime);
@@ -136,6 +137,7 @@ void MissionMenu::PlayNotification(const MissionNotification& notif)
 			auto* icon = GetUI<UIIcon>(Hash32("gollira_mission_2"));
 			icon->isDraw = true;
 			mission2Sequence_->Play(icon);
+			PlayCountDisplay(GetUI<UIDigit>(Hash32("kaihi_count")), kaihiCountSequence_.get(), notif.count);
 		}
 		else
 		{
@@ -309,6 +311,13 @@ void MissionMenu::InitializeLogic()
 	UIAnimationFactory::Attach<UITranslateOffsetAnimation>(skillCount, Hash32("missionEventEnd"));
 	skillCountSequence_ = std::make_unique<UIAnimationSequence>();
 	skillCountSequence_->Add(Hash32("missionEventStart")).Add(Hash32("missionEventEnd"), 4.0f);
+
+	// 回避使用回数カウント
+	auto* kaihiCount = GetUI<UIDigit>(Hash32("kaihi_count"));
+	UIAnimationFactory::Attach<UITranslateOffsetAnimation>(kaihiCount, Hash32("missionEventStart"));
+	UIAnimationFactory::Attach<UITranslateOffsetAnimation>(kaihiCount, Hash32("missionEventEnd"));
+	kaihiCountSequence_ = std::make_unique<UIAnimationSequence>();
+	kaihiCountSequence_->Add(Hash32("missionEventStart")).Add(Hash32("missionEventEnd"), 4.0f);
 
 	// 通常攻撃回数カウント
 	auto* normalAttackCount = GetUI<UIDigit>(Hash32("normalAttack_count"));

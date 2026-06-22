@@ -11,7 +11,7 @@
             "collisionSizeHeight": 100.0,
             "charaConSizeRadius":28.0,
             "charaConSizeHeight":100.0,
-            "hp": 300,
+            "hp": 30,
             "attack": 30,
             "criticalRate":20,
             "criticalDamageMultiplier": 1.5,
@@ -36,7 +36,7 @@
             "collisionSizeHeight": 110.0,
             "charaConSizeRadius":110.0,
             "charaConSizeHeight":110.0,
-            "hp": 1000,
+            "hp": 10,
             "attack": 40,
             "criticalRate": 5,
             "criticalDamageMultiplier": 1.8

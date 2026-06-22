@@ -1,4 +1,4 @@
-{
+﻿{
     "animations": [
         {
             "comment": "サウンドオプション：背景の肉球",
@@ -348,7 +348,7 @@
             "loop": "Once"
         },
         {
-            "comment": "ゲームクリアの肉球(上から下:バウンス)",
+            "comment": "ゲームクリアの文字(上から下:バウンス)",
             "key": "GameClearStampBounceA",
             "valueType": "Vector3",
             "startValue": { "x": 0.0, "y": 500.0, "z": 0.0},
@@ -358,7 +358,7 @@
             "loop": "Once"
         },
         {
-            "comment": "ゲームクリアの肉球(下から上:バウンス)",
+            "comment": "ゲームクリアの文字(下から上:バウンス)",
             "key": "GameClearStampBounceB",
             "valueType": "Vector3",
             "startValue": { "x": 0.0, "y": 0.0, "z": 0.0},
@@ -368,13 +368,91 @@
             "loop": "Once"
         },
         {
-            "comment": "ゲームクリアの肉球(上から下:バウンス)",
+            "comment": "ゲームクリアの文字(上から下:バウンス)",
             "key": "GameClearStampBounceC",
             "valueType": "Vector3",
             "startValue": { "x": 0.0, "y": 70.0, "z": 0.0},
             "endValue":   { "x": 0.0, "y": 0.0, "z": 0.0},
             "duration": 0.1,
             "easing": "EaseOut",
+            "loop": "Once"
+        },
+
+
+
+
+        {
+            "comment": "ゲームクリアの文字移動(ミッションクリアの位置から少し上)",
+            "key": "GameClearTextMove",
+            "valueType": "Vector3",
+            "startValue": { "x": 0.0, "y": 0.0, "z": 0.0},
+            "endValue":   { "x": -30.0, "y": 300.0, "z": 0.0},
+            "duration": 1.0,
+            "easing": "EaseInOut",
+            "loop": "Once"
+        },
+        {
+            "comment": "ゲームクリアの文字縮小(ミッションクリアの位置から少し上)",
+            "key": "GameClearTextScaleDown",
+            "valueType": "Vector3",
+            "startValue": { "x": 1.0, "y": 1.0, "z": 1.0},
+            "endValue":   { "x": 0.75, "y": 0.75, "z": 1.0},
+            "duration": 1.0,
+            "easing": "EaseInOut",
+            "loop": "Once"
+        },
+        {
+            "comment": "ゲームクリアのスタンプの移動(ミッションクリアの位置から少し上)",
+            "key": "GameClearStampMove",
+            "valueType": "Vector3",
+            "startValue": { "x": 0.0, "y": 0.0, "z": 0.0},
+            "endValue":   { "x": -180.0, "y": 300.0, "z": 0.0},
+            "duration": 1.0,
+            "easing": "EaseInOut",
+            "loop": "Once"
+        },
+        {
+            "comment": "ゲームクリアのスタンプの縮小(ミッションクリアの位置から少し上)",
+            "key": "GameClearStampScaleDown",
+            "valueType": "Vector3",
+            "startValue": { "x": 1.0, "y": 1.0, "z": 1.0},
+            "endValue":   { "x": 0.75, "y": 0.75, "z": 1.0},
+            "duration": 1.0,
+            "easing": "EaseInOut",
+            "loop": "Once"
+        },
+
+
+
+        {
+            "comment": "ミッション1を右からスライド",
+            "key": "GameClearMission1Move",
+            "valueType": "Vector3",
+            "startValue": { "x": 1920.0, "y": 0.0, "z": 0.0 },
+            "endValue":   { "x": 0.0,    "y": 0.0, "z": 0.0 },
+            "duration": 1.0,
+            "easing": "EaseInOut",
+            "loop": "Once"
+        },
+        {
+            "comment": "ミッション2を右からスライド",
+            "key": "GameClearMission2Move",
+            "valueType": "Vector3",
+            "startValue": { "x": 1920.0, "y": 0.0, "z": 0.0 },
+            "endValue":   { "x": 0.0,    "y": 0.0, "z": 0.0 },
+            "duration": 1.0,
+            "easing": "EaseInOut",
+            "loop": "Once"
+        },
+
+        {
+            "comment": "ミッション3を右からスライド",
+            "key": "GameClearMission3Move",
+            "valueType": "Vector3",
+            "startValue": { "x": 1920.0, "y": 0.0, "z": 0.0 },
+            "endValue":   { "x": 0.0,    "y": 0.0, "z": 0.0 },
+            "duration": 1.0,
+            "easing": "EaseInOut",
             "loop": "Once"
         },
 

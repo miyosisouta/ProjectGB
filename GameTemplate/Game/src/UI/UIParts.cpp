@@ -290,6 +290,15 @@ void UIDigit::Initialize(const char* assetName, const int digit, const int numbe
 		renderList_.push_back(spriteRender);
 		UpdateNumber(i + 1, number_);	// 桁なので＋１する
 	}
+
+	// 初期値の桁数に合わせて余分なSpriteRenderを削除
+	// （digit=2 で初期値0の場合、Update()の同値チェックが通らず2枚残るのを防ぐ）
+	digit_ = ComputeDigit();
+	while (static_cast<int>(renderList_.size()) > digit_)
+	{
+		delete renderList_.back();
+		renderList_.pop_back();
+	}
 }
 
 
@@ -442,6 +451,7 @@ void UICanvas::Update()
 
 void UICanvas::Render(RenderContext& rc)
 {
+	if (!isDraw) { return; }
 	for (auto& ui : uiList_) {
 		ui.get()->Render(rc);
 	}
