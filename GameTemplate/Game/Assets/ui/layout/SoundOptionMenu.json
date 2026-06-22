@@ -38,20 +38,6 @@
 
 
       {
-        "comment": "選択中の黄色の背景",
-        "type": "UIIcon",
-        "name": "flame",
-        "asset": "Assets/ui/option/button/waku.DDS",
-        "width": 1790,
-        "height": 72,
-        "position": [0, 250, 0],
-        "scale": [1, 2, 1],
-        "rotation": 0,
-        "color": [1, 1, 1, 1]
-      },
-
-
-      {
         "comment": "白色の帯(サウンドの数分ある)",
         "type": "UIIcon",
         "name": "FadeA",
@@ -99,7 +85,6 @@
         "rotation": 0,
         "color": [1, 1, 1, 1]
       },
-
       
       
       {
@@ -203,7 +188,7 @@
         "position": [600, 250, 0],
         "scale": [1, 1, 1],
         "rotation": 0,
-        "color": [0.14, 0.9, 0.48, 1]
+        "color": [1, 1, 1, 1]
       },
       {
         "type": "UIIcon",
@@ -327,7 +312,7 @@
         "position": [600, 25, 0],
         "scale": [1, 1, 1],
         "rotation": 0,
-        "color": [0.14, 0.9, 0.48, 1]
+        "color": [1, 1, 1, 1]
       },
       {
         "type": "UIIcon",
@@ -451,7 +436,7 @@
         "position": [600, -200, 0],
         "scale": [1, 1, 1],
         "rotation": 0,
-        "color": [0.14, 0.9, 0.48, 1]
+        "color": [1, 1, 1, 1]
       },
       {
         "type": "UIIcon",

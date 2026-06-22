@@ -8,7 +8,6 @@
 
 class Character;
 
-
 class CameraSteering : public Noncopyable
 {
 private:
@@ -46,7 +45,7 @@ private:
 	Character* targetCharacter_ = nullptr; //!< カメラのターゲット
 	Vector3 toVector_ = Vector3::Zero; //!< プレイヤーからカメラへの方向
 	float   currentPitch_ = 0.0f; //!< 仰角
-	float sensitivity_ = 1.0f; //!< 感度の設定
+	float sensitivity_ = 1.0; //!< 初期値1.0f
 	bool invert_ = false; //!< 操作の反転するか
 	bool isUpdate_ = true; //!< 更新をするか否か
 
@@ -92,5 +91,5 @@ public:
 	/** カメラの操作感度の取得 */
 	float GetSensitivity() const { return sensitivity_; }
 	/** カメラとターゲットとの距離の取得 */
-	float GetDistance()    const { return config_.distance; }
+	float GetDistance() const { return config_.distance; }
 };

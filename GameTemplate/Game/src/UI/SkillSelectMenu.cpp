@@ -122,6 +122,9 @@ void SkillSelectMenu::Render(RenderContext& rc)
 
 void SkillSelectMenu::InitializeLogic()
 {
+	// 左にする
+	selectSkillType = SKILL_LANDMINE_TYPE;
+
 	taskSchedulerSystem_ = std::make_unique<TaskSchedulerSystem>();
 	const int id = taskSchedulerSystem_->CreateLoopSequence(20.0f);
 	{

@@ -108,7 +108,18 @@ void BossSelectMenu::Render(RenderContext& rc)
 
 void BossSelectMenu::InitializeLogic()
 {
+	// 選択状態をゴリラ（左端）にリセット
+	selectBossType = BOSS_GOLLIRA_TYPE;
+
+	// taskSchedulerを先に生成
+	taskSchedulerSystem_ = std::make_unique<TaskSchedulerSystem>();
+
+	// アニメーションを先にアタッチ
 	AnimationIconAttach();
+
+	// アイコンリセット→初期アニメーション再生
+	AnimationResetIcon();
+	GolliraUpdateAnimation();
 
 	taskSchedulerSystem_ = std::make_unique<TaskSchedulerSystem>();
 	const int id = taskSchedulerSystem_->CreateLoopSequence(20.0f);

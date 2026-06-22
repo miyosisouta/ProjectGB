@@ -12,7 +12,7 @@
 #include "src/Util/TaskSchedulerSystem.h"
 
 #include "src/UI/Layout.h"
-#include "src/UI/InGameMenu.h"
+#include "src/UI/CameraOptionMenu.h"
 
 
 DebugScene::DebugScene()
@@ -29,7 +29,7 @@ DebugScene::~DebugScene()
 bool DebugScene::Start()
 {
 	layout_ = new Layout;
-	layout_->Initialize<InGameMenu>("Assets/ui/Layout/InGameMenu.json");
+	layout_->Initialize<CameraOptionMenu>("Assets/ui/Layout/CameraOptionMenu.json");
 
 	return true;
 }
@@ -38,7 +38,7 @@ bool DebugScene::Start()
 void DebugScene::Update()
 {
 	//taskScheduler_->Update(g_gameTime->GetFrameDeltaTime());
-	InGameMenu* menu = static_cast<InGameMenu*>(layout_->GetMenu());
+	CameraOptionMenu* menu = static_cast<CameraOptionMenu*>(layout_->GetMenu());
 	
 	layout_->Update();
 }

@@ -121,10 +121,18 @@ void OptionMenu::Render(RenderContext& rc)
 
 void OptionMenu::InitializeLogic()
 {
+	// 選択をサウンドにリセット
+	selectOptionType = SOUND_OPTION_TYPE;
+
+	// スケジューラーの生成
 	taskScheduler = std::make_unique<TaskSchedulerSystem>();
 
 	// アニメーションアタッチ
 	AnimationIconAttach();
+
+	// リセット
+	ResetIcon();
+	SoundIconAnimation();
 
 	const int id = taskScheduler->CreateLoopSequence(20.0f);
 	{
