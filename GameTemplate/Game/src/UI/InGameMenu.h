@@ -28,6 +28,8 @@ private:
 
 	// スタミナの情報を取得するためにいるプレイヤーステートとゲージレンダー
 	GaugeRender staminaGauge_;
+	// 枯渇状態キャッシュ（Render側でも参照するため保持）
+	bool isExhausted_ = false;
 
 public:
 	void Update() override;
