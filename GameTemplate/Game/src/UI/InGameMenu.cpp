@@ -12,8 +12,6 @@
 #include "src/Actor/BossCharacter.h"
 #include "src/Actor/ActorStatus.h"
 
- 
-
 
 namespace
 {
@@ -253,28 +251,55 @@ void InGameMenu::Update()
 
 	// スタミナの計算
 	float staminaRate = stamina / maxStamina;
-	
+	if (player) {
+		isExhausted_ = player->IsExhausted();
+	}
+
 	staminaGauge_.SetProgressRange(0.0, staminaRate);
 	staminaGauge_.Update();
 
 	// スタミナの色を変える
-	if (staminaRate >= 1.0f)
+	if (isExhausted_)
+	{
+		// 枯渇中：ゲージ・背景リングをグレーに
+		staminaGauge_.SetGaugeColor({ 0.5f, 0.5f, 0.5f, 1.0f });
+		staminaGauge_.SetBgColor({ 0.3f, 0.3f, 0.3f, 1.0f });
+	}
+	else if (staminaRate >= 1.0f)
 	{
 		staminaGauge_.SetGaugeColor(Vector4(0.0f, 0.0f, 0.0f, 0.0f));
-		
+		staminaGauge_.SetBgColor({ 0.0f, 0.0f, 0.0f, 1.0f });
 	}
 	else if (staminaRate >= 0.5f)
 	{
 		staminaGauge_.SetGaugeColor({ 0.3f,1.0f,0.3f,1.0f });
-		
+		staminaGauge_.SetBgColor({ 0.0f, 0.0f, 0.0f, 1.0f });
 	}
 	else if (staminaRate >= 0.25f)
 	{
 		staminaGauge_.SetGaugeColor({ 1.0f,1.0f,0.3f,1.0f });
+		staminaGauge_.SetBgColor({ 0.0f, 0.0f, 0.0f, 1.0f });
 	}
 	else
 	{
 		staminaGauge_.SetGaugeColor({ 1.0f,0.3f,0.3f,1.0f });
+		staminaGauge_.SetBgColor({ 0.0f, 0.0f, 0.0f, 1.0f });
+	}
+
+	// 枯渇時：スキルボタンA（回避/ダッシュ）のグレー化と枯渇アイコン表示
+	{
+		const Vector4 exhaustedColor = { 0.3f, 0.3f, 0.3f, 1.0f };
+		auto* dodgeIconBack = GetUI<UIIcon>(Hash32("dodeg_Icon_back"));
+		auto* dodgeButtonBack = GetUI<UIIcon>(Hash32("dodeg_Icon_run_back"));
+		auto* dodgeIconFlame = GetUI<UIIcon>(Hash32("dodeg_Icon_flame"));
+		auto* dodgeIconPunch = GetUI<UIIcon>(Hash32("dodeg_Icon_punch"));
+		if (dodgeIconBack) dodgeIconBack->color = isExhausted_ ? exhaustedColor : Vector4::White;
+		if (dodgeButtonBack) dodgeButtonBack->color = isExhausted_ ? exhaustedColor : Vector4::White;
+		if (dodgeIconFlame) dodgeIconFlame->color = isExhausted_ ? exhaustedColor : Vector4::White;
+		if (dodgeIconPunch) dodgeIconPunch->color = isExhausted_ ? exhaustedColor : Vector4::White;
+
+		auto* depletedBtnIcon = GetUI<UIIcon>(Hash32("StaminaDepleted_ButtonA"));
+		if (depletedBtnIcon) depletedBtnIcon->isDraw = isExhausted_;
 	}
 
 
@@ -356,7 +381,7 @@ void InGameMenu::InitializeLogic()
 	staminaGauge_.SetThickness(0.2f, 0.12f);
 	staminaGauge_.SetProgressRangeDeg(0, 360);
 	staminaGauge_.SetGaugeColor({ 0.3f,1.0f,0.3f,1.0f });
-	//staminaGauge_.SetBgColor({ 0.3f,0.3f,0.3f,0.0f });
+	staminaGauge_.SetBgColor({ 0.0f, 0.0f, 0.0f, 0.0f });
 }
 
 
