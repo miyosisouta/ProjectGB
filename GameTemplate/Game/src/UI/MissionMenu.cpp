@@ -99,7 +99,7 @@ void MissionMenu::PlayCountDisplay(UIDigit* digit, UIAnimationSequence* seq, int
 {
 	digit->isDraw = true;
 	digit->SetNumber(count);
-	digit->transform.localPosition.x = (count >= 10) ? 95.0f : 130.0f;
+	digit->transform.localPosition.x = (count >= 10) ? 105.0f : 140.0f;
 	seq->Play(digit);
 }
 

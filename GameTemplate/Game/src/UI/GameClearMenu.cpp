@@ -163,20 +163,23 @@ void GameClearMenu::InitializeLogic()
 	}
 
 	// クリア済みミッションの丸エフェクトをRevealの0.5秒後にスケジュール
+	// IsCleared()をReveal時点で判定することでゴリラ/亀いずれも同じタイミングで再生
 	const float revealTimes[]      = { 7.0f,  7.5f,  8.0f   };
-	const float effectYPositions[] = { 50.0f, -100.0f, -250.0f };
+	// X=-550: medal_gold の localX(-220) × scale(2.5) = ワールドX -550
+	// Y: 各カードのワールドY(60/-90/-240) から -30 でメダルの少し下
+	const float effectYPositions[] = { 30.0f, -120.0f, -270.0f };
 	for (int i = 0; i < 3; i++)
 	{
-		auto* mission = MissionManager::Get().GetMissionByIndex(i);
-		if (!mission || !mission->IsCleared()) continue;
-
 		const float effectDelay = revealTimes[i] + 0.5f;
 		const float yPos = effectYPositions[i];
-		taskSchedulerSystem_->AddTimer(effectDelay, [this, yPos]()
+		const int missionIdx = i;
+		taskSchedulerSystem_->AddTimer(effectDelay, [this, yPos, missionIdx]()
 		{
+			auto* mission = MissionManager::Get().GetMissionByIndex(missionIdx);
+			if (!mission || !mission->IsCleared()) return;
 			for (int j = 0; j < MAX_EFFECT_NUM; j++)
 			{
-				effectRenderList_[j]->SetPosition(Vector3(-440.0f, yPos, 0.0f));
+				effectRenderList_[j]->SetPosition(Vector3(-550.0f, yPos, 0.0f));
 				effectRenderList_[j]->Play();
 			}
 		});
@@ -242,7 +245,7 @@ void GameClearMenu::ShowMissionBackground(int index)
 				// 現在のカウントを設定
 				const int count = mission->GetCurrentCount();
 				countDigit->SetNumber(count);
-				countDigit->transform.localPosition.x = (count >= 10) ? 95.0f : 130.0f;
+				countDigit->transform.localPosition.x = (count >= 10) ? 105.0f : 140.0f;
 			}
 		}
 	}
