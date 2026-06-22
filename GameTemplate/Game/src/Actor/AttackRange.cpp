@@ -101,7 +101,8 @@ void AttackRange::Update()
     else
     {
         // サークル (デフォルト): param2=時間 (パルスリング用), param3=pulseSpeed
-        pulseTime_ += g_gameTime->GetFrameDeltaTime();
+        // 表示中のみ加算（非表示中にズレるのを防ぐ）
+        if (isDraw_) pulseTime_ += g_gameTime->GetFrameDeltaTime();
         model_.SetSplatColorParams(
             initParam_.emissiveIntensity,
             initParam_.lineThreshold,

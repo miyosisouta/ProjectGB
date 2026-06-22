@@ -92,8 +92,24 @@ public:
      */
     void SetScale(const Vector3& scale);
 
-    /** 表示・非表示を切り替える。 */
-    void SetDraw(bool isDraw) { isDraw_ = isDraw; }
+    /**
+     * 表示・非表示を切り替える。
+     * true にした瞬間 pulseTime_ をリセットし、パルスリングが中央から再開する。
+     */
+    void SetDraw(bool isDraw)
+    {
+        if (isDraw && !isDraw_) pulseTime_ = 0.0f;
+        isDraw_ = isDraw;
+    }
+    /**
+     * [Circle 専用] カウントダウン時間を渡すと、その秒数でパルスリングが
+     * 外円にちょうど到達するよう pulseSpeed を自動設定する。SetDraw(true) の前に呼ぶこと。
+     */
+    void SetPulseCountdown(float durationSeconds)
+    {
+        if (durationSeconds > 0.0f)
+            initParam_.pulseSpeed = 1.0f / durationSeconds;
+    }
     /** 現在の表示状態を取得する。 */
     bool GetDraw() const { return isDraw_; }
     /**
