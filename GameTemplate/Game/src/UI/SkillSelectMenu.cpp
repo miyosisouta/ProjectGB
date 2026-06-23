@@ -122,7 +122,7 @@ void SkillSelectMenu::Render(RenderContext& rc)
 
 void SkillSelectMenu::InitializeLogic()
 {
-	// 左にする
+	// 選択状態を一番左(地雷)にリセット
 	selectSkillType = SKILL_LANDMINE_TYPE;
 
 	taskSchedulerSystem_ = std::make_unique<TaskSchedulerSystem>();

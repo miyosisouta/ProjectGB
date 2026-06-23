@@ -308,11 +308,7 @@ void KeyConfigOptionMenu::Update()
 		case KEY_CONFIG_STATE_DECIDE:
 		{
 			// 青枠点滅：消
-			auto* selectFlame = GetUI<UIIcon>(Hash32("flame"));
-			auto* dummyFlame = GetUI<UIDummy>(Hash32("InitFlame"));
-			auto* animation = selectFlame->FindAnimation(Hash32("KeyConfig_selectFlame_FadeIn"));
-			animation->Stop();
-			selectFlame->color.w = dummyFlame->color.w;
+			ResetSelectFlameAnimation();
 
 			// 状態の切り替え
 			keyConfigState_ = KEY_CONFIG_STATE_SELECT;
@@ -337,10 +333,12 @@ void KeyConfigOptionMenu::Update()
 		// 閉じたので2か所ボタン表示を切り替える
 		case KEY_CONFIG_STATE_OVERLAP_DECIDE:
 		{
+			// 青枠点滅：消
+			ResetSelectFlameAnimation();
+
 			// 選択されたボタンを設定
 			KeyConfig::Get().SetKeyBind(overlapAction_, selectButton_);
 			KeyConfig::Get().SetKeyBind(selectAction_, overlapButton_);
-
 
 			InitializeButtonIcon(Hash32("SkillButton/buttonA"), Hash32("SkillButton/buttonB"), Hash32("SkillButton/buttonX"), Hash32("SkillButton/buttonY"), enActionSpecialSkill);
 			InitializeButtonIcon(Hash32("RunButton/buttonA"), Hash32("RunButton/buttonB"), Hash32("RunButton/buttonX"), Hash32("RunButton/buttonY"), enActionDash);
@@ -379,6 +377,10 @@ void KeyConfigOptionMenu::Render(RenderContext& rc)
 
 void KeyConfigOptionMenu::InitializeLogic()
 {
+	// 選択状態を一番上(スキル)にリセット
+	selectKeyConfigType = SKILL_KEY_TYPE;
+
+	// タスクスケジューラーの生成
 	taskScheduler_ = std::make_unique<TaskSchedulerSystem>();	
 
 	// 一回だけよぶアタッチ
@@ -448,6 +450,16 @@ void KeyConfigOptionMenu::InitializeLogic()
 		InitializeButtonIcon(Hash32("RunButton/buttonA"), Hash32("RunButton/buttonB"), Hash32("RunButton/buttonX"), Hash32("RunButton/buttonY"), enActionDash);
 		InitializeButtonIcon(Hash32("AttackButton/buttonA"), Hash32("AttackButton/buttonB"), Hash32("AttackButton/buttonX"), Hash32("AttackButton/buttonY"), enActionNormalSkill);
 	}
+}
+
+void KeyConfigOptionMenu::ResetSelectFlameAnimation()
+{
+	// 青枠点滅：消
+	auto* selectFlame = GetUI<UIIcon>(Hash32("flame"));
+	auto* dummyFlame = GetUI<UIDummy>(Hash32("InitFlame"));
+	auto* animation = selectFlame->FindAnimation(Hash32("KeyConfig_selectFlame_FadeIn"));
+	animation->Stop();
+	selectFlame->color.w = dummyFlame->color.w;
 }
 
 void KeyConfigOptionMenu::UpdateSelectFlame()
@@ -540,29 +552,6 @@ void KeyConfigOptionMenu::UpdateButtonIcon(const uint32_t buttonAId, const uint3
 	buttonX->isDraw = false;
 	auto* buttonY = GetUI<UIIcon>(buttonYId);
 	buttonY->isDraw = false;
-
-
-	//// もし、ボタンが押されなかったら抜ける
-	//if(isWaiting_)
-	//{
-	//	return;
-	//}
-
-	//// 初期キーを変数に入れる
-	//int attackKey = KeyConfig::Get().GetBindButton(static_cast<EnGameAction>(actionKey));
-	//// 特定のボタンが押されたら表示
-	//if (attackKey == enButtonA) {
-	//	buttonA->isDraw = true;
-	//}
-	//if (attackKey == enButtonB) {
-	//	buttonB->isDraw = true;
-	//}
-	//if (attackKey == enButtonX) {
-	//	buttonX->isDraw = true;
-	//}
-	//if (attackKey == enButtonY) {
-	//	buttonY->isDraw = true;
-	//}
 }
 
 bool KeyConfigOptionMenu::IsButtonOverLap() const

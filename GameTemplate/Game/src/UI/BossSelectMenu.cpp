@@ -108,7 +108,7 @@ void BossSelectMenu::Render(RenderContext& rc)
 
 void BossSelectMenu::InitializeLogic()
 {
-	// 選択状態をゴリラ（左端）にリセット
+	// 選択状態をゴリラ(左端)にリセット
 	selectBossType = BOSS_GOLLIRA_TYPE;
 
 	// taskSchedulerを先に生成

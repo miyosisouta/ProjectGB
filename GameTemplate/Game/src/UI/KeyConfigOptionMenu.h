@@ -49,6 +49,7 @@ public:
 
 
 private:
+	void ResetSelectFlameAnimation();
 	void UpdateSelectFlame();
 	void UpdateSelectedButton(const int buttonType);
 	void UpdateButtonIcon(const uint32_t buttonAId, const uint32_t buttonBId, const uint32_t buttonXId, const uint32_t buttonYId, const int actionKey);

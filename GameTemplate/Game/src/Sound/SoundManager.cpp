@@ -64,6 +64,16 @@ void SoundManager::Update()
 }
 
 
+void SoundManager::ResetToDefault()
+{
+	volumes_[static_cast<size_t>(SoundVolumeType::Master)] = DEFAULT_VOLUME;
+	volumes_[static_cast<size_t>(SoundVolumeType::BGM)] = DEFAULT_VOLUME;
+	volumes_[static_cast<size_t>(SoundVolumeType::SE)] = DEFAULT_VOLUME;
+
+	bgmVolumeScale_ = 1.0f;
+	isChangeVolume_ = 1.0f;
+}
+
 void SoundManager::PlayBGM(const int kind)
 {
 	// BGMが生成されていない

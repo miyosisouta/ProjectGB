@@ -65,6 +65,12 @@ public:
      */
     void Update();
 
+    /**
+     * 初期設定
+     * タイトルに戻る時に初期化
+     */
+    void ResetToDefault();
+
 
 public:
     /** BGM再生 */

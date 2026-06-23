@@ -20,6 +20,13 @@ void CameraManager::Setup(nsK2EngineLow::Camera* engineCamera)
     engineCamera_ = engineCamera;
 }
 
+void CameraManager::ResetToDefault()
+{
+    sensitivityStage_ = SENSITIVITY_DEFAULT_STAGE;
+    distance_ = DISTANCE_NORMAL;
+    invert_ = INVERT_OFF;
+}
+
 
 void CameraManager::Register(const uint32_t nameHash, RefCameraController controller)
 {

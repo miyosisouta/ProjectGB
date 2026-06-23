@@ -65,6 +65,12 @@ public:
     void Setup(nsK2EngineLow::Camera* engineCamera);
 
     /**
+     * 初期設定
+     * タイトルに戻る時に初期化
+     */
+    void ResetToDefault();
+
+    /**
      * 更新処理
      * ブレンド計算とエンジンカメラへの反映
      */
