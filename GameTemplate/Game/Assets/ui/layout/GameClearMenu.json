@@ -35,7 +35,7 @@
         "name": "missionResult1",
         "source": "Assets/ui/layout/MissionResultCard.json",
         "position": [0, 60, 0],
-        "scale": [2, 2.4, 1]
+        "scale": [2.5, 2.5, 1]
       },
       {
         "comment": "ミッション結果カード2（中）",
@@ -43,7 +43,7 @@
         "name": "missionResult2",
         "source": "Assets/ui/layout/MissionResultCard.json",
         "position": [0, -90, 0],
-        "scale": [2, 2.4, 1]
+        "scale": [2.5, 2.5, 1]
       },
       {
         "comment": "ミッション結果カード3（下）",
@@ -51,7 +51,7 @@
         "name": "missionResult3",
         "source": "Assets/ui/layout/MissionResultCard.json",
         "position": [0, -240, 0],
-        "scale": [2, 2.4, 1]
+        "scale": [2.5, 2.5, 1]
       },
 
       {
@@ -61,7 +61,7 @@
         "asset": "Assets/ui/option/decision/a_button.DDS",
         "width": 80,
         "height": 80,
-        "position": [550, -450, 0],
+        "position": [650, -450, 0],
         "scale": [1, 1, 1],
         "rotation": 0,
         "color": [1, 1, 1, 1],
@@ -71,10 +71,10 @@
         "comment": "もどるのテキスト画像",
         "type": "UIIcon",
         "name": "return_text",
-        "asset": "Assets/ui/option/return/ward.DDS",
+        "asset": "Assets/ui/option/return/return.DDS",
         "width": 200,
         "height": 60,
-        "position": [700, -450, 0],
+        "position": [800, -450, 0],
         "scale": [1, 1, 1],
         "rotation": 0,
         "color": [1, 1, 1, 1],
