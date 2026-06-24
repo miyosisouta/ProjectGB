@@ -1,0 +1,71 @@
+﻿{
+    "TitleBackground": [
+        {
+            "comment": "背景オブジェクトの動くスピード",
+            "treeSpeed":    150.0,
+            "grassSpeed":   150.0,
+            "fenceSpeed":   150.0,
+
+            "comment": "木の間隔とZ座標（treeZ2 は2列目）",
+            "treeSpacing":  450.0,
+            "treeZ":       -700.0,
+            "treeZ2":     -1100.0,
+
+            "comment": "草の間隔とZ座標",
+            "grassSpacing": 240.0,
+            "grassZ":      -300.0,
+
+            "comment": "柵の間隔とZ座標",
+            "fenceSpacing": 250.0,
+            "fenceZ":      -480.0,
+
+            "comment": "地面のY座標とスケール",
+            "groundY":     -15.0,
+            "groundScale": 5000.0,
+
+            "comment": "カリングのマージン（cullingMargin2 は奥の2列目の木専用）",
+            "cullingMargin":  400.0,
+            "cullingMargin2": 1800.0,
+
+            "comment": "右端スポーン座標（草・柵共通）。木は treeSpawnX で個別指定",
+            "spawnX":       1800.0,
+            "treeSpawnX":   2800.0,
+
+            "comment": "プレイヤーの位置と回転",
+            "playerX":      -200.0,
+            "playerY":         0.0,
+            "playerZ":       200.0,
+            "playerRotYDeg":  90.0,
+
+            "comment": "カメラの位置とターゲット",
+            "camPosX":     90.0,
+            "camPosY":    125.0,
+            "camPosZ":    625.0,
+            "camTargetX":  75.0,
+            "camTargetY": 150.0,
+            "camTargetZ":   0.0,
+            "camFovDeg":   60.0,
+            "camNear":      1.0,
+            "camFar":    5000.0,
+
+            "comment": "スカイキューブのスケール（farClip より十分小さくしないとクリップされる）",
+            "skyCubeScale": 400.0,
+
+            "comment": "グループランダム配置 — 最大連続数 / 最小ギャップ / ベース間隔 / 乗数上限",
+            "treeMaxConsecutive":  3,
+            "treeMinGap":          150.0,
+            "treeBaseGap":         350.0,
+            "treeMaxGap":          3.0,
+
+            "grassMaxConsecutive": 4,
+            "grassMinGap":         25.0,
+            "grassBaseGap":        100.0,
+            "grassMaxGap":         2.0,
+
+            "fenceMaxConsecutive": 3,
+            "fenceMinGap":         150.0,
+            "fenceBaseGap":        300.0,
+            "fenceMaxGap":         3.0
+        }
+    ]
+}
