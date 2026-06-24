@@ -9,8 +9,8 @@
 #include "src/UI/Menu.h"
 //#include "src/Util/TaskSchedulerSystem.h"
 
-
 class Layout;
+class TitleBackground;
 
 
 class DebugScene : public IScene
@@ -20,6 +20,7 @@ class DebugScene : public IScene
 
 private:
 	Layout* layout_ = nullptr;
+	TitleBackground* titleBackground_ = nullptr;
 
 	std::unique_ptr<TaskSchedulerSystem> taskScheduler_ = nullptr;
 

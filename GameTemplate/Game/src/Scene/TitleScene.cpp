@@ -8,11 +8,12 @@
 #include "TitleScene.h"
 
 #include "src/Scene/InGameScene.h"
-#include "src/Scene/TitleScreen.h"
+#include "src/Scene/TitleBackground.h"
 #include "src/Sound/SoundManager.h"
 
 #include "src/UI/Layout.h"
 #include "src/UI/TitleMenu.h"
+#include "src/UI/LoadingMenu.h"
 #include "src/UI/BossSelectMenu.h"
 #include "src/UI/SkillSelectMenu.h"
 #include "src/UI/CheckStartWindow.h"
@@ -26,11 +27,13 @@
 
 TitleScene::TitleScene()
 {
+    titleBackground_ = NewGO<TitleBackground>(0, "titleBackground");
 }
 
 
 TitleScene::~TitleScene()
 {
+    DeleteGO(titleBackground_);
 }
 
 
@@ -51,25 +54,41 @@ void TitleScene::Update()
 	auto* titleMenu = dynamic_cast<TitleMenu*>(menu);
 	// タイトルのメニューが有効な時の処理
 	if (titleMenu) {
+		// 設定画面から戻ってきたらスクロール再開
+		if (optionMenuWasActive_ && !UIScreenManager::Get().IsTransitioning()) {
+			optionMenuWasActive_ = false;
+			titleBackground_->SetScrollEnabled(true);
+		}
+
 		if (titleMenu->IsAbuttonEnabled()) {
 			if (titleMenu->IsSelectStat()) {
 				if (g_pad[0]->IsTrigger(enButtonA)) {
-					/*SoundManager::Get().PlaySE(enSoundKind_Menu_Decide);
-					isRequestScene = true;
-
-					UIScreenManager::Get().Pop();*/
-					// すぐ閉じる
-					UIScreenManager::Get().Push<BossSelectMenu>("Assets/ui/layout/BossSelectMenu.json", UITransitionMode::Push, UIScreenTransitionPreset::None());
+					SoundManager::Get().PlaySE(enSoundKind_Menu_Decide);
+					// 背景を止めてプレイヤーを走り去らせる（Loading 中の描画をスキップして負荷軽減）
+					titleBackground_->SetScrollEnabled(false);
+					titleBackground_->StartPlayerRunOff();
+					titleBackground_->SetVisible(false);
+					// ローディング → ボス選択 の順で遷移
+					// Replace にすることで TitleMenu が先に退場し、Loading が常に最前面になる
+					pendingLoad_ = PendingLoad::ToBossSelect;
+					loadingTimer_ = 0.0f;
+					UIScreenManager::Get().Push<LoadingMenu>(
+						"Assets/ui/layout/LoadingMenu.json",
+						UITransitionMode::Replace,
+						UIScreenTransitionPreset::FadeInOut());
 				}
 			}
 			if (titleMenu->IsSelectOption()) {
 				if (g_pad[0]->IsTrigger(enButtonA)) {
 					SoundManager::Get().PlaySE(enSoundKind_Menu_Decide);
+					// 背景を止めて設定画面へ（プレイヤーはその場に留まる）
+					titleBackground_->SetScrollEnabled(false);
+					optionMenuWasActive_ = true;
 					UIScreenManager::Get().Push<OptionMenu>("Assets/ui/layout/OptionMenu.json", UITransitionMode::Push, UIScreenTransitionPreset::FadeInOut());
 				}
 			}
 			if (titleMenu->IsSelectExit()) {
-				if (g_pad[0]->IsTrigger(enButtonA)) {//
+				if (g_pad[0]->IsTrigger(enButtonA)) {
 					SoundManager::Get().PlaySE(enSoundKind_Menu_Decide);
 					exit(0);
 				}
@@ -107,11 +126,59 @@ void TitleScene::Update()
 	}
 
 
-	// ボス選択メニューが有効な時(タイトルに戻る)
+	// ボス選択メニューが有効な時(タイトルに戻る) ← Loading を上に重ねてフェードイン
 	if (bossSelectMenu) {
 		if (!UIScreenManager::Get().IsTransitioning() && g_pad[0]->IsTrigger(enButtonB)) {
 			SoundManager::Get().PlaySE(enSoundKind_Menu_Return);
-			UIScreenManager::Get().Pop();
+			pendingLoad_ = PendingLoad::ToTitleMenu;
+			loadingTimer_ = 0.0f;
+			// Push モード: ボス選択画面が下に残ったまま Loading がフェードイン
+			// onActive でフェードイン完了を検知 → ボス選択を隠し背景をリセット
+			UIScreenCallbacks loadCb;
+			loadCb.onActive = [this]() {
+				// Loading が完全に表示された → ボス選択を非表示
+				if (auto* bossMenu = UIScreenManager::Get().FindMenu<BossSelectMenu>())
+					if (auto* canvas = bossMenu->GetCanvas())
+						canvas->color.w = 0.0f;
+				// プレイヤー位置・オブジェクトを初期化（スクロールはタイマー後に再開）
+				titleBackground_->ResetBackground();
+			};
+			UIScreenManager::Get().Push<LoadingMenu>(
+				"Assets/ui/layout/LoadingMenu.json",
+				UITransitionMode::Push,
+				UIScreenTransitionPreset::FadeInOut(),
+				loadCb);
+		}
+	}
+
+
+	// ローディングメニューが有効な時：タイマーが満ちたら次の画面へ
+	auto* loadingMenu = dynamic_cast<LoadingMenu*>(menu);
+	if (loadingMenu && !UIScreenManager::Get().IsTransitioning()) {
+		loadingTimer_ += g_gameTime->GetFrameDeltaTime();
+		if (loadingTimer_ >= 3.0f) {
+			loadingTimer_ = 0.0f;
+			if (pendingLoad_ == PendingLoad::ToBossSelect) {
+				pendingLoad_ = PendingLoad::None;
+				// None() にすることで Loading が消えた瞬間に BossSelect を即表示し
+				// TitleBackground が透けて映る瞬間をなくす
+				UIScreenManager::Get().Push<BossSelectMenu>(
+					"Assets/ui/layout/BossSelectMenu.json",
+					UITransitionMode::Replace,
+					UIScreenTransitionPreset::None());
+			}
+			else if (pendingLoad_ == PendingLoad::ToTitleMenu) {
+				pendingLoad_ = PendingLoad::None;
+				// Loading フェードアウト開始と同時に背景を再表示・スクロール再開
+				titleBackground_->SetVisible(true);
+				titleBackground_->SetScrollEnabled(true);
+				// Inactive になったボス選択など残存エントリーを除去してから積む
+				UIScreenManager::Get().ClearInactive();
+				UIScreenManager::Get().Push<TitleMenu>(
+					"Assets/ui/layout/TitleMenu.json",
+					UITransitionMode::Replace,
+					UIScreenTransitionPreset::FadeInOut());
+			}
 		}
 	}
 

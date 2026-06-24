@@ -89,15 +89,7 @@ void TimerMenu::Render(RenderContext& rc)
 	MenuBase::Render(rc);
 }
 
-
 void TimerMenu::InitializeLogic()
 {
-	// ゲームクリアの文字をバウンスする
-	/*auto* gameClearBounce = GetUI<UIIcon>(Hash32("gameClear"));
-	UIAnimationFactory::Attach<UITranslateOffsetAnimation>(gameClearBounce, Hash32("GameClearStampBounceA"));
-	UIAnimationFactory::Attach<UITranslateOffsetAnimation>(gameClearBounce, Hash32("GameClearStampBounceB"));
-	UIAnimationFactory::Attach<UITranslateOffsetAnimation>(gameClearBounce, Hash32("GameClearStampBounceC"));
-	gameClearSequence_ = std::make_unique<UIAnimationSequence>();
-	gameClearSequence_->Add(Hash32("GameClearStampBounceA")).Add(Hash32("GameClearStampBounceB")).Add(Hash32("GameClearStampBounceC"));*/
-
 }
+

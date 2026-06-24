@@ -666,6 +666,15 @@ public:
         stack_[stackIndex].updateWhenInactive = enable;
     }
 
+    /** Inactive 状態のエントリーをスタックから即座に除去する（遷移中は呼ばないこと） */
+    void ClearInactive()
+    {
+        stack_.erase(
+            std::remove_if(stack_.begin(), stack_.end(),
+                [](const UIScreenEntry& e) { return e.state == UIScreenState::Inactive; }),
+            stack_.end());
+    }
+
 
 private:
     // ============================================

@@ -7,9 +7,11 @@
 #include "stdafx.h"
 #include "DebugScene.h"
 #include "TitleScene.h"
+#include "src/Scene/TitleBackground.h"
 
 #include "src/sound/SoundManager.h"
 #include "src/Util/TaskSchedulerSystem.h"
+
 
 #include "src/UI/Layout.h"
 #include "src/UI/CameraOptionMenu.h"
@@ -17,19 +19,27 @@
 
 DebugScene::DebugScene()
 {
+	titleBackground_ = NewGO<TitleBackground>(0, "titleBackground");
 }
 
 
 DebugScene::~DebugScene()
 {
-	delete layout_;
+	DeleteGO(titleBackground_);
+	// UI
+	//delete layout_;
 }
 
 
 bool DebugScene::Start()
 {
-	layout_ = new Layout;
-	layout_->Initialize<CameraOptionMenu>("Assets/ui/Layout/CameraOptionMenu.json");
+	// UI
+	//layout_ = new Layout;
+	//layout_->Initialize<CameraOptionMenu>("Assets/ui/Layout/CameraOptionMenu.json");
+
+
+	// タイトル
+
 
 	return true;
 }
@@ -37,16 +47,18 @@ bool DebugScene::Start()
 
 void DebugScene::Update()
 {
+	// UI
 	//taskScheduler_->Update(g_gameTime->GetFrameDeltaTime());
-	CameraOptionMenu* menu = static_cast<CameraOptionMenu*>(layout_->GetMenu());
+	//CameraOptionMenu* menu = static_cast<CameraOptionMenu*>(layout_->GetMenu());
 	
-	layout_->Update();
+	//layout_->Update();
 }
 
 
 void DebugScene::Render(RenderContext& rc)
 {
-	layout_->Render(rc);
+	// UI
+	//layout_->Render(rc);
 }
 
 

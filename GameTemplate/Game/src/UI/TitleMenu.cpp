@@ -166,6 +166,10 @@ void TitleMenu::InitializeLogic()
 			});
 	}
 	
+	// タイトルの水色背景は 3D 背景があるため非表示
+	auto* back = GetUI<UIIcon>(Hash32("title_back"));
+	back->isDraw = false;
+
 	// 非表示 はじめる
 	auto* start = GetUI<UIIcon>(Hash32("Title_start"));
 	start->isDraw = false;
