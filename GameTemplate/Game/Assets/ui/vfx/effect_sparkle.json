@@ -20,8 +20,8 @@
             "type": "InitPosition",
             "position": {
                 "mode": "perAxis",
-                "x": { "mode": "random", "min": -100.0, "max": 100.0 },
-                "y": { "mode": "random", "min": -50.0,  "max": 50.0 },
+                "x": { "mode": "random", "min": -200.0, "max": 150.0 },
+                "y": { "mode": "random", "min": -30.0,  "max": 50.0 },
                 "z": 0.0
             }
         },

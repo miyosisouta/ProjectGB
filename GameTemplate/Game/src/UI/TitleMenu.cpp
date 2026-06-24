@@ -81,8 +81,8 @@ void TitleMenu::Render(RenderContext& rc)
 {
 	MenuBase::Render(rc);
 	
-	effectRender->Draw(rc);
-	effectRenderB->Draw(rc);
+	//effectRender->Draw(rc);
+	//effectRenderB->Draw(rc);
 }
 
 
@@ -151,12 +151,12 @@ void TitleMenu::InitializeLogic()
 		// 星のエフェクト
 		effectRender = std::make_unique<ParticleEffectRender>();
 		effectRender->Init("Assets/ui/vfx/effect_sparkle.json", "Assets/ui/titleUI/kira.dds", 128.0f, 128.0f);
-		effectRender->SetPosition(Vector3(370.0f, 290, 0.0f));
+		effectRender->SetPosition(Vector3(280.0f, 290, 0.0f));
 		effectRender->EnableHotReload();
 
 		effectRenderB = std::make_unique<ParticleEffectRender>();
 		effectRenderB->Init("Assets/ui/vfx/effect_sparkle.json", "Assets/ui/titleUI/kira.dds", 128.0f, 128.0f);
-		effectRenderB->SetPosition(Vector3(-320.0f, 150, 0.0f));
+		effectRenderB->SetPosition(Vector3(-280.0f, 200, 0.0f));
 		effectRenderB->EnableHotReload();
 
 		taskScheduler->AddTimer(4.0f, [&]()
