@@ -7,8 +7,22 @@
 #include "stdafx.h"
 #include "TitleBackground.h"
 #include "src/Camera/CameraManager.h"
+#include "src/Core/ParameterManager.h"
 
 static constexpr const char* TITLEBG_PARAM_JSON = "Assets/Parameter/TitleBackgroundParameter.json";
+
+namespace
+{
+    /* 地面 */
+    constexpr float GROUND_INIT_POS = 0.0f;
+    constexpr float GROUND_INIT_SCALY = 1.0f;
+
+    /* プレイヤー */
+    constexpr uint8_t PLAYER_ANIMATION_TOTAL_NUM = 2;
+    constexpr uint8_t PLAYER_ANIMATION_WALK = 0;
+    constexpr uint8_t PLAYER_ANIMATION_RUN = 1;
+    static const Vector3 PLAYER_RUN_EFFECT_SCAL = Vector3(3.0f, 3.0f, 3.0f);
+}
 
 
 TitleBackground::TitleBackground() {}
@@ -28,15 +42,15 @@ bool TitleBackground::Start()
     ground_.SetName("titleGround");
     ground_.Init(
         "Assets/Objects/Stage/Forest/ObjectData/titleGround.tkm",
-        Vector3(0.0f, param_.groundY, 0.0f),
+        Vector3(GROUND_INIT_POS, param_.groundY, GROUND_INIT_POS),
         Quaternion::Identity,
-        Vector3(param_.groundScale, 1.0f, param_.groundScale)
+        Vector3(param_.groundScale, GROUND_INIT_SCALY, param_.groundScale)
     );
 
     // モデル初期化（配置はスポーナーが行う）
     for (int i = 0; i < TitleBGCount::TREE_COUNT; i++)
         trees_[i].model.Init("Assets/Objects/Stage/Forest/ObjectData/tree.tkm");
-    for (int i = 0; i < TitleBGCount::TREE_COUNT2; i++)
+    for (int i = 0; i < TitleBGCount::TREE_COUNT_SECOND; i++)
         trees2_[i].model.Init("Assets/Objects/Stage/Forest/ObjectData/tree.tkm");
     for (int i = 0; i < TitleBGCount::GRASS_COUNT; i++)
         grasses_[i].model.Init("Assets/Objects/Stage/Forest/ObjectData/grass.tkm");
@@ -48,9 +62,11 @@ bool TitleBackground::Start()
 
     // プレイヤー
     {
-        playerAnims_.Create(1);
-        playerAnims_[0].Load("Assets/Objects/Player/Animation/Walk.tka");
-        playerAnims_[0].SetLoopFlag(true);
+        playerAnims_.Create(PLAYER_ANIMATION_TOTAL_NUM);
+        playerAnims_[PLAYER_ANIMATION_WALK].Load("Assets/Objects/Player/Animation/Walk.tka");
+        playerAnims_[PLAYER_ANIMATION_RUN].Load("Assets/Objects/Player/Animation/Run.tka");
+        playerAnims_[PLAYER_ANIMATION_WALK].SetLoopFlag(true);
+        playerAnims_[PLAYER_ANIMATION_RUN].SetLoopFlag(true);
 
         playerModel_.Init(
             "Assets/Objects/Player/Model/Model.tkm",
@@ -58,7 +74,7 @@ bool TitleBackground::Start()
             static_cast<int>(playerAnims_.size()),
             enModelUpAxisZ
         );
-        playerModel_.PlayAnimation(0);
+        playerModel_.PlayAnimation(PLAYER_ANIMATION_WALK);
 
         ApplyPlayerTransform();
     }
@@ -79,6 +95,7 @@ bool TitleBackground::Start()
 
 void TitleBackground::Update()
 {
+#ifdef _DEBUG
     // Selectボタンで JSON をホットリロード
     if (g_pad[0]->IsTrigger(enButtonSelect)) {
         LoadParam();
@@ -88,50 +105,42 @@ void TitleBackground::Update()
         ApplyCamera();
         skyCube_->SetScale(param_.skyCubeScale);
     }
+#endif 
 
+    // スクロール中
     if (scrollEnabled_) {
-        const float despawnX   = -param_.spawnX;
-        const float treeSpawnX = param_.treeSpawnX > 0.0f ? param_.treeSpawnX : param_.spawnX;
-        const float treeDespawnX = -treeSpawnX;
+        const float treeDespawnX = -param_.tree.spawnX;
+        const float despawnX     = -param_.grass.spawnX;
 
-        UpdateSpawner(treeSpawn_,  trees_,   TitleBGCount::TREE_COUNT,
-                      param_.treeSpeed,  param_.treeSpacing,
-                      param_.treeMinGap,  param_.treeBaseGap,  param_.treeMaxGap,  param_.treeMaxConsecutive,
-                      treeSpawnX, param_.treeZ, true);
+        UpdateSpawner(treeSpawn_,  trees_,   TitleBGCount::TREE_COUNT,  param_.tree);
+        UpdateSpawner(treeSpawn2_, trees2_,  TitleBGCount::TREE_COUNT_SECOND, param_.tree2);
+        UpdateSpawner(grassSpawn_, grasses_, TitleBGCount::GRASS_COUNT, param_.grass);
+        UpdateSpawner(fenceSpawn_, fences_,  TitleBGCount::FENCE_COUNT, param_.fence);
 
-        UpdateSpawner(treeSpawn2_, trees2_,  TitleBGCount::TREE_COUNT2,
-                      param_.treeSpeed,  param_.treeSpacing,
-                      param_.treeMinGap,  param_.treeBaseGap,  param_.treeMaxGap,  param_.treeMaxConsecutive,
-                      treeSpawnX, param_.treeZ2, true);
-
-        UpdateSpawner(grassSpawn_, grasses_, TitleBGCount::GRASS_COUNT,
-                      param_.grassSpeed, param_.grassSpacing,
-                      param_.grassMinGap, param_.grassBaseGap, param_.grassMaxGap, param_.grassMaxConsecutive,
-                      param_.spawnX, param_.grassZ, true);
-
-        UpdateSpawner(fenceSpawn_, fences_,  TitleBGCount::FENCE_COUNT,
-                      param_.fenceSpeed, param_.fenceSpacing,
-                      param_.fenceMinGap, param_.fenceBaseGap, param_.fenceMaxGap, param_.fenceMaxConsecutive,
-                      param_.spawnX, param_.fenceZ);
-
-        ScrollActiveObjects(trees_,   TitleBGCount::TREE_COUNT,  param_.treeSpeed,  treeDespawnX);
-        ScrollActiveObjects(trees2_,  TitleBGCount::TREE_COUNT2, param_.treeSpeed,  treeDespawnX);
-        ScrollActiveObjects(grasses_, TitleBGCount::GRASS_COUNT, param_.grassSpeed, despawnX);
-        ScrollActiveObjects(fences_,  TitleBGCount::FENCE_COUNT, param_.fenceSpeed, despawnX);
+        ScrollActiveObjects(trees_,   TitleBGCount::TREE_COUNT,  param_.tree.speed,  treeDespawnX);
+        ScrollActiveObjects(trees2_,  TitleBGCount::TREE_COUNT_SECOND, param_.tree.speed,  treeDespawnX);
+        ScrollActiveObjects(grasses_, TitleBGCount::GRASS_COUNT, param_.grass.speed, despawnX);
+        ScrollActiveObjects(fences_,  TitleBGCount::FENCE_COUNT, param_.fence.speed, despawnX);
     }
 
+    // カリング
     UpdateCulling();
 
-    // プレイヤーが走り去り中なら左へ移動
-    if (playerRunOff_ && !playerGone_) {
+    // プレイヤーが走り去り中なら右へ移動し続ける
+    if (playerRunOff_) {
         const float dt = g_gameTime->GetFrameDeltaTime();
-        playerTransform_.localPosition.x -= param_.playerRunSpeed * dt;
+        playerModel_.PlayAnimation(PLAYER_ANIMATION_RUN);
+        playerTransform_.localPosition.x += param_.playerRunSpeed * dt;
         playerTransform_.UpdateTransform();
         playerModel_.SetPosition(playerTransform_.position);
         playerModel_.SetRotation(playerTransform_.rotation);
-        if (playerTransform_.localPosition.x < -param_.spawnX) {
-            playerGone_ = true;
-        }
+
+        EffectManager::Get().PlayEffect(
+            enEffectKind_Dash_Wind,
+            playerTransform_.position,
+            playerTransform_.rotation,
+            PLAYER_RUN_EFFECT_SCAL
+        );
     }
 
     playerModel_.Update();
@@ -147,7 +156,7 @@ void TitleBackground::Render(RenderContext& rc)
     for (int i = 0; i < TitleBGCount::TREE_COUNT; i++) {
         if (trees_[i].active && trees_[i].isDraw) trees_[i].model.Draw(rc);
     }
-    for (int i = 0; i < TitleBGCount::TREE_COUNT2; i++) {
+    for (int i = 0; i < TitleBGCount::TREE_COUNT_SECOND; i++) {
         if (trees2_[i].active && trees2_[i].isDraw) trees2_[i].model.Draw(rc);
     }
     for (int i = 0; i < TitleBGCount::GRASS_COUNT; i++) {
@@ -163,8 +172,9 @@ void TitleBackground::Render(RenderContext& rc)
 
 void TitleBackground::ResetBackground()
 {
-    playerRunOff_ = false;
-    playerGone_   = false;
+    playerRunOff_ = false; // スクロール停止
+    playerGone_   = false; // 走り始める
+    playerModel_.PlayAnimation(PLAYER_ANIMATION_WALK);
     ResetSpawners();
     PreFillScene();
     ApplyPlayerTransform();
@@ -173,60 +183,53 @@ void TitleBackground::ResetBackground()
 
 void TitleBackground::LoadParam()
 {
-    std::ifstream file(TITLEBG_PARAM_JSON);
-    if (!file.is_open()) return;
+    // ホットリロード対応：既存データを破棄してから再読み込み
+    ParameterManager::Get().UnloadParameter<MasterTitleBGParameter>();
+    ParameterManager::Get().LoadTitleBGParamData(TITLEBG_PARAM_JSON);
 
-    nlohmann::json j;
-    file >> j;
+    const auto* p = ParameterManager::Get().GetTitleBGParam();
+    if (!p) return;
 
-    if (!j.contains("TitleBackground") || !j["TitleBackground"].is_array() || j["TitleBackground"].empty())
-        return;
+    const float treeSpawnX = p->treeSpawnX > 0.0f ? p->treeSpawnX : p->spawnX;
 
-    const auto& p = j["TitleBackground"][0];
-    param_.treeSpeed     = p.value("treeSpeed",     param_.treeSpeed);
-    param_.grassSpeed    = p.value("grassSpeed",    param_.grassSpeed);
-    param_.fenceSpeed    = p.value("fenceSpeed",    param_.fenceSpeed);
-    param_.treeSpacing   = p.value("treeSpacing",   param_.treeSpacing);
-    param_.treeZ         = p.value("treeZ",         param_.treeZ);
-    param_.treeZ2        = p.value("treeZ2",        param_.treeZ2);
-    param_.grassSpacing  = p.value("grassSpacing",  param_.grassSpacing);
-    param_.grassZ        = p.value("grassZ",        param_.grassZ);
-    param_.fenceSpacing  = p.value("fenceSpacing",  param_.fenceSpacing);
-    param_.fenceZ        = p.value("fenceZ",        param_.fenceZ);
-    param_.groundY       = p.value("groundY",       param_.groundY);
-    param_.groundScale   = p.value("groundScale",   param_.groundScale);
-    param_.cullingMargin  = p.value("cullingMargin",  param_.cullingMargin);
-    param_.cullingMargin2 = p.value("cullingMargin2", param_.cullingMargin2);
-    param_.spawnX        = p.value("spawnX",        param_.spawnX);
-    param_.treeSpawnX    = p.value("treeSpawnX",    param_.treeSpawnX);
-    param_.playerX       = p.value("playerX",       param_.playerX);
-    param_.playerY       = p.value("playerY",       param_.playerY);
-    param_.playerZ       = p.value("playerZ",       param_.playerZ);
-    param_.playerRotYDeg = p.value("playerRotYDeg", param_.playerRotYDeg);
-    param_.camPosX       = p.value("camPosX",       param_.camPosX);
-    param_.camPosY       = p.value("camPosY",       param_.camPosY);
-    param_.camPosZ       = p.value("camPosZ",       param_.camPosZ);
-    param_.camTargetX    = p.value("camTargetX",    param_.camTargetX);
-    param_.camTargetY    = p.value("camTargetY",    param_.camTargetY);
-    param_.camTargetZ    = p.value("camTargetZ",    param_.camTargetZ);
-    param_.camFovDeg     = p.value("camFovDeg",     param_.camFovDeg);
-    param_.camNear       = p.value("camNear",       param_.camNear);
-    param_.camFar        = p.value("camFar",        param_.camFar);
-    param_.skyCubeScale  = p.value("skyCubeScale",  param_.skyCubeScale);
+    param_.tree = {
+        p->treeSpeed,  p->treeSpacing,
+        p->treeMinGap, p->treeBaseGap, p->treeMaxGap, p->treeMaxConsecutive,
+        treeSpawnX,    p->treeZ,       true
+    };
+    param_.tree2       = param_.tree;
+    param_.tree2.z     = p->treeZ2;
 
-    param_.treeMaxConsecutive  = p.value("treeMaxConsecutive",  param_.treeMaxConsecutive);
-    param_.treeMinGap          = p.value("treeMinGap",          param_.treeMinGap);
-    param_.treeBaseGap         = p.value("treeBaseGap",         param_.treeBaseGap);
-    param_.treeMaxGap          = p.value("treeMaxGap",          param_.treeMaxGap);
-    param_.grassMaxConsecutive = p.value("grassMaxConsecutive", param_.grassMaxConsecutive);
-    param_.grassMinGap         = p.value("grassMinGap",         param_.grassMinGap);
-    param_.grassBaseGap        = p.value("grassBaseGap",        param_.grassBaseGap);
-    param_.grassMaxGap         = p.value("grassMaxGap",         param_.grassMaxGap);
-    param_.fenceMaxConsecutive = p.value("fenceMaxConsecutive", param_.fenceMaxConsecutive);
-    param_.fenceMinGap         = p.value("fenceMinGap",         param_.fenceMinGap);
-    param_.fenceBaseGap        = p.value("fenceBaseGap",        param_.fenceBaseGap);
-    param_.fenceMaxGap         = p.value("fenceMaxGap",         param_.fenceMaxGap);
-    param_.playerRunSpeed      = p.value("playerRunSpeed",      param_.playerRunSpeed);
+    param_.grass = {
+        p->grassSpeed,  p->grassSpacing,
+        p->grassMinGap, p->grassBaseGap, p->grassMaxGap, p->grassMaxConsecutive,
+        p->spawnX,      p->grassZ,       true
+    };
+
+    param_.fence = {
+        p->fenceSpeed,  p->fenceSpacing,
+        p->fenceMinGap, p->fenceBaseGap, p->fenceMaxGap, p->fenceMaxConsecutive,
+        p->spawnX,      p->fenceZ,       false
+    };
+
+    param_.groundY        = p->groundY;
+    param_.groundScale    = p->groundScale;
+    param_.cullingMargin  = p->cullingMargin;
+    param_.playerX        = p->playerX;
+    param_.playerY        = p->playerY;
+    param_.playerZ        = p->playerZ;
+    param_.playerRotYDeg  = p->playerRotYDeg;
+    param_.camPosX        = p->camPosX;
+    param_.camPosY        = p->camPosY;
+    param_.camPosZ        = p->camPosZ;
+    param_.camTargetX     = p->camTargetX;
+    param_.camTargetY     = p->camTargetY;
+    param_.camTargetZ     = p->camTargetZ;
+    param_.camFovDeg      = p->camFovDeg;
+    param_.camNear        = p->camNear;
+    param_.camFar         = p->camFar;
+    param_.skyCubeScale   = p->skyCubeScale;
+    param_.playerRunSpeed = p->playerRunSpeed;
 }
 
 
@@ -263,27 +266,21 @@ void TitleBackground::ApplyPlayerTransform()
 
 void TitleBackground::PreFillScene()
 {
-    const float despawnX   = -param_.spawnX;
-    const float treeSpawnX = param_.treeSpawnX > 0.0f ? param_.treeSpawnX : param_.spawnX;
-
     // UpdateSpawner と同じグループ/ギャップのランダムロジックで
     // 右端 → 左端へ向かってオブジェクトを配置する
-    auto fill = [despawnX](
-        ScrollModel* objects, int count,
-        float rightEdge, float spacing,
-        float minGap, float baseGap, float maxGap, int maxConsecutive,
-        float z, SpawnController& ctrl, float speed, bool randomRotY)
+    auto fill = [](
+        ScrollModel* objects, int count, const SpawnConfig& cfg,
+        SpawnController& ctrl, float despawnX)
     {
-        float x   = rightEdge;
+        float x   = cfg.spawnX;
         int   idx = 0;
 
         while (x > despawnX && idx < count) {
-            // グループサイズをランダム決定
-            const int groupSize = 1 + rand() % maxConsecutive;
+            const int groupSize = 1 + rand() % cfg.maxConsecutive;
 
             for (int g = 0; g < groupSize && idx < count && x > despawnX; g++, idx++) {
-                objects[idx].position = Vector3(x, 0.0f, z);
-                if (randomRotY) {
+                objects[idx].position = Vector3(x, 0.0f, cfg.z);
+                if (cfg.randomRotY) {
                     const float rotDeg = static_cast<float>(1 + rand() % 10) * 18.0f;
                     objects[idx].rotation.SetRotationY(Math::DegToRad(rotDeg));
                 }
@@ -292,38 +289,29 @@ void TitleBackground::PreFillScene()
                 objects[idx].model.Update();
                 objects[idx].active = true;
                 objects[idx].isDraw = true;
-                x -= spacing;
+                x -= cfg.spacing;
             }
 
-            // グループ間ギャップ（UpdateSpawner と同じ計算式）
-            const float effectiveMinGap = (std::max)(minGap, spacing);
-            const float gap = effectiveMinGap + baseGap * (static_cast<float>(rand()) / static_cast<float>(RAND_MAX)) * maxGap;
+            const float effectiveMinGap = (std::max)(cfg.minGap, cfg.spacing);
+            const float gap = effectiveMinGap + cfg.baseGap * (static_cast<float>(rand()) / static_cast<float>(RAND_MAX)) * cfg.maxGap;
             x -= gap;
         }
 
         // スポーナーを Gap フェーズで再開し、次のグループまで待機
-        const float effectiveMinGap = (std::max)(minGap, spacing);
-        const float initGap = effectiveMinGap + baseGap * (static_cast<float>(rand()) / static_cast<float>(RAND_MAX)) * maxGap;
+        const float effectiveMinGap = (std::max)(cfg.minGap, cfg.spacing);
+        const float initGap = effectiveMinGap + cfg.baseGap * (static_cast<float>(rand()) / static_cast<float>(RAND_MAX)) * cfg.maxGap;
         ctrl.phase     = SpawnController::Phase::Gap;
         ctrl.groupLeft = 0;
-        ctrl.timer     = initGap / speed;
+        ctrl.timer     = initGap / cfg.speed;
     };
 
-    fill(trees_,   TitleBGCount::TREE_COUNT,  treeSpawnX,   param_.treeSpacing,
-         param_.treeMinGap,  param_.treeBaseGap,  param_.treeMaxGap,  param_.treeMaxConsecutive,
-         param_.treeZ,  treeSpawn_,  param_.treeSpeed, true);
+    const float treeDespawnX = -param_.tree.spawnX;
+    const float despawnX     = -param_.grass.spawnX;
 
-    fill(trees2_,  TitleBGCount::TREE_COUNT2, treeSpawnX,   param_.treeSpacing,
-         param_.treeMinGap,  param_.treeBaseGap,  param_.treeMaxGap,  param_.treeMaxConsecutive,
-         param_.treeZ2, treeSpawn2_, param_.treeSpeed, true);
-
-    fill(grasses_, TitleBGCount::GRASS_COUNT, param_.spawnX, param_.grassSpacing,
-         param_.grassMinGap, param_.grassBaseGap, param_.grassMaxGap, param_.grassMaxConsecutive,
-         param_.grassZ, grassSpawn_, param_.grassSpeed, true);
-
-    fill(fences_,  TitleBGCount::FENCE_COUNT, param_.spawnX, param_.fenceSpacing,
-         param_.fenceMinGap, param_.fenceBaseGap, param_.fenceMaxGap, param_.fenceMaxConsecutive,
-         param_.fenceZ, fenceSpawn_, param_.fenceSpeed, false);
+    fill(trees_,   TitleBGCount::TREE_COUNT,  param_.tree,  treeSpawn_,  treeDespawnX);
+    fill(trees2_,  TitleBGCount::TREE_COUNT_SECOND, param_.tree2, treeSpawn2_, treeDespawnX);
+    fill(grasses_, TitleBGCount::GRASS_COUNT, param_.grass, grassSpawn_, despawnX);
+    fill(fences_,  TitleBGCount::FENCE_COUNT, param_.fence, fenceSpawn_, despawnX);
 }
 
 
@@ -343,10 +331,7 @@ void TitleBackground::ResetSpawners()
 
 
 void TitleBackground::UpdateSpawner(
-    SpawnController& ctrl, ScrollModel* objects, int count,
-    float speed, float baseSpacing,
-    float minGap, float baseGap, float maxGap, int maxConsecutive,
-    float spawnX, float z, bool randomRotY)
+    SpawnController& ctrl, ScrollModel* objects, int count, const SpawnConfig& cfg)
 {
     const float dt = g_gameTime->GetFrameDeltaTime();
     ctrl.timer -= dt;
@@ -355,14 +340,14 @@ void TitleBackground::UpdateSpawner(
     // Gap フェーズ終了 → 新グループ開始
     if (ctrl.phase == SpawnController::Phase::Gap) {
         ctrl.phase     = SpawnController::Phase::Group;
-        ctrl.groupLeft = 1 + rand() % maxConsecutive;
+        ctrl.groupLeft = 1 + rand() % cfg.maxConsecutive;
     }
 
     // 非アクティブなスロットを探してスポーン
     for (int i = 0; i < count; i++) {
         if (!objects[i].active) {
-            objects[i].position = Vector3(spawnX, 0.0f, z);
-            if (randomRotY) {
+            objects[i].position = Vector3(cfg.spawnX, 0.0f, cfg.z);
+            if (cfg.randomRotY) {
                 const float rotDeg = static_cast<float>(1 + rand() % 10) * 18.0f;
                 objects[i].rotation.SetRotationY(Math::DegToRad(rotDeg));
             }
@@ -378,15 +363,14 @@ void TitleBackground::UpdateSpawner(
     ctrl.groupLeft--;
 
     if (ctrl.groupLeft > 0) {
-        // グループ継続：baseSpacing 分進む時間後に次をスポーン
-        ctrl.timer = baseSpacing / speed;
+        // グループ継続：spacing 分進む時間後に次をスポーン
+        ctrl.timer = cfg.spacing / cfg.speed;
     } else {
         // グループ終了 → Gap フェーズへ
-        // グループ間の最小距離はグループ内間隔 (baseSpacing) 以上を保証し、重なりを防ぐ
         ctrl.phase = SpawnController::Phase::Gap;
-        const float effectiveMinGap = (std::max)(minGap, baseSpacing);
-        const float gap = effectiveMinGap + baseGap * (static_cast<float>(rand()) / static_cast<float>(RAND_MAX)) * maxGap;
-        ctrl.timer = gap / speed;
+        const float effectiveMinGap = (std::max)(cfg.minGap, cfg.spacing);
+        const float gap = effectiveMinGap + cfg.baseGap * (static_cast<float>(rand()) / static_cast<float>(RAND_MAX)) * cfg.maxGap;
+        ctrl.timer = gap / cfg.speed;
     }
 }
 
@@ -415,8 +399,7 @@ void TitleBackground::UpdateCulling()
     Frustum frustum;
     frustum.BuildFromViewProjectionMatrix(g_camera3D->GetViewProjectionMatrix());
 
-    const Vector3 margin (param_.cullingMargin,  param_.cullingMargin,  param_.cullingMargin);
-    const Vector3 margin2(param_.cullingMargin2, param_.cullingMargin2, param_.cullingMargin2);
+    const Vector3 margin(param_.cullingMargin, param_.cullingMargin, param_.cullingMargin);
 
     for (int i = 0; i < TitleBGCount::TREE_COUNT; i++) {
         if (!trees_[i].active) continue;
@@ -427,14 +410,12 @@ void TitleBackground::UpdateCulling()
         trees_[i].isDraw = frustum.IsVisible(bounds);
     }
 
-    // 2列目は奥にある（Z=-1100）分だけ視錐台端でのX幅が広い。
-    // cullingMargin2 を大きくして画面端付近での消えを防ぐ。
-    for (int i = 0; i < TitleBGCount::TREE_COUNT2; i++) {
+    for (int i = 0; i < TitleBGCount::TREE_COUNT_SECOND; i++) {
         if (!trees2_[i].active) continue;
         Bounds bounds;
         bounds.Compute(trees2_[i].model.GetModel());
-        bounds.maxPoint += trees2_[i].position + margin2;
-        bounds.minPoint += trees2_[i].position - margin2;
+        bounds.maxPoint += trees2_[i].position + margin;
+        bounds.minPoint += trees2_[i].position - margin;
         trees2_[i].isDraw = frustum.IsVisible(bounds);
     }
 

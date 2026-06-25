@@ -344,6 +344,62 @@ void ParameterManager::LoadMissionParamData(const char* path)
 	);
 }
 
+// ============================================================
+//  TitleBackgroundParameter.json 読み込みヘルパー
+// ============================================================
+void ParameterManager::LoadTitleBGParamData(const char* path)
+{
+	ParameterManager::Get().LoadParameterFromArray<MasterTitleBGParameter>(
+		path, "TitleBackground",
+		[](const nlohmann::json& j, MasterTitleBGParameter& p)
+		{
+			p.treeSpeed          = j.value("treeSpeed",          p.treeSpeed);
+			p.grassSpeed         = j.value("grassSpeed",         p.grassSpeed);
+			p.fenceSpeed         = j.value("fenceSpeed",         p.fenceSpeed);
+			p.treeSpacing        = j.value("treeSpacing",        p.treeSpacing);
+			p.treeZ              = j.value("treeZ",              p.treeZ);
+			p.treeZ2             = j.value("treeZ2",             p.treeZ2);
+			p.grassSpacing       = j.value("grassSpacing",       p.grassSpacing);
+			p.grassZ             = j.value("grassZ",             p.grassZ);
+			p.fenceSpacing       = j.value("fenceSpacing",       p.fenceSpacing);
+			p.fenceZ             = j.value("fenceZ",             p.fenceZ);
+			p.groundY            = j.value("groundY",            p.groundY);
+			p.groundScale        = j.value("groundScale",        p.groundScale);
+			p.cullingMargin      = j.value("cullingMargin",      p.cullingMargin);
+			p.spawnX             = j.value("spawnX",             p.spawnX);
+			p.treeSpawnX         = j.value("treeSpawnX",         p.treeSpawnX);
+			p.playerX            = j.value("playerX",            p.playerX);
+			p.playerY            = j.value("playerY",            p.playerY);
+			p.playerZ            = j.value("playerZ",            p.playerZ);
+			p.playerRotYDeg      = j.value("playerRotYDeg",      p.playerRotYDeg);
+			p.camPosX            = j.value("camPosX",            p.camPosX);
+			p.camPosY            = j.value("camPosY",            p.camPosY);
+			p.camPosZ            = j.value("camPosZ",            p.camPosZ);
+			p.camTargetX         = j.value("camTargetX",         p.camTargetX);
+			p.camTargetY         = j.value("camTargetY",         p.camTargetY);
+			p.camTargetZ         = j.value("camTargetZ",         p.camTargetZ);
+			p.camFovDeg          = j.value("camFovDeg",          p.camFovDeg);
+			p.camNear            = j.value("camNear",            p.camNear);
+			p.camFar             = j.value("camFar",             p.camFar);
+			p.skyCubeScale       = j.value("skyCubeScale",       p.skyCubeScale);
+			p.treeMaxConsecutive  = j.value("treeMaxConsecutive",  p.treeMaxConsecutive);
+			p.treeMinGap          = j.value("treeMinGap",          p.treeMinGap);
+			p.treeBaseGap         = j.value("treeBaseGap",         p.treeBaseGap);
+			p.treeMaxGap          = j.value("treeMaxGap",          p.treeMaxGap);
+			p.grassMaxConsecutive = j.value("grassMaxConsecutive", p.grassMaxConsecutive);
+			p.grassMinGap         = j.value("grassMinGap",         p.grassMinGap);
+			p.grassBaseGap        = j.value("grassBaseGap",        p.grassBaseGap);
+			p.grassMaxGap         = j.value("grassMaxGap",         p.grassMaxGap);
+			p.fenceMaxConsecutive = j.value("fenceMaxConsecutive", p.fenceMaxConsecutive);
+			p.fenceMinGap         = j.value("fenceMinGap",         p.fenceMinGap);
+			p.fenceBaseGap        = j.value("fenceBaseGap",        p.fenceBaseGap);
+			p.fenceMaxGap         = j.value("fenceMaxGap",         p.fenceMaxGap);
+			p.playerRunSpeed      = j.value("playerRunSpeed",      p.playerRunSpeed);
+		}
+	);
+}
+
+
 void ParameterManager::LoadBattleCommonParamData(const char* path)
 {
 	ParameterManager::Get().LoadParameterFromArray<MasterBattleCommonParameter>(

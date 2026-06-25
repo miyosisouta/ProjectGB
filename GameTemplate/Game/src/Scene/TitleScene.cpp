@@ -24,6 +24,11 @@
 #include "src/UI/CameraOptionMenu.h"
 #include "src/UI/UIScreenManager.h"
 
+namespace
+{
+	constexpr float DOG_RUN_WAIT_TIME = 1.5f; // Loading前に犬が走っていく時間
+	constexpr float LOADING_TIME = 3.0f; // ローディング画面の時間
+}
 
 TitleScene::TitleScene()
 {
@@ -40,10 +45,7 @@ TitleScene::~TitleScene()
 bool TitleScene::Start()
 {
 	UIScreenManager::Get().Boot<TitleMenu>("Assets/ui/layout/TitleMenu.json");
-
-	// タイトルBGM再生
 	SoundManager::Get().PlayBGM(enSoundKind_Title);
-
 	return true;
 }
 
@@ -51,42 +53,43 @@ bool TitleScene::Start()
 void TitleScene::Update()
 {
 	auto* menu = UIScreenManager::Get().GetActiveMenu();
+
+	// -------------------------------------------------------
+	// タイトルメニュー
+	// -------------------------------------------------------
 	auto* titleMenu = dynamic_cast<TitleMenu*>(menu);
-	// タイトルのメニューが有効な時の処理
 	if (titleMenu) {
-		// 設定画面から戻ってきたらスクロール再開
+		// 遷移してもよいか
 		if (optionMenuWasActive_ && !UIScreenManager::Get().IsTransitioning()) {
 			optionMenuWasActive_ = false;
-			titleBackground_->SetScrollEnabled(true);
+			titleBackground_->SetScrollEnabled(true); // タイトルのスクロール開始
 		}
 
-		if (titleMenu->IsAbuttonEnabled()) {
+		// 遷移中はボタン入力を受け付けない
+		if (pendingLoad_ == PendingLoad::None && titleMenu->IsAbuttonEnabled()) {
+
+			// はじめるを選んでいる場合
 			if (titleMenu->IsSelectStat()) {
 				if (g_pad[0]->IsTrigger(enButtonA)) {
 					SoundManager::Get().PlaySE(enSoundKind_Menu_Decide);
-					// 背景を止めてプレイヤーを走り去らせる（Loading 中の描画をスキップして負荷軽減）
-					titleBackground_->SetScrollEnabled(false);
+					// タイトルUIを即座に非表示 → 犬を走らせる
+					if (auto* c = titleMenu->GetCanvas()) c->color.w = 0.0f;
 					titleBackground_->StartPlayerRunOff();
-					titleBackground_->SetVisible(false);
-					// ローディング → ボス選択 の順で遷移
-					// Replace にすることで TitleMenu が先に退場し、Loading が常に最前面になる
-					pendingLoad_ = PendingLoad::ToBossSelect;
-					loadingTimer_ = 0.0f;
-					UIScreenManager::Get().Push<LoadingMenu>(
-						"Assets/ui/layout/LoadingMenu.json",
-						UITransitionMode::Replace,
-						UIScreenTransitionPreset::FadeInOut());
+					pendingLoad_ = PendingLoad::WaitingForDog;
 				}
 			}
+
+			// せっていを選んでいる場合
 			if (titleMenu->IsSelectOption()) {
 				if (g_pad[0]->IsTrigger(enButtonA)) {
 					SoundManager::Get().PlaySE(enSoundKind_Menu_Decide);
-					// 背景を止めて設定画面へ（プレイヤーはその場に留まる）
-					titleBackground_->SetScrollEnabled(false);
-					optionMenuWasActive_ = true;
+					titleBackground_->SetScrollEnabled(false); // タイトルのスクロール停止
+					optionMenuWasActive_ = true; // オプションメニューを開く
 					UIScreenManager::Get().Push<OptionMenu>("Assets/ui/layout/OptionMenu.json", UITransitionMode::Push, UIScreenTransitionPreset::FadeInOut());
 				}
 			}
+
+			// おわるを選んでいる場合
 			if (titleMenu->IsSelectExit()) {
 				if (g_pad[0]->IsTrigger(enButtonA)) {
 					SoundManager::Get().PlaySE(enSoundKind_Menu_Decide);
@@ -94,102 +97,124 @@ void TitleScene::Update()
 				}
 			}
 		}
-	}
 
-
-	// ボス選択メニューが有効な時(ゴリラorカメを選択)
-	auto* bossSelectMenu = dynamic_cast<BossSelectMenu*>(menu);
-
-	if (bossSelectMenu) {
-		if (g_pad[0]->IsTrigger(enButtonA)) {
-			// スキル選択画面
-			UIScreenManager::Get().Push<SkillSelectMenu>("Assets/ui/layout/SkillSelectMenu.json", UITransitionMode::Push, UIScreenTransitionPreset::FadeInOut());
-			// ボスを選択
-			BossType stageType = BossType::enGorilla;
-			GameModeType mode = GameModeType::enNormal;
-			// 選択されたボスになる
-			if (bossSelectMenu->IsSelectGollira()) {
-				stageType = BossType::enGorilla;
-			}
-			else if (bossSelectMenu->IsSelectTurtle()) {
-				stageType = BossType::enTurtle;
-			}
-
-			CharacterDataBase::Get().SetStageType(stageType);
-			CharacterDataBase::Get().SetGameModeType(mode);
-
-			SoundManager::Get().PlaySE(enSoundKind_Menu_Decide);
-			//isRequestScene = true;
-
-			//UIScreenManager::Get().Pop();
-		}
-	}
-
-
-	// ボス選択メニューが有効な時(タイトルに戻る) ← Loading を上に重ねてフェードイン
-	if (bossSelectMenu) {
-		if (!UIScreenManager::Get().IsTransitioning() && g_pad[0]->IsTrigger(enButtonB)) {
-			SoundManager::Get().PlaySE(enSoundKind_Menu_Return);
-			pendingLoad_ = PendingLoad::ToTitleMenu;
-			loadingTimer_ = 0.0f;
-			// Push モード: ボス選択画面が下に残ったまま Loading がフェードイン
-			// onActive でフェードイン完了を検知 → ボス選択を隠し背景をリセット
-			UIScreenCallbacks loadCb;
-			loadCb.onActive = [this]() {
-				// Loading が完全に表示された → ボス選択を非表示
-				if (auto* bossMenu = UIScreenManager::Get().FindMenu<BossSelectMenu>())
-					if (auto* canvas = bossMenu->GetCanvas())
-						canvas->color.w = 0.0f;
-				// プレイヤー位置・オブジェクトを初期化（スクロールはタイマー後に再開）
-				titleBackground_->ResetBackground();
-			};
-			UIScreenManager::Get().Push<LoadingMenu>(
-				"Assets/ui/layout/LoadingMenu.json",
-				UITransitionMode::Push,
-				UIScreenTransitionPreset::FadeInOut(),
-				loadCb);
-		}
-	}
-
-
-	// ローディングメニューが有効な時：タイマーが満ちたら次の画面へ
-	auto* loadingMenu = dynamic_cast<LoadingMenu*>(menu);
-	if (loadingMenu && !UIScreenManager::Get().IsTransitioning()) {
-		loadingTimer_ += g_gameTime->GetFrameDeltaTime();
-		if (loadingTimer_ >= 3.0f) {
-			loadingTimer_ = 0.0f;
-			if (pendingLoad_ == PendingLoad::ToBossSelect) {
-				pendingLoad_ = PendingLoad::None;
-				// None() にすることで Loading が消えた瞬間に BossSelect を即表示し
-				// TitleBackground が透けて映る瞬間をなくす
-				UIScreenManager::Get().Push<BossSelectMenu>(
-					"Assets/ui/layout/BossSelectMenu.json",
-					UITransitionMode::Replace,
-					UIScreenTransitionPreset::None());
-			}
-			else if (pendingLoad_ == PendingLoad::ToTitleMenu) {
-				pendingLoad_ = PendingLoad::None;
-				// Loading フェードアウト開始と同時に背景を再表示・スクロール再開
-				titleBackground_->SetVisible(true);
-				titleBackground_->SetScrollEnabled(true);
-				// Inactive になったボス選択など残存エントリーを除去してから積む
-				UIScreenManager::Get().ClearInactive();
-				UIScreenManager::Get().Push<TitleMenu>(
-					"Assets/ui/layout/TitleMenu.json",
+		// 犬が走り去るのを待ち Loading を開始
+		if (pendingLoad_ == PendingLoad::WaitingForDog) {
+			loadingTimer_ += g_gameTime->GetFrameDeltaTime();
+			// 犬が一定時間走ったら、
+			if (loadingTimer_ >= DOG_RUN_WAIT_TIME) {
+				loadingTimer_ = 0.0f;
+				pendingLoad_ = PendingLoad::ToBossSelect; // ボスセレクトに遷移
+				// 先にローディングを開始
+				UIScreenManager::Get().Push<LoadingMenu>(
+					"Assets/ui/layout/LoadingMenu.json",
 					UITransitionMode::Replace,
 					UIScreenTransitionPreset::FadeInOut());
 			}
 		}
 	}
 
+	// -------------------------------------------------------
+	// ローディング
+	// Loading が完全に表示されたら BossSelect 画面に遷移する。
+	// BossSelect が Loading(Inactive) を背景にしてフェードインするため
+	// チラツキがなくなる。フェードイン完了後に Inactive の Loading を削除する。
+	// -------------------------------------------------------
+	auto* loadingMenu = dynamic_cast<LoadingMenu*>(menu);
+	if (loadingMenu && !UIScreenManager::Get().IsTransitioning()) {
+		loadingTimer_ += g_gameTime->GetFrameDeltaTime();
+		if (pendingLoad_ == PendingLoad::ToBossSelect && loadingTimer_ >= LOADING_TIME) {
+			loadingTimer_ = 0.0f;
+			pendingLoad_ = PendingLoad::None;
+			UIScreenCallbacks bossCb;
+			bossCb.onActive = [this]() {
+				// BossSelect のフェードイン完了後 → 非表示中 Loading を削除
+				UIScreenManager::Get().ClearInactive();
+			};
+			UIScreenManager::Get().Push<BossSelectMenu>(
+				"Assets/ui/layout/BossSelectMenu.json",
+				UITransitionMode::Push,
+				UIScreenTransitionPreset::FadeInOut(),
+				bossCb);
+		}
+		// Loading が完全に表示されたら TitleMenu に遷移する。
+		// Loading がまだ不透明な間に背景をリセットするため、チラツキがなくなる。
+		if (pendingLoad_ == PendingLoad::ToTitleMenu && loadingTimer_ >= LOADING_TIME) {
+			loadingTimer_ = 0.0f;
+			pendingLoad_ = PendingLoad::None;
+			titleBackground_->ResetBackground(); // Loading が不透明な間にリセット
+			UIScreenCallbacks titleCb;
+			titleCb.onActive = [this]() {
+				// TitleMenu のフェードイン完了後 → 非表示中の Loading を削除
+				UIScreenManager::Get().ClearInactive();
+			};
+			UIScreenManager::Get().Push<TitleMenu>(
+				"Assets/ui/layout/TitleMenu.json",
+				UITransitionMode::Replace,
+				UIScreenTransitionPreset::FadeInOut(),
+				titleCb);
+		}
+	}
 
-	// スキル選択メニューが有効な時
+	// -------------------------------------------------------
+	// ボスセレクトメニュー
+	// -------------------------------------------------------
+	auto* bossSelectMenu = dynamic_cast<BossSelectMenu*>(menu);
+
+	if (bossSelectMenu) {
+		// ボス選択したら
+		if (!UIScreenManager::Get().IsTransitioning() && g_pad[0]->IsTrigger(enButtonA)) {
+			// スキル選択画面へ
+			UIScreenManager::Get().Push<SkillSelectMenu>("Assets/ui/layout/SkillSelectMenu.json", UITransitionMode::Push, UIScreenTransitionPreset::FadeInOut());
+			
+			// 初期化
+			BossType stageType = BossType::enGorilla;
+			GameModeType mode = GameModeType::enNormal;
+
+			// ゴリラを選択したら
+			if (bossSelectMenu->IsSelectGollira()) {
+				stageType = BossType::enGorilla;
+			}
+			// カメを選択したら
+			else if (bossSelectMenu->IsSelectTurtle()) {
+				stageType = BossType::enTurtle;
+			}
+
+			// ボスとタイプをデータベースへ設定
+			CharacterDataBase::Get().SetStageType(stageType);
+			CharacterDataBase::Get().SetGameModeType(mode);
+			SoundManager::Get().PlaySE(enSoundKind_Menu_Decide);
+		}
+	}
+
+	// タイトルへ戻る（BossSelect の上に Loading を重ねてからチラツキを防ぐ）
+	if (bossSelectMenu) {
+		if (!UIScreenManager::Get().IsTransitioning() && g_pad[0]->IsTrigger(enButtonB)) {
+			SoundManager::Get().PlaySE(enSoundKind_Menu_Return);
+			pendingLoad_ = PendingLoad::ToTitleMenu;
+			loadingTimer_ = 0.0f;
+			// Push で BossSelect の上に Loading をフェードインさせる。
+			// Replace だと BossSelect が先に消え、背後の TitleMenu(Inactive) が一瞬見えてしまうため。
+			UIScreenCallbacks loadingCb;
+			loadingCb.onActive = [this]() {
+				// Loading が完全に表示されてから BossSelect を削除する
+				UIScreenManager::Get().ClearInactive();
+			};
+			UIScreenManager::Get().Push<LoadingMenu>(
+				"Assets/ui/layout/LoadingMenu.json",
+				UITransitionMode::Push,
+				UIScreenTransitionPreset::FadeInOut(),
+				loadingCb);
+		}
+	}
+
+	// -------------------------------------------------------
+	// スキル選択
+	// -------------------------------------------------------
 	auto* skillSelectMenu = dynamic_cast<SkillSelectMenu*>(menu);
-
 	if (skillSelectMenu) {
 		if (g_pad[0]->IsTrigger(enButtonA)) {
 			AbilityType skillType = AbilityType::enDefault;
-			// アビリティの選択をする
 			if (skillSelectMenu->IsSelectSkillLandMine()) {
 				skillType = AbilityType::enLandmine;
 			}
@@ -199,19 +224,11 @@ void TitleScene::Update()
 			else if (skillSelectMenu->IsSelectSkillFire()) {
 				skillType = AbilityType::enFireMagic;
 			}
-
 			CharacterDataBase::Get().SetPlayerAbility(skillType);
-
 			SoundManager::Get().PlaySE(enSoundKind_Menu_Decide);
-			// 確認ウィンドウの表示
 			UIScreenManager::Get().Push<CheckStartWindow>("Assets/ui/layout/CheckStartWindow.json", UITransitionMode::Push, UIScreenTransitionPreset::FadeInOut());
-			//isRequestScene = true;
-			// 全部のUIを消す
-			//UIScreenManager::Get().AllPop();
 		}
 	}
-
-	// スキル選択メニューが有効な時(戻る)
 	if (skillSelectMenu) {
 		if (!UIScreenManager::Get().IsTransitioning() && g_pad[0]->IsTrigger(enButtonB)) {
 			SoundManager::Get().PlaySE(enSoundKind_Menu_Return);
@@ -219,25 +236,21 @@ void TitleScene::Update()
 		}
 	}
 
-	// 確認ウィンドウが有効な時
+	// -------------------------------------------------------
+	// 確認ウィンドウ
+	// -------------------------------------------------------
 	auto* checkStartWindow = dynamic_cast<CheckStartWindow*>(menu);
-
 	if (checkStartWindow) {
 		if (!UIScreenManager::Get().IsTransitioning()) {
-			// Bボタンで直接スキル選択に戻る
 			if (g_pad[0]->IsTrigger(enButtonB)) {
 				SoundManager::Get().PlaySE(enSoundKind_Menu_Return);
 				UIScreenManager::Get().Pop();
 			}
-
 			if (g_pad[0]->IsTrigger(enButtonA)) {
-				// 選択されたらスキル選択にもどる
 				if (checkStartWindow->IsSelectBackButton()) {
-					//CheckStartWindow::SetCheckWindowClose(true);
 					SoundManager::Get().PlaySE(enSoundKind_Menu_Return);
 					UIScreenManager::Get().Pop();
 				}
-				// 選択されたらインゲーム
 				else if (checkStartWindow->IsSelectStartButton()) {
 					isRequestScene = true;
 					UIScreenManager::Get().AllPop();
@@ -247,8 +260,9 @@ void TitleScene::Update()
 		}
 	}
 
-
-	// サウンドメニューが有効な時
+	// -------------------------------------------------------
+	// オプション系
+	// -------------------------------------------------------
 	auto* soundMenu = dynamic_cast<SoundOptionMenu*>(menu);
 	if (soundMenu) {
 		if (!UIScreenManager::Get().IsTransitioning() && g_pad[0]->IsTrigger(enButtonB)) {
@@ -257,66 +271,45 @@ void TitleScene::Update()
 		}
 	}
 
-
-	// オプションメニューの遷移(音の設定・キーの設定・カメラの設定)
 	auto* optionMenu = dynamic_cast<OptionMenu*>(menu);
-	if (optionMenu)
-	{
-		if (optionMenu->IsSelectSound()) {
-			if (g_pad[0]->IsTrigger(enButtonA)) {
-				SoundManager::Get().PlaySE(enSoundKind_Menu_Decide);
-				UIScreenManager::Get().Push<SoundOptionMenu>("Assets/ui/layout/SoundOptionMenu.json", UITransitionMode::Push, UIScreenTransitionPreset::FadeInOut());
-			}
-		}
-		if (optionMenu->IsSelectKeyConfig()) {
-			if (g_pad[0]->IsTrigger(enButtonA)) {
-				SoundManager::Get().PlaySE(enSoundKind_Menu_Decide);
-				UIScreenManager::Get().Push<KeyConfigOptionMenu>("Assets/ui/layout/KeyConfigOptionMenu.json", UITransitionMode::Push, UIScreenTransitionPreset::FadeInOut());
-			}
-		}
-		if (optionMenu->IsSelectCamera()) {
-			if (g_pad[0]->IsTrigger(enButtonA)) {
-				SoundManager::Get().PlaySE(enSoundKind_Menu_Decide);
-				UIScreenManager::Get().Push<CameraOptionMenu>("Assets/ui/layout/CameraOptionMenu.json", UITransitionMode::Push, UIScreenTransitionPreset::FadeInOut());
-			}
-		}
-	}
-
-	// オプションメニューが有効な時 戻る
-	//auto* optionMenu = dynamic_cast<OptionMenu*>(menu);
 	if (optionMenu) {
+		if (optionMenu->IsSelectSound() && g_pad[0]->IsTrigger(enButtonA)) {
+			SoundManager::Get().PlaySE(enSoundKind_Menu_Decide);
+			UIScreenManager::Get().Push<SoundOptionMenu>("Assets/ui/layout/SoundOptionMenu.json", UITransitionMode::Push, UIScreenTransitionPreset::FadeInOut());
+		}
+		if (optionMenu->IsSelectKeyConfig() && g_pad[0]->IsTrigger(enButtonA)) {
+			SoundManager::Get().PlaySE(enSoundKind_Menu_Decide);
+			UIScreenManager::Get().Push<KeyConfigOptionMenu>("Assets/ui/layout/KeyConfigOptionMenu.json", UITransitionMode::Push, UIScreenTransitionPreset::FadeInOut());
+		}
+		if (optionMenu->IsSelectCamera() && g_pad[0]->IsTrigger(enButtonA)) {
+			SoundManager::Get().PlaySE(enSoundKind_Menu_Decide);
+			UIScreenManager::Get().Push<CameraOptionMenu>("Assets/ui/layout/CameraOptionMenu.json", UITransitionMode::Push, UIScreenTransitionPreset::FadeInOut());
+		}
 		if (!UIScreenManager::Get().IsTransitioning() && g_pad[0]->IsTrigger(enButtonB)) {
 			SoundManager::Get().PlaySE(enSoundKind_Menu_Return);
 			UIScreenManager::Get().Pop();
 		}
 	}
 
-	// キーコンフィグオプションメニューが有効な時
 	auto* keyConfigOptionMenu = dynamic_cast<KeyConfigOptionMenu*>(menu);
 	if (keyConfigOptionMenu) {
-		// ボタンが重なったら
 		if (keyConfigOptionMenu->IsButtonOverLap()) {
-			// キャンセルした後なら処理したくない
 			if (!KeyConfigOptionMenu::IsWarningWindowCancel() && !KeyConfigOptionMenu::IsWarningWindowClose()) {
 				SoundManager::Get().PlaySE(enSoundKind_Menu_Decide);
 				UIScreenManager::Get().Push<WarningButtonWindow>("Assets/ui/layout/WarningButtonWindow.json", UITransitionMode::Push, UIScreenTransitionPreset::FadeInOut());
 			}
 		}
-		// キーコンフィグオプションメニューが有効な時 戻る
-		if (!UIScreenManager::Get().IsTransitioning()) {
-			if (!keyConfigOptionMenu->IsButtonSetting()) {
-				if (g_pad[0]->IsTrigger(enButtonB)) {
-					KeyConfigOptionMenu::SetWarningWindowCancel(true);
-					SoundManager::Get().PlaySE(enSoundKind_Menu_Return);
-					UIScreenManager::Get().Pop();
-				}
+		if (!UIScreenManager::Get().IsTransitioning() && !keyConfigOptionMenu->IsButtonSetting()) {
+			if (g_pad[0]->IsTrigger(enButtonB)) {
+				KeyConfigOptionMenu::SetWarningWindowCancel(true);
+				SoundManager::Get().PlaySE(enSoundKind_Menu_Return);
+				UIScreenManager::Get().Pop();
 			}
 		}
 	}
 
-	// 警告ウィンドウ(WarningButtonWindow)が有効な時
 	auto* warningButtonWindow = dynamic_cast<WarningButtonWindow*>(menu);
-	if (warningButtonWindow){
+	if (warningButtonWindow) {
 		if (!UIScreenManager::Get().IsTransitioning()) {
 			if (g_pad[0]->IsTrigger(enButtonB)) {
 				KeyConfigOptionMenu::SetWarningWindowCancel(true);
@@ -331,8 +324,6 @@ void TitleScene::Update()
 		}
 	}
 
-
-	// カメラオプションメニューが有効な時 戻る
 	auto* cameraOptionMenu = dynamic_cast<CameraOptionMenu*>(menu);
 	if (cameraOptionMenu) {
 		if (!UIScreenManager::Get().IsTransitioning() && g_pad[0]->IsTrigger(enButtonB)) {
@@ -341,29 +332,22 @@ void TitleScene::Update()
 		}
 	}
 
-
 	UIScreenManager::Get().Update();
 }
 
 
 void TitleScene::Render(RenderContext& rc)
 {
-	//layout_->Render(rc);
 	UIScreenManager::Get().Render(rc);
 }
 
 
 bool TitleScene::RequestScene(uint32_t& id)
 {
-	//Aボタンが押されたら次のシーンへ（仮）
-	if(isRequestScene) {
+	if (isRequestScene) {
 		id = InGameScene::ID();
-
-		// タイトルBGMストップ
 		SoundManager::Get().StopBGM();
-
 		return true;
 	}
-
 	return false;
 }

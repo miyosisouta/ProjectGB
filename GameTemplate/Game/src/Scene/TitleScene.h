@@ -16,13 +16,13 @@ public:
 
 
 private:
-	enum class PendingLoad { None, ToBossSelect, ToTitleMenu };
+	enum class PendingLoad { None, WaitingForDog, ToBossSelect, ToTitleMenu };
 
 	TitleBackground* titleBackground_ = nullptr;
-	bool        isRequestScene       = false;
-	bool        optionMenuWasActive_ = false;  // 設定から戻るときにスクロール再開
-	PendingLoad pendingLoad_         = PendingLoad::None;
-	float       loadingTimer_        = 0.0f;
+	bool        isRequestScene        = false;
+	bool        optionMenuWasActive_  = false;
+	PendingLoad pendingLoad_          = PendingLoad::None;
+	float       loadingTimer_         = 0.0f;
 
 
 public:
