@@ -14,64 +14,54 @@
 // スポーン済みのオブジェクトがデスポーンするまでの間に次のグループが出始めるため、
 // maxConsecutive より余裕を持たせた値にする
 namespace TitleBGCount {
-    constexpr int TREE_COUNT  = 16;
-    constexpr int TREE_COUNT2 = 16;  // 2列目の木
-    constexpr int GRASS_COUNT = 14;
-    constexpr int FENCE_COUNT = 14;
+    constexpr int TREE_COUNT  = 16;         // 1列目の木
+    constexpr int TREE_COUNT_SECOND = 16;   // 2列目の木
+    constexpr int GRASS_COUNT = 14;         // 草
+    constexpr int FENCE_COUNT = 14;         // 柵
 }
 
 
 class TitleBackground : public IGameObject
 {
+public:
+    /** UpdateSpawner / PreFillScene に渡すオブジェクト種別ごとの設定 */
+    struct SpawnConfig {
+        float speed          = 100.0f;
+        float spacing        = 300.0f;
+        float minGap         = 150.0f;
+        float baseGap        = 300.0f;
+        float maxGap         = 3.0f;
+        int   maxConsecutive = 8;
+        float spawnX         = 1000.0f;
+        float z              = 0.0f;
+        bool  randomRotY     = false;
+    };
+
 private:
     /** JSON から読み込む全パラメーター。デフォルト値は JSON が見つからない場合のフォールバック */
     struct Param {
-        float treeSpeed     = 100.0f;
-        float grassSpeed    = 130.0f;
-        float fenceSpeed    = 150.0f;
-        float treeSpacing   = 300.0f;
-        float treeZ         = -300.0f;
-        float treeZ2        = -1100.0f; // 2列目の木のZ座標
-        float grassSpacing  = 240.0f;
-        float grassZ        = -100.0f;
-        float fenceSpacing  = 250.0f;
-        float fenceZ        = -180.0f;
-        float groundY       = -30.0f;
-        float groundScale   = 5000.0f;
+        SpawnConfig tree;    // 1列目の木
+        SpawnConfig tree2;   // 2列目の木（z のみ異なる）
+        SpawnConfig grass;
+        SpawnConfig fence;
+        float groundY        = -30.0f;
+        float groundScale    = 5000.0f;
         float cullingMargin  = 100.0f;
-        float cullingMargin2 = 800.0f; // 奥の2列目の木専用（遠いほど広いマージンが必要）
-        float spawnX        = 1000.0f;  // 右端スポーン座標（左端デスポーンは -spawnX）
-        float treeSpawnX    = 0.0f;     // 木専用スポーン座標 (0 = spawnX を使用)
-        float playerX       = -250.0f;
-        float playerY       = 0.0f;
-        float playerZ       = 0.0f;
-        float playerRotYDeg = 90.0f;
-        float camPosX       = 0.0f;
-        float camPosY       = 150.0f;
-        float camPosZ       = 800.0f;
-        float camTargetX    = 0.0f;
-        float camTargetY    = 0.0f;
-        float camTargetZ    = 0.0f;
-        float camFovDeg     = 60.0f;
-        float camNear       = 1.0f;
-        float camFar        = 5000.0f;
-        float skyCubeScale    = 1000.0f;
-        float playerRunSpeed  = 300.0f;  // 走り去り時のX移動速度
-
-        // グループランダム配置
-        // gap = baseGap * rand(0..maxGap)  ← maxGap は乗数
-        int   treeMaxConsecutive  = 8;
-        float treeMinGap          = 150.0f;
-        float treeBaseGap         = 300.0f;
-        float treeMaxGap          = 3.0f;
-        int   grassMaxConsecutive = 4;
-        float grassMinGap         = 50.0f;
-        float grassBaseGap        = 240.0f;
-        float grassMaxGap         = 2.0f;
-        int   fenceMaxConsecutive = 3;
-        float fenceMinGap         = 150.0f;
-        float fenceBaseGap        = 250.0f;
-        float fenceMaxGap         = 3.0f;
+        float playerX        = -250.0f;
+        float playerY        = 0.0f;
+        float playerZ        = 0.0f;
+        float playerRotYDeg  = 90.0f;
+        float camPosX        = 0.0f;
+        float camPosY        = 150.0f;
+        float camPosZ        = 800.0f;
+        float camTargetX     = 0.0f;
+        float camTargetY     = 0.0f;
+        float camTargetZ     = 0.0f;
+        float camFovDeg      = 60.0f;
+        float camNear        = 1.0f;
+        float camFar         = 5000.0f;
+        float skyCubeScale   = 1000.0f;
+        float playerRunSpeed = 300.0f;
     };
 
     struct ScrollModel {
@@ -99,7 +89,7 @@ private:
 
     StaticObject    ground_;
     ScrollModel     trees_  [TitleBGCount::TREE_COUNT];
-    ScrollModel     trees2_ [TitleBGCount::TREE_COUNT2]; // 2列目
+    ScrollModel     trees2_ [TitleBGCount::TREE_COUNT_SECOND]; // 2列目
     ScrollModel     grasses_[TitleBGCount::GRASS_COUNT];
     ScrollModel     fences_ [TitleBGCount::FENCE_COUNT];
 
@@ -137,8 +127,14 @@ public:
     bool IsPlayerGone() const { return playerGone_; }
     /** プレイヤー位置・スポーナーを初期状態にリセット（スクロール状態は変えない） */
     void ResetBackground();
-    /** 描画をすべてスキップする（Loading 中の負荷軽減用） */
-    void SetVisible(bool v) { visible_ = v; }
+    /** 描画をすべてスキップする（Loading 中の負荷軽減用）。SkyCube も連動して非表示にする */
+    void SetVisible(bool v)
+    {
+        visible_ = v;
+        if (skyCube_) {
+            v ? skyCube_->Activate() : skyCube_->Deactivate();
+        }
+    }
 
 private:
     void LoadParam();
@@ -147,9 +143,7 @@ private:
     void ResetSpawners();
     void PreFillScene();
     void UpdateSpawner(SpawnController& ctrl, ScrollModel* objects, int count,
-                       float speed, float baseSpacing,
-                       float minGap, float baseGap, float maxGap, int maxConsecutive,
-                       float spawnX, float z, bool randomRotY = false);
+                       const SpawnConfig& cfg);
     void ScrollActiveObjects(ScrollModel* objects, int count, float speed, float despawnX);
     void UpdateCulling();
 };

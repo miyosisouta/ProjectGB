@@ -295,6 +295,58 @@ struct MasterMissionParameter : public IMasterParameter
 	float       goalHpRate;             //!< 目標HP残存率 (0.0〜1.0)
 };
 
+/**
+ * タイトル背景パラメーター
+ * TitleBackgroundParameter.json の "TitleBackground" 配列から読み込む
+ */
+struct MasterTitleBGParameter : public IMasterParameter
+{
+	appParameter(MasterTitleBGParameter);
+
+	float treeSpeed          = 100.0f;
+	float grassSpeed         = 130.0f;
+	float fenceSpeed         = 150.0f;
+	float treeSpacing        = 300.0f;
+	float treeZ              = -300.0f;
+	float treeZ2             = -1100.0f;
+	float grassSpacing       = 240.0f;
+	float grassZ             = -100.0f;
+	float fenceSpacing       = 250.0f;
+	float fenceZ             = -180.0f;
+	float groundY            = -30.0f;
+	float groundScale        = 5000.0f;
+	float cullingMargin      = 100.0f;
+	float spawnX             = 1000.0f;
+	float treeSpawnX         = 0.0f;
+	float playerX            = -250.0f;
+	float playerY            = 0.0f;
+	float playerZ            = 0.0f;
+	float playerRotYDeg      = 90.0f;
+	float camPosX            = 0.0f;
+	float camPosY            = 150.0f;
+	float camPosZ            = 800.0f;
+	float camTargetX         = 0.0f;
+	float camTargetY         = 0.0f;
+	float camTargetZ         = 0.0f;
+	float camFovDeg          = 60.0f;
+	float camNear            = 1.0f;
+	float camFar             = 5000.0f;
+	float skyCubeScale       = 1000.0f;
+	float playerRunSpeed     = 300.0f;
+	int   treeMaxConsecutive  = 8;
+	float treeMinGap          = 150.0f;
+	float treeBaseGap         = 300.0f;
+	float treeMaxGap          = 3.0f;
+	int   grassMaxConsecutive = 4;
+	float grassMinGap         = 50.0f;
+	float grassBaseGap        = 240.0f;
+	float grassMaxGap         = 2.0f;
+	int   fenceMaxConsecutive = 3;
+	float fenceMinGap         = 150.0f;
+	float fenceBaseGap        = 250.0f;
+	float fenceMaxGap         = 3.0f;
+};
+
 /** defineの使用終了 */
 #undef appParameter
 
@@ -333,6 +385,7 @@ public:
 	void LoadSkillParamData(const char* path);
 	void LoadAttackObjectParamData(const char* path);
 	void LoadStageManagerParamData(const char* path);
+	void LoadTitleBGParamData(const char* path);
 
 public:
 	/**
@@ -605,6 +658,12 @@ public:
 	const MasterStageManagerParameter* GetStageManagerParam()
 	{
 		return GetParameter<MasterStageManagerParameter>(0);
+	}
+
+	/** タイトル背景パラメーターを取得するショートカット */
+	const MasterTitleBGParameter* GetTitleBGParam()
+	{
+		return GetParameter<MasterTitleBGParameter>(0);
 	}
 
 

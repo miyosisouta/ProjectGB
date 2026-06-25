@@ -227,8 +227,12 @@ public:
         def.exit.buildFunc = [duration](UICanvas* canvas, uint32_t) -> std::unique_ptr<UIAnimationBase>
             {
                 if (!canvas) return nullptr;
+                // 現在の alpha から 0 へフェード。
+                // 呼び出し元が canvas.w を手動で 0 にしていた場合でも
+                // 開始値を 1.0f に戻してフラッシュさせないようにする。
+                const float fromAlpha = canvas->color.w;
                 auto anim = std::make_unique<UICanvasFadeAnimation>();
-                anim->SetParameter(1.0f, 0.0f, duration,
+                anim->SetParameter(fromAlpha, 0.0f, duration,
                     EasingType::EaseIn, LoopMode::Once);
                 anim->SetUI(canvas);
                 return anim;
