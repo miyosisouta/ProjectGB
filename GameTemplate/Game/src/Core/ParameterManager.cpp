@@ -238,6 +238,7 @@ void ParameterManager::LoadSkillParamData(const char* path)
 		[](const nlohmann::json& j, MasterSkillParameter& p)
 		{
 			p.key                      = j.value("key",                      "");
+			p.collisionRadius          = j.value("collisionRadius",          0.0f);
 			p.collisionForward         = j.value("collisionForward",         0.0f);
 			p.collisionHeight          = j.value("collisionHeight",          0.0f);
 			p.targetPosForward         = j.value("targetPosForward",         0.0f);
@@ -245,12 +246,17 @@ void ParameterManager::LoadSkillParamData(const char* path)
 			p.avoidEffectRotation      = j.value("avoidEffectRotation",      0.0f);
 			p.avoidEffectScale         = j.value("avoidEffectScale",         0.0f);
 			p.avoidStartTime           = j.value("avoidStartTime",           0.0f);
+			p.avoidInvincibleStartTime = j.value("avoidInvincibleStartTime", 0.0f);
+			p.avoidJustStartTime       = j.value("avoidJustStartTime",       0.0f);
+			p.avoidJustEndTime         = j.value("avoidJustEndTime",         0.0f);
 			p.avoidEndTime             = j.value("avoidEndTime",             0.0f);
 			p.effectScaleFactor        = j.value("effectScaleFactor",        0.0f);
 			p.fireMagicCollisionSize   = j.value("fireMagicCollisionSize",   0.0f);
 			p.fireMagicCollisionDepth  = j.value("fireMagicCollisionDepth",  0.0f);
 			p.fireMagicCollisionForward= j.value("fireMagicCollisionForward",0.0f);
 			p.fireMagicCollisionHeight = j.value("fireMagicCollisionHeight", 0.0f);
+			p.fireMagicHitCount        = j.value("fireMagicHitCount",        1);
+			p.fireMagicHitInterval     = j.value("fireMagicHitInterval",     0.0f);
 			p.fireMagicAttackStartTime = j.value("fireMagicAttackStartTime", 0.0f);
 			p.fireMagicAttackEndTime   = j.value("fireMagicAttackEndTime",   0.0f);
 		}

@@ -32,10 +32,9 @@ void Bite::Enter(Character* p)
 				{
 					// ゴーストコリジョンを生成
 					attackHitbox_ = std::make_unique<GhostBody>();
-					attackHitbox_->CreateSphere(p, CharacterID::PlayerNormalAtkID(), 50.0f, ghost::CollisionAttribute::PlayerAtk, ghost::CollisionAttributeMask::PlayerAtk);
-
 					// 座標計算
 					const auto* sp = ParameterManager::Get().GetSkillParam("Bite");
+					attackHitbox_->CreateSphere(p, CharacterID::PlayerNormalAtkID(), sp->collisionRadius, ghost::CollisionAttribute::PlayerAtk, ghost::CollisionAttributeMask::PlayerAtk);
 					Vector3 playerPos = p->transform_.position;				// プレイヤーの現在の座標を取得
 					Quaternion playerRot = p->GetStateMachine()->GetRotation();
 					Vector3 forwardDir = p->GetStateMachine()->GetDirection();// プレイヤーが最後に向いていた方向を取得

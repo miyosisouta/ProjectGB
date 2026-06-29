@@ -25,7 +25,7 @@ namespace
 	}
 
 	template <typename T>
-	T* GetHitObject(CollisionHitManager::Pair& pair, const uint32_t id)
+	T* GetHitObject(const CollisionHitManager::Pair& pair, const uint32_t id)
 	{
 		if (pair.a->GetOwnerId() == id) {
 			return static_cast<T*>(pair.a->GetOwner());
@@ -198,34 +198,44 @@ void CollisionHitManager::OnCollisionEnter(GhostBody* a, GhostBody* b)
 
 	// ボスの攻撃
 	{
-		// 通常攻撃
-		if (ContainsBossAttackPair(pair)) {
-			UpdateBossAttackPair(pair);
+		if (IsJustAvoidPair(pair)) {
+			// ジャスト回避: 専用の演出・報酬処理を行い、ダメージはすべてスキップ
+			OnJustAvoid(pair);
 		}
-		// ヒットスタンプ
-		if (ContainsBossHitStampPair(pair)) {
-			UpdateBossHitStampPair(pair);
+		else if (IsPlayerInvinciblePair(pair)) {
+			// 通常回避（無敵中）: 何もせずダメージをすべてスキップ
 		}
-		// 回転攻撃
-		if (ContainsBossSpinPair(pair)) {
-			UpdateBossSpinPair(pair);
-		}
-		// 岩を投げる
-		if (ContainsBossThrowRockPair(pair)) {
-			UpdateBossThrowRockPair(pair);
-		}
-		// レーザー
-		if (ContainsBossLaserWeakPair(pair)) {
-			UpdateBossLaserWeakPair(pair);
-		}
-		if (ContainsBossLaserStrongPair(pair)) {
-			UpdateBossLaserStrongPair(pair);
+		else {
+			// 通常攻撃
+			if (ContainsBossAttackPair(pair)) {
+				UpdateBossAttackPair(pair);
+			}
+			// ヒットスタンプ
+			if (ContainsBossHitStampPair(pair)) {
+				UpdateBossHitStampPair(pair);
+			}
+			// 回転攻撃
+			if (ContainsBossSpinPair(pair)) {
+				UpdateBossSpinPair(pair);
+			}
+			// 岩を投げる
+			if (ContainsBossThrowRockPair(pair)) {
+				UpdateBossThrowRockPair(pair);
+			}
+			// レーザー
+			if (ContainsBossLaserWeakPair(pair)) {
+				UpdateBossLaserWeakPair(pair);
+			}
+			if (ContainsBossLaserStrongPair(pair)) {
+				UpdateBossLaserStrongPair(pair);
+			}
 		}
 	}
 
 	// キャラクター全体
 	{
-		if (ContainsCharacterLandminePlayerPair(pair)) {
+		// 地雷（対プレイヤー）: 無敵中はスキップ
+		if (ContainsCharacterLandminePlayerPair(pair) && !IsPlayerInvinciblePair(pair)) {
 			UpdateCharacterLandminePlayerPair(pair);
 		}
 		if (ContainsCharacterLandmineBossPair(pair)) {
@@ -237,15 +247,26 @@ void CollisionHitManager::OnCollisionEnter(GhostBody* a, GhostBody* b)
 
 void CollisionHitManager::OnCollisionStay(GhostBody* a, GhostBody* b, int frameCount)
 {
-	// --- 継続的に実行したい処理をここに書く ---
+	Pair pair(a, b);
 
-	// TODO: 継続ダメージなどの例
-	// 例: 毒沼の継続ダメージ（Nフレームごとに適用）
-	//
-	// const int DAMAGE_INTERVAL = 60; // 60フレームごと
-	// if (frameCount % DAMAGE_INTERVAL == 0) {
-	//     ApplyContinuousDamage(a, b);
-	// }
+	// スキル攻撃の多段ヒット
+	// Enter で1回目のダメージ済み（frameCount=1）
+	// その後 fireMagicHitInterval 秒ごとに追加ヒット
+	if (ContainsPlayerSkillAttackPair(pair))
+	{
+		const auto* sp          = ParameterManager::Get().GetSkillParam("FireMagic");
+		const int intervalFrames = static_cast<int>(sp->fireMagicHitInterval * 60.0f);
+		const int maxHits        = sp->fireMagicHitCount;
+
+		// frameCount=1 が Enter（1回目）なので、elapsed=frameCount-1 で正規化
+		int elapsed  = frameCount - 1;
+		int hitIndex = elapsed / intervalFrames; // 1回目の追加ヒット=1, 2回目=2, ...
+
+		if (elapsed > 0 && elapsed % intervalFrames == 0 && hitIndex < maxHits)
+		{
+			UpdatePlayerSkillAttackPair(pair);
+		}
+	}
 }
 
 
@@ -348,6 +369,49 @@ void CollisionHitManager::UpdatePlayerSkillAttackPair(Pair& hitPair)
 /* ボスが攻撃 */
 /* ============================================ */
 
+//// =====================================================================
+//// ジャスト回避
+//// =====================================================================
+
+bool CollisionHitManager::IsJustAvoidPair(const Pair& hitPair)
+{
+	// プレイヤーが衝突に含まれているか
+	auto* player = GetHitObject<Player>(hitPair, CharacterID::PlayerID());
+	if (!player || !player->GetStatus()) return false;
+
+	// ボスの攻撃が衝突に含まれているか
+	bool isBossAttack =
+		IsHitObject<BossCharacter>(hitPair, CharacterID::BossNormalAtkID()) ||
+		IsHitObject<BossCharacter>(hitPair, CharacterID::BossHitStampAtkID()) ||
+		IsHitObject<BossCharacter>(hitPair, CharacterID::BossSpinAtkID()) ||
+		IsHitObject<BossCharacter>(hitPair, CharacterID::BossThrowRockAtkID()) ||
+		IsHitObject<BossCharacter>(hitPair, CharacterID::BossLaserWeakAtkID()) ||
+		IsHitObject<BossCharacter>(hitPair, CharacterID::BossLaserStrongAtkID());
+	if (!isBossAttack) return false;
+
+	// プレイヤーがジャスト回避ウィンドウ中か
+	PlayerStatus* status = player->GetStatus()->As<PlayerStatus>();
+	return status && status->IsJustAvoiding();
+}
+
+void CollisionHitManager::OnJustAvoid(Pair& hitPair)
+{
+	// TODO: スローモーション演出、カウンター攻撃ウィンドウの開放、専用エフェクト再生など
+}
+
+bool CollisionHitManager::IsPlayerInvinciblePair(const Pair& hitPair)
+{
+	// プレイヤーが衝突に含まれているか
+	auto* player = GetHitObject<Player>(hitPair, CharacterID::PlayerID());
+	if (!player || !player->GetStatus()) return false;
+
+	// プレイヤーが無敵状態か（enAvoid / enDamage / enSkill など何でも）
+	PlayerStatus* status = player->GetStatus()->As<PlayerStatus>();
+	return status && status->IsInvincible();
+}
+
+
+
 bool CollisionHitManager::ContainsBossAttackPair(const Pair& hitPair)
 {
 	if (!IsHitObject<BossCharacter>(hitPair, CharacterID::BossNormalAtkID())) {
@@ -367,9 +431,6 @@ void CollisionHitManager::UpdateBossAttackPair(Pair& hitPair)
 
 	// プレイヤーがいるか、プレイヤーのステータスがあるか
 	if (player == nullptr || player->GetStatus() == nullptr) { return; }
-	// プレイヤーが無敵フラグを持っているか
-	PlayerStatus* status = player->GetStatus()->As<PlayerStatus>();
-	if (status && status->IsInvincible()) { return; }
 
 	// ボスのステータスがあるならダメージ処理
 	if (boss->GetStatus()) {
@@ -411,9 +472,6 @@ void CollisionHitManager::UpdateBossHitStampPair(Pair& hitPair)
 
 	// プレイヤーがいるか、もしくはプレイヤーのステータスがあるか
 	if (player == nullptr || player->GetStatus() == nullptr) { return; }
-	// プレイヤーが無敵フラグを持っているか
-	PlayerStatus* status = player->GetStatus()->As<PlayerStatus>();
-	if (status && status->IsInvincible()){ return; }
 
 	if (boss->GetStatus()) {
 		float motion = bossStatus->GetSkillMotionValues("HitStamp");
@@ -455,9 +513,6 @@ void CollisionHitManager::UpdateBossSpinPair(Pair& hitPair)
 
 	// プレイヤーがいるかつプレイヤーのステータスがあるかつボスがいいなら続ける
 	if (player == nullptr || player->GetStatus() == nullptr || boss == nullptr) { return; }
-	PlayerStatus* status = player->GetStatus()->As<PlayerStatus>();
-	// プレイヤーが無敵フラグを持っているか
-	if (status && status->IsInvincible()){ return; }
 
 	if (boss->GetStatus()) {
 		float motion = bossStatus->GetSkillMotionValues("SpinAttack");
@@ -510,9 +565,6 @@ void CollisionHitManager::UpdateBossThrowRockPair(Pair& hitPair)
 
 	// プレイヤーがいるか、もしくはプレイヤーのステータスがあるか
 	if (player == nullptr || player->GetStatus() == nullptr) { return; }
-	// プレイヤーが無敵フラグを持っているか
-	PlayerStatus* status = player->GetStatus()->As<PlayerStatus>();
-	if (status && status->IsInvincible()) { return; }
 
 	if (boss->GetStatus()) {
 		float motion = bossStatus->GetSkillMotionValues("ThrowRock");
@@ -552,9 +604,6 @@ void CollisionHitManager::UpdateBossLaserWeakPair(Pair& hitPair)
 
 	// プレイヤーがいるか、もしくはプレイヤーのステータスがあるか
 	if (player == nullptr || player->GetStatus() == nullptr) { return; }
-	// プレイヤーが無敵フラグを持っているか
-	PlayerStatus* status = player->GetStatus()->As<PlayerStatus>();
-	if (status && status->IsInvincible()) { return; }
 
 	if (boss->GetStatus()) {
 		float motion = bossStatus->GetSkillMotionValues("LaserWeak");
@@ -594,9 +643,6 @@ void CollisionHitManager::UpdateBossLaserStrongPair(Pair& hitPair)
 
 	// プレイヤーがいるか、もしくはプレイヤーのステータスがあるか
 	if (player == nullptr || player->GetStatus() == nullptr) { return; }
-	// プレイヤーが無敵フラグを持っているか
-	PlayerStatus* status = player->GetStatus()->As<PlayerStatus>();
-	if (status && status->IsInvincible()) { return; }
 
 	if (boss->GetStatus()) {
 		float motion = bossStatus->GetSkillMotionValues("LaserStrong");

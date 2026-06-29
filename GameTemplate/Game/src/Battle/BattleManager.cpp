@@ -170,7 +170,6 @@ BattleManager::BattleManager()
 		GrassBendManager::Initialize();
 
 		// ダメージ通知のコールバックを登録する
-		// BattleManagerが存在するときだけ通知が届く
 		CollisionHitManager::Get().onDamageNotify = [this](int damage, DamageNotifyType type, bool isCritical)
 			{
 				PushDamageNotify(damage, type, isCritical);
@@ -356,6 +355,16 @@ void BattleManager::SetGroupMask(const uint32_t updateMask, const uint32_t drawM
 
 void BattleManager::ApplyGroupMasks()
 {
+	// updateMask_ の各ビットが「そのグループを更新するか」を表している。
+	// (updateMask_ & UpdateGroup::XXX) で対象グループのビットだけを取り出し、
+	// 0 以外なら true → SetUpdate(true) でそのオブジェクトの Update を有効にする。
+	// 0 なら false → SetUpdate(false) で止める。
+	//
+	// 例: updateMask_ = 0000 0101 のとき
+	//   & Player(0000 0001) → 0000 0001 (≠0) → Player は動く
+	//   & Boss  (0000 0010) → 0000 0000 (= 0) → Boss  は止まる
+	//   & UI    (0000 0100) → 0000 0100 (≠0) → UI    は動く
+
 	// --- Update 制御 ---
 	if (player_)
 		player_->SetUpdate((updateMask_ & UpdateGroup::Player) != 0);
@@ -369,6 +378,8 @@ void BattleManager::ApplyGroupMasks()
 	if (stage_)
 		stage_->SetUpdate((updateMask_ & UpdateGroup::Stage) != 0);
 
+	// UI だけは Update と Draw を別々のマスクで制御できるため、2行ある。
+	// updateMask_ でスクリーンに動くかどうか、drawMask_ で描画するかどうかを独立して管理する。
 	// --- UI の Update / Draw 制御 ---
 	uiManager_.SetUpdateMask((updateMask_ & UpdateGroup::UI) ? UIManager::All : UIManager::None);
 	uiManager_.SetDrawMask  ((drawMask_   & UpdateGroup::UI) ? UIManager::All : UIManager::None);
@@ -629,12 +640,19 @@ void BattleManager::UpdateDebugGroupInput()
 
 	bool changed = false;
 	for (int i = 0; i < 4; i++) {
+		// GetAsyncKeyState はキーの状態を 16 ビット整数で返す。
+		// 最上位ビット（0x8000 = 1000 0000 0000 0000）が 1 なら「今このキーが押されている」。
+		// & 0x8000 でそのビットだけ取り出し、0 以外なら押下中と判断する。
 		const bool cur = (GetAsyncKeyState(table[i].vKey) & 0x8000) != 0;
 		if (cur && !prev[i]) {
+			// ^= (XOR) でビットをトグルする。
+			// 対象グループのビットが 1 なら 0 に、0 なら 1 に反転する。
+			// つまり F キーを押すたびに ON → OFF → ON と切り替わる。
 			updateMask_ ^= table[i].group;  // トグル
 			changed = true;
 
 			char buf[64];
+			// トグル後に & で対象ビットを取り出し、今 ON か OFF かをデバッグ表示する。
 			const bool isOn = (updateMask_ & table[i].group) != 0;
 			sprintf_s(buf, "[Debug] %s Update: %s\n", table[i].label, isOn ? "ON" : "OFF");
 			OutputDebugStringA(buf);
@@ -677,10 +695,14 @@ void BattleManager::UpdateDebugGroupInput()
 	static bool prevF8 = false;
 	const bool curF8 = (GetAsyncKeyState(VK_F8) & 0x8000) != 0;
 	if (curF8 && !prevF8) {
+		// drawMask_ の UI ビットを ^= でトグルする（描画 ON ↔ OFF の切り替え）。
+		// updateMask_ ではなく drawMask_ を変えているため、
+		// UI の Update（動き）はそのままで「画面に表示するかどうか」だけを制御できる。
 		drawMask_ ^= UpdateGroup::UI;
 		ApplyGroupMasks();
 		Layout::SetDrawPaused(!Layout::IsDrawPaused());
 		char buf[64];
+		// & で UI ビットを取り出し、今 ON か OFF かをデバッグ表示する。
 		const bool isOn = (drawMask_ & UpdateGroup::UI) != 0;
 		sprintf_s(buf, "[Debug] UI Draw: %s\n", isOn ? "ON" : "OFF");
 		OutputDebugStringA(buf);

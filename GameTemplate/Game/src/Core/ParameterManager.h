@@ -202,6 +202,7 @@ struct MasterSkillParameter : public IMasterParameter
 	std::string key; //!< スキル識別キー
 
 	// Bite (通常攻撃)
+	float collisionRadius;           //!< コリジョンの半径
 	float collisionForward;          //!< コリジョンの前方オフセット
 	float collisionHeight;           //!< コリジョンの高さオフセット
 
@@ -211,6 +212,9 @@ struct MasterSkillParameter : public IMasterParameter
 	float avoidEffectRotation;       //!< 回避エフェクトの回転角度 (度)
 	float avoidEffectScale;          //!< 回避エフェクトスケール (一様)
 	float avoidStartTime;            //!< 回避処理の開始タイミング (秒)
+	float avoidInvincibleStartTime;  //!< 無敵フラグONのタイミング (秒)
+	float avoidJustStartTime;        //!< ジャスト回避ウィンドウ開始 (秒)
+	float avoidJustEndTime;          //!< ジャスト回避ウィンドウ終了 (秒)
 	float avoidEndTime;              //!< 回避処理の終了タイミング (秒)
 
 	// FireMagic (炎魔法)
@@ -219,6 +223,8 @@ struct MasterSkillParameter : public IMasterParameter
 	float fireMagicCollisionDepth;   //!< 炎魔法コリジョンの奥行き
 	float fireMagicCollisionForward; //!< 炎魔法コリジョンの前方オフセット
 	float fireMagicCollisionHeight;  //!< 炎魔法コリジョンの高さオフセット
+	int   fireMagicHitCount;         //!< 炎魔法の多段攻撃回数
+	float fireMagicHitInterval;      //!< 炎魔法の攻撃間隔 (秒)
 	float fireMagicAttackStartTime;  //!< 炎魔法の攻撃判定開始時間 (秒)
 	float fireMagicAttackEndTime;    //!< 炎魔法の攻撃判定終了時間 (秒)
 };
