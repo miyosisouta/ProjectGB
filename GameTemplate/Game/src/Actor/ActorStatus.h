@@ -343,13 +343,25 @@ public:
 class PlayerStatus : public CharacterStatus
 {
 public:
-    /* 無敵フラグ */
+    /**
+     * 無敵フラグ（ビットフラグ）
+     *
+     * 1つの整数の各ビットを「ON/OFF スイッチ」として使う。
+     * 複数の無敵状態が同時に重なっても、それぞれ独立して管理できる。
+     *
+     *   ビット位置:  4           3         2          1
+     *   フラグ名:    enJustAvoid enSkill   enDamage   enAvoid
+     *   値(2進):     00010000    00001000  00000100   00000010
+     *
+     * 例: 回避中 & ジャスト回避中 → invincibleFlag_ = 00010010 (= 18)
+     */
     enum class InvincibleFlags : uint32_t
     {
-        enNone   = 0,
-        enAvoid  = 1 << 1, //!< 回避中
-        enDamage = 1 << 2, //!< ダメージ受け中
-        enSkill  = 1 << 3, //!< スキル使用中
+        enNone      = 0,
+        enAvoid     = 1 << 1, //!< 回避中
+        enDamage    = 1 << 2, //!< ダメージ受け中
+        enSkill     = 1 << 3, //!< スキル使用中
+        enJustAvoid = 1 << 4, //!< ジャスト回避ウィンドウ中
     };
 
     enum class StaminaState
@@ -384,8 +396,8 @@ private:
     float runSpeedBase_              = 0.0f; //!< 走り時のベース移動速度
 
     /* その他 */
-    uint32_t          invincibleFlag_ = 0;   //!< 無敵フラグ（ビット演算）
-    PlayerSkillStatus skillStatus_;          //!< スキルスロット＋クールダウン管理
+    uint32_t          invincibleFlag_    = 0;     //!< 無敵フラグ（ビット演算）
+    PlayerSkillStatus skillStatus_;               //!< スキルスロット＋クールダウン管理
 
 
 public:
@@ -594,10 +606,17 @@ public:
 
 
 public:
-    /* 無敵フラグ */
+    /* 無敵フラグ操作 */
+    // |= : 指定フラグのビットを 1 にする（他のフラグはそのまま）
     void AddInvincible(InvincibleFlags flag)    { invincibleFlag_ |=  static_cast<uint32_t>(flag); }
+    // &= ~ : 指定フラグのビットを 0 にする（~ で対象ビットだけ反転させてから AND で消す）
     void RemoveInvincible(InvincibleFlags flag) { invincibleFlag_ &= ~static_cast<uint32_t>(flag); }
-    bool IsInvincible() const                  { return invincibleFlag_ != 0; }
+    // != 0 : どれか1つでもフラグが立っていれば true
+    bool IsInvincible()      const { return invincibleFlag_ != 0; }
+    // & : enJustAvoid のビットだけ取り出して 0 以外なら true（ジャスト回避ウィンドウ中）
+    bool IsJustAvoiding()    const { return (invincibleFlag_ & static_cast<uint32_t>(InvincibleFlags::enJustAvoid)) != 0; }
+    // & : enAvoid のビットだけ取り出して 0 以外なら true（回避ロール中）
+    bool IsNormalDodging()   const { return (invincibleFlag_ & static_cast<uint32_t>(InvincibleFlags::enAvoid)) != 0; }
 
 
     /*************** スタミナの増減に関する関数 ***************/

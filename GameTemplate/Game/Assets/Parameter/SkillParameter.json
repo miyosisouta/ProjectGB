@@ -1,9 +1,10 @@
-{
+﻿{
     "Skill": [
         {
             "comment": "通常攻撃 - Bite",
             "key": "Bite",
-            "collisionForward": 100.0,
+            "collisionRadius": 60.0,
+            "collisionForward": 110.0,
             "collisionHeight": 50.0
         },
         {
@@ -14,16 +15,21 @@
             "avoidEffectRotation": 180.0,
             "avoidEffectScale": 3.0,
             "avoidStartTime": 0.1,
-            "avoidEndTime": 0.8
+            "avoidInvincibleStartTime": 0.05,
+            "avoidJustStartTime": 0.15,
+            "avoidJustEndTime": 0.3,
+            "avoidEndTime": 0.7
         },
         {
             "comment": "特殊スキル - FireMagic",
             "key": "FireMagic",
             "effectScaleFactor": 0.4,
-            "fireMagicCollisionSize": 20.0,
+            "fireMagicCollisionSize": 25.0,
             "fireMagicCollisionDepth": 200.0,
-            "fireMagicCollisionForward": 100.0,
+            "fireMagicCollisionForward": 110.0,
             "fireMagicCollisionHeight": 40.0,
+            "fireMagicHitCount": 4,
+            "fireMagicHitInterval": 0.3,
             "fireMagicAttackStartTime": 0.1,
             "fireMagicAttackEndTime": 1.5
         }

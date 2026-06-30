@@ -102,9 +102,7 @@ private:
 	std::unordered_map<PairKey, PairInfo, PairKeyHash> activePairs_;
 
 public:
-	// ダメージ通知コールバック
-	// BattleManagerなど外部から登録する
-	// 登録がなければ何も起きない
+	// ダメージ通知コールバック（BattleManagerなど外部から登録する）
 	std::function<void(int, DamageNotifyType, bool)> onDamageNotify;
 
 private:
@@ -137,6 +135,12 @@ private:
 	void OnCollisionStay(GhostBody* a, GhostBody* b, int frameCount);
 	/** Exit: 離脱した瞬間の処理 : 離脱時に一度だけ実行したい処理 */
 	void OnCollisionExit(GhostBody* a, GhostBody* b);
+
+	/* ジャスト回避 */
+	bool IsJustAvoidPair(const Pair& hitPair);      //!< ジャスト回避ウィンドウ中のボス攻撃か
+	void OnJustAvoid(Pair& hitPair);                //!< ジャスト回避時の処理
+	/* 通常回避（無敵） */
+	bool IsPlayerInvinciblePair(const Pair& hitPair); //!< プレイヤーが無敵中か（回避・ダメージ硬直など）
 
 	/* プレイヤーの攻撃 */
 	bool ContainsPlayerNormalAttackPair(const Pair& hitPair);	//!< 通常攻撃のフラグ取得

@@ -67,7 +67,7 @@ namespace
 		{
 		case AbilityType::enDefault:         return "DefaultAttack";
 		case AbilityType::enLandmine:        return "Landmine";
-		case AbilityType::enFireMagic:       return "Magic";
+		case AbilityType::enFireMagic:       return "FireMagic";
 		default:                             return nullptr;
 		}
 	}

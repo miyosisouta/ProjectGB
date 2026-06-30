@@ -14,12 +14,32 @@ void Avoid::Enter(Character* p)
 	// 前フレームの移動量をリセット
 	p->SetMoveVelocity(Vector3::Zero);
 
-
 	// タスクスケージュールを作成
 	taskScheduler_ = std::make_unique<TaskSchedulerSystem>();
 
 	const auto* sp = ParameterManager::Get().GetSkillParam("Avoid");
 	const Vector3 effectScale(sp->avoidEffectScale);
+
+	taskScheduler_->AddTimer(sp->avoidInvincibleStartTime, [&, p]()
+		{
+			// 無敵を設定（通常回避）
+			PlayerStatus* status = p->GetStatus()->As<PlayerStatus>();
+			status->AddInvincible(PlayerStatus::InvincibleFlags::enAvoid);
+		});
+
+	taskScheduler_->AddTimer(sp->avoidJustStartTime, [&, p]()
+		{
+			// ジャスト回避ウィンドウ 開始
+			PlayerStatus* status = p->GetStatus()->As<PlayerStatus>();
+			status->AddInvincible(PlayerStatus::InvincibleFlags::enJustAvoid);
+		});
+
+	taskScheduler_->AddTimer(sp->avoidJustEndTime, [&, p]()
+		{
+			// ジャスト回避ウィンドウ 終了
+			PlayerStatus* status = p->GetStatus()->As<PlayerStatus>();
+			status->RemoveInvincible(PlayerStatus::InvincibleFlags::enJustAvoid);
+		});
 
 	taskScheduler_->AddTimer(sp->avoidStartTime, [&, p, sp, effectScale]()
 		{
@@ -33,10 +53,6 @@ void Avoid::Enter(Character* p)
 
 			// 移動先の設定
 			targetPos_ = playerPos + (forwardDir * sp->targetPosForward);
-
-			// プレイヤーステータスの取得、無敵を設定
-			PlayerStatus* status = p->GetStatus()->As<PlayerStatus>();
-			status->AddInvincible(PlayerStatus::InvincibleFlags::enAvoid);
 
 			// SEの再生
 			SoundManager::Get().PlaySE(enSoundKind_Player_Utility);
@@ -84,9 +100,10 @@ void Avoid::Update(Character* p)
 
 void Avoid::Exit(Character* p)
 {
-	// プレイヤーステータスの取得、無敵を削除
+	// プレイヤーステータスの取得、無敵を削除（安全策）
 	PlayerStatus* status = p->GetStatus()->As<PlayerStatus>();
 	status->RemoveInvincible(PlayerStatus::InvincibleFlags::enAvoid);
+	status->RemoveInvincible(PlayerStatus::InvincibleFlags::enJustAvoid);
 
 	p->SetMoveVelocity(Vector3::Zero);	// ピタッと止める
 
