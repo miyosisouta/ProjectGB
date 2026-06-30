@@ -35,6 +35,8 @@
 #include "src/UI/UIManager.h"
 #include "src/Util/GameTimer.h"
 #include "src/Util/DamageNotify.h"
+#include "src/Battle/GamePhaseManager.h"
+#include "src/Emotion/EmotionEffectObserver.h"
 
 
 class PlayerController;
@@ -85,6 +87,12 @@ private:
 
 	// --- ダメージ ---
 	DamageNotifyQueue damageNotifyQueue_; //!< ダメージ通知管理
+
+	// --- ゲームフェーズ管理 ---
+	// ボスのHP閾値監視と、感情システムへの強制変更を担う（Mediatorパターン）
+	GamePhaseManager      gamePhaseManager_;
+	EmotionEffectObserver emotionEffectObserver_;                  //!< 感情レベル変化時にエフェクトを再生するオブザーバー
+	bool gamePhaseManagerInitialized_ = false; //!< Start()完了後に1回だけ Init() するためのフラグ
 
 
 private:
@@ -237,6 +245,8 @@ private:
 	 * F8 : UI      描画 ON/OFF
 	 */
 	void UpdateDebugGroupInput();
+
+	FontRender debugEmotionText_;  //!< todo for test : 値の視覚化（感情レベル・攻撃力）
 #endif
 
 

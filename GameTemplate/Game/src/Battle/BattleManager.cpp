@@ -229,6 +229,22 @@ void BattleManager::Update()
 		}
 		case GameState::Playing:
 		{
+			// GamePhaseManager の遅延初期化
+			// コンストラクタ時点では Player::Start() が未完了のため、
+			// Playing に入った最初のフレームで Init() する
+			if (!gamePhaseManagerInitialized_)
+			{
+				auto* playerStatus = player_->GetStatus()->As<PlayerStatus>();
+				if (playerStatus && boss_->GetBoss())
+				{
+					gamePhaseManager_.Init(boss_->GetBoss(), &playerStatus->GetEmotionSystem());
+					emotionEffectObserver_.Init(player_, &playerStatus->GetEmotionSystem());
+					gamePhaseManagerInitialized_ = true;
+				}
+			}
+			gamePhaseManager_.Update();
+			emotionEffectObserver_.Update();
+
 			gameTimer_.Update();
 			boss_->Update();
 			GrassBendManager::Get().Update(g_gameTime->GetFrameDeltaTime());
@@ -342,6 +358,21 @@ void BattleManager::Render(RenderContext& rc)
 {
 	uiManager_.Render(rc);
 	AttackObjectManager::Get().Render(rc);
+
+#ifdef K2_DEBUG
+	// todo for test : 値の視覚化（感情レベル・攻撃力の数値確認）
+	if (auto* playerStatus = player_->GetStatus()->As<PlayerStatus>())
+	{
+		int attack    = playerStatus->GetAttack();
+		int emotionLv = static_cast<int>(playerStatus->GetEmotionSystem().GetCurrentLevel());
+		wchar_t buf[64];
+		swprintf_s(buf, L"ATK:%d  EmotionLv:%d", attack, emotionLv);
+		debugEmotionText_.SetPosition(400.0f, 100.0f, 0.0f);
+		debugEmotionText_.SetColor(0.0f, 0.0f, 0.0f, 1.0f);
+		debugEmotionText_.SetText(buf);
+		debugEmotionText_.Draw(rc);
+	}
+#endif
 }
 
 

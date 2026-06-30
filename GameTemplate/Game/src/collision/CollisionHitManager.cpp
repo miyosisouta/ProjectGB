@@ -7,6 +7,7 @@
 #include "src/Actor/AttackObject.h"
 #include "src/Core/ParameterManager.h"
 #include "src/Util/DamageCalculator.h"
+#include "src/Emotion/EmotionSystem.h"
 
 
 namespace
@@ -396,7 +397,28 @@ bool CollisionHitManager::IsJustAvoidPair(const Pair& hitPair)
 
 void CollisionHitManager::OnJustAvoid(Pair& hitPair)
 {
+	// ジャスト回避したプレイヤーの感情レベルを上昇させる
+	// デバフ中なら帳消しで Normal、通常/バフ中なら1段階アップ
+	auto* player = GetHitObject<Player>(hitPair, CharacterID::PlayerID());
+	if (player)
+	{
+		auto* status = player->GetStatus()->As<PlayerStatus>();
+		if (status) { status->GetEmotionSystem().OnJustAvoid(); }
+	}
+
 	// TODO: スローモーション演出、カウンター攻撃ウィンドウの開放、専用エフェクト再生など
+	// todo for test : 値の視覚化（ジャスト回避成功時に感情レベルが上がることを確認）
+}
+
+void CollisionHitManager::NotifyEmotionStrongHit(Pair& hitPair)
+{
+	// 強攻撃を受けたプレイヤーの感情レベルを下降させる
+	// バフ中なら帳消しで Normal、通常/デバフ中なら1段階ダウン
+	// HitStamp・Spin・チャージレーザーの3種が強攻撃に該当する
+	auto* player = GetHitObject<Player>(hitPair, CharacterID::PlayerID());
+	if (!player) { return; }
+	auto* status = player->GetStatus()->As<PlayerStatus>();
+	if (status) { status->GetEmotionSystem().OnStrongAttackHit(); }
 }
 
 bool CollisionHitManager::IsPlayerInvinciblePair(const Pair& hitPair)
@@ -482,6 +504,7 @@ void CollisionHitManager::UpdateBossHitStampPair(Pair& hitPair)
 		if (onDamageNotify) onDamageNotify(result.damage, DamageNotifyType::TakeHit, result.isCritical); // ダメージの情報を通知
 		UpdateTakeHitSound(); // 攻撃が当たったSEを流す
 		g_pad[0]->SetVibration(vibrationTime, vibrationForce);
+		NotifyEmotionStrongHit(hitPair); // 強攻撃：感情レベルを下降させる
 	}
 
 	// エフェクト
@@ -523,6 +546,7 @@ void CollisionHitManager::UpdateBossSpinPair(Pair& hitPair)
 		if (onDamageNotify) onDamageNotify(result.damage, DamageNotifyType::TakeHit, result.isCritical); // ダメージの情報を通知
 		UpdateTakeHitSound(); // 攻撃が当たったSEを流す
 		g_pad[0]->SetVibration(vibrationTime, vibrationForce);
+		NotifyEmotionStrongHit(hitPair); // 強攻撃：感情レベルを下降させる
 	}
 	
 
@@ -653,6 +677,7 @@ void CollisionHitManager::UpdateBossLaserStrongPair(Pair& hitPair)
 		if (onDamageNotify) onDamageNotify(result.damage, DamageNotifyType::TakeHit, result.isCritical); // ダメージの情報を通知
 		UpdateTakeHitSound(); // 攻撃が当たったSEを流す
 		g_pad[0]->SetVibration(vibrationTime, vibrationForce);
+		NotifyEmotionStrongHit(hitPair); // 強攻撃：感情レベルを下降させる
 	}
 
 	// エフェクト

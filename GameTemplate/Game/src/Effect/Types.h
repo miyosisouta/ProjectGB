@@ -23,13 +23,19 @@ enum enEffectKind
 
 	/* ボス */
 	enEffectKind_Wind_Blast_Boss,
-	enEffectKind_HitStamp,
-	enEffectkind_Spin, 
+	enEffectKind_HitStamp_Smoke,
+	enEffectKind_HitStamp_ShockWave,
+	enEffectkind_Spin,
 	enEffectKind_Raser,
 	enEffectKind_DamageZone_Ring,
 	enEffectKind_DamageZone_Box,
-	enEffectKind_AttackHitBoss,		// 13
-	enEffectKind_Max				
+	enEffectKind_AttackHitBoss,		// 14
+
+	/* 感情システム */
+	enEffectKind_Buff,				// 15 バフ上昇時
+	enEffectKind_Debuff,			// 16 デバフ下降時
+
+	enEffectKind_Max
 };
 
 
@@ -58,11 +64,16 @@ static EffectInformation effectInformation[enEffectKind_Max] =
 
 	/* ボス */
 	EffectInformation(u"Assets/Effect/Wind_Blast_Boss.efk"),
-	EffectInformation(u"Assets/Effect/HitStamp.efk"),
+	EffectInformation(u"Assets/Effect/HitStamp_Smoke.efk"),
+	EffectInformation(u"Assets/Effect/HitStamp_ShockWave.efk"),
 	EffectInformation(u"Assets/Effect/SpinAttack.efk"),
 	EffectInformation(u"Assets/Effect/Thunder.efk"),
 	EffectInformation(u"Assets/Effect/DamageZone_Ring.efk"),
 	EffectInformation(u"Assets/Effect/DamageZone_Box.efk"),
-	EffectInformation(u"Assets/Effect/HitBoss.efk")				// 13
+	EffectInformation(u"Assets/Effect/HitBoss.efk"),			// 14
+
+	/* 感情システム */
+	EffectInformation(u"Assets/Effect/Buff.efk"),				// 15
+	EffectInformation(u"Assets/Effect/Debuff.efk"),				// 16
 };
 

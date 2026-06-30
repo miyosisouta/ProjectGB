@@ -76,7 +76,6 @@ public:
         if (it != effectList_.end()) {
             return it->second;
         }
-        K2_ASSERT(false, "削除済みか追加されていないエフェクトにアクセスしようとしています。\n");
         return nullptr;
     }
 
