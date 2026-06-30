@@ -29,7 +29,12 @@ enum enEffectKind
 	enEffectKind_DamageZone_Ring,
 	enEffectKind_DamageZone_Box,
 	enEffectKind_AttackHitBoss,		// 13
-	enEffectKind_Max				
+
+	/* 感情システム */
+	enEffectKind_Buff,				// 14 バフ上昇時
+	enEffectKind_Debuff,			// 15 デバフ下降時
+
+	enEffectKind_Max
 };
 
 
@@ -63,6 +68,10 @@ static EffectInformation effectInformation[enEffectKind_Max] =
 	EffectInformation(u"Assets/Effect/Thunder.efk"),
 	EffectInformation(u"Assets/Effect/DamageZone_Ring.efk"),
 	EffectInformation(u"Assets/Effect/DamageZone_Box.efk"),
-	EffectInformation(u"Assets/Effect/HitBoss.efk")				// 13
+	EffectInformation(u"Assets/Effect/HitBoss.efk"),			// 13
+
+	/* 感情システム */
+	EffectInformation(u"Assets/Effect/Buff.efk"),				// 14
+	EffectInformation(u"Assets/Effect/Debuff.efk"),				// 15
 };
 

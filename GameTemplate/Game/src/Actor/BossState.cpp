@@ -41,6 +41,7 @@ namespace
 	constexpr float ATTACK_HITSTAMP_COLLISION_SIZE = 350.0f;	// コリジョンサイズ
 	constexpr float ATTACK_HITSTAMP_RANGE_SIZE = 70.0f;	// 攻撃範囲サイズ
 	constexpr float GRAVITY_POWER = -800.0f;					// 重力の強さ
+	constexpr float EFFECT_SCALE_HITSTAMP = 0.2f;				// ヒットスタンプのエフェクトサイズ
 	
 	// 回転攻撃
 	constexpr float SPIN_ATTACK_START_TIME = 3.0f;				// 攻撃開始時間
@@ -430,7 +431,7 @@ void HitStampState::Update()
 			// ここに着地時の処理をまとめる
 			boss_->SetMoveVelocity(Vector3::Zero);
 			Vector3 targetPos = boss_->GetTransformPosition();
-			Vector3 targetScal = ATTACK_HITSTAMP_COLLISION_SIZE * EFFECT_SCALE_FACTOR_DAMAGE_LING;
+			Vector3 targetScal = ATTACK_HITSTAMP_COLLISION_SIZE * EFFECT_SCALE_HITSTAMP;
 			EffectManager::Get().PlayEffect(enEffectKind_HitStamp, targetPos, boss_->GetTransformRotation(), targetScal);
 			SoundManager::Get().PlaySE(enSoundKind_Boss_HitStamp);
 

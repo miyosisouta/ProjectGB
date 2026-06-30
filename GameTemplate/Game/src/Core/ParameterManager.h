@@ -353,6 +353,30 @@ struct MasterTitleBGParameter : public IMasterParameter
 	float fenceMaxGap         = 3.0f;
 };
 
+/**
+ * 感情システムパラメーター
+ * EmotionParameter.json の "Emotion" 配列から読み込む
+ * 各感情段階の倍率テーブルとエフェクト位置オフセットを保持する
+ */
+struct MasterEmotionParameter : public IMasterParameter
+{
+	appParameter(MasterEmotionParameter);
+
+	// 各感情段階の攻撃力・移動速度倍率
+	// インデックス 0=Debuff3, 1=Debuff2, 2=Debuff1, 3=Normal, 4=Buff1, 5=Buff2, 6=Buff3
+	struct ModifierEntry
+	{
+		float attackMul = 1.0f;  //!< 攻撃力倍率
+		float speedMul  = 1.0f;  //!< 移動速度倍率
+	};
+
+	ModifierEntry modifiers[7];           //!< 7段階分の倍率テーブル
+	float         buffEffectScale   = 1.0f;  //!< バフ上昇時エフェクトのスケール（一様）
+	float         debuffEffectScale = 1.0f;  //!< デバフ下降時エフェクトのスケール（一様）
+	Vector3       buffEffectOffset   = Vector3::Zero;  //!< Buff effect position offset from player (x/y/z)
+	Vector3       debuffEffectOffset = Vector3::Zero;  //!< Debuff effect position offset from player (x/y/z)
+};
+
 /** defineの使用終了 */
 #undef appParameter
 
@@ -392,6 +416,7 @@ public:
 	void LoadAttackObjectParamData(const char* path);
 	void LoadStageManagerParamData(const char* path);
 	void LoadTitleBGParamData(const char* path);
+	void LoadEmotionParamData(const char* path);
 
 public:
 	/**
@@ -670,6 +695,12 @@ public:
 	const MasterTitleBGParameter* GetTitleBGParam()
 	{
 		return GetParameter<MasterTitleBGParameter>(0);
+	}
+
+	/** 感情システムパラメーターを取得するショートカット */
+	const MasterEmotionParameter* GetEmotionParam() const
+	{
+		return GetParameter<MasterEmotionParameter>(0);
 	}
 
 

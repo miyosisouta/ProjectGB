@@ -74,6 +74,7 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 	ParameterManager::Get().LoadSkillParamData("Assets/Parameter/SkillParameter.json");
 	ParameterManager::Get().LoadAttackObjectParamData("Assets/Parameter/AttackObjectParameter.json");
 	ParameterManager::Get().LoadStageManagerParamData("Assets/Parameter/StageManagerParameter.json");
+	ParameterManager::Get().LoadEmotionParamData("Assets/Parameter/EmotionParameter.json");
 
 	// カメラコンフィグ
 	CameraConfig::CreateInstance();

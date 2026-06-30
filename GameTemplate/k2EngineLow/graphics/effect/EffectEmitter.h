@@ -95,7 +95,16 @@ namespace nsK2EngineLow {
 		{
 			return m_effect.IsPlay();
 		}
+		/// <summary>
+		/// エフェクト終了時（DeleteGO直前）に呼ばれるコールバックを設定する。
+		/// EffectManager がマップから除去するために使用する。
+		/// </summary>
+		void SetOnEffectEndCallback(std::function<void()> cb)
+		{
+			onEffectEnd_ = std::move(cb);
+		}
 	private:
 		Effect m_effect;					//エフェクト。
+		std::function<void()> onEffectEnd_;	//エフェクト終了コールバック。
 	};
 }

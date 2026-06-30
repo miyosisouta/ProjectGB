@@ -23,6 +23,7 @@ namespace nsK2EngineLow {
 
 		if (!IsPlay())
 		{
+			if (onEffectEnd_) onEffectEnd_();
 			DeleteGO(this);
 		}
 	}

@@ -54,6 +54,14 @@ EffectHandle EffectManager::PlayEffect(const int kind, const Vector3& position, 
 	EffectHandle handle = effectHandleCount_++;
 	effectList_[handle] = m_effect;
 
+	// 再生終了時にマップから除去するコールバックを登録する
+	// （非ループエフェクトは EffectEmitter::Update() 内で DeleteGO されるため、
+	//   その直前にこのコールバックが呼ばれてマップから安全に削除する）
+	m_effect->SetOnEffectEndCallback([this, handle]()
+	{
+		effectList_.erase(handle);
+	});
+
 	return handle;
 }
 

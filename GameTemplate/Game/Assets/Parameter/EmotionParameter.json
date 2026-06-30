@@ -1,0 +1,23 @@
+{
+    "Emotion": [
+        {
+            "comment": "感情システムのパラメーター（倍率テーブル・エフェクト位置）",
+
+            "modifiers": [
+                { "level": "Debuff3", "attackMul": 0.5, "speedMul": 0.6 },
+                { "level": "Debuff2", "attackMul": 0.8, "speedMul": 0.8 },
+                { "level": "Debuff1", "attackMul": 0.9, "speedMul": 0.8 },
+                { "level": "Normal",  "attackMul": 1.0, "speedMul": 1.0 },
+                { "level": "Buff1",   "attackMul": 1.1, "speedMul": 1.0 },
+                { "level": "Buff2",   "attackMul": 1.2, "speedMul": 1.0 },
+                { "level": "Buff3",   "attackMul": 1.5, "speedMul": 1.0 }
+            ],
+
+            "buffEffectScale":   80.0,
+            "debuffEffectScale": 70.0,
+
+            "buffEffectOffset":   { "x": 0.0, "y": -20.0, "z": 0.0 },
+            "debuffEffectOffset": { "x": 0.0, "y": 20.0, "z": 0.0 }
+        }
+    ]
+}

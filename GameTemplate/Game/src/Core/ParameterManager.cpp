@@ -406,6 +406,49 @@ void ParameterManager::LoadTitleBGParamData(const char* path)
 }
 
 
+// ============================================================
+//  EmotionParameter.json 読み込みヘルパー
+// ============================================================
+void ParameterManager::LoadEmotionParamData(const char* path)
+{
+	ParameterManager::Get().LoadParameterFromArray<MasterEmotionParameter>(
+		path,
+		"Emotion",
+		[](const nlohmann::json& j, MasterEmotionParameter& p)
+		{
+			// 倍率テーブル（7段階）
+			if (j.contains("modifiers") && j["modifiers"].is_array())
+			{
+				const auto& arr = j["modifiers"];
+				for (int i = 0; i < 7 && i < static_cast<int>(arr.size()); i++)
+				{
+					p.modifiers[i].attackMul = arr[i].value("attackMul", 1.0f);
+					p.modifiers[i].speedMul  = arr[i].value("speedMul",  1.0f);
+				}
+			}
+			// effect scale
+			p.buffEffectScale   = j.value("buffEffectScale",   1.0f);
+			p.debuffEffectScale = j.value("debuffEffectScale", 1.0f);
+			// effect position offset
+			if (j.contains("buffEffectOffset") && j["buffEffectOffset"].is_object())
+			{
+				const auto& o = j["buffEffectOffset"];
+				p.buffEffectOffset.x = o.value("x", 0.0f);
+				p.buffEffectOffset.y = o.value("y", 0.0f);
+				p.buffEffectOffset.z = o.value("z", 0.0f);
+			}
+			if (j.contains("debuffEffectOffset") && j["debuffEffectOffset"].is_object())
+			{
+				const auto& o = j["debuffEffectOffset"];
+				p.debuffEffectOffset.x = o.value("x", 0.0f);
+				p.debuffEffectOffset.y = o.value("y", 0.0f);
+				p.debuffEffectOffset.z = o.value("z", 0.0f);
+			}
+		}
+	);
+}
+
+
 void ParameterManager::LoadBattleCommonParamData(const char* path)
 {
 	ParameterManager::Get().LoadParameterFromArray<MasterBattleCommonParameter>(

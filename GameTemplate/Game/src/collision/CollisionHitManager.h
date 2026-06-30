@@ -139,6 +139,10 @@ private:
 	/* ジャスト回避 */
 	bool IsJustAvoidPair(const Pair& hitPair);      //!< ジャスト回避ウィンドウ中のボス攻撃か
 	void OnJustAvoid(Pair& hitPair);                //!< ジャスト回避時の処理
+
+	// 強攻撃（HitStamp・Spin・チャージレーザー）ヒット時に感情システムへ通知する共通処理
+	// 各 UpdateBoss*Pair の中で個別に書くのを避けるためここにまとめる
+	void NotifyEmotionStrongHit(Pair& hitPair);
 	/* 通常回避（無敵） */
 	bool IsPlayerInvinciblePair(const Pair& hitPair); //!< プレイヤーが無敵中か（回避・ダメージ硬直など）
 
