@@ -302,6 +302,7 @@
     <ClCompile Include="src\UI\GameClearMenu.cpp" />
     <ClCompile Include="src\UI\GameOverMenu.cpp" />
     <ClCompile Include="src\UI\GameStartMenu.cpp" />
+    <ClCompile Include="src\UI\EmotionStatusIconMenu.cpp" />
     <ClCompile Include="src\UI\InGameMenu.cpp" />
     <ClCompile Include="src\UI\KeyConfigOptionMenu.cpp" />
     <ClCompile Include="src\UI\Layout.cpp" />
@@ -354,6 +355,7 @@
     <ClInclude Include="src\Actor\PlayerState.h" />
     <ClInclude Include="src\Actor\StateMachine.h" />
     <ClInclude Include="src\Battle\BattleManager.h" />
+    <ClInclude Include="src\Battle\GamePhaseManager.h" />
     <ClInclude Include="src\Battle\Mission.h" />
     <ClInclude Include="src\Battle\MissionCondition.h" />
     <ClInclude Include="src\Battle\MissionEvent.h" />
@@ -420,6 +422,7 @@
     <ClInclude Include="src\UI\CameraOptionMenu.h" />
     <ClInclude Include="src\UI\CheckStartWindow.h" />
     <ClInclude Include="src\UI\GameClearMenu.h" />
+    <ClInclude Include="src\UI\EmotionStatusIconMenu.h" />
     <ClInclude Include="src\UI\GameOverMenu.h" />
     <ClInclude Include="src\UI\GameStartMenu.h" />
     <ClInclude Include="src\UI\InGameMenu.h" />

@@ -73,6 +73,7 @@
     <ClCompile Include="src\UI\GameClearMenu.cpp" />
     <ClCompile Include="src\UI\GameOverMenu.cpp" />
     <ClCompile Include="src\UI\GameStartMenu.cpp" />
+    <ClCompile Include="src\UI\EmotionStatusIconMenu.cpp" />
     <ClCompile Include="src\UI\InGameMenu.cpp" />
     <ClCompile Include="src\UI\KeyConfigOptionMenu.cpp" />
     <ClCompile Include="src\UI\Layout.cpp" />
@@ -184,6 +185,7 @@
     <ClInclude Include="src\Types.h" />
     <ClInclude Include="src\UI\BootMenu.h" />
     <ClInclude Include="src\UI\BossSelectMenu.h" />
+    <ClInclude Include="src\UI\EmotionStatusIconMenu.h" />
     <ClInclude Include="src\UI\GameClearMenu.h" />
     <ClInclude Include="src\UI\GameOverMenu.h" />
     <ClInclude Include="src\UI\GameStartMenu.h" />
@@ -230,5 +232,6 @@
     <ClInclude Include="src\Emotion\IEmotionObserver.h" />
     <ClInclude Include="src\Emotion\IStatusModifier.h" />
     <ClInclude Include="src\Emotion\EmotionEffectObserver.h" />
+    <ClInclude Include="src\Battle\GamePhaseManager.h" />
   </ItemGroup>
 </Project>

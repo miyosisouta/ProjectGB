@@ -810,6 +810,48 @@
             "duration": 0.4,
             "easing": "EaseIn",
             "loop": "Once"
+        },
+
+
+        {
+            "comment": "感情アイコン(UIIcon)：バフ/デバフ変動時に拡大",
+            "key": "emotion_icon_scaleUp",
+            "valueType": "Vector3",
+            "startValue": { "x": 1.0, "y": 1.0, "z": 1.0 },
+            "endValue":   { "x": 1.2, "y": 1.2, "z": 1.0 },
+            "duration": 0.08,
+            "easing": "EaseOut",
+            "loop": "Once"
+        },
+        {
+            "comment": "感情アイコン(UIIcon)：バフ/デバフ変動時に通常に戻る",
+            "key": "emotion_icon_scaleDown",
+            "valueType": "Vector3",
+            "startValue": { "x": 1.2, "y": 1.2, "z": 1.0 },
+            "endValue":   { "x": 1.0, "y": 1.0, "z": 1.0 },
+            "duration": 0.12,
+            "easing": "EaseIn",
+            "loop": "Once"
+        },
+        {
+            "comment": "感情アイコン(UIText)：バフ/デバフ変動時に拡大 (ベーススケール0.7に合わせた値)",
+            "key": "emotion_text_scaleUp",
+            "valueType": "Vector3",
+            "startValue": { "x": 0.7, "y": 0.7, "z": 0.7 },
+            "endValue":   { "x": 0.84, "y": 0.84, "z": 0.84 },
+            "duration": 0.08,
+            "easing": "EaseOut",
+            "loop": "Once"
+        },
+        {
+            "comment": "感情アイコン(UIText)：バフ/デバフ変動時に通常に戻る (ベーススケール0.7に合わせた値)",
+            "key": "emotion_text_scaleDown",
+            "valueType": "Vector3",
+            "startValue": { "x": 0.84, "y": 0.84, "z": 0.84 },
+            "endValue":   { "x": 0.7, "y": 0.7, "z": 0.7 },
+            "duration": 0.12,
+            "easing": "EaseIn",
+            "loop": "Once"
         }
     ]
 }

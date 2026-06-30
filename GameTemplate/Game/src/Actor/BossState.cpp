@@ -41,7 +41,8 @@ namespace
 	constexpr float ATTACK_HITSTAMP_COLLISION_SIZE = 350.0f;	// コリジョンサイズ
 	constexpr float ATTACK_HITSTAMP_RANGE_SIZE = 70.0f;	// 攻撃範囲サイズ
 	constexpr float GRAVITY_POWER = -800.0f;					// 重力の強さ
-	constexpr float EFFECT_SCALE_HITSTAMP = 0.2f;				// ヒットスタンプのエフェクトサイズ
+	constexpr float EFFECT_SCALE_HITSTAMP_SMOKE = 0.2f;				// ヒットスタンプの煙のエフェクトサイズ
+	constexpr float EFFECT_SCALE_HITSTAMP_SHOCKWAVE = 0.5f;				// ヒットスタンプの衝撃波のエフェクトサイズ
 	
 	// 回転攻撃
 	constexpr float SPIN_ATTACK_START_TIME = 3.0f;				// 攻撃開始時間
@@ -429,10 +430,12 @@ void HitStampState::Update()
 			verticalVelocity_ = FLOAT_ZERO;
 
 			// ここに着地時の処理をまとめる
-			boss_->SetMoveVelocity(Vector3::Zero);
-			Vector3 targetPos = boss_->GetTransformPosition();
-			Vector3 targetScal = ATTACK_HITSTAMP_COLLISION_SIZE * EFFECT_SCALE_HITSTAMP;
-			EffectManager::Get().PlayEffect(enEffectKind_HitStamp, targetPos, boss_->GetTransformRotation(), targetScal);
+			boss_->SetMoveVelocity(Vector3::Zero); // 移動速度を0に
+			Vector3 targetPos = boss_->GetTransformPosition(); // ボスの座標を取得
+			Vector3 targetSmokeScal = ATTACK_HITSTAMP_COLLISION_SIZE * EFFECT_SCALE_HITSTAMP_SMOKE;	// 煙のエフェクトのスケール
+			Vector3 targetShokeWaveScal = ATTACK_HITSTAMP_COLLISION_SIZE * EFFECT_SCALE_HITSTAMP_SHOCKWAVE; // 衝撃波のエフェクトのスケール
+			EffectManager::Get().PlayEffect(enEffectKind_HitStamp_Smoke, targetPos, boss_->GetTransformRotation(), targetSmokeScal); // 煙			
+			EffectManager::Get().PlayEffect(enEffectKind_HitStamp_ShockWave, targetPos, boss_->GetTransformRotation(), targetShokeWaveScal); // 衝撃波
 			SoundManager::Get().PlaySE(enSoundKind_Boss_HitStamp);
 
 			phase_ = Phase::ShokingStamp;

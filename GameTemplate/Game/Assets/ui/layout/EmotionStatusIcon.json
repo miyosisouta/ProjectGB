@@ -1,0 +1,99 @@
+{
+  "canvas": {
+    "elements": [
+
+      {
+        "coment": "攻撃力アイコンの背景",
+        "type": "UIIcon",
+        "name": "Attack_Icon_back",
+        "asset": "Assets/ui/inGameUI/skillIcon/back.DDS",
+        "width": 60,
+        "height": 60,
+        "position": [-380, -310, 0],
+        "scale": [1, 1, 1],
+        "rotation": 0,
+        "color": [1, 1, 1, 1]
+      },
+      {
+        "coment": "攻撃力アイコンの枠",
+        "type": "UIIcon",
+        "name": "Attack_Icon_border",
+        "asset": "Assets/ui/inGameUI/skillIcon/back_flame.DDS",
+        "width": 60,
+        "height": 60,
+        "position": [-380, -310, 0],
+        "scale": [1, 1, 1],
+        "rotation": 0,
+        "color": [1, 1, 1, 1]
+      },
+      {
+        "coment": "攻撃力アイコン",
+        "type": "UIIcon",
+        "name": "Attack_Icon_image",
+        "asset": "Assets/ui/inGameUI/skillIcon/punch.DDS",
+        "width": 48,
+        "height": 48,
+        "position": [-380, -310, 0],
+        "scale": [1, 1, 1],
+        "rotation": 0,
+        "color": [1, 1, 1, 1]
+      },
+      {
+        "coment": "攻撃力レベル",
+        "type": "UIText",
+        "name": "Attack_Level_text",
+        "text": "",
+        "position": [-366, -320, 0],
+        "scale": [0.7, 0.7, 0.7],
+        "color": [1, 1, 1, 1]
+      },
+
+      {
+        "coment": "速度アイコンの背景",
+        "type": "UIIcon",
+        "name": "Speed_Icon_back",
+        "asset": "Assets/ui/inGameUI/skillIcon/back.DDS",
+        "width": 60,
+        "height": 60,
+        "position": [-450, -310, 0],
+        "scale": [1, 1, 1],
+        "rotation": 0,
+        "color": [1, 1, 1, 1]
+      },
+      {
+        "coment": "速度アイコンの枠",
+        "type": "UIIcon",
+        "name": "Speed_Icon_border",
+        "asset": "Assets/ui/inGameUI/skillIcon/back_flame.DDS",
+        "width": 60,
+        "height": 60,
+        "position": [-450, -310, 0],
+        "scale": [1, 1, 1],
+        "rotation": 0,
+        "color": [1, 1, 1, 1]
+      },
+      {
+        "coment": "速度アイコン",
+        "type": "UIIcon",
+        "name": "Speed_Icon_image",
+        "asset": "Assets/ui/inGameUI/skillIcon/dog.DDS",
+        "width": 48,
+        "height": 48,
+        "position": [-450, -310, 0],
+        "scale": [1, 1, 1],
+        "rotation": 0,
+        "color": [1, 1, 1, 1]
+      },
+      {
+        "coment": "速度レベル",
+        "type": "UIText",
+        "name": "Speed_Level_text",
+        "text": "",
+        "position": [-435, -320, 0],
+        "scale": [0.7, 0.7, 0.7],
+        "color": [1, 1, 1, 1]
+      }
+
+    ]
+  }
+}
