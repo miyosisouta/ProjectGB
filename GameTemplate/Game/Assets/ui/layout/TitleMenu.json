@@ -11,16 +11,17 @@
         "position": [0, 0, 0],
         "scale": [1, 1, 1],
         "rotation": 0,
-        "color": [1, 1, 1, 1]
+        "color": [1, 1, 1, 1],
+        "isDraw": false
       },
       {
         "coment": "タイトルロゴ:がぶっと",
         "type": "UIIcon",
         "name": "Title_gabu",
-        "asset": "Assets/ui/titleUI/gabutto.DDS",
+        "asset": "Assets/ui/titleUI/gabutto2.DDS",
         "width": 400,
-        "height": 130,
-        "position": [-150, 300, 0],
+        "height": 150,
+        "position": [-210, 300, 0],
         "scale": [1, 1, 1],
         "rotation": 0,
         "color": [1, 1, 1, 1]
@@ -30,7 +31,7 @@
         "type": "UIIcon",
         "name": "Title_inu",
         "asset": "Assets/ui/titleUI/inu.DDS",
-        "width": 350,
+        "width": 3500,
         "height": 220,
         "position": [240, 315, 0],
         "scale": [1, 1, 1],
@@ -45,7 +46,7 @@
         "asset": "Assets/ui/titleUI/buster_new.DDS",
         "width": 750,
         "height": 290,
-        "position": [80, 150, 0],
+        "position": [60, 150, 0],
         "scale": [1, 1, 1],
         "rotation": 0,
         "color": [1, 1, 1, 1]
@@ -55,12 +56,13 @@
         "type": "UIIcon",
         "name": "Title_nikukyu",
         "asset": "Assets/ui/titleUI/niku.DDS",
-        "width": 180,
-        "height": 180,
-        "position": [-385, 135, 0],
+        "width": 100,
+        "height": 100,
+        "position": [100, 315, 0],
         "scale": [1, 1, 1],
-        "rotation": 0,
-        "color": [1, 1, 1, 1]
+        "rotation": -30,
+        "color": [1, 1, 1, 1],
+        "isDraw": false
       },
       {
         "coment": "タイトルロゴ:Aボタン押してね",
@@ -102,9 +104,9 @@
         "coment": "タイトルメニュー:設定",
         "type": "UIIcon",
         "name": "Title_option",
-        "asset": "Assets/ui/titleUI/option.DDS",
-        "width": 150,
-        "height": 70,
+        "asset": "Assets/ui/titleUI/title.DDS",
+        "width": 290,
+        "height": 45,
         "position": [0, -300, 0],
         "scale": [1, 1, 1],
         "rotation": 0,
@@ -134,7 +136,7 @@
         "comment": "ダミー(設定座標取得用)",
         "type": "UIDummy",
         "name": "OptionPositionDummy",
-        "position": [-135, -300, 0]
+        "position": [-210, -300, 0]
       },
       {
         "comment": "ダミー(おわる座標取得用)",

@@ -155,52 +155,21 @@ void KeyConfigOptionMenu::Update()
 
 
 	// デフォルト
-	if (selectKeyConfigType == DEFAULT_KEY_TYPE) {
-		if (g_pad[0]->IsTrigger(enButtonA)) {
+	if (keyConfigState_ == KEY_CONFIG_STATE_SELECT) {
+		if (g_pad[0]->IsTrigger(enButtonX)) {
 			/*skillButton = DEFAULT_KEY_TYPE;
 			runButton = DEFAULT_KEY_TYPE;
 			attackButton = DEFAULT_KEY_TYPE;*/
 
-			KeyConfig::Get().SetKeyBind(EnGameAction::enActionSpecialSkill,enButtonY);
-			KeyConfig::Get().SetKeyBind(EnGameAction::enActionDash,enButtonA);
+			KeyConfig::Get().SetKeyBind(EnGameAction::enActionSpecialSkill, enButtonY);
+			KeyConfig::Get().SetKeyBind(EnGameAction::enActionDash, enButtonA);
 			KeyConfig::Get().SetKeyBind(EnGameAction::enActionNormalSkill, enButtonB);
 
 			SoundManager::Get().PlaySE(enSoundKind_Menu_Decide);
 
 			keyConfigState_ = KEY_CONFIG_STATE_DEFAULT;
 		}
-
-
-		// 選択中の時にでかくなる
-		auto* buttonCanvs = GetUI<UICanvas>(Hash32("DefaultSoundIcon"));
-		buttonCanvs->transform.localScale = Vector3(1.2f);
-		// 背景の色が変わる
-		auto* normalBack = GetUI<UIIcon>(Hash32("DefaultSoundIcon/Button_Default_back"));
-		auto* selectColorDummy = GetUI<UIDummy>(Hash32("DefaultSoundIcon/BackSelectColorDummy"));
-		if (normalBack) {
-			normalBack->color = selectColorDummy->color;
-		}
-		// 枠の色が変わる
-		auto* nomalFlame = GetUI<UIIcon>(Hash32("DefaultSoundIcon/Button_Default_flame"));
-		auto* selectFlameColorDummy = GetUI<UIDummy>(Hash32("DefaultSoundIcon/FlameSelectColorDummy"));
-		if (nomalFlame) {	
-			nomalFlame->color = selectFlameColorDummy->color;
-		}
 	}
-	else {
-		auto* buttonCanvs = GetUI<UICanvas>(Hash32("DefaultSoundIcon"));
-		buttonCanvs->transform.localScale = Vector3(1.0f);
-		// 背景の色が変わる
-		auto* normalBack = GetUI<UIIcon>(Hash32("DefaultSoundIcon/Button_Default_back"));
-		auto* normalColorDummy = GetUI<UIDummy>(Hash32("DefaultSoundIcon/BackNormalColorDummy"));
-		normalBack->color = normalColorDummy->color;
-		// 枠の色が変わる
-		auto* nomalFlame = GetUI<UIIcon>(Hash32("DefaultSoundIcon/Button_Default_flame"));
-		auto* selectFlameColorDummy = GetUI<UIDummy>(Hash32("DefaultSoundIcon/FlameNormalColorDummy"));
-		nomalFlame->color = selectFlameColorDummy->color;
-	}
-
-
 	
 
 	// @todo for test 一旦、分けてみる
@@ -489,7 +458,7 @@ void KeyConfigOptionMenu::UpdateSelectFlame()
 	// 青緑の枠
 	auto* selectFrame = GetUI<UIIcon>(Hash32("flame"));
 	float posY = 200.0f;
-	float offsetY = 200.0f;
+	float offsetY = 225.0f;
 	switch (selectKeyConfigType)
 	{
 		case SKILL_KEY_TYPE:

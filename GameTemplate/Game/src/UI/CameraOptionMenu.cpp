@@ -16,7 +16,7 @@ namespace
 	static constexpr int CAMERA_SENS_TYPE = 0;
 	static constexpr int CAMERA_LENGTH_TYPE = 1;
 	static constexpr int CAMERA_INVERSION_TYPE = 2;
-	static constexpr int DEFAULT_CAMERA_TYPE = 3;
+	//static constexpr int DEFAULT_CAMERA_TYPE = 3;
 
 	// カメラ距離の選択
 	static int selectDistanceType = 0;
@@ -48,8 +48,8 @@ void CameraOptionMenu::Update()
 		}
 		else if (g_pad[0]->IsTrigger(enButtonDown)) {
 			selectCameraType++;
-			if (selectCameraType > DEFAULT_CAMERA_TYPE) {
-				selectCameraType = DEFAULT_CAMERA_TYPE;
+			if (selectCameraType > CAMERA_INVERSION_TYPE) {
+				selectCameraType = CAMERA_INVERSION_TYPE;
 			}
 			else {
 				SoundManager::Get().PlaySE(enSoundKind_Menu_Move);
@@ -135,8 +135,8 @@ void CameraOptionMenu::Update()
 
 
 	// デフォルト
-	if (selectCameraType == DEFAULT_CAMERA_TYPE) {
-		if (g_pad[0]->IsTrigger(enButtonA)) {
+	//if (selectCameraType == DEFAULT_CAMERA_TYPE) {
+		if (g_pad[0]->IsTrigger(enButtonX)) {
 			// デフォルトの値
 			sensitiityStage_ = static_cast<float>(SENSITIVITY_DEFAULT_STAGE);
 			selectDistanceType = BUTTON_DISTANCE_NORMAL;
@@ -149,66 +149,61 @@ void CameraOptionMenu::Update()
 			SoundManager::Get().PlaySE(enSoundKind_Menu_Decide);
 		}
 
-		// 選択中の時にでかくなる
-		auto* buttonCanvs = GetUI<UICanvas>(Hash32("DefaultIcon"));
-		buttonCanvs->transform.localScale = Vector3(1.2f);
-		// 背景の色が変わる
-		auto* normalBack = GetUI<UIIcon>(Hash32("DefaultIcon/Button_Default_back"));
-		auto* selectColorDummy = GetUI<UIDummy>(Hash32("DefaultIcon/BackSelectColorDummy"));
-		if (normalBack) {
-			normalBack->color = selectColorDummy->color;
-		}
-		// 枠の色が変わる
-		auto* nomalFlame = GetUI<UIIcon>(Hash32("DefaultSoundIcon/Button_Default_flame"));
-		auto* selectFlameColorDummy = GetUI<UIDummy>(Hash32("DefaultIcon/FlameSelectColorDummy"));
-		if (nomalFlame) {
-			nomalFlame->color = selectFlameColorDummy->color;
-		}
-	}
-	else {
-		auto* buttonCanvs = GetUI<UICanvas>(Hash32("DefaultIcon"));
-		buttonCanvs->transform.localScale = Vector3(1.0f);
-		// 背景の色が変わる
-		auto* normalBack = GetUI<UIIcon>(Hash32("DefaultIcon/Button_Default_back"));
-		auto* normalColorDummy = GetUI<UIDummy>(Hash32("DefaultIcon/BackNormalColorDummy"));
-		normalBack->color = normalColorDummy->color;
-		// 枠の色が変わる
-		auto* nomalFlame = GetUI<UIIcon>(Hash32("DefaultIcon/Button_Default_flame"));
-		auto* selectFlameColorDummy = GetUI<UIDummy>(Hash32("DefaultIcon/FlameNormalColorDummy"));
-		nomalFlame->color = selectFlameColorDummy->color;
+	//	// 選択中の時にでかくなる
+	//	auto* buttonCanvs = GetUI<UICanvas>(Hash32("DefaultIcon"));
+	//	buttonCanvs->transform.localScale = Vector3(1.2f);
+	//	// 背景の色が変わる
+	//	auto* normalBack = GetUI<UIIcon>(Hash32("DefaultIcon/Button_Default_back"));
+	//	auto* selectColorDummy = GetUI<UIDummy>(Hash32("DefaultIcon/BackSelectColorDummy"));
+	//	if (normalBack) {
+	//		normalBack->color = selectColorDummy->color;
+	//	}
+	//	// 枠の色が変わる
+	//	auto* nomalFlame = GetUI<UIIcon>(Hash32("DefaultSoundIcon/Button_Default_flame"));
+	//	auto* selectFlameColorDummy = GetUI<UIDummy>(Hash32("DefaultIcon/FlameSelectColorDummy"));
+	//	if (nomalFlame) {
+	//		nomalFlame->color = selectFlameColorDummy->color;
+	//	}
+	//}
+	//else {
+	//	auto* buttonCanvs = GetUI<UICanvas>(Hash32("DefaultIcon"));
+	//	buttonCanvs->transform.localScale = Vector3(1.0f);
+	//	// 背景の色が変わる
+	//	auto* normalBack = GetUI<UIIcon>(Hash32("DefaultIcon/Button_Default_back"));
+	//	auto* normalColorDummy = GetUI<UIDummy>(Hash32("DefaultIcon/BackNormalColorDummy"));
+	//	normalBack->color = normalColorDummy->color;
+	//	// 枠の色が変わる
+	//	auto* nomalFlame = GetUI<UIIcon>(Hash32("DefaultIcon/Button_Default_flame"));
+	//	auto* selectFlameColorDummy = GetUI<UIDummy>(Hash32("DefaultIcon/FlameNormalColorDummy"));
+	//	nomalFlame->color = selectFlameColorDummy->color;
 
-	}
+	//}
 
 
 	// 選択中
 	{
 		// 青緑の枠
 		auto* selectFrame = GetUI<UIIcon>(Hash32("flame"));
-		float posY = 250.0f;
+		float posY = 200.0f;
 		float offsetY = 225.0f;
 		switch (selectCameraType)
 		{
 		case CAMERA_SENS_TYPE:
 		{
-			posY = 250.0f;
+			posY;
 			selectFrame->isDraw = true;
 			break;
 		}
 		case CAMERA_LENGTH_TYPE:
 		{
-			posY = 250.0f - offsetY;
+			posY = 200.0f - offsetY;
 			selectFrame->isDraw = true;
 			break;
 		}
 		case CAMERA_INVERSION_TYPE:
 		{
-			posY = 250.0f - (offsetY * 2.0f);
+			posY = 200.0f - (offsetY * 2.0f);
 			selectFrame->isDraw = true;
-			break;
-		}
-		default:
-		{
-			selectFrame->isDraw = false;
 			break;
 		}
 		}

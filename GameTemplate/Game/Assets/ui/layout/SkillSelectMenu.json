@@ -19,22 +19,24 @@
         "asset": "Assets/ui/skillSelectUI/title/ken.DDS",
         "width": 150,
         "height": 140,
-        "position": [-850, 455, 0],
+        "position": [-900, 455, 0],
         "scale": [1, 1, 1],
         "rotation": 0,
-        "color": [1, 1, 1, 1]
+        "color": [1, 1, 1, 1],
+        "pivot": [0,0.5]
       },
       {
         "coment": "タイトル:スキル選択",
         "type": "UIIcon",
         "name": "titleName",
-        "asset": "Assets/ui/skillSelectUI/title/skillSelect.DDS",
-        "width": 490,
+        "asset": "Assets/ui/skillSelectUI/title/skillselect_text.DDS",
+        "width": 600,
         "height": 100,
-        "position": [-490, 450, 0],
+        "position": [-720, 450, 0],
         "scale": [1, 1, 1],
         "rotation": 0,
-        "color": [1, 1, 1, 1]
+        "color": [1, 1, 1, 1],
+        "pivot": [0,0.5]
       },
 
 
@@ -298,6 +300,15 @@
 
 
 
+      {
+        "comment": "へんこうボタンアイコン",
+        "type": "UIPrefab",
+        "name": "changeIcon",
+        "source": "Assets/ui/layout/ChangeButton.json",
+        "position": [335, -500, 0],
+        "scale": [1, 1, 1],
+        "color": [0, 0, 0, 1]
+      },
       {
         "comment": "戻るボタンアイコン",
         "type": "UIPrefab",

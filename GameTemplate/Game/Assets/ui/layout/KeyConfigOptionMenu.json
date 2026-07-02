@@ -19,22 +19,24 @@
         "asset": "Assets/ui/keyConfigOption/title/controller.DDS",
         "width": 150,
         "height": 100,
-        "position": [-850, 450, 0],
+        "position": [-900, 450, 0],
         "scale": [1, 1, 1],
         "rotation": 0,
-        "color": [1, 1, 1, 1]
+        "color": [1, 1, 1, 1],
+        "pivot": [0,0.5]
       },
       {
         "coment": "タイトル:文字",
         "type": "UIIcon",
         "name": "title_ward",
-        "asset": "Assets/ui/keyConfigOption/title/ward.DDS",
-        "width": 500,
+        "asset": "Assets/ui/keyConfigOption/title/controller_text.DDS",
+        "width": 700,
         "height": 100,
-        "position": [-480, 450, 0],
+        "position": [-720, 455, 0],
         "scale": [1, 1, 1],
         "rotation": 0,
-        "color": [1, 1, 1, 1]
+        "color": [1, 1, 1, 1],
+        "pivot": [0,0.5]
       },
 
 
@@ -46,7 +48,7 @@
         "asset": "Assets/ui/keyConfigOption/controller/controller.DDS",
         "width": 800,
         "height": 530,
-        "position": [-500, 0, 0],
+        "position": [-500, -25, 0],
         "scale": [1, 1, 1],
         "rotation": 0,
         "color": [1, 1, 1, 1]
@@ -55,7 +57,7 @@
 
 
       {
-        "comment": "白色の帯(サウンドの数分ある)",
+        "comment": "白色の帯(スキルの数分ある)",
         "type": "UIIcon",
         "name": "FadeA",
         "asset": "Assets/ui/option/button/fade2.DDS",
@@ -72,7 +74,7 @@
         "asset": "Assets/ui/option/button/fade2.DDS",
         "width": 900,
         "height": 145,
-        "position": [400, 0, 0],
+        "position": [400, -25, 0],
         "scale": [1, 1, 1],
         "rotation": 0,
         "color": [1, 1, 1, 1]
@@ -83,7 +85,7 @@
         "asset": "Assets/ui/option/button/fade2.DDS",
         "width": 900,
         "height": 145,
-        "position": [400, -200, 0],
+        "position": [400, -250, 0],
         "scale": [1, 1, 1],
         "rotation": 0,
         "color": [1, 1, 1, 1]
@@ -110,7 +112,7 @@
         "asset": "Assets/ui/keyConfigOption/ward/run.DDS",
         "width": 350,
         "height": 25,
-        "position": [200, 0, 0],
+        "position": [200, -25, 0],
         "scale": [1, 2, 1],
         "rotation": 0,
         "color": [1, 1, 1, 1]
@@ -122,7 +124,7 @@
         "asset": "Assets/ui/keyConfigOption/ward/attack.DDS",
         "width": 200,
         "height": 25,
-        "position": [125, -200, 0],
+        "position": [125, -250, 0],
         "scale": [1, 2, 1],
         "rotation": 0,
         "color": [1, 1, 1, 1]
@@ -155,11 +157,29 @@
       
 
       {
-        "comment": "デフォルトサウンドアイコン",
+        "comment": "えらぶボタンアイコン",
         "type": "UIPrefab",
-        "name": "DefaultSoundIcon",
+        "name": "selectIcon",
+        "source": "Assets/ui/layout/SelectButton.json",
+        "position": [-135, -500, 0],
+        "scale": [1, 1, 1],
+        "color": [0, 0, 0, 1]
+      },
+      {
+        "comment": "へんこうボタンアイコン",
+        "type": "UIPrefab",
+        "name": "changeIcon",
+        "source": "Assets/ui/layout/ChangeButton.json",
+        "position": [75, -500, 0],
+        "scale": [1, 1, 1],
+        "color": [0, 0, 0, 1]
+      },
+      {
+        "comment": "デフォルトアイコン",
+        "type": "UIPrefab",
+        "name": "DefaultIcon",
         "source": "Assets/ui/layout/DefaultButton.json",
-        "position": [0, -420, 0],
+        "position": [300, -500, 0],
         "scale": [1, 1, 1]
       },
       {
@@ -191,7 +211,7 @@
         "type": "UIPrefab",
         "name": "RunButton",
         "source": "Assets/ui/layout/ButtonUI.json",
-        "position": [700, 0, 0],
+        "position": [700, -25, 0],
         "scale": [1, 1, 1]
       },
       {
@@ -199,7 +219,7 @@
         "type": "UIPrefab",
         "name": "AttackButton",
         "source": "Assets/ui/layout/ButtonUI.json",
-        "position": [700, -200, 0],
+        "position": [700, -250, 0],
         "scale": [1, 1, 1]
       }
     ]

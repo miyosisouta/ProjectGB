@@ -446,11 +446,8 @@ void InGameMenu::BossHitAnimationScheduler(int poolIndex)
 			// アニメーション
 			auto* bossDamage = GetUI<UIDigit>(currentHash);
 			bossDamage->isDraw = true;
-			K2_LOG("Scheduler isDraw = true, color.w = %f", bossDamage->color.w);
 			UIAnimationFactory::Attach<UITranslateOffsetAnimation>(bossDamage, Hash32("damageDisplay_posUp1"));
 			auto* animation = bossDamage->FindAnimation(Hash32("damageDisplay_posUp1"));
-			K2_LOG("bossDamage=%p", bossDamage);
-			K2_LOG("anim=%p", animation);
 			if (animation) {
 				animation->Clear();
 				animation->Play();

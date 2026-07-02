@@ -17,24 +17,26 @@
         "type": "UIIcon",
         "name": "title_icon",
         "asset": "Assets/ui/cameraOptionUI/title/camera.DDS",
-        "width": 160,
-        "height": 120,
-        "position": [-840, 455, 0],
+        "width": 150,
+        "height": 100,
+        "position": [-900, 450, 0],
         "scale": [1, 1, 1],
         "rotation": 0,
-        "color": [1, 1, 1, 1]
+        "color": [1, 1, 1, 1],
+        "pivot": [0,0.5]
       },
       {
         "coment": "タイトル:文字",
         "type": "UIIcon",
         "name": "title_ward",
-        "asset": "Assets/ui/cameraOptionUI/title/title.DDS",
-        "width": 350,
-        "height": 120,
-        "position": [-545, 455, 0],
+        "asset": "Assets/ui/cameraOptionUI/title/title2.DDS",
+        "width": 600,
+        "height": 100,
+        "position": [-720, 455, 0],
         "scale": [1, 1, 1],
         "rotation": 0,
-        "color": [1, 1, 1, 1]
+        "color": [1, 1, 1, 1],
+        "pivot": [0,0.5]
       },
 
 
@@ -45,7 +47,7 @@
         "asset": "Assets/ui/option/button/fade2.DDS",
         "width": 1800,
         "height": 150,
-        "position": [0, 250, 0],
+        "position": [0, 200, 0],
         "scale": [1, 1, 1],
         "rotation": 0,
         "color": [1, 1, 1, 1]
@@ -57,7 +59,7 @@
         "asset": "Assets/ui/option/button/fade2.DDS",
         "width": 1800,
         "height": 150,
-        "position": [0, 25, 0],
+        "position": [0, -25, 0],
         "scale": [1, 1, 1],
         "rotation": 0,
         "color": [1, 1, 1, 1]
@@ -69,7 +71,7 @@
         "asset": "Assets/ui/option/button/fade2.DDS",
         "width": 1800,
         "height": 150,
-        "position": [0, -200, 0],
+        "position": [0, -250, 0],
         "scale": [1, 1, 1],
         "rotation": 0,
         "color": [1, 1, 1, 1]
@@ -83,7 +85,7 @@
         "asset": "Assets/ui/option/button/walu.DDS",
         "width": 1800,
         "height": 75,
-        "position": [0, 250, 0],
+        "position": [0, 200, 0],
         "scale": [1, 2, 1],
         "rotation": 0,
         "color": [1, 1, 1, 1]
@@ -99,7 +101,7 @@
         "asset": "Assets/ui/cameraOptionUI/bar/ber_back.DDS",
         "width": 85,
         "height": 57.5,
-        "position": [96, 250, 0],
+        "position": [96, 200, 0],
         "scale": [12, 1, 1],
         "rotation": 0,
         "color": [1, 1, 1, 1]
@@ -108,10 +110,10 @@
         "comment": "カメラ感度：文字",
         "type": "UIIcon",
          "name": "sens_ward",
-        "asset": "Assets/ui/cameraOptionUI/word/sens.DDS",
-        "width": 200,
-        "height": 65,
-        "position": [-600, 250, 0],
+        "asset": "Assets/ui/cameraOptionUI/word/sensi.DDS",
+        "width": 340,
+        "height": 50,
+        "position": [-650, 200, 0],
         "scale": [1, 1, 1],
         "rotation": 0,
         "color": [1, 1, 1, 1]
@@ -122,7 +124,7 @@
         "asset": "Assets/ui/cameraOptionUI/bar/ber_lr.DDS",
         "width": 25,
         "height": 53,
-        "position": [600, 250.5, 0],
+        "position": [600, 200.5, 0],
         "scale": [1, 1, 1],
         "rotation": 180,
         "color": [1, 1, 1, 1]
@@ -133,7 +135,7 @@
         "asset": "Assets/ui/cameraOptionUI/bar/ber_lr.DDS",
         "width": 25,
         "height": 53,
-        "position": [-396, 250.5, 0],
+        "position": [-396, 200.5, 0],
         "scale": [1, 1, 1],
         "rotation": 0,
         "color": [1, 1, 1, 1]
@@ -144,7 +146,7 @@
         "asset": "Assets/ui/cameraOptionUI/bar/ber_green_lr.DDS",
         "width": 23,
         "height": 45,
-        "position": [-392, 250.5, 0],
+        "position": [-392, 200.5, 0],
         "scale": [1, 1, 1],
         "rotation": 0,
         "color": [1, 1, 1, 1]
@@ -155,7 +157,7 @@
         "asset": "Assets/ui/cameraOptionUI/bar/ber_green_white.DDS",
         "width": 81,
         "height": 45,
-        "position": [-383, 250, 0],
+        "position": [-383, 200.5, 0],
         "scale": [12, 1, 1],
         "rotation": 0,
         "color": [0.14, 0.9, 0.48, 1]
@@ -166,7 +168,7 @@
         "asset": "Assets/ui/cameraOptionUI/bar/ber_maru.DDS",
         "width": 60,
         "height": 60,
-        "position": [600, 250, 0],
+        "position": [600, 200, 0],
         "scale": [1, 1, 1],
         "rotation": 0,
         "color": [1, 1, 1, 1]
@@ -177,7 +179,7 @@
         "asset": "Assets/ui/cameraOptionUI/bar/ber_waku.DDS",
         "width": 65,
         "height": 65,
-        "position": [600, 250, 0],
+        "position": [600, 200, 0],
         "scale": [1, 1, 1],
         "rotation": 0,
         "color": [1, 1, 1, 1]
@@ -190,10 +192,10 @@
         "comment": "カメラ距離：文字",
         "type": "UIIcon",
         "name": "length_ward",
-        "asset": "Assets/ui/cameraOptionUI/word/length.DDS",
-        "width": 200,
-        "height": 65,
-        "position": [-600, 25, 0],
+        "asset": "Assets/ui/cameraOptionUI/word/dis.DDS",
+        "width": 340,
+        "height": 50,
+        "position": [-650, -25, 0],
         "scale": [1, 1, 1],
         "rotation": 0,
         "color": [1, 1, 1, 1]
@@ -205,7 +207,7 @@
         "asset": "Assets/ui/cameraOptionUI/button/distans_back.DDS",
         "width": 325,
         "height": 65,
-        "position": [-240, 25, 0],
+        "position": [-240, -25, 0],
         "scale": [1, 1, 1],
         "rotation": 0,
         "color": [0.54, 0.55, 0.55, 1]
@@ -217,7 +219,7 @@
         "asset": "Assets/ui/cameraOptionUI/button/distance_back_normal.DDS",
         "width": 325,
         "height": 65,
-        "position": [ 95, 25, 0],
+        "position": [ 95, -25, 0],
         "scale": [1, 1, 1],
         "rotation": 0,
         "color": [0.54, 0.55, 0.55, 1]
@@ -229,7 +231,7 @@
         "asset": "Assets/ui/cameraOptionUI/button/distans_back.DDS",
         "width": 325,
         "height": 65,
-        "position": [430, 25, 0],
+        "position": [430, -25, 0],
         "scale": [1, 1, 1],
         "rotation": 180,
         "color": [0.54, 0.55, 0.55, 1]
@@ -241,7 +243,7 @@
         "asset": "Assets/ui/cameraOptionUI/button/distans_back.DDS",
         "width": 325,
         "height": 65,
-        "position": [-240, 25, 0],
+        "position": [-240, -25, 0],
         "scale": [1, 1, 1],
         "rotation": 0,
         "color": [0.14, 0.9, 0.48, 1],
@@ -254,7 +256,7 @@
         "asset": "Assets/ui/cameraOptionUI/button/distance_back_normal.DDS",
         "width": 325,
         "height": 65,
-        "position": [ 95, 25, 0],
+        "position": [ 95, -25, 0],
         "scale": [1, 1, 1],
         "rotation": 0,
         "color": [0.14, 0.9, 0.48, 1],
@@ -267,7 +269,7 @@
         "asset": "Assets/ui/cameraOptionUI/button/distans_back.DDS",
         "width": 325,
         "height": 65,
-        "position": [430, 25, 0],
+        "position": [430, -25, 0],
         "scale": [1, 1, 1],
         "rotation": 180,
         "color": [0.14, 0.9, 0.48, 1],
@@ -280,7 +282,7 @@
         "asset": "Assets/ui/cameraOptionUI/button/distans_flame.DDS",
         "width": 325,
         "height": 65,
-        "position": [-240, 25, 0],
+        "position": [-240, -25, 0],
         "scale": [1, 1, 1],
         "rotation": 0,
         "color": [1, 1, 1, 1]
@@ -292,7 +294,7 @@
         "asset": "Assets/ui/cameraOptionUI/button/distans_flame_normal.DDS",
         "width": 325,
         "height": 65,
-        "position": [ 95, 25, 0],
+        "position": [ 95, -25, 0],
         "scale": [1, 1, 1],
         "rotation": 0,
         "color": [1, 1, 1, 1]
@@ -304,7 +306,7 @@
         "asset": "Assets/ui/cameraOptionUI/button/distans_flame.DDS",
         "width": 325,
         "height": 65,
-        "position": [430, 25, 0],
+        "position": [430, -25, 0],
         "scale": [1, 1, 1],
         "rotation": 180,
         "color": [1, 1, 1, 1]
@@ -316,7 +318,7 @@
         "asset": "Assets/ui/cameraOptionUI/word/near_ward.DDS",
         "width": 110,
         "height": 45,
-        "position": [-240, 25, 0],
+        "position": [-240, -25, 0],
         "scale": [1, 1, 1],
         "rotation": 0,
         "color": [1, 1, 1, 1]
@@ -328,7 +330,7 @@
         "asset": "Assets/ui/cameraOptionUI/word/normal_ward.DDS",
         "width": 110,
         "height": 45,
-        "position": [ 95, 25, 0],
+        "position": [ 95, -25, 0],
         "scale": [1, 1, 1],
         "rotation": 0,
         "color": [1, 1, 1, 1]
@@ -340,7 +342,7 @@
         "asset": "Assets/ui/cameraOptionUI/word/far_ward.DDS",
         "width": 110,
         "height": 45,
-        "position": [430, 25, 0],
+        "position": [430, -25, 0],
         "scale": [1, 1, 1],
         "rotation": 0,
         "color": [1, 1, 1, 1]
@@ -354,10 +356,10 @@
         "comment": "左右反転：文字",
         "type": "UIIcon",
         "name": "inversion_ward",
-        "asset": "Assets/ui/cameraOptionUI/word/inversion.DDS",
-        "width": 190,
-        "height": 65,
-        "position": [-600, -200, 0],
+        "asset": "Assets/ui/cameraOptionUI/word/inver.DDS",
+        "width": 340,
+        "height": 50,
+        "position": [-650, -250, 0],
         "scale": [1, 1, 1],
         "rotation": 0,
         "color": [1, 1, 1, 1]
@@ -369,7 +371,7 @@
         "asset": "Assets/ui/cameraOptionUI/button/onoff_back.DDS",
         "width": 500,
         "height": 65,
-        "position": [-160, -200, 0],
+        "position": [-160, -250, 0],
         "scale": [1, 1, 1],
         "rotation": 0,
         "color": [0.54, 0.55, 0.55, 1]
@@ -381,7 +383,7 @@
         "asset": "Assets/ui/cameraOptionUI/button/onoff_back.DDS",
         "width": 500,
         "height": 65,
-        "position": [350, -200, 0],
+        "position": [350, -250, 0],
         "scale": [1, 1, 1],
         "rotation": 180,
         "color": [0.54, 0.55, 0.55, 1]
@@ -393,7 +395,7 @@
         "asset": "Assets/ui/cameraOptionUI/button/onoff_back.DDS",
         "width": 500,
         "height": 65,
-        "position": [-160, -200, 0],
+        "position": [-160, -250, 0],
         "scale": [1, 1, 1],
         "rotation": 0,
         "color": [0.14, 0.9, 0.48, 1],
@@ -406,7 +408,7 @@
         "asset": "Assets/ui/cameraOptionUI/button/onoff_back.DDS",
         "width": 500,
         "height": 65,
-        "position": [350, -200, 0],
+        "position": [350, -250, 0],
         "scale": [1, 1, 1],
         "rotation": 180,
         "color": [0.14, 0.9, 0.48, 1],
@@ -420,7 +422,7 @@
         "asset": "Assets/ui/cameraOptionUI/button/onoff.DDS",
         "width": 500,
         "height": 65,
-        "position": [-160, -200, 0],
+        "position": [-160, -250, 0],
         "scale": [1, 1, 1],
         "rotation": 0,
         "color": [1, 1, 1, 1]
@@ -432,7 +434,7 @@
         "asset": "Assets/ui/cameraOptionUI/button/onoff.DDS",
         "width": 500,
         "height": 65,
-        "position": [350, -200, 0],
+        "position": [350, -250, 0],
         "scale": [1, 1, 1],
         "rotation": 180,
         "color": [1, 1, 1, 1]
@@ -444,7 +446,7 @@
         "asset": "Assets/ui/cameraOptionUI/word/off_text.DDS",
         "width": 75,
         "height": 45,
-        "position": [-160, -200, 0],
+        "position": [-160, -250, 0],
         "scale": [1, 1, 1],
         "rotation": 0,
         "color": [1, 1, 1, 1]
@@ -456,24 +458,41 @@
         "asset": "Assets/ui/cameraOptionUI/word/on_text.DDS",
         "width": 75,
         "height": 45,
-        "position": [ 350, -200, 0],
+        "position": [ 350, -250, 0],
         "scale": [1, 1, 1],
         "rotation": 0,
         "color": [1, 1, 1, 1]
       },
+      
+      
+    
 
-
- 
-       
-     
 
     
+      {
+        "comment": "えらぶボタンアイコン",
+        "type": "UIPrefab",
+        "name": "selectIcon",
+        "source": "Assets/ui/layout/SelectButton.json",
+        "position": [340, -500, 0],
+        "scale": [1, 1, 1],
+        "color": [0, 0, 0, 1]
+      },
+      {
+        "comment": "へんこうボタンアイコン",
+        "type": "UIPrefab",
+        "name": "changeIcon",
+        "source": "Assets/ui/layout/ChangeButton.json",
+        "position": [110, -500, 0],
+        "scale": [1, 1, 1],
+        "color": [0, 0, 0, 1]
+      },
       {
         "comment": "デフォルトアイコン",
         "type": "UIPrefab",
         "name": "DefaultIcon",
         "source": "Assets/ui/layout/DefaultButton.json",
-        "position": [0, -420, 0],
+        "position": [540, -500, 0],
         "scale": [1, 1, 1]
       },
       {
@@ -482,14 +501,6 @@
         "name": "returnIcon",
         "source": "Assets/ui/layout/RetrunButton.json",
         "position": [790, -500, 0],
-        "scale": [1, 1, 1]
-      },
-      {
-        "comment": "決定ボタンアイコン",
-        "type": "UIPrefab",
-        "name": "decisionIcon",
-        "source": "Assets/ui/layout/DecisionButton.json",
-        "position": [560, -500, 0],
         "scale": [1, 1, 1]
       }
     ]

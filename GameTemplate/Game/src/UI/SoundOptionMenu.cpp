@@ -66,9 +66,9 @@ void SoundOptionMenu::Update()
 		UpdateSpeaker(Hash32("speaker000"), Hash32("speaker001"), Hash32("speaker002"), Hash32("speaker003"), seVolume);
 	}
 
-	// デフォルト
-	if (selectVolumetType == DEFAULT_VOLUME_TYPE) {
-		if (g_pad[0]->IsTrigger(enButtonA)) {
+	//// デフォルト
+	//if (selectVolumetType == DEFAULT_VOLUME_TYPE) {
+		if (g_pad[0]->IsTrigger(enButtonX)) {
 			masterVolume = DEFAULT_VOLUME;
 			bgmVolume = DEFAULT_VOLUME;
 			seVolume = DEFAULT_VOLUME;
@@ -76,59 +76,59 @@ void SoundOptionMenu::Update()
 			SoundManager::Get().PlaySE(enSoundKind_Menu_Decide);
 		}
 
-		// 選択中の時にでかくなる
-		auto* buttonCanvs = GetUI<UICanvas>(Hash32("DefaultSoundIcon"));
-		buttonCanvs->transform.localScale = Vector3(1.2f);
-		// 背景の色が変わる
-		auto* normalBack = GetUI<UIIcon>(Hash32("DefaultSoundIcon/Button_Default_back"));
-		auto* selectColorDummy = GetUI<UIDummy>(Hash32("DefaultSoundIcon/BackSelectColorDummy"));
-		if (normalBack){
-			normalBack->color = selectColorDummy->color;
-		}
-		// 枠の色が変わる
-		auto* nomalFlame = GetUI<UIIcon>(Hash32("DefaultSoundIcon/Button_Default_flame"));
-		auto* selectFlameColorDummy = GetUI<UIDummy>(Hash32("DefaultSoundIcon/FlameSelectColorDummy"));
-		if (nomalFlame) {
-			nomalFlame->color = selectFlameColorDummy->color;
-		}
-	}
-	else {
-		auto* buttonCanvs = GetUI<UICanvas>(Hash32("DefaultSoundIcon"));
-		buttonCanvs->transform.localScale = Vector3(1.0f);
-		// 背景の色が変わる
-		auto* normalBack = GetUI<UIIcon>(Hash32("DefaultSoundIcon/Button_Default_back"));
-		auto* normalColorDummy = GetUI<UIDummy>(Hash32("DefaultSoundIcon/BackNormalColorDummy"));
-		normalBack->color = normalColorDummy->color;
-		// 枠の色が変わる
-		auto* nomalFlame = GetUI<UIIcon>(Hash32("DefaultSoundIcon/Button_Default_flame"));
-		auto* selectFlameColorDummy = GetUI<UIDummy>(Hash32("DefaultSoundIcon/FlameNormalColorDummy"));
-		nomalFlame->color = selectFlameColorDummy->color;
-		
-	}
+	//	// 選択中の時にでかくなる
+	//	auto* buttonCanvs = GetUI<UICanvas>(Hash32("DefaultSoundIcon"));
+	//	buttonCanvs->transform.localScale = Vector3(1.2f);
+	//	// 背景の色が変わる
+	//	auto* normalBack = GetUI<UIIcon>(Hash32("DefaultSoundIcon/Button_Default_back"));
+	//	auto* selectColorDummy = GetUI<UIDummy>(Hash32("DefaultSoundIcon/BackSelectColorDummy"));
+	//	if (normalBack){
+	//		normalBack->color = selectColorDummy->color;
+	//	}
+	//	// 枠の色が変わる
+	//	auto* nomalFlame = GetUI<UIIcon>(Hash32("DefaultSoundIcon/Button_Default_flame"));
+	//	auto* selectFlameColorDummy = GetUI<UIDummy>(Hash32("DefaultSoundIcon/FlameSelectColorDummy"));
+	//	if (nomalFlame) {
+	//		nomalFlame->color = selectFlameColorDummy->color;
+	//	}
+	//}
+	//else {
+	//	auto* buttonCanvs = GetUI<UICanvas>(Hash32("DefaultSoundIcon"));
+	//	buttonCanvs->transform.localScale = Vector3(1.0f);
+	//	// 背景の色が変わる
+	//	auto* normalBack = GetUI<UIIcon>(Hash32("DefaultSoundIcon/Button_Default_back"));
+	//	auto* normalColorDummy = GetUI<UIDummy>(Hash32("DefaultSoundIcon/BackNormalColorDummy"));
+	//	normalBack->color = normalColorDummy->color;
+	//	// 枠の色が変わる
+	//	auto* nomalFlame = GetUI<UIIcon>(Hash32("DefaultSoundIcon/Button_Default_flame"));
+	//	auto* selectFlameColorDummy = GetUI<UIDummy>(Hash32("DefaultSoundIcon/FlameNormalColorDummy"));
+	//	nomalFlame->color = selectFlameColorDummy->color;
+	//	
+	//}
 
 	// 選択中
 	{
 		// 青緑の枠
 		auto* selectFrame2 = GetUI<UIIcon>(Hash32("flame2"));
-		float posY = 250.0f;
+		float posY = 200.0f;
 		float offsetY = 225.0f;
 		switch (selectVolumetType)
 		{
 			case MASTER_VOLUME_TYPE:
 			{
-				posY = 250.0f;
+				posY;
 				selectFrame2->isDraw = true;
 				break;
 			}
 			case BGM_VOLUME_TYPE:
 			{
-				posY = 250.0f - offsetY;
+				posY = 200.0f - offsetY;
 				selectFrame2->isDraw = true;
 				break;
 			}
 			case SE_VOLUME_TYPE:
 			{
-				posY = 250.0f - (offsetY *2.0f);
+				posY = 200.0f - (offsetY *2.0f);
 				selectFrame2->isDraw = true;
 				break;
 			}

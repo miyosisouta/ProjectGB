@@ -14,12 +14,12 @@
 
 
 #include "src/UI/Layout.h"
-#include "src/UI/CameraOptionMenu.h"
+#include "src/UI/SoundOptionMenu.h"
 
 
 DebugScene::DebugScene()
 {
-	titleBackground_ = NewGO<TitleBackground>(0, "titleBackground");
+	titleBackground_ = NewGO<TitleBackground>(0, "SoundOptionMenu");
 }
 
 
@@ -34,8 +34,8 @@ DebugScene::~DebugScene()
 bool DebugScene::Start()
 {
 	// UI
-	//layout_ = new Layout;
-	//layout_->Initialize<CameraOptionMenu>("Assets/ui/Layout/CameraOptionMenu.json");
+	layout_ = new Layout;
+	layout_->Initialize<SoundOptionMenu>("Assets/ui/Layout/SoundOptionMenu.json");
 
 
 	// タイトル
@@ -49,16 +49,16 @@ void DebugScene::Update()
 {
 	// UI
 	//taskScheduler_->Update(g_gameTime->GetFrameDeltaTime());
-	//CameraOptionMenu* menu = static_cast<CameraOptionMenu*>(layout_->GetMenu());
+	SoundOptionMenu* menu = static_cast<SoundOptionMenu*>(layout_->GetMenu());
 	
-	//layout_->Update();
+	layout_->Update();
 }
 
 
 void DebugScene::Render(RenderContext& rc)
 {
 	// UI
-	//layout_->Render(rc);
+	layout_->Render(rc);
 }
 
 
