@@ -9,6 +9,7 @@
 
 
 class GhostBody;
+class BossCharacter;
 
 #include "src/Util/DamageNotify.h"
 
@@ -138,11 +139,11 @@ private:
 
 	/* ジャスト回避 */
 	bool IsJustAvoidPair(const Pair& hitPair);      //!< ジャスト回避ウィンドウ中のボス攻撃か
-	void OnJustAvoid(Pair& hitPair);                //!< ジャスト回避時の処理
+	void OnJustAvoid(Pair& hitPair);                //!< ジャスト回避成立時の処理。ボスの調子システムを動揺方向へ進める
 
-	// 強攻撃（HitStamp・Spin・チャージレーザー）ヒット時に感情システムへ通知する共通処理
-	// 各 UpdateBoss*Pair の中で個別に書くのを避けるためここにまとめる
-	void NotifyEmotionStrongHit(Pair& hitPair);
+	// ボスの特定の攻撃（HitStamp・チャージレーザー・SpinAttack・ThrowRock）がプレイヤーにヒットした時の共通フック
+	// 各 UpdateBoss*Pair の中で個別に書くのを避けるためここにまとめる。ボスの調子システムを強気方向へ進める
+	void OnBossStrongAttackHit(BossCharacter* boss);
 	/* 通常回避（無敵） */
 	bool IsPlayerInvinciblePair(const Pair& hitPair); //!< プレイヤーが無敵中か（回避・ダメージ硬直など）
 

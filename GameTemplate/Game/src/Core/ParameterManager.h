@@ -356,25 +356,152 @@ struct MasterTitleBGParameter : public IMasterParameter
 /**
  * 感情システムパラメーター
  * EmotionParameter.json の "Emotion" 配列から読み込む
- * 各感情段階の倍率テーブルとエフェクト位置オフセットを保持する
+ * 各段階の倍率テーブルとエフェクト位置オフセットを保持する
  */
 struct MasterEmotionParameter : public IMasterParameter
 {
 	appParameter(MasterEmotionParameter);
 
-	// 各感情段階の攻撃力・移動速度倍率
+	// 各段階の攻撃力・攻撃速度・被ダメージ倍率
 	// インデックス 0=Debuff3, 1=Debuff2, 2=Debuff1, 3=Normal, 4=Buff1, 5=Buff2, 6=Buff3
 	struct ModifierEntry
 	{
-		float attackMul = 1.0f;  //!< 攻撃力倍率
-		float speedMul  = 1.0f;  //!< 移動速度倍率
+		float attackMul          = 1.0f;  //!< 攻撃力倍率
+		float attackSpeedMul     = 1.0f;  //!< 攻撃速度倍率（taskSchedulerの秒数・攻撃間隔に反映。演出速度とは独立）
+		float damageTakenMul     = 1.0f;  //!< 被ダメージ倍率
+		float animationSpeedMul  = 1.0f;  //!< アニメーション再生速度倍率（攻撃速度とは独立に調整できる演出用の値）
+		float effectSpeedMul     = 1.0f;  //!< エフェクト再生速度倍率（攻撃速度とは独立に調整できる演出用の値）
 	};
 
-	ModifierEntry modifiers[7];           //!< 7段階分の倍率テーブル
-	float         buffEffectScale   = 1.0f;  //!< バフ上昇時エフェクトのスケール（一様）
-	float         debuffEffectScale = 1.0f;  //!< デバフ下降時エフェクトのスケール（一様）
-	Vector3       buffEffectOffset   = Vector3::Zero;  //!< Buff effect position offset from player (x/y/z)
-	Vector3       debuffEffectOffset = Vector3::Zero;  //!< Debuff effect position offset from player (x/y/z)
+	ModifierEntry modifiers[7];              //!< 7段階分の倍率テーブル
+	float         buffEffectScale   = 1.0f;  //!< 強気化エフェクトのスケール（一様）
+	float         debuffEffectScale = 1.0f;  //!< 動揺エフェクトのスケール（一様）
+	float         buffEffectOffsetY   = 0.0f;  //!< 強気化エフェクトのボス位置からのYオフセット（XZはボス座標のまま）
+	float         debuffEffectOffsetY = 0.0f;  //!< 動揺エフェクトのボス位置からのYオフセット（XZはボス座標のまま）
+};
+
+/**
+ * ボスの行動パラメーター（BossState.cpp の各ステートが参照する調整値）
+ * BossStateParameter.json の "BossState" 配列から読み込む（ボス種別によらず共通の1セット）
+ *
+ * 攻撃ごとにネストした構造体でまとめ、その中をさらに用途別にコメントで分類している。
+ *   [timing]   : TaskSchedulerSystem::AddTimer/AddLoopTimer に渡す秒数
+ *   [collision] : 攻撃判定・インジケーターのサイズや位置オフセット
+ *   [effect]    : エフェクトのスケール
+ *   [movement]  : 移動速度・距離・重力など
+ *   [count]     : 回数などの整数値
+ *
+ * "※攻撃速度で秒数が変化する" と書かれた構造体の [timing] 項目は、
+ * BossStateBase::GetAttackSpeedMul()（EmotionSystem の攻撃速度倍率）で割った値が
+ * 実際に taskScheduler_->AddTimer(...) に渡される（BossState.cpp 側で除算する）。
+ * Idle/Run/Death は「攻撃」ではないため攻撃速度の影響を受けない。
+ */
+struct MasterBossStateParameter : public IMasterParameter
+{
+	appParameter(MasterBossStateParameter);
+
+	// 共通（複数ステートで使う値、または他システム(NPCController)と足並みを揃えるための値）
+	struct Common
+	{
+		float shortDistance         = 500.0f;  //!< [movement] 近距離判定 (NPCControllerと同じ値。BossRunStateの目標距離計算で使用)
+		float midDistance           = 1000.0f; //!< [movement] 中距離判定
+		float longDistance          = 1500.0f; //!< [movement] 遠距離判定
+		float rotateSpeed           = 0.01f;   //!< [movement] ボスがターゲット方向へ旋回する速さ（各攻撃の予備動作で共通使用）
+		float damageRingEffectScale = 0.4f;    //!< [effect]   円形攻撃エフェクトのスケール係数（通常攻撃・回転攻撃・レーザーの着弾エフェクトで共通使用）
+	} common;
+
+	// 待機 (BossIdleState)
+	struct Idle
+	{
+		float endTime = 6.0f; //!< [timing] 待機を終えるまでの秒数
+	} idle;
+
+	// 走る (BossRunState)
+	struct Run
+	{
+		float   moveSpeed          = 100.0f;              //!< [movement] 走行時のベース移動速度
+		float   seLoopInterval     = 0.2f;                 //!< [timing]   足音SEを鳴らすループ間隔(秒)
+		float   effectLoopInterval = 0.5f;                 //!< [timing]   疾走エフェクトを再生するループ間隔(秒)
+		Vector3 effectScale        = Vector3(20.0f, 20.0f, 20.0f); //!< [effect] 疾走エフェクトのスケール
+	} run;
+
+	// 通常攻撃 (BossAttackState) ※攻撃速度で秒数が変化する
+	struct NormalAttack
+	{
+		float beginTime          = 0.1f;   //!< [timing]    攻撃判定・アニメーションが発生するまでの秒数
+		float collisionResetTime = 0.6f;   //!< [timing]    攻撃判定を消すまでの秒数
+		float endTime            = 1.0f;   //!< [timing]    ステートを終えるまでの秒数
+		float collisionForward   = 200.0f; //!< [collision] 判定をボス前方へずらすオフセット量
+		float collisionHeight    = 100.0f; //!< [collision] 判定の高さオフセット量
+		float collisionSize      = 200.0f; //!< [collision] 判定球の半径
+	} normalAttack;
+
+	// ヒットスタンプ (HitStampState) ※攻撃速度で秒数が変化する
+	struct HitStamp
+	{
+		float   upBeginTime         = 0.5f;    //!< [timing]    飛び上がり開始までの秒数
+		float   overheadMoveTime    = 2.0f;    //!< [timing]    プレイヤー頭上へ移動を終えるまでの秒数
+		float   fallBeginTime       = 5.0f;    //!< [timing]    落下を開始するまでの秒数
+		float   rangeSize           = 70.0f;   //!< [collision] 攻撃範囲インジケーター(着地地点の予告円)の半径
+		Vector3 jumpHeight          = Vector3(0.0f, 3000.0f, 0.0f); //!< [movement] 飛び上がる高さ（現在地からの相対値）
+		float   verticalVelocity    = 1500.0f; //!< [movement]  上昇時に設定する垂直速度
+		float   upSpeed             = 600.0f;  //!< [movement]  上昇中の水平移動速度
+		float   downSpeed           = 800.0f;  //!< [movement]  落下中の水平移動速度
+		float   gravityPower        = -800.0f; //!< [movement]  落下中にかかる重力の強さ
+		float   effectScaleBasis   = 350.0f;   //!< [effect]    着地エフェクトのスケール算出に使う基準サイズ（実際の攻撃判定半径はBossState.cpp内の固定値を使用しており本値の対象外）
+		float   smokeEffectScale    = 0.2f;    //!< [effect]    着地時の煙エフェクトのスケール係数（effectScaleBasisに掛ける）
+		float   shockWaveEffectScale = 0.5f;   //!< [effect]    着地時の衝撃波エフェクトのスケール係数（effectScaleBasisに掛ける）
+	} hitStamp;
+
+	// 回転攻撃 (SpinState) ※攻撃速度で秒数が変化する
+	struct Spin
+	{
+		float attackStartTime    = 3.0f;   //!< [timing]    予測表示を終え突進を開始するまでの秒数
+		float attackEndTime      = 7.5f;   //!< [timing]    強制終了までの秒数
+		float seLoopInterval     = 0.3f;   //!< [timing]    回転SEを鳴らすループ間隔(秒)
+		float effectLoopInterval = 1.0f;   //!< [timing]    回転エフェクトのループ間隔(秒)（現状コード内では未使用。将来の追従エフェクト用に予約）
+		float moveSpeed          = 300.0f; //!< [movement]  突進時の移動速度
+		float overMoveDistance   = 300.0f; //!< [movement]  目標地点からさらに進む距離
+		float effectScaleBasis   = 250.0f; //!< [effect]    突進エフェクトのスケール算出に使う基準サイズ（実際の攻撃判定半径はBossState.cpp内の固定値を使用しており本値の対象外）
+		float indicatorRangeSize = 50.0f;  //!< [collision] 攻撃予測ラインの太さ
+		float indicatorLength    = 250.0f; //!< [collision] 攻撃予測ラインの長さ（見た目のみ、攻撃距離とは無関係）
+		float indicatorForward   = 500.0f; //!< [collision] 攻撃予測ライン中心の前方オフセット
+	} spin;
+
+	// 岩を投げる攻撃 (ThrowRockState) ※攻撃速度で秒数が変化する
+	struct ThrowRock
+	{
+		float beginTime         = 2.5f;   //!< [timing]    岩を投げるまでの秒数
+		float endTime           = 4.0f;   //!< [timing]    ステートを終えるまでの秒数
+		float overMoveDistance  = 200.0f; //!< [movement]  プレイヤーのいる位置からさらに奥に投げ込む距離
+		float indicatorLength   = 250.0f; //!< [collision] 攻撃予測ラインの長さ（見た目のみ、攻撃距離とは無関係）
+		float indicatorBaseSize = 200.0f; //!< [collision] 攻撃予測ラインのタイリング基準サイズ（長さ軸）
+		float indicatorForward  = 600.0f; //!< [collision] 攻撃予測ライン中心の前方オフセット
+		float indicatorRangeSize = 33.0f; //!< [collision] 攻撃予測ラインの太さ
+		float rockCollisionSize = 100.0f; //!< [collision] 投げた岩の攻撃判定サイズ
+	} throwRock;
+
+	// レーザー攻撃 (LaserState) ※攻撃速度で秒数が変化する
+	struct Laser
+	{
+		float   initialShotTime       = 0.1f;  //!< [timing]    最初の予測タイマーが発火するまでの秒数
+		float   attackTime            = 1.0f;  //!< [timing]    発射開始から判定・エフェクトを消すまでの秒数
+		float   shotIntervalNormal    = 3.0f;  //!< [timing]    予測→発射までの秒数（通常/連発モード）
+		float   shotIntervalCharge    = 6.0f;  //!< [timing]    予測→発射までの秒数（チャージモード）
+		uint8_t shotCountNormal       = 1;     //!< [count]     発射本数（通常/チャージモード）
+		uint8_t shotCountMult         = 3;     //!< [count]     発射本数（連発モード）
+		Vector3 chargeScale           = Vector3(1.75f, 1.75f, 1.75f); //!< [effect] チャージモード時のエフェクト・判定スケール倍率
+		float   collisionScale        = 180.0f; //!< [collision] 発射時の攻撃判定スケール基準値
+		float   indicatorRadiusNormal = 45.0f;  //!< [collision] 予測サークルの半径（通常/連発モード）
+		float   indicatorRadiusCharge = 75.0f;  //!< [collision] 予測サークルの半径（チャージモード）
+		float   effectScaleFactor     = 0.5f;   //!< [effect]    レーザーエフェクトのサイズ調整係数（現状コード内では未使用）
+	} laser;
+
+	// 死亡 (BossDeathState)
+	struct Death
+	{
+		float animationTime = 2.0f; //!< [timing] 死亡アニメーション再生後、実際に死亡扱いにするまでの秒数
+	} death;
 };
 
 /** defineの使用終了 */
@@ -417,6 +544,7 @@ public:
 	void LoadStageManagerParamData(const char* path);
 	void LoadTitleBGParamData(const char* path);
 	void LoadEmotionParamData(const char* path);
+	void LoadBossStateParamData(const char* path);
 
 public:
 	/**
@@ -702,6 +830,13 @@ public:
 	{
 		return GetParameter<MasterEmotionParameter>(0);
 	}
+
+	/** ボスの行動パラメーターを取得するショートカット */
+	const MasterBossStateParameter* GetBossStateParam() const
+	{
+		return GetParameter<MasterBossStateParameter>(0);
+	}
+
 
 
 	/** カテゴリ名で絞り込んで全スキルを取得するショートカット */

@@ -246,7 +246,12 @@ private:
 	 */
 	void UpdateDebugGroupInput();
 
-	FontRender debugEmotionText_;  //!< todo for test : 値の視覚化（感情レベル・攻撃力）
+	// todo for test : 値の視覚化（ボスの攻撃力・攻撃速度倍率・被ダメージ倍率・プレイヤーへの与ダメージを表示する）
+	FontRender debugBossAttackText_;
+	FontRender debugBossAttackSpeedText_;
+	FontRender debugBossDamageTakenText_;
+	FontRender debugBossDamageDealtText_;
+	int        lastBossDamageToPlayer_ = 0; //!< todo for test : ボスがプレイヤーに与えた直近のダメージ量
 #endif
 
 

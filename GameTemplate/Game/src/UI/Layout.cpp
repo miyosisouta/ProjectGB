@@ -308,6 +308,12 @@ UIBase* Layout::CreateUI(UICanvas* canvas, const std::string& type, const uint32
     if (type == "UIPrefab") {
         return LoadPrefab(canvas, key, item, prefix);
     }
+    // -------------------------------------------------------
+    // グループ: 同じJSON内の "elements" を子Canvasとして埋め込む（UIPrefabのファイル分割なし版）
+    // -------------------------------------------------------
+    if (type == "UIGroup") {
+        return LoadGroup(canvas, key, item, prefix);
+    }
     //if (type == "UIButton") return canvas->CreateUI<UIButton>(key);
     //if (type == "UIGauge")  return canvas->CreateUI<UIGauge>(key);
     return nullptr;
@@ -390,6 +396,10 @@ UIBase* Layout::LoadPrefab(UICanvas* parentCanvas, const uint32_t key,
             // childPrefix をさらに引き継ぐ
             childUI = LoadPrefab(childCanvas, childKey, childItem, childPrefix, depth + 1);
         }
+        else if (childType == "UIGroup") {
+            // プレハブの中にグループ（再帰）
+            childUI = LoadGroup(childCanvas, childKey, childItem, childPrefix, depth + 1);
+        }
         else {
             childUI = CreateUI(childCanvas, childType, childKey, childItem, childPrefix);
         }
@@ -397,6 +407,81 @@ UIBase* Layout::LoadPrefab(UICanvas* parentCanvas, const uint32_t key,
         if (childUI == nullptr) {
             K2_LOG("Layout::LoadPrefab: unknown type [%s] in [%s]\n",
                 childType.c_str(), sourcePath.c_str());
+            continue;
+        }
+
+        // 子UIも menu_ の uiMap_ にフラットに登録 → GetUI で取れる
+        menu_->RegisterUI(childKey, childUI);
+    }
+
+    return childCanvas;
+}
+
+
+UIBase* Layout::LoadGroup(UICanvas* parentCanvas, const uint32_t key,
+    const nlohmann::json& item,
+    const std::string& prefix, int depth)
+{
+    // 無限再帰ガード
+    if (depth >= kMaxPrefabDepth) {
+        K2_LOG("Layout::LoadGroup: max depth reached (%d)\n", kMaxPrefabDepth);
+        return nullptr;
+    }
+
+    if (!item.contains("elements")) {
+        K2_LOG("Layout::LoadGroup: 'elements' field missing\n");
+        return nullptr;
+    }
+
+    // このグループの name を取得してスコープを構築（UIPrefabと同じ規則）
+    const std::string groupName = item.value("name", "");
+    std::string childPrefix;
+    if (prefix.empty()) {
+        childPrefix = groupName;
+    }
+    else {
+        childPrefix = prefix + "/" + groupName;
+    }
+
+    // 子Canvas を親Canvas の子UIとして生成
+    parentCanvas->CreateUI<UICanvas>(key);
+    auto* childCanvas = parentCanvas->FindUI<UICanvas>(key);
+    if (!childCanvas) return nullptr;
+
+    // 同じJSON側の overrides を子Canvasに適用
+    if (item.contains("position")) {
+        childCanvas->transform.localPosition = ParseVector3(item["position"]);
+    }
+    if (item.contains("scale")) {
+        childCanvas->transform.localScale = ParseVector3(item["scale"]);
+    }
+    if (item.contains("color")) {
+        childCanvas->color = ParseVector4(item["color"]);
+    }
+
+    // 同じJSON内の elements を走査して、子Canvas上にUIを生成（別ファイルを読みに行かない点だけLoadPrefabと違う）
+    auto& elements = item["elements"];
+    for (auto& childItem : elements) {
+        std::string childType = childItem["type"];
+        std::string childName = childItem["name"];
+
+        const uint32_t childKey = MakeScopedKey(childPrefix, childName);
+
+        UIBase* childUI = nullptr;
+
+        if (childType == "UIPrefab") {
+            childUI = LoadPrefab(childCanvas, childKey, childItem, childPrefix, depth + 1);
+        }
+        else if (childType == "UIGroup") {
+            // グループの中にグループ（再帰）
+            childUI = LoadGroup(childCanvas, childKey, childItem, childPrefix, depth + 1);
+        }
+        else {
+            childUI = CreateUI(childCanvas, childType, childKey, childItem, childPrefix);
+        }
+
+        if (childUI == nullptr) {
+            K2_LOG("Layout::LoadGroup: unknown type [%s]\n", childType.c_str());
             continue;
         }
 

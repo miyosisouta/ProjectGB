@@ -49,8 +49,11 @@ public:
 
 
 public:
-    /** エフェクト再生 */
-    EffectHandle PlayEffect(const int kind, const Vector3& position, const Quaternion& rotation, const Vector3& scale);
+    /**
+     * エフェクト再生
+     * @param speed 再生速度（1.0fが等倍）。ボスの攻撃速度倍率などに合わせてエフェクトの再生速度を変えたい場合に指定する
+     */
+    EffectHandle PlayEffect(const int kind, const Vector3& position, const Quaternion& rotation, const Vector3& scale, const float speed = 1.0f);
     /** エフェクト停止 */
     void StopEffect(const EffectHandle handle);
 
@@ -68,7 +71,12 @@ public:
      * NOTE: ループエフェクトをボスなどに追従させるために毎フレーム呼ぶ
      */
     void SetEffectScale(const EffectHandle handle, const Vector3& pos);
-    
+    /**
+     * 再生中エフェクトの速度を更新する（1.0fが等倍）
+     * NOTE: 再生開始後に攻撃速度が変わった場合など、追従中のエフェクトの速度を変えたい場合に呼ぶ
+     */
+    void SetEffectSpeed(const EffectHandle handle, const float speed);
+
 
     EffectEmitter* FindEffect(const EffectHandle handle)
     {

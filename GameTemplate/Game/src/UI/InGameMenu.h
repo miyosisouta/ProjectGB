@@ -26,6 +26,27 @@ private:
 	std::unique_ptr<TaskSchedulerSystem> playerDamageScheduler_ = nullptr;
 	std::unique_ptr<TaskSchedulerSystem> bossCriticalHitDamageScheduler_[DAMAGE_POOL_SIZE];
 
+	/**
+	 * ボスの感情バフ/デバフアイコン
+	 * enumの値が小さいほどHPバー右端の起点(origin)に近い側に並ぶ
+	 */
+	enum class EmotionBuffKind : int
+	{
+		DamageTakenMul = 0,
+		AttackSpeed    = 1,
+		AttackPower    = 2,
+	};
+	static const int EmotionBuffKindCount = 3;
+
+	/** 直前フレームの感情レベル（変化検出用。初期値はEmotionLevel::Normalと同じ0） */
+	int lastEmotionLevel_ = 0;
+	/** 各バフ種別が直前フレームで表示されていたか（表示/非表示の切り替わり検出用） */
+	bool emotionBuffWasActive_[EmotionBuffKindCount] = { false, false, false };
+	/** 表示時のポップ演出（拡大->縮小） */
+	std::unique_ptr<UIAnimationSequence> emotionIconPopSequence_[EmotionBuffKindCount];
+	/** 非表示時のフェードアウト演出 */
+	std::unique_ptr<UIAnimationSequence> emotionIconFadeOutSequence_[EmotionBuffKindCount];
+
 	// スタミナの情報を取得するためにいるプレイヤーステートとゲージレンダー
 	GaugeRender staminaGauge_;
 	// 枯渇状態キャッシュ（Render側でも参照するため保持）
@@ -51,4 +72,7 @@ private:
 
 	/** ボタンの情報(表示) */
 	void UpdateButtonWord(const uint32_t enAction);
+
+	/** ボスの感情バフ/デバフアイコンの表示・アニメーションを更新する */
+	void UpdateEmotionBuffIcon(const int currentLevel);
 };

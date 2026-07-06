@@ -2,95 +2,29 @@
 #include "BossState.h"
 #include "BossCharacter.h"
 #include "AttackRange.h"
+#include "src/Actor/ActorStatus.h"
 #include "src/Actor/AttackObjectManager.h"
 #include "src/Stage/GrassBendManager.h"
 #include <time.h>
 
+// ============================================================================
+// 調整値について
+// ----------------------------------------------------------------------------
+// 距離・秒数・コリジョンサイズ・エフェクトスケールなどのバランス調整値は
+// Assets/Parameter/BossStateParameter.json (MasterBossStateParameter) に外出しした。
+// 各ステートの Enter()/Update() 内で ParameterManager::Get().GetBossStateParam() から
+// 都度読み出して使う（"p->通常攻撃.collisionSize" のように attack 名 + 分類でまとめてある）。
+// ============================================================================
 namespace
 {
-	// NPCControllerで定義している距離と同じ値を設定
-	constexpr float SHORT_DISTANCE = 500.0f;	// 近距離
-	constexpr float MID_DISTANCE = 1000.0f;		// 中距離
-	constexpr float LONG_DISTANCE = 1500.0f;	// 遠距離
-
-	// 待機
-	constexpr float BOSS_IDLE_END_TIME = 6.0f; // 待機時間終了
-
-	// ダッシュ
-	static const Vector3 BOSS_RUN_EFFECT_SCALE = Vector3(20.0f, 20.0f, 20.0f); // エフェクトサイズ
-	constexpr float BOSS_RUN_MOVE_SPEED = 100.0f;			// 走るときのベース速度
-	constexpr float BOSS_RUN_SE_LOOP_SEQUENCE = 0.2f;		// 走る際のSEのループシーケンス
-	constexpr float BOSS_RUN_EFFECT_LOOP_SEQUENCE = 0.5f;	// 走る際のエフェクトのループシーケンス
-	
-	// 通常攻撃
-	constexpr float ATTACK_TASK_BEGIN_TIME = 0.1f;			// タスクスケジューラー最初の処理が始まるの時間
-	constexpr float ATTACK_TASK_COLLISION_RESET_TIME = 0.6f;// タスクスケジューラーのコリジョンを消す時間
-	constexpr float ATTACK_TASK_END_TIME = 1.0f;			// タスクスケジューラーの処理が終わる時間
-	constexpr float ATTACK_COLLISION_FORWARD = 200.0f;		// 前方向
-	constexpr float ATTACK_COLLISION_HEIGHT = 100.0f;		// 高さ
-	constexpr float ATTACK_NORMAL_COLLISION_SIZE = 200.0f;	// コリジョンサイズ
-
-	// ヒットスタンプ
-	static Vector3 ATTACK_HEIGHT = Vector3(0.0f,3000.0f,0.0f);	// 高さ
-	constexpr float BOSS_HITSTAMP_UP_BEGIN_TIME = 0.5f;			// ジャンプする時間
-	constexpr float BOSS_HITSTAMP_OVERHEAD_MOVE_TIME = 2.0f;	// 頭上で移動する時間
-	constexpr float BOSS_HITSTAMP_FALL_BEGIN_TIME = 5.0f;		// 落ち始める時間
-	constexpr float BOSS_HITSTAMP_VERTICAL_VELOCITY = 1500.0f;	// 垂直速度
-	constexpr float BOSS_HITSTAMP_UP_SPEED = 600.0f;			// ヒットスタンプ時飛び上がる際のベース速度
-	constexpr float BOSS_HITSTAMP_DOWN_SPEED = 800.0f;			// ヒットスタンプ時着地する際のベース速度
-	constexpr float ATTACK_HITSTAMP_COLLISION_SIZE = 350.0f;	// コリジョンサイズ
-	constexpr float ATTACK_HITSTAMP_RANGE_SIZE = 70.0f;	// 攻撃範囲サイズ
-	constexpr float GRAVITY_POWER = -800.0f;					// 重力の強さ
-	constexpr float EFFECT_SCALE_HITSTAMP_SMOKE = 0.2f;				// ヒットスタンプの煙のエフェクトサイズ
-	constexpr float EFFECT_SCALE_HITSTAMP_SHOCKWAVE = 0.5f;				// ヒットスタンプの衝撃波のエフェクトサイズ
-	
-	// 回転攻撃
-	constexpr float SPIN_ATTACK_START_TIME = 3.0f;				// 攻撃開始時間
-	constexpr float SPIN_ATTACK_END_TIME = 7.5f;				// 攻撃終了時間
-	constexpr float BOSS_SPIN_ATTACK_SPEED = 300.0f;			// 回転攻撃のベース速度
-	constexpr float OVER_MOVE_DISTANCE_SPIN_ATTACK = 300.0f;	// 回転攻撃のターゲットの位置からさらに進む距離
-	constexpr float ATTACK_SPIN_COLLISION_SIZE = 250.0f;		// 回転攻撃のコリジョンサイズ
-	constexpr float ATTACK_SPIN_RANGE_SIZE = 50.0f;				// 攻撃予測ラインのサイズ
-	constexpr float ATTACK_SPIN_INDICATOR_LENGTH = 250.0f;		// 攻撃予測ラインの長さ (見た目のみ、攻撃距離と無関係)
-	constexpr float ATTACK_SPIN_INDICATOR_FORWARD = 500.0f;		// インジケーター中心の前方オフセット
-	constexpr float BOSS_SPIN_SE_LOOP_SEQUENCE = 0.3f;			// 回転攻撃のSEのループシーケンス
-	constexpr float BOSS_SPIN_EFFECT_LOOP_SEQUENCE = 1.0f;		// 回転攻撃のエフェクトのループシーケンス
-
-	// 岩を投げる攻撃
-	constexpr float ROCK_THROW_INDICATOR_LENGTH = 250.0f;		// 攻撃予測ラインの長さ (見た目のみ、攻撃距離と無関係)
-	constexpr float ROCK_THROW_INDICATOR_BASE_SIZE = 200.0f;	// タイリング基準サイズ (長さ軸)
-	constexpr float ROCK_THROW_INDICATOR_FORWARD = 600.0f;		// インジケーター中心の前方オフセット
-	constexpr float ROCK_THROW_RANGE_SIZE = 33.0f;				// 攻撃予測ラインの横幅サイズ
-	constexpr float ROCK_THROW_BEGIN_TIME = 2.5f;				// 岩を投げる時間
-	constexpr float ROCK_THROW_END_TIME = 4.0f;					// 処理の終了時間
-	constexpr float OVER_MOVE_DISTANCE_THROW_ROCK = 200.0f;		// プレイヤーのいる位置からさらに奥
-	constexpr float ATTACK_ROCK_COLLISION_SIZE = 100.0f;		// コリジョンサイズ
-
-	// レーザー
-	constexpr float LASER_ATTACK_TIME = 1.0f;		// レーザーの攻撃時間
-	constexpr float LASER_SHOT_TIME_NORMAL = 3.0f;	// レーザーの攻撃まで時間(通常)
-	constexpr float LASER_SHOT_TIME_CHARGE = 6.0f;	// レーザーの攻撃まで時間(チャージ) 
-	constexpr uint8_t LASER_SHOT_COUNT_NORMAL = 1;	// レーザーの本数(通常)
-	constexpr uint8_t LASER_SHOT_COUNT_MULT = 3;	// レーザーの本数(マルチモード)
-	static const Vector3 LASER_SHOT_SCALE_CHARGE = Vector3(1.75f, 1.75f, 1.75f); // レーザーのチャージ時の大きさ
-	constexpr float LASER_SHOT_COLLISION_SCALE = 180.0f; // レーザーのhitCollisonのサイズ
-	constexpr float LASER_INDICATOR_RADIUS_NORMAL = 45.0f; // 予測サークルの半径 (通常/連発)
-	constexpr float LASER_INDICATOR_RADIUS_CHARGE = 75.0f; // 予測サークルの半径 (チャージ)
-	constexpr float EFFECT_SCALE_FACTOR_LASER = 0.5f; // レーザーエフェクトサイズ調整
-
-	// 死亡
-	constexpr float DEATH_ANIMATION_TIME = 2.0f;
-
-	// 共通
-	constexpr float EFFECT_SCALE_FACTOR_DAMAGE_LING = 0.4f;		// 円形の攻撃予測用エフェクトのサイズ調整
+	// 以下は「バランス調整値」ではなく、コード上の意味を分かりやすくするための
+	// 数値定数（0・1・0.5など）。JSON化する対象ではないためここに残している。
 	constexpr uint8_t INT_ZERO = 0;				// 初期化の値(int)
 	constexpr float FLOAT_ZERO = 0.0f;			// 初期化の値(float)
-	constexpr float BOSS_ROTATE_SPEED = 0.01f;	// ボスの回転速度
 	constexpr float BOSS_ROTATE_MAX = 360.0f;	// 1回転
 	constexpr float MOVE_EPSILON = 0.001f;		// 少しでも動いているか
 	constexpr float DIST_HALF = 0.5f;			// 距離の半分
 	constexpr float FIXED_EFFECT_SCALE_Y = 1.0f;// エフェクトのｙスケールの初期化
-	constexpr float INIT_SHOT_TIME = 0.1f;		// タスクスケジューラの次の処理までの時間の初期化
 }
 
 
@@ -105,11 +39,13 @@ void BossIdleState::Enter()
 
 	// 待機時間の生成
 	{
+		const auto* p = ParameterManager::Get().GetBossStateParam();
+
 		// タスクシステムを作成
 		taskScheduler_ = std::make_unique<TaskSchedulerSystem>();
 
-		// 時間設定
-		taskScheduler_->AddTimer(BOSS_IDLE_END_TIME, [&]() {
+		// 時間設定（Idleは「攻撃」ではないので攻撃速度の影響は受けない）
+		taskScheduler_->AddTimer(p->idle.endTime, [&]() {
 			isFinished_ = true;
 			});
 	}
@@ -136,6 +72,8 @@ void BossIdleState::Exit()
 
 void BossRunState::Enter()
 {
+	const auto* p = ParameterManager::Get().GetBossStateParam();
+
 	isFinished_ = false; // 初期化
 	boss_->PlayAnimation(BossAnimID::enAnimRun); // 走るアニメーションを設定
 
@@ -145,22 +83,22 @@ void BossRunState::Enter()
 	float currentDistSq = diff.LengthSq(); // 今の距離の2乗
 
 	// 射程範囲外から走り始めた → 遠距離の境界まで走る
-	if (currentDistSq > LONG_DISTANCE * LONG_DISTANCE) {
-		goalPos_ = LONG_DISTANCE * LONG_DISTANCE;
+	if (currentDistSq > p->common.longDistance * p->common.longDistance) {
+		goalPos_ = p->common.longDistance * p->common.longDistance;
 	}
 	// 遠距離から走り始めた → 中距離の境界まで走る
-	else if (currentDistSq > MID_DISTANCE * MID_DISTANCE) {
-		goalPos_ = MID_DISTANCE * MID_DISTANCE;
+	else if (currentDistSq > p->common.midDistance * p->common.midDistance) {
+		goalPos_ = p->common.midDistance * p->common.midDistance;
 	}
 	// 中距離から走り始めた → 近距離の境界まで走る
-	else if (currentDistSq > SHORT_DISTANCE * SHORT_DISTANCE) {
-		goalPos_ = SHORT_DISTANCE * SHORT_DISTANCE;
+	else if (currentDistSq > p->common.shortDistance * p->common.shortDistance) {
+		goalPos_ = p->common.shortDistance * p->common.shortDistance;
 	}
 
-	// 音の再生
+	// 音の再生（Runは「攻撃」ではないので攻撃速度の影響は受けない）
 	{
 		taskScheduler_ = std::make_unique<TaskSchedulerSystem>();
-		const int SoundId = taskScheduler_->CreateLoopSequence(BOSS_RUN_SE_LOOP_SEQUENCE);
+		const int SoundId = taskScheduler_->CreateLoopSequence(p->run.seLoopInterval);
 		taskScheduler_->AddLoopTimer(SoundId, FLOAT_ZERO, [&](void) {
 			SoundManager::Get().PlaySE(enSoundKind_Boss_Run);
 			});
@@ -168,17 +106,19 @@ void BossRunState::Enter()
 
 	// エフェクト
 	{
-		const int SoundId = taskScheduler_->CreateLoopSequence(BOSS_RUN_EFFECT_LOOP_SEQUENCE);
+		const int SoundId = taskScheduler_->CreateLoopSequence(p->run.effectLoopInterval);
 		taskScheduler_->AddLoopTimer(SoundId, FLOAT_ZERO, [&](void) {
 			const Vector3 bossPos = boss_->transform_.position;
 			const Quaternion bossRot = boss_->transform_.rotation;
-			EffectManager::Get().PlayEffect(enEffectKind_Dash_Wind, bossPos, bossRot, BOSS_RUN_EFFECT_SCALE);
+			EffectManager::Get().PlayEffect(enEffectKind_Dash_Wind, bossPos, bossRot, ParameterManager::Get().GetBossStateParam()->run.effectScale);
 			});
 	}
 }
 
 void BossRunState::Update()
 {
+	const auto* p = ParameterManager::Get().GetBossStateParam();
+
 	// ステートを抜けるかどうか
 	{
 		Vector3 diff = boss_->GetTargetPos() - boss_->GetTransformPosition();
@@ -196,8 +136,8 @@ void BossRunState::Update()
 
 	// 移動 / 回転の計算・設定
 	{
-		Vector3 moveVelocity = CalcMovePlayerVelocity(BOSS_RUN_MOVE_SPEED);
-		Quaternion moveRotate = RotateToTarget(BOSS_ROTATE_SPEED);
+		Vector3 moveVelocity = CalcMovePlayerVelocity(p->run.moveSpeed);
+		Quaternion moveRotate = RotateToTarget(p->common.rotateSpeed);
 		boss_->SetMoveVelocity(moveVelocity);
 		boss_->SetTargetRot(moveRotate);
 	}
@@ -217,8 +157,11 @@ void BossRunState::Exit()
 
 void BossAttackState::Enter()
 {
+	const auto* p = ParameterManager::Get().GetBossStateParam();
+	const float speedMul = GetAttackSpeedMul(); // 攻撃速度倍率（[timing]の秒数はこれで割る）
+
 	isFinished_ = false; // 初期化
-	Quaternion targetRot = RotateToTarget(BOSS_ROTATE_SPEED);// 攻撃の前にプレイヤーがいる方向へ向く
+	Quaternion targetRot = RotateToTarget(p->common.rotateSpeed);// 攻撃の前にプレイヤーがいる方向へ向く
 	boss_->SetTargetRot(targetRot);
 
 	// タスクシステムを作成
@@ -227,14 +170,19 @@ void BossAttackState::Enter()
 	// 攻撃までの時間設定
 	{
 		// アニメーションの再生とコリジョンの生成
-		taskScheduler_->AddTimer(ATTACK_TASK_BEGIN_TIME, [&]() {
-			boss_->PlayAnimation(BossAnimID::enAnimAttack); // 通常攻撃アニメーションを設定
+		taskScheduler_->AddTimer(p->normalAttack.beginTime / speedMul, [&]() {
+			// タイマー発火時点のパラメーターを取り直す（Enter()のローカル変数pは寿命が切れているため使えない）
+			const auto* p = ParameterManager::Get().GetBossStateParam();
+			const float animSpeed = GetAnimationSpeedMul(); // アニメーション再生速度（攻撃速度とは独立）
+			const float effectSpeed = GetEffectSpeedMul();  // エフェクト再生速度（攻撃速度とは独立）
+
+			boss_->PlayAnimation(BossAnimID::enAnimAttack, animSpeed); // 通常攻撃アニメーションを設定
 			SoundManager::Get().PlaySE(enSoundKind_Boss_NormalAttack); // 音の再生
 
 			// ゴーストコリジョンを生成
 			attackHitbox_ = std::make_unique<GhostBody>();
-			attackHitbox_->CreateSphere(boss_, CharacterID::BossNormalAtkID(), ATTACK_NORMAL_COLLISION_SIZE, ghost::CollisionAttribute::BossAtk, ghost::CollisionAttributeMask::BossAtk);
-			
+			attackHitbox_->CreateSphere(boss_, CharacterID::BossNormalAtkID(), p->normalAttack.collisionSize, ghost::CollisionAttribute::BossAtk, ghost::CollisionAttributeMask::BossAtk);
+
 			// 座標計算
 			Vector3 bossPos = boss_->transform_.position;				// プレイヤーの現在の座標を取得
 
@@ -243,8 +191,8 @@ void BossAttackState::Enter()
 			forward.Normalize(); // ベクトルの長さを1にしておく
 
 			Quaternion bossRot = boss_->GetTargetRot();
-			float forwardOffset = ATTACK_COLLISION_FORWARD;									// 目の前にどれくらいズラすか
-			float heightOffset = ATTACK_COLLISION_HEIGHT;										// 高さの調整
+			float forwardOffset = p->normalAttack.collisionForward;									// 目の前にどれくらいズラすか
+			float heightOffset = p->normalAttack.collisionHeight;										// 高さの調整
 			Vector3 collisionTargetPos = bossPos + (forward * forwardOffset);	// 前方向の座標を決定
 			collisionTargetPos.y += heightOffset;									// 高さを決定
 
@@ -262,20 +210,20 @@ void BossAttackState::Enter()
 			}
 
 			// エフェクトのPRSを決め
-			Vector3 collisionTargetScal = ATTACK_NORMAL_COLLISION_SIZE * EFFECT_SCALE_FACTOR_DAMAGE_LING;
+			Vector3 collisionTargetScal = p->normalAttack.collisionSize * p->common.damageRingEffectScale;
 			bossRot.AddRotationDegY(BOSS_ROTATE_MAX);
-			EffectManager::Get().PlayEffect(enEffectKind_Wind_Blast_Boss, collisionTargetPos, bossRot, collisionTargetScal);
+			EffectManager::Get().PlayEffect(enEffectKind_Wind_Blast_Boss, collisionTargetPos, bossRot, collisionTargetScal, effectSpeed);
 			});
 
 		// コリジョンを破棄
-		taskScheduler_->AddTimer(ATTACK_TASK_COLLISION_RESET_TIME, [&]()
+		taskScheduler_->AddTimer(p->normalAttack.collisionResetTime / speedMul, [&]()
 			{
 				attackHitbox_.reset(nullptr);
 			},
 			true);
 
 		// 処理を終わる
-		taskScheduler_->AddTimer(ATTACK_TASK_END_TIME, [&]()
+		taskScheduler_->AddTimer(p->normalAttack.endTime / speedMul, [&]()
 			{
 				isFinished_ = true;
 			});
@@ -301,15 +249,18 @@ void BossAttackState::Exit()
 
 void HitStampState::Enter()
 {
+	const auto* p = ParameterManager::Get().GetBossStateParam();
+	const float speedMul = GetAttackSpeedMul(); // 攻撃速度倍率（[timing]の秒数はこれで割る）
+
 	isFinished_ = false; // 初期化
 	createAttackCollision_ = false; // コリジョンの生成を可能にする
-	gravity_ = GRAVITY_POWER;
+	gravity_ = p->hitStamp.gravityPower;
 	phase_ = Phase::Ready; // 準備をする
 
-	Quaternion targetRot = RotateToTarget(BOSS_ROTATE_SPEED);// 攻撃の前にプレイヤーがいる方向へ向く
+	Quaternion targetRot = RotateToTarget(p->common.rotateSpeed);// 攻撃の前にプレイヤーがいる方向へ向く
 	boss_->SetTargetRot(targetRot);
 
-	boss_->PlayAnimation(BossAnimID::enAnimJump); // ジャンプアニメーションを設定
+	boss_->PlayAnimation(BossAnimID::enAnimJump, GetAnimationSpeedMul()); // ジャンプアニメーションを設定
 
 	// 攻撃範囲インジケーターを生成 (表示は Hover フェーズまで待つ)
 	{
@@ -318,23 +269,27 @@ void HitStampState::Enter()
 		param.type      = AttackRange::Type::enCircle;
 		param.character = AttackRange::Character::Boss;
 		attackRange_->SetInitParam(param);
-		attackRange_->SetScale(Vector3(ATTACK_HITSTAMP_RANGE_SIZE, 1.0f, ATTACK_HITSTAMP_RANGE_SIZE));
+		attackRange_->SetScale(Vector3(p->hitStamp.rangeSize, 1.0f, p->hitStamp.rangeSize));
 	}
 
 	// タスクシステムを作成
 	taskScheduler_ = std::make_unique<TaskSchedulerSystem>();
 
 	// 現在の位置から上方向に飛び上がる
-	taskScheduler_->AddTimer(BOSS_HITSTAMP_UP_BEGIN_TIME, [&]() {
+	taskScheduler_->AddTimer(p->hitStamp.upBeginTime / speedMul, [&]() {
+		const auto* p = ParameterManager::Get().GetBossStateParam(); // タイマー発火時点で取り直す
+
 		boss_->SetMoveVelocity(Vector3::Zero);
-		targetPos_ = boss_->GetTransformPosition() + ATTACK_HEIGHT; // 移動する地点を設定
-		nextTargetPos_ = boss_->GetTargetPos() + ATTACK_HEIGHT;// 次に移動する地点を計算
-		verticalVelocity_ = BOSS_HITSTAMP_VERTICAL_VELOCITY; // 垂直速度
+		targetPos_ = boss_->GetTransformPosition() + p->hitStamp.jumpHeight; // 移動する地点を設定
+		nextTargetPos_ = boss_->GetTargetPos() + p->hitStamp.jumpHeight;// 次に移動する地点を計算
+		verticalVelocity_ = p->hitStamp.verticalVelocity; // 垂直速度
 		phase_ = Phase::JumpUp;
 		});
 
 	// プレイヤーの頭上へ移動
-	taskScheduler_->AddTimer(BOSS_HITSTAMP_OVERHEAD_MOVE_TIME, [&]() {
+	taskScheduler_->AddTimer(p->hitStamp.overheadMoveTime / speedMul, [&]() {
+		const auto* p = ParameterManager::Get().GetBossStateParam(); // タイマー発火時点で取り直す
+
 		boss_->SetMoveVelocity(Vector3::Zero);
 		targetPos_ = nextTargetPos_;// 移動する地点を設定
 
@@ -347,7 +302,8 @@ void HitStampState::Enter()
 		{
 			attackRange_->SetPosition(Vector3(fixedAttackPos_.x, 0.5f, fixedAttackPos_.z));
 			// カウントダウン半分の時点で外円到達し、残り半分は外円に張り付いて表示
-			const float countdown = BOSS_HITSTAMP_FALL_BEGIN_TIME - BOSS_HITSTAMP_OVERHEAD_MOVE_TIME;
+			const float speedMul = GetAttackSpeedMul();
+			const float countdown = (p->hitStamp.fallBeginTime - p->hitStamp.overheadMoveTime) / speedMul;
 			attackRange_->SetPulseCountdown(countdown * 0.5f);
 			attackRange_->SetDraw(true);
 		}
@@ -355,7 +311,7 @@ void HitStampState::Enter()
 		});
 
 	// 地面に落ちる
-	taskScheduler_->AddTimer(BOSS_HITSTAMP_FALL_BEGIN_TIME, [&]() {
+	taskScheduler_->AddTimer(p->hitStamp.fallBeginTime / speedMul, [&]() {
 
 		boss_->SetMoveVelocity(Vector3::Zero);
 		verticalVelocity_ = FLOAT_ZERO;
@@ -374,6 +330,9 @@ void HitStampState::Enter()
 
 void HitStampState::Update()
 {
+	const auto* p = ParameterManager::Get().GetBossStateParam();
+	const float effectSpeed = GetEffectSpeedMul(); // 着地エフェクトの再生速度（攻撃速度とは独立）
+
 	if (taskScheduler_) { taskScheduler_->Update(g_gameTime->GetFrameDeltaTime()); }
 
 	switch (phase_)
@@ -387,7 +346,7 @@ void HitStampState::Update()
 	case Phase::JumpUp:
 	{
 		// XZ移動
-		Vector3 move = CalcVelocityTowards(targetPos_, BOSS_HITSTAMP_UP_SPEED);
+		Vector3 move = CalcVelocityTowards(targetPos_, p->hitStamp.upSpeed);
 		move.y = FLOAT_ZERO;
 		boss_->SetMoveVelocity(move);
 
@@ -417,7 +376,7 @@ void HitStampState::Update()
 
 	case Phase::FallDown:
 	{
-		Vector3 move = CalcVelocityTowards(targetPos_, BOSS_HITSTAMP_DOWN_SPEED);
+		Vector3 move = CalcVelocityTowards(targetPos_, p->hitStamp.downSpeed);
 		move.y = FLOAT_ZERO;
 		boss_->SetMoveVelocity(move);
 
@@ -432,10 +391,11 @@ void HitStampState::Update()
 			// ここに着地時の処理をまとめる
 			boss_->SetMoveVelocity(Vector3::Zero); // 移動速度を0に
 			Vector3 targetPos = boss_->GetTransformPosition(); // ボスの座標を取得
-			Vector3 targetSmokeScal = ATTACK_HITSTAMP_COLLISION_SIZE * EFFECT_SCALE_HITSTAMP_SMOKE;	// 煙のエフェクトのスケール
-			Vector3 targetShokeWaveScal = ATTACK_HITSTAMP_COLLISION_SIZE * EFFECT_SCALE_HITSTAMP_SHOCKWAVE; // 衝撃波のエフェクトのスケール
-			EffectManager::Get().PlayEffect(enEffectKind_HitStamp_Smoke, targetPos, boss_->GetTransformRotation(), targetSmokeScal); // 煙			
-			EffectManager::Get().PlayEffect(enEffectKind_HitStamp_ShockWave, targetPos, boss_->GetTransformRotation(), targetShokeWaveScal); // 衝撃波
+			// ※実際の攻撃判定半径はコード内の固定値(300.0f)を使用しており、effectScaleBasisとは別（詳細はShokingStampフェーズ参照）
+			Vector3 targetSmokeScal = p->hitStamp.effectScaleBasis * p->hitStamp.smokeEffectScale;	// 煙のエフェクトのスケール
+			Vector3 targetShokeWaveScal = p->hitStamp.effectScaleBasis * p->hitStamp.shockWaveEffectScale; // 衝撃波のエフェクトのスケール
+			EffectManager::Get().PlayEffect(enEffectKind_HitStamp_Smoke, targetPos, boss_->GetTransformRotation(), targetSmokeScal, effectSpeed); // 煙
+			EffectManager::Get().PlayEffect(enEffectKind_HitStamp_ShockWave, targetPos, boss_->GetTransformRotation(), targetShokeWaveScal, effectSpeed); // 衝撃波
 			SoundManager::Get().PlaySE(enSoundKind_Boss_HitStamp);
 
 			phase_ = Phase::ShokingStamp;
@@ -498,23 +458,27 @@ void HitStampState::Exit()
 
 void SpinState::Enter()
 {
+	const auto* p = ParameterManager::Get().GetBossStateParam();
+	const float speedMul = GetAttackSpeedMul(); // 攻撃速度倍率（[timing]の秒数はこれで割る）
+
 	isFinished_ = false; // 初期化
 	isAttackStart_ = false; // 攻撃範囲表示の間は攻撃を開始しない
 
 	// 攻撃の前にプレイヤーがいる方向へ向く
-	Quaternion targetRot = RotateToTarget(BOSS_ROTATE_SPEED);
+	Quaternion targetRot = RotateToTarget(p->common.rotateSpeed);
 	boss_->SetTargetRot(targetRot);
 
 	// 回転アニメーションを設定
-	boss_->PlayAnimation(BossAnimID::enAnimSpin);
+	boss_->PlayAnimation(BossAnimID::enAnimSpin, GetAnimationSpeedMul());
 
 	// エフェクトを再生
-	Vector3 targetScal = ATTACK_SPIN_COLLISION_SIZE * EFFECT_SCALE_FACTOR_DAMAGE_LING;
+	Vector3 targetScal = p->spin.effectScaleBasis * p->common.damageRingEffectScale;
 	spinEffectHandle_ = EffectManager::Get().PlayEffect(
 		enEffectkind_Spin,
 		boss_->GetTransformPosition(),
 		boss_->GetTransformRotation(),
-		targetScal
+		targetScal,
+		GetEffectSpeedMul()
 	);
 
 	// プレイヤーの方向と進む距離を設定
@@ -526,7 +490,7 @@ void SpinState::Enter()
 		if (diff.LengthSq() >= MOVE_EPSILON)
 		{
 			diff.Normalize(); // 方向を正規化
-			targetPos_ = playerPos + (diff * OVER_MOVE_DISTANCE_SPIN_ATTACK); // プレイヤーのいる位置とボスから見た方向から少し先まで進む
+			targetPos_ = playerPos + (diff * p->spin.overMoveDistance); // プレイヤーのいる位置とボスから見た方向から少し先まで進む
 		}
 		else {
 			targetPos_ = playerPos;
@@ -545,8 +509,8 @@ void SpinState::Enter()
 			dir.y = 0.0f;
 			dir.Normalize();
 
-			// ライン中心 = ボスから ATTACK_SPIN_INDICATOR_LENGTH の半分先
-			Vector3 startPos = bossPos + (dir * (ATTACK_SPIN_INDICATOR_LENGTH * DIST_HALF + ATTACK_SPIN_INDICATOR_FORWARD));
+			// ライン中心 = ボスから indicatorLength の半分先
+			Vector3 startPos = bossPos + (dir * (p->spin.indicatorLength * DIST_HALF + p->spin.indicatorForward));
 			startPos.y = 0.5f;
 
 			// 方向に合わせてY軸回転
@@ -563,7 +527,7 @@ void SpinState::Enter()
 			attackRangeIndicator_->SetInitParam(param);
 			attackRangeIndicator_->SetPosition(startPos);
 			attackRangeIndicator_->SetRotation(lineRot);
-			attackRangeIndicator_->SetScale(Vector3(ATTACK_SPIN_INDICATOR_LENGTH * 0.5f, FIXED_EFFECT_SCALE_Y, ATTACK_SPIN_RANGE_SIZE));
+			attackRangeIndicator_->SetScale(Vector3(p->spin.indicatorLength * 0.5f, FIXED_EFFECT_SCALE_Y, p->spin.indicatorRangeSize));
 			attackRangeIndicator_->SetLineDrawProgress(0.0f); // 初期は非表示
 			attackRangeIndicator_->SetDraw(true);
 		}
@@ -575,7 +539,9 @@ void SpinState::Enter()
 	// タスクシステムの構築
 	{
 		// 移動開始（予測インジケーターを非表示にしてから攻撃）
-		taskScheduler_->AddTimer(SPIN_ATTACK_START_TIME, [&]() {
+		taskScheduler_->AddTimer(p->spin.attackStartTime / speedMul, [&]() {
+			const auto* p = ParameterManager::Get().GetBossStateParam(); // タイマー発火時点で取り直す
+
 			// 予測インジケーターを非表示・破棄
 			if (attackRangeIndicator_)
 			{
@@ -591,15 +557,15 @@ void SpinState::Enter()
 			// 草曲げは Update() で毎フレーム SetSource を呼ぶ
 
 			// SEの再生
-			const int id = taskScheduler_->CreateLoopSequence(BOSS_SPIN_SE_LOOP_SEQUENCE);
+			const int id = taskScheduler_->CreateLoopSequence(p->spin.seLoopInterval);
 			taskScheduler_->AddLoopTimer(id, FLOAT_ZERO, [&]() {
 				SoundManager::Get().PlaySE(enSoundKind_Boss_Spin);
 				});
 			});
 
 
-		// 5秒たったら強制終了
-		taskScheduler_->AddTimer(SPIN_ATTACK_END_TIME, [&]() {
+		// 強制終了
+		taskScheduler_->AddTimer(p->spin.attackEndTime / speedMul, [&]() {
 			boss_->SetMoveVelocity(Vector3::Zero);
 			attackHitbox_.reset();
 			isFinished_ = true;
@@ -610,13 +576,16 @@ void SpinState::Enter()
 
 void SpinState::Update()
 {
+	const auto* p = ParameterManager::Get().GetBossStateParam();
+	const float speedMul = GetAttackSpeedMul();
+
 	if (taskScheduler_) { taskScheduler_->Update(g_gameTime->GetFrameDeltaTime()); }
 
 	// 攻撃開始前はラインインジケーターをボスから徐々に伸ばす
 	if (!isAttackStart_ && attackRangeIndicator_)
 	{
 		predictionElapsed_ += g_gameTime->GetFrameDeltaTime();
-		float progress = min(predictionElapsed_ / SPIN_ATTACK_START_TIME, 1.0f);
+		float progress = min(predictionElapsed_ / (p->spin.attackStartTime / speedMul), 1.0f);
 		attackRangeIndicator_->SetLineDrawProgress(progress);
 	}
 
@@ -630,7 +599,7 @@ void SpinState::Update()
 	if (isAttackStart_)
 	{
 		// 移動先を計算・設定
-		Vector3 moveVelocity = CalcVelocityTowards(targetPos_, BOSS_SPIN_ATTACK_SPEED);
+		Vector3 moveVelocity = CalcVelocityTowards(targetPos_, p->spin.moveSpeed);
 		boss_->SetMoveVelocity(moveVelocity);
 
 		if (attackHitbox_) { attackHitbox_->SetPosition(boss_->GetTransformPosition()); }
@@ -680,11 +649,14 @@ void SpinState::Exit()
 
 void ThrowRockState::Enter()
 {
+	const auto* p = ParameterManager::Get().GetBossStateParam();
+	const float speedMul = GetAttackSpeedMul(); // 攻撃速度倍率（[timing]の秒数はこれで割る）
+
 	isFinished_ = false; // 初期化
 	boss_->SetMoveVelocity(Vector3::Zero);
 
 	// 攻撃の前にプレイヤーがいる方向へ向く
-	Quaternion targetRot = RotateToTarget(BOSS_ROTATE_SPEED);
+	Quaternion targetRot = RotateToTarget(p->common.rotateSpeed);
 	boss_->SetTargetRot(targetRot);
 
 
@@ -695,11 +667,11 @@ void ThrowRockState::Enter()
 
 
 	// 方向を算出して目標の座標を設定
-	Vector3 diff = playerPos - bossPos; 
+	Vector3 diff = playerPos - bossPos;
 	if (diff.LengthSq() >= MOVE_EPSILON)
 	{
 		diff.Normalize(); // 方向を正規化
-		targetPos_ = playerPos + (diff * OVER_MOVE_DISTANCE_THROW_ROCK); // プレイヤーのいる位置とボスから見た方向から少し先まで進む
+		targetPos_ = playerPos + (diff * p->throwRock.overMoveDistance); // プレイヤーのいる位置とボスから見た方向から少し先まで進む
 	}
 	else {
 		targetPos_ = playerPos;
@@ -714,8 +686,8 @@ void ThrowRockState::Enter()
 	{
 		targetDir.Normalize();
 
-		float meshHalfExtent = ROCK_THROW_INDICATOR_LENGTH * DIST_HALF;
-		Vector3 startPos = bossPos + targetDir * (ROCK_THROW_INDICATOR_LENGTH * DIST_HALF + ROCK_THROW_INDICATOR_FORWARD);
+		float meshHalfExtent = p->throwRock.indicatorLength * DIST_HALF;
+		Vector3 startPos = bossPos + targetDir * (p->throwRock.indicatorLength * DIST_HALF + p->throwRock.indicatorForward);
 		startPos.y = 0.5f;
 
 		float angle = atan2(targetDir.x, targetDir.z);
@@ -726,11 +698,11 @@ void ThrowRockState::Enter()
 		AttackRange::InitParam param;
 		param.type      = AttackRange::Type::enLine;
 		param.character = AttackRange::Character::Boss;
-		param.baseSizeX = ROCK_THROW_INDICATOR_BASE_SIZE;
+		param.baseSizeX = p->throwRock.indicatorBaseSize;
 		attackRangeIndicator_->SetInitParam(param);
 		attackRangeIndicator_->SetPosition(startPos);
 		attackRangeIndicator_->SetRotation(lineRot);
-		attackRangeIndicator_->SetScale(Vector3(meshHalfExtent, FIXED_EFFECT_SCALE_Y, ROCK_THROW_RANGE_SIZE));
+		attackRangeIndicator_->SetScale(Vector3(meshHalfExtent, FIXED_EFFECT_SCALE_Y, p->throwRock.indicatorRangeSize));
 		attackRangeIndicator_->SetLineDrawProgress(0.0f);
 		attackRangeIndicator_->SetDraw(true);
 	}
@@ -738,8 +710,11 @@ void ThrowRockState::Enter()
 	// タスクシステムを作成
 	taskScheduler_ = std::make_unique<TaskSchedulerSystem>();
 
-	taskScheduler_->AddTimer(ROCK_THROW_BEGIN_TIME, [this,bossPos,targetDir]()
+	taskScheduler_->AddTimer(p->throwRock.beginTime / speedMul, [this,bossPos,targetDir]()
 		{
+			// タイマー発火時点で取り直す（Enter()のローカル変数pは寿命が切れているため使えない）
+			const auto* p = ParameterManager::Get().GetBossStateParam();
+
 			// 予測インジケーターを非表示・破棄
 			if (attackRangeIndicator_)
 			{
@@ -753,8 +728,9 @@ void ThrowRockState::Enter()
 			Vector3 forward(mat.m[2][0], mat.m[2][1], mat.m[2][2]); // Z軸
 			forward.Normalize(); // ベクトルの長さを1にしておく
 
-			float attackForward = ATTACK_COLLISION_FORWARD;
-			float attackHeight = ATTACK_COLLISION_HEIGHT;
+			// ※通常攻撃(normalAttack)と同じ前方/高さオフセット値を使い回している（元コードの仕様を踏襲）
+			float attackForward = p->normalAttack.collisionForward;
+			float attackHeight = p->normalAttack.collisionHeight;
 			Vector3 startPos = bossPos + (forward * attackForward);
 			startPos.y = attackHeight;
 
@@ -763,13 +739,13 @@ void ThrowRockState::Enter()
 				boss_,
 				startPos,
 				targetDir,
-				ATTACK_ROCK_COLLISION_SIZE
+				p->throwRock.rockCollisionSize
 			);
 			// アニメーションを再生
-			boss_->PlayAnimation(BossAnimID::enAnimClicked);
+			boss_->PlayAnimation(BossAnimID::enAnimClicked, GetAnimationSpeedMul());
 		});
 
-	taskScheduler_->AddTimer(ROCK_THROW_END_TIME, [&]()
+	taskScheduler_->AddTimer(p->throwRock.endTime / speedMul, [&]()
 		{
 			isFinished_ = true;
 		});
@@ -777,12 +753,15 @@ void ThrowRockState::Enter()
 
 void ThrowRockState::Update()
 {
+	const auto* p = ParameterManager::Get().GetBossStateParam();
+	const float speedMul = GetAttackSpeedMul();
+
 	if (taskScheduler_) { taskScheduler_->Update(g_gameTime->GetFrameDeltaTime()); }
 
 	if (attackRangeIndicator_)
 	{
 		predictionElapsed_ += g_gameTime->GetFrameDeltaTime();
-		float progress = min(predictionElapsed_ / ROCK_THROW_BEGIN_TIME, 1.0f);
+		float progress = min(predictionElapsed_ / (p->throwRock.beginTime / speedMul), 1.0f);
 		attackRangeIndicator_->SetLineDrawProgress(progress);
 	}
 }
@@ -805,30 +784,33 @@ void ThrowRockState::Exit()
 
 void LaserState::Setup()
 {
-	shotTime_ = INIT_SHOT_TIME;
-	attackDeleyTime = INIT_SHOT_TIME;
+	// Enter()から呼ばれる（同一フレーム内の同期呼び出しのため、ここでパラメーターを取得してよい）
+	const auto* p = ParameterManager::Get().GetBossStateParam();
 
-	switch (mode_) 
+	shotTime_ = p->laser.initialShotTime / attackSpeedMul_;
+	attackDeleyTime = p->laser.initialShotTime / attackSpeedMul_;
+
+	switch (mode_)
 	{
 	case Mode::enNormal:
 	{
 		scale_ = Vector3::One;
-		attackDeleyTime = LASER_SHOT_TIME_NORMAL;
-		shotCount_ = LASER_SHOT_COUNT_NORMAL;
+		attackDeleyTime = p->laser.shotIntervalNormal / attackSpeedMul_;
+		shotCount_ = p->laser.shotCountNormal;
 		break;
 	}
 	case Mode::enMult:
 	{
 		scale_ = Vector3::One;
-		attackDeleyTime = LASER_SHOT_TIME_NORMAL;
-		shotCount_ = LASER_SHOT_COUNT_MULT;
+		attackDeleyTime = p->laser.shotIntervalNormal / attackSpeedMul_;
+		shotCount_ = p->laser.shotCountMult;
 		break;
 	}
 	case Mode::enCharge:
 	{
-		scale_ = LASER_SHOT_SCALE_CHARGE;
-		attackDeleyTime = LASER_SHOT_TIME_CHARGE;
-		shotCount_ = LASER_SHOT_COUNT_NORMAL;
+		scale_ = p->laser.chargeScale;
+		attackDeleyTime = p->laser.shotIntervalCharge / attackSpeedMul_;
+		shotCount_ = p->laser.shotCountNormal;
 		break;
 	}
 	default:
@@ -838,10 +820,13 @@ void LaserState::Setup()
 
 void LaserState::Enter()
 {
+	// 攻撃速度倍率を保持しておく（Setup()や発火済みタイマーのコールバック内でも同じ値を使うため）
+	attackSpeedMul_ = GetAttackSpeedMul();
+
 	// 攻撃モード
 	{
 		// 結果をランダムに
-		srand(time(nullptr)); 
+		srand(time(nullptr));
 		// 0～9の乱数を取得
 		uint8_t attackMode = rand() % enWeightMax;
 
@@ -863,10 +848,11 @@ void LaserState::Enter()
 		isFinished_ = false;
 		boss_->SetMoveVelocity(Vector3::Zero);
 	}
-	
+
+	const auto* p = ParameterManager::Get().GetBossStateParam();
 
 	// 攻撃の前にプレイヤーがいる方向へ向く
-	Quaternion targetRot = RotateToTarget(BOSS_ROTATE_SPEED);
+	Quaternion targetRot = RotateToTarget(p->common.rotateSpeed);
 	boss_->SetTargetRot(targetRot);
 
 	// 発射タイミングや攻撃範囲を設定
@@ -875,6 +861,7 @@ void LaserState::Enter()
 	// タスクスケジューラを作成
 	taskScheduler_ = std::make_unique<TaskSchedulerSystem>();
 
+	const float laserAttackTime = p->laser.attackTime / attackSpeedMul_; // [timing] 発射開始から判定・エフェクトを消すまでの秒数
 
 	// 攻撃回数分だけ追加
 	for (int i = INT_ZERO; i < shotCount_; ++i)
@@ -882,9 +869,9 @@ void LaserState::Enter()
 		/***** 発射前 *****/
 		taskScheduler_->AddTimer(shotTime_, [&]()
 			{
-				if (mode_ == Mode::enCharge) {
-					int i = 0;
-				}
+				// タイマー発火時点で取り直す（Enter()のローカル変数pは寿命が切れているため使えない）
+				const auto* p = ParameterManager::Get().GetBossStateParam();
+
 				// タイマー発火時にプレイヤー座標を取得する
 				targetPos_ = boss_->GetTargetPos();
 
@@ -894,31 +881,37 @@ void LaserState::Enter()
 					attackRangeIndicator_ = nullptr;
 				}
 				float indicatorRadius = (mode_ == Mode::enCharge)
-					? LASER_INDICATOR_RADIUS_CHARGE : LASER_INDICATOR_RADIUS_NORMAL;
+					? p->laser.indicatorRadiusCharge : p->laser.indicatorRadiusNormal;
 				attackRangeIndicator_ = NewGO<AttackRange>(0, "laserRange");
 				AttackRange::InitParam laserParam;
 				laserParam.type      = AttackRange::Type::enCircle;
 				laserParam.character = AttackRange::Character::Boss;
 				// カウントダウン半分の時点で外円到達、残り半分は外円に張り付いて表示
-				const float laserCountdown = (mode_ == Mode::enCharge) ? LASER_SHOT_TIME_CHARGE : LASER_SHOT_TIME_NORMAL;
+				// ※攻撃速度を反映した実測の「予測→発射」秒数で割ることで、インジケーターの動きも攻撃の速さに追従する
+				const float laserCountdown = (mode_ == Mode::enCharge)
+					? (p->laser.shotIntervalCharge / attackSpeedMul_)
+					: (p->laser.shotIntervalNormal / attackSpeedMul_);
 				laserParam.pulseSpeed = 2.0f / laserCountdown;
 				attackRangeIndicator_->SetInitParam(laserParam);
 				attackRangeIndicator_->SetPosition(targetPos_);
 				attackRangeIndicator_->SetScale(Vector3(indicatorRadius, 1.0f, indicatorRadius));
 				attackRangeIndicator_->SetDraw(true);
 
-				boss_->PlayAnimation(BossAnimID::enAnimAntic);
+				boss_->PlayAnimation(BossAnimID::enAnimAntic, GetAnimationSpeedMul());
 			});
 
-		shotTime_ += attackDeleyTime; // 予測 → 発射の間隔
+		shotTime_ += attackDeleyTime; // 予測 → 発射の間隔（Setup()で既に攻撃速度反映済み）
 
 		/***** 発射中 *****/
 		taskScheduler_->AddTimer(shotTime_, [&]()
 			{
+				// タイマー発火時点で取り直す（Enter()のローカル変数pは寿命が切れているため使えない）
+				const auto* p = ParameterManager::Get().GetBossStateParam();
+
 				// 計算
-				float effectSize = LASER_SHOT_COLLISION_SCALE * EFFECT_SCALE_FACTOR_DAMAGE_LING; // エフェクトのサイズ
+				float effectSize = p->laser.collisionScale * p->common.damageRingEffectScale; // エフェクトのサイズ
 				Vector3 effectScale = scale_ * effectSize; // エフェクトのスケール
-				float collisionScale = LASER_SHOT_COLLISION_SCALE * scale_.x; // コリジョンのスケール
+				float collisionScale = p->laser.collisionScale * scale_.x; // コリジョンのスケール
 				uint32_t collisionId; // コリジョンのID
 
 				// モードによって、サウンドの再生とコリジョンのID設定
@@ -936,14 +929,15 @@ void LaserState::Enter()
 					attackRangeIndicator_ = nullptr;
 				}
 				phase_ = Phase::enShot;
-				boss_->PlayAnimation(BossAnimID::enAnimClicked);
+				boss_->PlayAnimation(BossAnimID::enAnimClicked, GetAnimationSpeedMul());
 
 				// レーザーのエフェクトを生成
 				laserEffectHandle_ = EffectManager::Get().PlayEffect(
 					enEffectKind_Raser,
 					targetPos_,  // 予測タイマー内で更新済みの座標を使う
 					boss_->GetTransformRotation(),
-					effectScale
+					effectScale,
+					GetEffectSpeedMul()
 				);
 
 				// 攻撃用コリジョンを生成
@@ -971,15 +965,15 @@ void LaserState::Enter()
 			});
 
 		/* 発射後 */
-		taskScheduler_->AddTimer(shotTime_ + LASER_ATTACK_TIME, [&]()
+		taskScheduler_->AddTimer(shotTime_ + laserAttackTime, [&]()
 			{
 				attackHitbox_.reset();
 				EffectManager::Get().StopEffect(laserEffectHandle_);
 			});
 
-		shotTime_ += LASER_ATTACK_TIME; // 次の予測開始タイミングへ
+		shotTime_ += laserAttackTime; // 次の予測開始タイミングへ
 
-	} 
+	}
 
 	/***** 終了 *****/
 	taskScheduler_->AddTimer(shotTime_, [&]()
@@ -1024,8 +1018,8 @@ void BossDeathState::Enter()
 	// タスクスケジューラを作成
 	taskScheduler_ = std::make_unique<TaskSchedulerSystem>();
 
-	// アニメーションが再生されてから特定の時間たったら
-	taskScheduler_->AddTimer(DEATH_ANIMATION_TIME, [&]()
+	// アニメーションが再生されてから特定の時間たったら（Deathは「攻撃」ではないので攻撃速度の影響は受けない）
+	taskScheduler_->AddTimer(ParameterManager::Get().GetBossStateParam()->death.animationTime, [&]()
 		{
 			BossStatus* status = boss_->GetStatus()->As<BossStatus>();
 			status->Die();
@@ -1112,4 +1106,22 @@ Quaternion BossStateBase::RotateToTarget(float rotateSpeed)
 	}
 
 	return currentRot;
+}
+
+float BossStateBase::GetAttackSpeedMul() const
+{
+	auto* status = boss_->GetStatus()->As<BossStatus>();
+	return status ? status->GetAttackSpeedMul() : 1.0f;
+}
+
+float BossStateBase::GetAnimationSpeedMul() const
+{
+	auto* status = boss_->GetStatus()->As<BossStatus>();
+	return status ? status->GetAnimationSpeedMul() : 1.0f;
+}
+
+float BossStateBase::GetEffectSpeedMul() const
+{
+	auto* status = boss_->GetStatus()->As<BossStatus>();
+	return status ? status->GetEffectSpeedMul() : 1.0f;
 }

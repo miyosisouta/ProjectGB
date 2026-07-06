@@ -32,8 +32,8 @@ enum enEffectKind
 	enEffectKind_AttackHitBoss,		// 14
 
 	/* 感情システム */
-	enEffectKind_Buff,				// 15 バフ上昇時
-	enEffectKind_Debuff,			// 16 デバフ下降時
+	enEffectKind_Buff,				// 15 強気化時
+	enEffectKind_Debuff,			// 16 動揺時
 
 	enEffectKind_Max
 };
@@ -74,6 +74,6 @@ static EffectInformation effectInformation[enEffectKind_Max] =
 
 	/* 感情システム */
 	EffectInformation(u"Assets/Effect/Buff.efk"),				// 15
-	EffectInformation(u"Assets/Effect/Debuff.efk"),				// 16
+	EffectInformation(u"Assets/Effect/Debuff.efk"),			// 16
 };
 

@@ -828,7 +828,7 @@
             "key": "emotion_icon_scaleUp",
             "valueType": "Vector3",
             "startValue": { "x": 1.0, "y": 1.0, "z": 1.0 },
-            "endValue":   { "x": 1.2, "y": 1.2, "z": 1.0 },
+            "endValue":   { "x": 1.4, "y": 1.4, "z": 1.0 },
             "duration": 0.08,
             "easing": "EaseOut",
             "loop": "Once"
@@ -837,7 +837,7 @@
             "comment": "感情アイコン(UIIcon)：バフ/デバフ変動時に通常に戻る",
             "key": "emotion_icon_scaleDown",
             "valueType": "Vector3",
-            "startValue": { "x": 1.2, "y": 1.2, "z": 1.0 },
+            "startValue": { "x": 1.4, "y": 1.4, "z": 1.0 },
             "endValue":   { "x": 1.0, "y": 1.0, "z": 1.0 },
             "duration": 0.12,
             "easing": "EaseIn",
@@ -860,6 +860,16 @@
             "startValue": { "x": 0.84, "y": 0.84, "z": 0.84 },
             "endValue":   { "x": 0.7, "y": 0.7, "z": 0.7 },
             "duration": 0.12,
+            "easing": "EaseIn",
+            "loop": "Once"
+        },
+        {
+            "comment": "感情アイコン(UICanvas)：バフ/デバフが無くなるときに非表示化するフェードアウト。表示側のポップ(emotion_icon_scaleUp+scaleDown=0.2秒)と同じ長さに揃えてある",
+            "key": "emotion_icon_fadeOut",
+            "valueType": "Vector4",
+            "startValue": { "x": 1.0, "y": 1.0, "z": 1.0, "w": 1.0 },
+            "endValue":   { "x": 1.0, "y": 1.0, "z": 1.0, "w": 0.0 },
+            "duration": 0.2,
             "easing": "EaseIn",
             "loop": "Once"
         }

@@ -14,7 +14,6 @@ class InGameScene : public IScene
 {
 private:
 	Layout* layout_                  = nullptr;
-	Layout* emotionStatusIconLayout_ = nullptr;
 	PouseMenu* pouseMenu_ = nullptr;
 
 

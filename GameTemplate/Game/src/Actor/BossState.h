@@ -19,6 +19,24 @@ protected:
 	Vector3 CalcVelocityTowards(Vector3 targetPos, float speed);
 	/** ターゲットに向かう回転の共通処理 */
 	Quaternion RotateToTarget(float rotateSpeed);
+	/**
+	 * ボスの現在の攻撃速度倍率を取得する（EmotionSystem由来。1.0fが等倍）
+	 * 攻撃系ステート（通常攻撃・ヒットスタンプ・回転・岩投げ・レーザー）が
+	 * taskScheduler_->AddTimer() に渡す秒数をこの値で割ることで、攻撃の速さに反映する。
+	 * Idle/Run/Death は「攻撃」ではないため使用しない。
+	 * アニメーション・エフェクトの再生速度には使わない（GetAnimationSpeedMul/GetEffectSpeedMulを使う）。
+	 */
+	float GetAttackSpeedMul() const;
+	/**
+	 * ボスの現在のアニメーション再生速度倍率を取得する（EmotionSystem由来。1.0fが等倍）
+	 * 攻撃速度(GetAttackSpeedMul)とは独立に調整できる演出用の値。boss_->PlayAnimation()に渡す。
+	 */
+	float GetAnimationSpeedMul() const;
+	/**
+	 * ボスの現在のエフェクト再生速度倍率を取得する（EmotionSystem由来。1.0fが等倍）
+	 * 攻撃速度(GetAttackSpeedMul)とは独立に調整できる演出用の値。EffectManager::PlayEffect()に渡す。
+	 */
+	float GetEffectSpeedMul() const;
 
 
 public:
@@ -236,6 +254,7 @@ private:
 	float shotTime_ = 0.0f; //!< タスクスケジューラの次の処理までの時間
 	float attackDeleyTime = 0.0f; //!< 攻撃までの時間
 	uint8_t shotCount_ = 0; //!< 攻撃回数
+	float attackSpeedMul_ = 1.0f; //!< Enter()冒頭で取得する攻撃速度倍率。Setup()内の[timing]計算で使う
 
 	
 private:

@@ -15,7 +15,6 @@
 
 #include "src/UI/Layout.h"
 #include "src/UI/InGameMenu.h"
-#include "src/UI/EmotionStatusIconMenu.h"
 
 
 InGameScene::InGameScene()
@@ -31,7 +30,6 @@ InGameScene::~InGameScene()
 {
 	BattleManager::Get().DestroyInstance();		//BattleManagerのインスタンスを破棄
 	delete layout_;
-	delete emotionStatusIconLayout_;
 	DeleteGO(pouseMenu_);
 }
 
@@ -41,9 +39,6 @@ bool InGameScene::Start()
 	// レイアウト生成
 	layout_ = new Layout();
 	layout_->Initialize<InGameMenu>("Assets/ui/layout/InGameMenu.json");
-
-	emotionStatusIconLayout_ = new Layout();
-	emotionStatusIconLayout_->Initialize<EmotionStatusIconMenu>("Assets/ui/layout/EmotionStatusIcon.json");
 
 	// インゲームBGM再生
 	SoundManager::Get().PlayBGM(enSoundKind_InGame);
@@ -57,7 +52,6 @@ void InGameScene::Update()
 	BattleManager::Get().Update();		//BattleManagerの更新
 
 	layout_->Update();
-	emotionStatusIconLayout_->Update();
 
 
 	// ポーズメニューの呼び出し
@@ -100,7 +94,6 @@ void InGameScene::Render(RenderContext& rc)
 		return;
 	}
 	layout_->Render(rc);
-	emotionStatusIconLayout_->Render(rc);
 }
 
 

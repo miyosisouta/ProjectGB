@@ -40,6 +40,14 @@ namespace nsK2EngineLow {
 			m_effect.Stop();
 		}
 		/// <summary>
+		/// 再生速度を設定（1.0が等倍）。
+		/// </summary>
+		/// <param name="speed">再生速度。</param>
+		void SetSpeed(float speed)
+		{
+			m_effect.SetSpeed(speed);
+		}
+		/// <summary>
 		/// 座標を設定。
 		/// </summary>
 		/// <param name="position">座標。/param>

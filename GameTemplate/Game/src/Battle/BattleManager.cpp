@@ -173,6 +173,10 @@ BattleManager::BattleManager()
 		CollisionHitManager::Get().onDamageNotify = [this](int damage, DamageNotifyType type, bool isCritical)
 			{
 				PushDamageNotify(damage, type, isCritical);
+#ifdef K2_DEBUG
+				// todo for test : ボスがプレイヤーに与えたダメージ量を記録する（値の視覚化用）
+				if (type == DamageNotifyType::TakeHit) { lastBossDamageToPlayer_ = damage; }
+#endif
 			};
 	}
 }
@@ -230,15 +234,16 @@ void BattleManager::Update()
 		case GameState::Playing:
 		{
 			// GamePhaseManager の遅延初期化
-			// コンストラクタ時点では Player::Start() が未完了のため、
+			// コンストラクタ時点では BossCharacter::Start() が未完了のため、
 			// Playing に入った最初のフレームで Init() する
 			if (!gamePhaseManagerInitialized_)
 			{
-				auto* playerStatus = player_->GetStatus()->As<PlayerStatus>();
-				if (playerStatus && boss_->GetBoss())
+				auto* boss = boss_->GetBoss();
+				auto* bossStatus = boss ? boss->GetStatus()->As<BossStatus>() : nullptr;
+				if (bossStatus)
 				{
-					gamePhaseManager_.Init(boss_->GetBoss(), &playerStatus->GetEmotionSystem());
-					emotionEffectObserver_.Init(player_, &playerStatus->GetEmotionSystem());
+					gamePhaseManager_.Init(boss, &bossStatus->GetEmotionSystem());
+					emotionEffectObserver_.Init(boss, &bossStatus->GetEmotionSystem());
 					gamePhaseManagerInitialized_ = true;
 				}
 			}
@@ -360,17 +365,39 @@ void BattleManager::Render(RenderContext& rc)
 	AttackObjectManager::Get().Render(rc);
 
 #ifdef K2_DEBUG
-	// todo for test : 値の視覚化（感情レベル・攻撃力の数値確認）
-	if (auto* playerStatus = player_->GetStatus()->As<PlayerStatus>())
+	// todo for test : 値の視覚化（ボスの攻撃力・攻撃速度倍率・被ダメージ倍率・プレイヤーへの与ダメージを表示する）
+	if (auto* boss = boss_->GetBoss())
 	{
-		int attack    = playerStatus->GetAttack();
-		int emotionLv = static_cast<int>(playerStatus->GetEmotionSystem().GetCurrentLevel());
-		wchar_t buf[64];
-		swprintf_s(buf, L"ATK:%d  EmotionLv:%d", attack, emotionLv);
-		debugEmotionText_.SetPosition(400.0f, 100.0f, 0.0f);
-		debugEmotionText_.SetColor(0.0f, 0.0f, 0.0f, 1.0f);
-		debugEmotionText_.SetText(buf);
-		debugEmotionText_.Draw(rc);
+		if (auto* bossStatus = boss->GetStatus()->As<BossStatus>())
+		{
+			wchar_t atkBuf[64];
+			swprintf_s(atkBuf, L"BossATK      : %d", bossStatus->GetAttack());
+			debugBossAttackText_.SetPosition(300.0f, 300.0f, 0.0f);
+			debugBossAttackText_.SetColor(1.0f, 1.0f, 1.0f, 1.0f);
+			debugBossAttackText_.SetText(atkBuf);
+			debugBossAttackText_.Draw(rc);
+
+			wchar_t spdBuf[64];
+			swprintf_s(spdBuf, L"BossSpeedMul : %.2f", bossStatus->GetAttackSpeedMul());
+			debugBossAttackSpeedText_.SetPosition(300.0f, 200.0f, 0.0f);
+			debugBossAttackSpeedText_.SetColor(1.0f, 1.0f, 1.0f, 1.0f);
+			debugBossAttackSpeedText_.SetText(spdBuf);
+			debugBossAttackSpeedText_.Draw(rc);
+
+			wchar_t dmgBuf[64];
+			swprintf_s(dmgBuf, L"BossDamageMul: %.2f", bossStatus->GetDamageTakenMul());
+			debugBossDamageTakenText_.SetPosition(300.0f, 100.0f, 0.0f);
+			debugBossDamageTakenText_.SetColor(1.0f, 1.0f, 1.0f, 1.0f);
+			debugBossDamageTakenText_.SetText(dmgBuf);
+			debugBossDamageTakenText_.Draw(rc);
+
+			wchar_t dealtBuf[64];
+			swprintf_s(dealtBuf, L"BossDamageDealt: %d", lastBossDamageToPlayer_);
+			debugBossDamageDealtText_.SetPosition(300.0f, 0.0f, 0.0f);
+			debugBossDamageDealtText_.SetColor(1.0f, 1.0f, 1.0f, 1.0f);
+			debugBossDamageDealtText_.SetText(dealtBuf);
+			debugBossDamageDealtText_.Draw(rc);
+		}
 	}
 #endif
 }
