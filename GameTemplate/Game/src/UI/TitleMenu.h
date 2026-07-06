@@ -34,4 +34,6 @@ public:
 	{
 		return isAbuttonEnabled;
 	}
+	/** キラキラを消す */
+	void StopEffect();
 };

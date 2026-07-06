@@ -212,3 +212,9 @@ bool TitleMenu::IsSelectExit() const
 	// 2は「おわり」なので
 	return selector_->GetValue() == 2;
 }
+
+void TitleMenu::StopEffect()
+{
+	effectRender->Reset();
+	effectRenderB->Reset();
+}

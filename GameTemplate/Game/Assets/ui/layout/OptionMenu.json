@@ -10,10 +10,8 @@
         "scale": [1, 1, 1]
       },
 
-
-
       {
-        "coment": "タイトル:アイコン",
+        "coment": "設定:アイコン",
         "type": "UIIcon",
         "name": "title_icon",
         "asset": "Assets/ui/optionUI/title/haguruma.DDS",
@@ -25,7 +23,7 @@
         "color": [1, 1, 1, 1]
       },
       {
-        "coment": "タイトル:文字",
+        "coment": "設定:文字",
         "type": "UIIcon",
         "name": "title_ward",
         "asset": "Assets/ui/optionUI/title/title_text.DDS",

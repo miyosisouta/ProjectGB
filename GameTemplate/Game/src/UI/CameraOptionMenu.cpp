@@ -16,7 +16,6 @@ namespace
 	static constexpr int CAMERA_SENS_TYPE = 0;
 	static constexpr int CAMERA_LENGTH_TYPE = 1;
 	static constexpr int CAMERA_INVERSION_TYPE = 2;
-	//static constexpr int DEFAULT_CAMERA_TYPE = 3;
 
 	// カメラ距離の選択
 	static int selectDistanceType = 0;
@@ -132,52 +131,19 @@ void CameraOptionMenu::Update()
 		}
 	}
 
-
-
 	// デフォルト
-	//if (selectCameraType == DEFAULT_CAMERA_TYPE) {
-		if (g_pad[0]->IsTrigger(enButtonX)) {
-			// デフォルトの値
-			sensitiityStage_ = static_cast<float>(SENSITIVITY_DEFAULT_STAGE);
-			selectDistanceType = BUTTON_DISTANCE_NORMAL;
-			selectInversionType = BUTTON_OFF;
+	if (g_pad[0]->IsTrigger(enButtonX)) {
+		// デフォルトの値
+		sensitiityStage_ = static_cast<float>(SENSITIVITY_DEFAULT_STAGE);
+		selectDistanceType = BUTTON_DISTANCE_NORMAL;
+		selectInversionType = BUTTON_OFF;
 
-			CameraManager::Get().SetSensitivityStage(SENSITIVITY_DEFAULT_STAGE);
-			CameraManager::Get().SetDistance(DISTANCE_NORMAL);
-			CameraManager::Get().SetInvert(INVERT_OFF);
+		CameraManager::Get().SetSensitivityStage(SENSITIVITY_DEFAULT_STAGE);
+		CameraManager::Get().SetDistance(DISTANCE_NORMAL);
+		CameraManager::Get().SetInvert(INVERT_OFF);
 
-			SoundManager::Get().PlaySE(enSoundKind_Menu_Decide);
-		}
-
-	//	// 選択中の時にでかくなる
-	//	auto* buttonCanvs = GetUI<UICanvas>(Hash32("DefaultIcon"));
-	//	buttonCanvs->transform.localScale = Vector3(1.2f);
-	//	// 背景の色が変わる
-	//	auto* normalBack = GetUI<UIIcon>(Hash32("DefaultIcon/Button_Default_back"));
-	//	auto* selectColorDummy = GetUI<UIDummy>(Hash32("DefaultIcon/BackSelectColorDummy"));
-	//	if (normalBack) {
-	//		normalBack->color = selectColorDummy->color;
-	//	}
-	//	// 枠の色が変わる
-	//	auto* nomalFlame = GetUI<UIIcon>(Hash32("DefaultSoundIcon/Button_Default_flame"));
-	//	auto* selectFlameColorDummy = GetUI<UIDummy>(Hash32("DefaultIcon/FlameSelectColorDummy"));
-	//	if (nomalFlame) {
-	//		nomalFlame->color = selectFlameColorDummy->color;
-	//	}
-	//}
-	//else {
-	//	auto* buttonCanvs = GetUI<UICanvas>(Hash32("DefaultIcon"));
-	//	buttonCanvs->transform.localScale = Vector3(1.0f);
-	//	// 背景の色が変わる
-	//	auto* normalBack = GetUI<UIIcon>(Hash32("DefaultIcon/Button_Default_back"));
-	//	auto* normalColorDummy = GetUI<UIDummy>(Hash32("DefaultIcon/BackNormalColorDummy"));
-	//	normalBack->color = normalColorDummy->color;
-	//	// 枠の色が変わる
-	//	auto* nomalFlame = GetUI<UIIcon>(Hash32("DefaultIcon/Button_Default_flame"));
-	//	auto* selectFlameColorDummy = GetUI<UIDummy>(Hash32("DefaultIcon/FlameNormalColorDummy"));
-	//	nomalFlame->color = selectFlameColorDummy->color;
-
-	//}
+		SoundManager::Get().PlaySE(enSoundKind_Menu_Decide);
+	}
 
 
 	// 選択中
@@ -397,8 +363,7 @@ void CameraOptionMenu::UpdateSensitivityBar(const uint32_t gaugeId, const int vo
 		}
 	}
 
-	// 段階を実数値にして変換
-	//const float sensitivityValue = SENSITIVITY_BASE + (sensitiityStage_ * SENSITIVITY_STEP);
+	// カメラ感度の取得
 	CameraManager::Get().SetSensitivityStage(static_cast<int>(sensitiityStage_));
 
 	// ゲージはデフォルトに戻すがあるので、選択中限らず更新する

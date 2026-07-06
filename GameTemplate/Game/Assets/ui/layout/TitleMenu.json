@@ -31,7 +31,7 @@
         "type": "UIIcon",
         "name": "Title_inu",
         "asset": "Assets/ui/titleUI/inu.DDS",
-        "width": 3500,
+        "width": 350,
         "height": 220,
         "position": [240, 315, 0],
         "scale": [1, 1, 1],

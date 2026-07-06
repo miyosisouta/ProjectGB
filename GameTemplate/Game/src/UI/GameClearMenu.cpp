@@ -244,7 +244,6 @@ void GameClearMenu::ShowMissionBackground(int index)
 				// 現在のカウントを設定
 				const int count = mission->GetCurrentCount();
 				countDigit->SetNumber(count);
-				//countDigit->transform.localPosition.x = (count >= 10) ? 105.0f : 140.0f;
 			}
 		}
 	}

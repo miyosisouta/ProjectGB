@@ -506,7 +506,7 @@
         "type": "UIPrefab",
         "name": "changeIcon",
         "source": "Assets/ui/layout/ChangeButton.json",
-        "position": [120, -500, 0],
+        "position": [325, -500, 0],
         "scale": [1, 1, 1],
         "color": [0, 0, 0, 1]
       },
@@ -515,7 +515,7 @@
         "type": "UIPrefab",
         "name": "selectIcon",
         "source": "Assets/ui/layout/SelectButton.json",
-        "position": [340, -500, 0],
+        "position": [120, -500, 0],
         "scale": [1, 1, 1],
         "color": [0, 0, 0, 1]
       },

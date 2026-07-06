@@ -76,35 +76,6 @@ void SoundOptionMenu::Update()
 			SoundManager::Get().PlaySE(enSoundKind_Menu_Decide);
 		}
 
-	//	// 選択中の時にでかくなる
-	//	auto* buttonCanvs = GetUI<UICanvas>(Hash32("DefaultSoundIcon"));
-	//	buttonCanvs->transform.localScale = Vector3(1.2f);
-	//	// 背景の色が変わる
-	//	auto* normalBack = GetUI<UIIcon>(Hash32("DefaultSoundIcon/Button_Default_back"));
-	//	auto* selectColorDummy = GetUI<UIDummy>(Hash32("DefaultSoundIcon/BackSelectColorDummy"));
-	//	if (normalBack){
-	//		normalBack->color = selectColorDummy->color;
-	//	}
-	//	// 枠の色が変わる
-	//	auto* nomalFlame = GetUI<UIIcon>(Hash32("DefaultSoundIcon/Button_Default_flame"));
-	//	auto* selectFlameColorDummy = GetUI<UIDummy>(Hash32("DefaultSoundIcon/FlameSelectColorDummy"));
-	//	if (nomalFlame) {
-	//		nomalFlame->color = selectFlameColorDummy->color;
-	//	}
-	//}
-	//else {
-	//	auto* buttonCanvs = GetUI<UICanvas>(Hash32("DefaultSoundIcon"));
-	//	buttonCanvs->transform.localScale = Vector3(1.0f);
-	//	// 背景の色が変わる
-	//	auto* normalBack = GetUI<UIIcon>(Hash32("DefaultSoundIcon/Button_Default_back"));
-	//	auto* normalColorDummy = GetUI<UIDummy>(Hash32("DefaultSoundIcon/BackNormalColorDummy"));
-	//	normalBack->color = normalColorDummy->color;
-	//	// 枠の色が変わる
-	//	auto* nomalFlame = GetUI<UIIcon>(Hash32("DefaultSoundIcon/Button_Default_flame"));
-	//	auto* selectFlameColorDummy = GetUI<UIDummy>(Hash32("DefaultSoundIcon/FlameNormalColorDummy"));
-	//	nomalFlame->color = selectFlameColorDummy->color;
-	//	
-	//}
 
 	// 選択中
 	{
