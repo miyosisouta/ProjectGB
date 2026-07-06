@@ -44,14 +44,7 @@ void EmotionSystem::OnAttackHitPlayer()
 {
     int current = static_cast<int>(currentLevel_);
 
-    // 動揺中（Debuff）に攻撃が当たったら、動揺が晴れて即 Normal に戻す（1段階ずつではない）
-    if (current < 0)
-    {
-        ChangeLevel(EmotionLevel::Normal);
-        return;
-    }
-
-    // 通常/強気中は1段階強気になる（上限 Buff3 でクランプ）
+    // 動揺中（Debuff）に攻撃が当たったら1段階だけ動揺が晴れる。通常/強気中は1段階強気になる（上限 Buff3 でクランプ）
     // windows.h の min マクロと衝突するため () で囲んで展開を防ぐ
     int next = (std::min)(current + 1, LevelMax);
     ChangeLevel(static_cast<EmotionLevel>(next));

@@ -11,6 +11,8 @@
 #include "src/Actor/Player.h"
 #include "src/Actor/BossCharacter.h"
 #include "src/Actor/ActorStatus.h"
+#include "src/Emotion/EmotionSystem.h"
+#include "src/Core/ParameterManager.h"
 
 
 namespace
@@ -104,6 +106,9 @@ void InGameMenu::Update()
 			bossMaxHP = bossStatus->GetMaxHP();
 
 			isTakeDamageBoss = bossStatus->IsTakeDamage();
+
+			// ボスの感情バフ/デバフアイコン
+			UpdateEmotionBuffIcon(static_cast<int>(bossStatus->GetEmotionSystem().GetCurrentLevel()));
 		}
 	}
 
@@ -373,6 +378,37 @@ void InGameMenu::InitializeLogic()
 	UIAnimationFactory::Attach<UITranslateOffsetAnimation>(bossHPCanvas, Hash32("HitBossPositionUp2"));
 	bossHitHPPositionSequence_ = std::make_unique<UIAnimationSequence>();
 	bossHitHPPositionSequence_->Add(Hash32("HitBossPositionUp")).Add(Hash32("HitBossPositionDown"));
+
+	// ボスの感情バフ/デバフアイコン：初期状態は全部非表示にし、表示/非表示それぞれのアニメーションを組む
+	{
+		UICanvas* emotionBuffCanvas[EmotionBuffKindCount] = {
+			GetUI<UICanvas>(Hash32("EmotionStatusIcon/DamageTakenMul")),
+			GetUI<UICanvas>(Hash32("EmotionStatusIcon/AttackSpeed")),
+			GetUI<UICanvas>(Hash32("EmotionStatusIcon/AttackPower")),
+		};
+		for (int i = 0; i < EmotionBuffKindCount; i++)
+		{
+			auto* canvas = emotionBuffCanvas[i];
+			if (!canvas) { continue; }
+
+			canvas->isDraw = false;
+
+			// 表示中のポップ演出（拡大->縮小）：背景・縁・アイコン・数字はCanvasの子なのでCanvasの拡縮だけで全部まとめて動く
+			UIAnimationFactory::Attach<UIScaleAnimation>(canvas, Hash32("emotion_icon_scaleUp"));
+			UIAnimationFactory::Attach<UIScaleAnimation>(canvas, Hash32("emotion_icon_scaleDown"));
+			emotionIconPopSequence_[i] = std::make_unique<UIAnimationSequence>();
+			emotionIconPopSequence_[i]->Add(Hash32("emotion_icon_scaleUp")).Add(Hash32("emotion_icon_scaleDown"));
+
+			// 非表示化のフェードアウト演出：終わったらisDrawを戻して次回の表示に備える
+			UIAnimationFactory::Attach<UIColorAnimation>(canvas, Hash32("emotion_icon_fadeOut"));
+			emotionIconFadeOutSequence_[i] = std::make_unique<UIAnimationSequence>();
+			emotionIconFadeOutSequence_[i]->Add(Hash32("emotion_icon_fadeOut")).OnComplete([canvas]()
+				{
+					canvas->isDraw = false;
+					canvas->color = Vector4::White;
+				});
+		}
+	}
 
 	// スタミナ
 	staminaGauge_.Init(150.0, 150.0);
@@ -757,5 +793,109 @@ void InGameMenu::UpdateButtonWord(const uint32_t enAction)
 	}
 	if (key == enButtonY) {
 		buttonY->isDraw = true;
+	}
+}
+
+
+void InGameMenu::UpdateEmotionBuffIcon(const int currentLevel)
+{
+	UICanvas* canvas[EmotionBuffKindCount] = {
+		GetUI<UICanvas>(Hash32("EmotionStatusIcon/DamageTakenMul")),
+		GetUI<UICanvas>(Hash32("EmotionStatusIcon/AttackSpeed")),
+		GetUI<UICanvas>(Hash32("EmotionStatusIcon/AttackPower")),
+	};
+
+	// レベルが変化したときだけ表示構成(表示/非表示・並び)を組み直す。変化が無ければアニメーションの再生だけ進める
+	if (currentLevel != lastEmotionLevel_)
+	{
+		bool isActive[EmotionBuffKindCount] = { false, false, false };
+
+		const auto* param = ParameterManager::Get().GetEmotionParam();
+		if (param)
+		{
+			// modifiers[] のインデックス = レベル + 3 (Debuff3=-3 〜 Buff3=3)
+			// そのレベルで基準値(1.0)から変化している倍率だけを「表示対象のバフ/デバフ」とみなす
+			const auto& modifier = param->modifiers[currentLevel + 3];
+			constexpr float kEpsilon = 0.0001f;
+			isActive[static_cast<int>(EmotionBuffKind::DamageTakenMul)] = std::abs(modifier.damageTakenMul - 1.0f) > kEpsilon;
+			isActive[static_cast<int>(EmotionBuffKind::AttackSpeed)]    = std::abs(modifier.attackSpeedMul - 1.0f) > kEpsilon;
+			isActive[static_cast<int>(EmotionBuffKind::AttackPower)]    = std::abs(modifier.attackMul - 1.0f)      > kEpsilon;
+		}
+
+		// enum値が小さいものほどHPバー右端の起点(origin)に近い側から詰めて並べる
+		static constexpr float kSlotOffsetX[EmotionBuffKindCount] = { 0.0f, -55.0f, -110.0f };
+		// 段階数値：試験的にFontRender(UIText)3つではなくUIDigit1つだけで表示する（Timerの数字表示と同じ仕組み）
+		auto* levelDigit = GetUI<UIDigit>(Hash32("EmotionStatusIcon/LevelDigit"));
+		const uint32_t backgroundKey[EmotionBuffKindCount] = {
+			Hash32("EmotionStatusIcon/DamageTakenMul/Background"),
+			Hash32("EmotionStatusIcon/AttackSpeed/Background"),
+			Hash32("EmotionStatusIcon/AttackPower/Background"),
+		};
+		const uint32_t borderKey[EmotionBuffKindCount] = {
+			Hash32("EmotionStatusIcon/DamageTakenMul/Border"),
+			Hash32("EmotionStatusIcon/AttackSpeed/Border"),
+			Hash32("EmotionStatusIcon/AttackPower/Border"),
+		};
+
+		// 段階数値：ボスの感情レベルの絶対値をそのまま全アイコン共通で使う
+		const int displayStage = std::abs(currentLevel);
+
+		// バフ中(強気)は水色、デバフ中(動揺)は赤色に背景・縁だけ色付けする（アイコン自体の色は変えない）
+		// バフ側は緑を減らして青寄り・少し濃いめに、デバフ側は緑と青を上げて少し薄めに調整
+		static const Vector4 kBuffTintColor(0.3f, 0.65f, 1.0f, 1.0f);
+		static const Vector4 kDebuffTintColor(1.0f, 0.35f, 0.35f, 1.0f);
+		const Vector4& activeTintColor = (currentLevel > 0) ? kBuffTintColor : kDebuffTintColor;
+
+		int slotIndex = 0;
+		for (int kind = 0; kind < EmotionBuffKindCount; kind++)
+		{
+			auto* kindCanvas = canvas[kind];
+			if (!kindCanvas) { continue; }
+
+			if (isActive[kind])
+			{
+				// アクティブなものだけ起点から左方向へ詰めて配置する（瞬時にスナップ）
+				kindCanvas->transform.localPosition.x = kSlotOffsetX[slotIndex];
+				slotIndex++;
+
+				// バフ/デバフの色付けは背景・縁だけに適用する（毎回更新することでForceSetLevelでの切り替わりにも対応）
+				auto* background = GetUI<UIIcon>(backgroundKey[kind]);
+				if (background) { background->color = activeTintColor; }
+				auto* border = GetUI<UIIcon>(borderKey[kind]);
+				if (border) { border->color = activeTintColor; }
+
+				if (!emotionBuffWasActive_[kind])
+				{
+					// 新規表示：フェードアウト済みでisDraw/alphaが落ちている可能性があるので明示的に戻す
+					kindCanvas->isDraw = true;
+					kindCanvas->color = Vector4::White;
+				}
+				// 変化があった時点で見えているアイコンは全部ポップさせる（新規表示・構成変化どちらも同じ演出）
+				if (emotionIconPopSequence_[kind]) { emotionIconPopSequence_[kind]->Play(kindCanvas); }
+			}
+			else if (emotionBuffWasActive_[kind])
+			{
+				// 表示中だったものが今回消える：フェードアウトさせる（完了時にisDrawを戻す）
+				if (emotionIconFadeOutSequence_[kind]) { emotionIconFadeOutSequence_[kind]->Play(kindCanvas); }
+			}
+
+			emotionBuffWasActive_[kind] = isActive[kind];
+		}
+
+		// slotIndexはループを抜けた時点でアクティブなバフ/デバフの数と一致する
+		if (levelDigit)
+		{
+			const bool anyActive = (slotIndex > 0);
+			levelDigit->isDraw = anyActive;
+			if (anyActive) { levelDigit->SetNumber(displayStage); }
+		}
+
+		lastEmotionLevel_ = currentLevel;
+	}
+
+	for (int i = 0; i < EmotionBuffKindCount; i++)
+	{
+		if (emotionIconPopSequence_[i])     { emotionIconPopSequence_[i]->Update(g_gameTime->GetFrameDeltaTime()); }
+		if (emotionIconFadeOutSequence_[i]) { emotionIconFadeOutSequence_[i]->Update(g_gameTime->GetFrameDeltaTime()); }
 	}
 }

@@ -53,7 +53,7 @@ public:
     void Init();
 
     /** ボスの特定攻撃（HitStamp・チャージレーザー・SpinAttack・ThrowRock）がプレイヤーにヒットしたときに呼ぶ */
-    /** 動揺中（Debuff）→調子の悪さが帳消しになりNormal、通常/強気中（Buff）→1段階強気になる */
+    /** 動揺中（Debuff）→1段階だけ動揺が晴れる、通常/強気中（Buff）→1段階強気になる（どちらも1段階ずつの変化、上限 Buff3 でクランプ） */
     void OnAttackHitPlayer();
 
     /** プレイヤーのジャスト回避が成立したときに呼ぶ */

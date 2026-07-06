@@ -272,6 +272,14 @@
         "scale": [1, 1, 1]
       },
       {
+        "comment": "ボスのバフ/デバフアイコン（HPバー右端の少し上を起点に並ぶ）",
+        "type": "UIPrefab",
+        "name": "EmotionStatusIcon",
+        "source": "Assets/ui/layout/EmotionStatusIcon.json",
+        "position": [450, 470, 0],
+        "scale": [1, 1, 1]
+      },
+      {
         "comment": "ボタン表示:回避",
         "type": "UIPrefab",
         "name": "InGame_ButtonUI_Run",

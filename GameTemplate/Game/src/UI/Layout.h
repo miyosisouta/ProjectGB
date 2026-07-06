@@ -94,6 +94,16 @@ private:
         const nlohmann::json& item,
         const std::string& prefix, int depth = 0);
 
+    /**
+     * 同じJSON内の "elements" をそのまま子Canvasとして埋め込む（別ファイルを必要としないUIPrefab）
+     * まとめて拡縮・色を変えたい要素群を、ファイルを分けずに1つのJSON内でグループ化したい場合に使う
+     * @param prefix 親から引き継ぐスコープ名（ネスト時に連結される）
+     * @param depth 再帰の深さ（無限ループ防止用）
+     */
+    UIBase* LoadGroup(UICanvas* parentCanvas, const uint32_t key,
+        const nlohmann::json& item,
+        const std::string& prefix, int depth = 0);
+
     /** プレハブの最大ネスト深度 */
     static const int kMaxPrefabDepth = 8;
 };
