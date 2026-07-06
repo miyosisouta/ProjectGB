@@ -1,23 +1,23 @@
 ﻿#include "stdafx.h"
 #include "EmotionEffectObserver.h"
 #include "EmotionSystem.h"
-#include "src/Actor/Player.h"
+#include "src/Actor/BossCharacter.h"
 #include "src/Effect/EffectManager.h"
 #include "src/Effect/Types.h"
 #include "src/Core/ParameterManager.h"
 
-void EmotionEffectObserver::Init(Player* player, EmotionSystem* emotionSystem)
+void EmotionEffectObserver::Init(BossCharacter* boss, EmotionSystem* emotionSystem)
 {
-    player_ = player;
+    boss_ = boss;
 
     // JSONパラメーターからエフェクトスケールを取得する
     const auto* param = ParameterManager::Get().GetEmotionParam();
     if (param)
     {
-        buffEffectScale_    = param->buffEffectScale;
-        debuffEffectScale_  = param->debuffEffectScale;
-        buffEffectOffset_   = param->buffEffectOffset;
-        debuffEffectOffset_ = param->debuffEffectOffset;
+        buffEffectScale_     = param->buffEffectScale;
+        debuffEffectScale_   = param->debuffEffectScale;
+        buffEffectOffsetY_   = param->buffEffectOffsetY;
+        debuffEffectOffsetY_ = param->debuffEffectOffsetY;
     }
 
     // 自分をオブザーバーとして登録する
@@ -26,7 +26,7 @@ void EmotionEffectObserver::Init(Player* player, EmotionSystem* emotionSystem)
 
 void EmotionEffectObserver::Update()
 {
-    if (!player_ || currentEffectHandle_ == INVALID_EFFECT_HANDLE) { return; }
+    if (!boss_ || currentEffectHandle_ == INVALID_EFFECT_HANDLE) { return; }
 
     effectFrameTimer_++;
     if (effectFrameTimer_ >= kEffectFollowMaxFrames)
@@ -37,36 +37,38 @@ void EmotionEffectObserver::Update()
         return;
     }
 
-    // 再生中エフェクトをプレイヤー位置に追従させる
-    EffectManager::Get().SetEffectPosition(currentEffectHandle_, player_->GetTransformPosition());
+    // 再生中エフェクトをボス位置に追従させる
+    EffectManager::Get().SetEffectPosition(currentEffectHandle_, boss_->GetTransformPosition());
 }
 
 void EmotionEffectObserver::OnEmotionChanged(int oldLevel, int newLevel)
 {
-    if (!player_) { return; }
+    if (!boss_) { return; }
 
-    Vector3 pos = player_->GetTransformPosition();
+    Vector3 pos = boss_->GetTransformPosition();
 
     effectFrameTimer_ = 0;
 
     if (newLevel > oldLevel)
     {
-        // レベルが上がった → Buff エフェクト
+        // レベルが上がった → 強気化エフェクト
         float s = buffEffectScale_;
+        pos.y += buffEffectOffsetY_;
         currentEffectHandle_ = EffectManager::Get().PlayEffect(
             enEffectKind_Buff,
-            pos + buffEffectOffset_,
+            pos,
             Quaternion::Identity,
             { s, s, s }
         );
     }
     else
     {
-        // レベルが下がった → Debuff エフェクト
+        // レベルが下がった → 動揺エフェクト
         float s = debuffEffectScale_;
+        pos.y += debuffEffectOffsetY_;
         currentEffectHandle_ = EffectManager::Get().PlayEffect(
             enEffectKind_Debuff,
-            pos + debuffEffectOffset_,
+            pos,
             Quaternion::Identity,
             { s, s, s }
         );

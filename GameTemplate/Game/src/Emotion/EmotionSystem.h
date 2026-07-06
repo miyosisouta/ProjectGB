@@ -1,10 +1,12 @@
 ﻿#pragma once
-#include "IStatusModifier.h"
+#include "IBossStatusModifier.h"
 #include <vector>
 
 class IEmotionObserver;
 
-// 感情の7段階（Debuff3=-3 〜 Normal=0 〜 Buff3=3）
+// ボスの感情の7段階（Debuff3=-3 〜 Normal=0 〜 Buff3=3）
+// Debuff側 = 動揺（プレイヤーにジャスト回避されて焦る）
+// Buff側   = 強気（プレイヤーに特定の攻撃を当てて調子に乗る）
 // int としてそのまま計算できるよう値を段階番号と対応させている
 enum class EmotionLevel : int
 {
@@ -17,17 +19,22 @@ enum class EmotionLevel : int
     Buff3   =  3,
 };
 
-// 各感情段階のステータス倍率
+// 各段階のステータス倍率
 struct EmotionModifier
 {
-    float attackMul = 1.0f;  //!< 攻撃力倍率
-    float speedMul  = 1.0f;  //!< 移動速度倍率
+    float attackMul          = 1.0f;  //!< 攻撃力倍率
+    float attackSpeedMul     = 1.0f;  //!< 攻撃速度倍率（taskSchedulerの秒数・攻撃間隔に反映。演出速度とは独立）
+    float damageTakenMul     = 1.0f;  //!< 被ダメージ倍率
+    float animationSpeedMul  = 1.0f;  //!< アニメーション再生速度倍率（攻撃速度とは独立に調整できる演出用の値）
+    float effectSpeedMul     = 1.0f;  //!< エフェクト再生速度倍率（攻撃速度とは独立に調整できる演出用の値）
 };
 
-// 感情システム
-// プレイヤーの感情段階を管理し、ステータス倍率を IStatusModifier 経由で提供する
-// ジャスト回避 / 強攻撃被弾 / HP閾値の3ルートで段階が変化する
-class EmotionSystem : public IStatusModifier
+// ボスの感情システム（コアシステム）
+// 旧来はプレイヤーにバフ・デバフを施していたが、今回はボス自身の感情（強気⇔動揺）として管理する。
+// 「見た目や行動そのものが変化した方が分かりやすい」という理由からボス側の状態として実装している。
+// BossStatus が IBossStatusModifier* のリストにこれを登録し、攻撃力・攻撃速度・被ダメージの倍率を提供する。
+// 各段階の倍率は EmotionParameter.json 側で自由に調整できる（InitModifierTable() の値は JSON 未読み込み時のフォールバック）。
+class EmotionSystem : public IBossStatusModifier
 {
 public:
     static constexpr int LevelMin = -3;  //!< 下限（Debuff3）
@@ -36,20 +43,22 @@ public:
 private:
     EmotionLevel    currentLevel_ = EmotionLevel::Normal;  //!< 現在の感情レベル
     EmotionModifier modifierTable_[7];                     //!< 倍率テーブル。インデックス = static_cast<int>(level) + 3
-    std::vector<IEmotionObserver*> observers_;             //!< UI・エフェクトへの通知リスト（Observerパターン）
+    std::vector<IEmotionObserver*> observers_;              //!< UI・エフェクトへの通知リスト（Observerパターン）
 
 public:
     EmotionSystem();
     ~EmotionSystem() = default;
 
-    /** ParameterManager から倍率テーブルを上書きロードする。PlayerStatus::Init() から呼ぶ */
+    /** ParameterManager から倍率テーブルを上書きロードする。BossStatus::Init() から呼ぶ */
     void Init();
 
-    /** ジャスト回避成功時に呼ぶ。デバフ中→Normal帳消し、通常/バフ中→1段階上昇 */
-    void OnJustAvoid();
+    /** ボスの特定攻撃（HitStamp・チャージレーザー・SpinAttack・ThrowRock）がプレイヤーにヒットしたときに呼ぶ */
+    /** 動揺中（Debuff）→調子の悪さが帳消しになりNormal、通常/強気中（Buff）→1段階強気になる */
+    void OnAttackHitPlayer();
 
-    /** 強攻撃ヒット時に呼ぶ（HitStamp・Spin・チャージレーザー）。バフ中→Normal帳消し、通常/デバフ中→1段階下降 */
-    void OnStrongAttackHit();
+    /** プレイヤーのジャスト回避が成立したときに呼ぶ */
+    /** 強気中（Buff）→調子の良さが帳消しになりNormal、通常/動揺中（Debuff）→1段階動揺が深まる */
+    void OnJustAvoidedByPlayer();
 
     /** HP閾値などで強制的にレベルをセットする（GamePhaseManager から呼ぶ） */
     void ForceSetLevel(EmotionLevel level);
@@ -64,11 +73,14 @@ public:
     void RemoveObserver(IEmotionObserver* observer);
 
     /************************************************/
-    /** IStatusModifier の実装                      */
+    /** IBossStatusModifier の実装                   */
     /************************************************/
-    // PlayerStatus の GetAttack() / GetMoveSpeedBase() から参照して倍率を適用する
-    float GetAttackMul() const override;
-    float GetSpeedMul()  const override;
+    // BossStatus の GetAttack() / GetAttackSpeedMul() / GetDamageTakenMul() / GetAnimationSpeedMul() / GetEffectSpeedMul() から参照して倍率を適用する
+    float GetAttackMul()         const override;
+    float GetAttackSpeedMul()    const override;
+    float GetDamageTakenMul()    const override;
+    float GetAnimationSpeedMul() const override;
+    float GetEffectSpeedMul()    const override;
 
 private:
     /** レベルを変更し、値が変わった場合のみ全 Observer に通知する */

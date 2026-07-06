@@ -1,7 +1,7 @@
 ﻿#pragma once
 #include "src/Core/ParameterManager.h"
 #include "src/Emotion/EmotionSystem.h"
-#include "src/Emotion/IStatusModifier.h"
+#include "src/Emotion/IBossStatusModifier.h"
 #include <vector>
 
 
@@ -27,8 +27,11 @@ struct CoolDown
         }
     }
 
-    /** スキル使用時に呼ぶ。タイマーを設定時間にセットしてカウント開始 */
-    void Activate() { coolTimer_ = coolDownTime_; }
+    /** 
+     * スキル使用時に呼ぶ。タイマーを設定時間にセットしてカウント開始
+     * speedMul : 攻撃速度倍率。大きいほどクールタイムが短くなる（ボスの調子システムなどから渡す） 
+     */
+    void Activate(float speedMul = 1.0f) { coolTimer_ = coolDownTime_ / ((speedMul > 0.0f) ? speedMul : 1.0f); }
 
     float GetTimer()    const { return coolTimer_; }            //!< 残り時間取得
     bool  CanUse()      const { return coolTimer_ <= 0.0f; }    //!< 使用可能か
@@ -61,7 +64,7 @@ struct SkillSlot
     void Update() { coolDown_.Update(); }
 
     /** スキル使用時に呼ぶ。クールダウンを開始させる */
-    void Activate() { coolDown_.Activate(); }
+    void Activate(float speedMul = 1.0f) { coolDown_.Activate(speedMul); }
 
     float GetMotionValues()     const { return motionValues_; }
     float GetCoolTimer()        const { return coolDown_.GetTimer(); }
@@ -111,11 +114,10 @@ public:
     ActorInitParam GetInitParam()              const { return initParam_; }
     int   GetHP()                              const { return hp_; }
     int   GetMaxHP()                           const { return maxHp_; }
-    // virtual：PlayerStatus/BossStatus でそれぞれ倍率を上乗せしてオーバーライドする
+    // virtual：PlayerStatus/BossStatus でそれぞれオーバーライドする
     virtual int   GetAttack()                  const { return attack_; }
     int   GetCritical()                        const { return critical_; }
     float GetCriticalDamageMultiplier()        const { return criticalDamageMultiplier_; }
-    // virtual：PlayerStatus でEmotionSystemの速度倍率を上乗せしてオーバーライドする
     virtual float GetMoveSpeedBase()           const { return moveSpeedBase_; }
     bool  IsHpDepleted()                const { return hp_ <= 0; } /* HPが0になったかを確認 : ルール設定時に使用 */
     bool  IsDead()                      const { return isDead_; } /* 死亡しているかを確認 : BattleManagerにてクリアかオーバーか確認するために使用 */
@@ -296,11 +298,14 @@ public:
     }
 
 public:
-    /** スキルを使用する。クールダウンを開始させる */
-    void Activate(const std::string& skillKey)
+    /** 
+     * スキルを使用する。クールダウンを開始させる 
+     * speedMul : 攻撃速度倍率。大きいほどクールタイムが短くなる（ボスの調子システムなどから渡す） 
+     */
+    void Activate(const std::string& skillKey, float speedMul = 1.0f)
     {
         auto it = slots_.find(skillKey);
-        if (it != slots_.end()) { it->second.Activate(); }
+        if (it != slots_.end()) { it->second.Activate(speedMul); }
     }
 
     /** スキルが使用可能か */
@@ -404,22 +409,9 @@ private:
     uint32_t          invincibleFlag_    = 0;     //!< 無敵フラグ（ビット演算）
     PlayerSkillStatus skillStatus_;               //!< スキルスロット＋クールダウン管理
 
-    // 感情システム（このPlayerStatusが所有する）
-    EmotionSystem emotionSystem_;
-
-    // ステータス修正子リスト（IStatusModifier* の非所有ポインタ）
-    // 現在は emotionSystem_ のみ登録されている
-    // 将来、装備バフやスキルバフを追加する際もこのリストに push_back するだけでよい
-    std::vector<IStatusModifier*> modifiers_;
-
 
 public:
-    PlayerStatus()
-    {
-        // EmotionSystem を修正子リストに登録する
-        // modifiers_ はポインタのリストなので emotionSystem_ のアドレスを持つだけ（所有しない）
-        modifiers_.push_back(&emotionSystem_);
-    }
+    PlayerStatus() {}
     ~PlayerStatus() {}
 
     /**
@@ -466,8 +458,6 @@ public:
 
         skillStatus_.Update();
         CharacterStatus::Update();
-
-        // todo for test : 値の視覚化（感情レベル・攻撃力 attack_ ・移動速度 moveSpeedBase_ / runSpeedBase_）
     }
 
 
@@ -508,9 +498,6 @@ public:
             moveSpeedBase_ = param->moveSpeedBase;
             runSpeedBase_ = param->runSpeedBase;
         }
-
-        // JSONから倍率テーブルを上書きロードする（コンストラクタ時点ではParameterManager未初期化のためここで呼ぶ）
-        emotionSystem_.Init();
     }
 
     /** スキルをスロットに装備する。Init() の後に呼ぶ */
@@ -540,35 +527,23 @@ public:
     float GetStaminaRecoverPerFrame()   const { return staminaRecoverPerFrame_; }
     float GetExhaustedRecoverPerFrame() const { return exhaustedRecoverPerFrame_; }
 
-    // 攻撃力を返す。modifiers_ の全倍率を掛け合わせて返す
     // DamageCalculator は ActorStatus* 経由でこれを呼ぶため virtual override が必須
     int GetAttack() const override
     {
-        float mul = 1.0f;
-        for (auto* m : modifiers_) { mul *= m->GetAttackMul(); }
-        return static_cast<int>(attack_ * mul);
+        return attack_;
     }
 
-    // 歩き速度を返す。modifiers_ の速度倍率を適用する
     float GetMoveSpeedBase() const override
     {
-        float mul = 1.0f;
-        for (auto* m : modifiers_) { mul *= m->GetSpeedMul(); }
-        return moveSpeedBase_ * mul;
+        return moveSpeedBase_;
     }
 
     /* 移動速度取得 */
-    // 走り速度を返す。modifiers_ の速度倍率を適用する
     float GetRunSpeedBase() const
     {
-        float mul = 1.0f;
-        for (auto* m : modifiers_) { mul *= m->GetSpeedMul(); }
-        return runSpeedBase_ * mul;
+        return runSpeedBase_;
     }
     float GetExhaustedSpeedRate()   const { return exhaustedSpeedRate_; }
-
-    // 感情システムへのアクセス（CollisionHitManager や GamePhaseManager から使う）
-    EmotionSystem& GetEmotionSystem() { return emotionSystem_; }
 
 
 public:
@@ -730,14 +705,23 @@ class BossStatus : public CharacterStatus
 private:
     BossSkillStatus skillStatus_; //!< スキルスロット＋クールダウン管理
 
-    // 激怒状態フラグ（HP50%以下で GamePhaseManager から有効化される）
-    bool  isEnraged_       = false;
-    // 激怒時の攻撃倍率。GamePhaseManager から調整しやすいよう定数ではなく変数で保持
-    float enrageAttackMul_ = 1.3f;
+    // ボスの感情システム（このBossStatusが所有する）
+    // プレイヤーの特定攻撃Hit/ジャスト回避/HP閾値の3ルートで強気⇔動揺の段階が変化する
+    EmotionSystem emotionSystem_;
+
+    // ステータス修正子リスト（IBossStatusModifier* の非所有ポインタ）
+    // 現在は emotionSystem_ のみ登録されている
+    // 将来、他の修正要因を追加する際もこのリストに push_back するだけでよい
+    std::vector<IBossStatusModifier*> modifiers_;
 
 
 public:
-    BossStatus()  {}
+    BossStatus()
+    {
+        // EmotionSystem を修正子リストに登録する
+        // modifiers_ はポインタのリストなので emotionSystem_ のアドレスを持つだけ（所有しない）
+        modifiers_.push_back(&emotionSystem_);
+    }
     ~BossStatus() {}
 
     /** 毎フレーム呼ぶ。スキルのクールダウン更新と基底フラグリセットを行う */
@@ -772,22 +756,62 @@ public:
         }
 
         skillStatus_.Init(characterKey);
+
+        // JSONから倍率テーブルを上書きロードする（コンストラクタ時点ではParameterManager未初期化のためここで呼ぶ）
+        emotionSystem_.Init();
     }
 
 public:
-    // 激怒状態を切り替える（GamePhaseManager から HP50%閾値で呼ばれる）
-    void SetEnraged(bool enraged) { isEnraged_ = enraged; }
-
-    // 激怒中は enrageAttackMul_ を掛けた値を返す
-    // DamageCalculator が ActorStatus* 経由で呼ぶため virtual override が必須
+    // 攻撃力を返す。modifiers_ の全倍率を掛け合わせて返す
+    // DamageCalculator は ActorStatus* 経由でこれを呼ぶため virtual override が必須
     int GetAttack() const override
     {
-        return isEnraged_ ? static_cast<int>(attack_ * enrageAttackMul_) : attack_;
+        float mul = 1.0f;
+        for (auto* m : modifiers_) { mul *= m->GetAttackMul(); }
+        return static_cast<int>(attack_ * mul);
     }
 
+    // 攻撃速度倍率を返す。modifiers_ の倍率を掛け合わせて返す（スキルのクールダウンに反映する）
+    float GetAttackSpeedMul() const
+    {
+        float mul = 1.0f;
+        for (auto* m : modifiers_) { mul *= m->GetAttackSpeedMul(); }
+        return mul;
+    }
+
+    // 被ダメージ倍率を返す。modifiers_ の倍率を掛け合わせて返す
+    // CollisionHitManager が最終ダメージに掛けて使う
+    float GetDamageTakenMul() const
+    {
+        float mul = 1.0f;
+        for (auto* m : modifiers_) { mul *= m->GetDamageTakenMul(); }
+        return mul;
+    }
+
+    // アニメーション再生速度倍率を返す。modifiers_ の倍率を掛け合わせて返す
+    // 攻撃速度（GetAttackSpeedMul）とは独立に調整できる演出用の値。BossState.cpp が PlayAnimation に渡す
+    float GetAnimationSpeedMul() const
+    {
+        float mul = 1.0f;
+        for (auto* m : modifiers_) { mul *= m->GetAnimationSpeedMul(); }
+        return mul;
+    }
+
+    // エフェクト再生速度倍率を返す。modifiers_ の倍率を掛け合わせて返す
+    // 攻撃速度（GetAttackSpeedMul）とは独立に調整できる演出用の値。BossState.cpp が PlayEffect に渡す
+    float GetEffectSpeedMul() const
+    {
+        float mul = 1.0f;
+        for (auto* m : modifiers_) { mul *= m->GetEffectSpeedMul(); }
+        return mul;
+    }
+
+    // 感情システムへのアクセス（CollisionHitManager や GamePhaseManager から使う）
+    EmotionSystem& GetEmotionSystem() { return emotionSystem_; }
+
 public:
-    /** スキルを使用する。クールダウンを開始させる */
-    void  ActivateSkill(const std::string& skillKey) { skillStatus_.Activate(skillKey); }
+    /** スキルを使用する。クールダウンを開始させる（現在の攻撃速度倍率をクールダウンに反映する） */
+    void  ActivateSkill(const std::string& skillKey) { skillStatus_.Activate(skillKey, GetAttackSpeedMul()); }
 
     /** スキルが使用可能か */
     bool  CanUseSkill(const std::string& skillKey)       const { return skillStatus_.CanUse(skillKey); }

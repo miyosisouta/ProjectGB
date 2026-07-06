@@ -1,0 +1,102 @@
+{
+    "BossState": [
+        {
+            "comment": "ボスの行動パラメーター（BossState.cpp）。攻撃ごとにネストしてまとめている。",
+
+            
+            "common": {
+                "comment": "共通パラメーター",
+                "shortDistance": 500.0,
+                "midDistance": 1000.0,
+                "longDistance": 1500.0,
+                "rotateSpeed": 0.01,
+                "damageRingEffectScale": 0.4
+            },
+
+            "idle": {
+                "comment": "待機パラメーター",
+                "endTime": 6.0
+            },
+
+            "run": {
+                "comment": "移動パラメーター",
+                "moveSpeed": 100.0,
+                "seLoopInterval": 0.2,
+                "effectLoopInterval": 0.5,
+                "effectScale": [20.0, 20.0, 20.0]
+            },
+
+            "normalAttack": {
+                "comment": "通常攻撃パラメーター",
+                "beginTime": 0.1,
+                "collisionResetTime": 0.6,
+                "endTime": 1.0,
+                "collisionForward": 200.0,
+                "collisionHeight": 100.0,
+                "collisionSize": 200.0
+            },
+
+            "hitStamp": {
+                "comment": "ヒットスタンプパラメーター",
+                "upBeginTime": 0.5,
+                "overheadMoveTime": 2.0,
+                "fallBeginTime": 5.0,
+                "rangeSize": 70.0,
+                "jumpHeight": [0.0, 3000.0, 0.0],
+                "verticalVelocity": 1500.0,
+                "upSpeed": 600.0,
+                "downSpeed": 800.0,
+                "gravityPower": -800.0,
+                "effectScaleBasis": 350.0,
+                "smokeEffectScale": 0.2,
+                "shockWaveEffectScale": 0.5
+            },
+
+            "spin": {
+                "comment": "スピン攻撃パラメーター",
+                "attackStartTime": 3.0,
+                "attackEndTime": 7.5,
+                "seLoopInterval": 0.3,
+                "effectLoopInterval": 1.0,
+                "moveSpeed": 300.0,
+                "overMoveDistance": 300.0,
+                "effectScaleBasis": 250.0,
+                "indicatorRangeSize": 50.0,
+                "indicatorLength": 250.0,
+                "indicatorForward": 500.0
+            },
+
+            "throwRock": {
+                "comment": "岩投げ攻撃パラメーター",
+                "beginTime": 2.5,
+                "endTime": 4.0,
+                "overMoveDistance": 200.0,
+                "indicatorLength": 250.0,
+                "indicatorBaseSize": 200.0,
+                "indicatorForward": 600.0,
+                "indicatorRangeSize": 33.0,
+                "rockCollisionSize": 100.0
+            },
+
+            "laser": {
+                "comment": "レーザー攻撃パラメーター",
+                "initialShotTime": 0.1,
+                "attackTime": 1.0,
+                "shotIntervalNormal": 3.0,
+                "shotIntervalCharge": 6.0,
+                "shotCountNormal": 1,
+                "shotCountMult": 3,
+                "chargeScale": [1.75, 1.75, 1.75],
+                "collisionScale": 180.0,
+                "indicatorRadiusNormal": 45.0,
+                "indicatorRadiusCharge": 75.0,
+                "effectScaleFactor": 0.5
+            },
+
+            "death": {
+                "comment": "死亡パラメーター",
+                "animationTime": 2.0
+            }
+        }
+    ]
+}

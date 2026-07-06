@@ -1,23 +1,23 @@
 {
     "Emotion": [
         {
-            "comment": "感情システムのパラメーター（倍率テーブル・エフェクト位置）",
+            "comment": "ボスの感情システムのパラメーター（倍率テーブル・エフェクト位置）",
 
             "modifiers": [
-                { "level": "Debuff3", "attackMul": 0.5, "speedMul": 0.6 },
-                { "level": "Debuff2", "attackMul": 0.8, "speedMul": 0.8 },
-                { "level": "Debuff1", "attackMul": 0.9, "speedMul": 0.8 },
-                { "level": "Normal",  "attackMul": 1.0, "speedMul": 1.0 },
-                { "level": "Buff1",   "attackMul": 1.1, "speedMul": 1.0 },
-                { "level": "Buff2",   "attackMul": 1.2, "speedMul": 1.0 },
-                { "level": "Buff3",   "attackMul": 1.5, "speedMul": 1.0 }
+                { "level": "Debuff3", "attackMul": 1.15, "attackSpeedMul": 0.8, "damageTakenMul": 1.4, "animationSpeedMul": 0.5,  "effectSpeedMul": 0.5  },
+                { "level": "Debuff2", "attackMul": 1.05, "attackSpeedMul": 1.0,  "damageTakenMul": 1.2, "animationSpeedMul": 0.8,  "effectSpeedMul": 0.9  },
+                { "level": "Debuff1", "attackMul": 1.0,  "attackSpeedMul": 1.0,  "damageTakenMul": 1.1, "animationSpeedMul": 0.8,  "effectSpeedMul": 0.9  },
+                { "level": "Normal",  "attackMul": 1.0,  "attackSpeedMul": 1.0,  "damageTakenMul": 1.0, "animationSpeedMul": 0.8,  "effectSpeedMul": 0.9  },
+                { "level": "Buff1",   "attackMul": 1.1,  "attackSpeedMul": 1.0,  "damageTakenMul": 1.0, "animationSpeedMul": 0.8,  "effectSpeedMul": 0.9  },
+                { "level": "Buff2",   "attackMul": 1.2,  "attackSpeedMul": 1.05, "damageTakenMul": 1.0, "animationSpeedMul": 1.2, "effectSpeedMul": 1.2 },
+                { "level": "Buff3",   "attackMul": 1.5,  "attackSpeedMul": 1.15, "damageTakenMul": 0.8, "animationSpeedMul": 1.5, "effectSpeedMul": 1.5 }
             ],
 
-            "buffEffectScale":   80.0,
-            "debuffEffectScale": 70.0,
+            "buffEffectScale":   200.0,
+            "debuffEffectScale": 150.0,
 
-            "buffEffectOffset":   { "x": 0.0, "y": -20.0, "z": 0.0 },
-            "debuffEffectOffset": { "x": 0.0, "y": 20.0, "z": 0.0 }
+            "buffEffectOffsetY":   -50.0,
+            "debuffEffectOffsetY": 30.0
         }
     ]
 }

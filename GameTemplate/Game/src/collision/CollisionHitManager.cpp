@@ -44,6 +44,25 @@ namespace
 		return nullptr;
 	}
 
+	// ジャスト回避されたペアからボス本体を取り出す
+	// 攻撃ヒットボックスのIDはボスの攻撃種別ごとに異なるが、オーナーはどれも同じ BossCharacter なので総当たりで探す
+	BossCharacter* GetBossFromAttackPair(const CollisionHitManager::Pair& pair)
+	{
+		static const uint32_t bossAtkIds[] = {
+			CharacterID::BossNormalAtkID(),
+			CharacterID::BossHitStampAtkID(),
+			CharacterID::BossSpinAtkID(),
+			CharacterID::BossThrowRockAtkID(),
+			CharacterID::BossLaserWeakAtkID(),
+			CharacterID::BossLaserStrongAtkID(),
+		};
+		for (uint32_t id : bossAtkIds)
+		{
+			if (auto* boss = GetHitObject<BossCharacter>(pair, id)) { return boss; }
+		}
+		return nullptr;
+	}
+
 	// 攻撃ボディ位置からボスのコリジョン表面座標を計算する
 	// 攻撃体はヒット検出時点でボス表面付近に位置するため、その座標をそのまま使う
 	Vector3 CalcBossSurfacePos(GhostBody* attackBody, GhostBody* bossBody)
@@ -307,13 +326,16 @@ void CollisionHitManager::UpdatePlayerNormalAttackPair(Pair& hitPair)
 
 
 	auto playerStatus = playerCharacter->GetStatus()->As<PlayerStatus>();
+	auto* bossStatus  = bossCharacter->GetStatus()->As<BossStatus>();
 
-	if (bossCharacter->GetStatus()) {
+	if (bossStatus) {
 		// ダメージ計算
 		float motion = playerStatus->GetSkillMotionValues("NormalAttack");
 		DamageResult result = Calculate(playerStatus, motion);
-		bossCharacter->GetStatus()->Damage(result.damage);
-		if (onDamageNotify) onDamageNotify(result.damage, DamageNotifyType::AttackHit, result.isCritical); // ダメージの情報を通知
+		// ボスの調子（被ダメージ倍率）を最終ダメージに反映する
+		int finalDamage = static_cast<int>(result.damage * bossStatus->GetDamageTakenMul());
+		bossStatus->Damage(finalDamage);
+		if (onDamageNotify) onDamageNotify(finalDamage, DamageNotifyType::AttackHit, result.isCritical); // ダメージの情報を通知
 		UpdateAttackHitSound(); // 攻撃が当たったSEを流す
 	}
 
@@ -346,13 +368,16 @@ void CollisionHitManager::UpdatePlayerSkillAttackPair(Pair& hitPair)
 
 
 	auto* playerStatus = playerCharacter->GetStatus()->As<PlayerStatus>();
+	auto* bossStatus   = bossCharacter->GetStatus()->As<BossStatus>();
 
-	if (bossCharacter->GetStatus()) {
+	if (bossStatus) {
 		// "SpecialAttack" スロットの威力を取得してダメージ計算
 		float motion = playerStatus->GetSkillMotionValues("SpecialAttack");
 		DamageResult result = Calculate(playerStatus, motion);
-		bossCharacter->GetStatus()->Damage(result.damage);
-		if (onDamageNotify) onDamageNotify(result.damage, DamageNotifyType::AttackHit, result.isCritical); // ダメージの情報を通知
+		// ボスの調子（被ダメージ倍率）を最終ダメージに反映する
+		int finalDamage = static_cast<int>(result.damage * bossStatus->GetDamageTakenMul());
+		bossStatus->Damage(finalDamage);
+		if (onDamageNotify) onDamageNotify(finalDamage, DamageNotifyType::AttackHit, result.isCritical); // ダメージの情報を通知
 		UpdateAttackHitSound(); // 攻撃が当たったSEを流す
 	}
 
@@ -397,28 +422,24 @@ bool CollisionHitManager::IsJustAvoidPair(const Pair& hitPair)
 
 void CollisionHitManager::OnJustAvoid(Pair& hitPair)
 {
-	// ジャスト回避したプレイヤーの感情レベルを上昇させる
-	// デバフ中なら帳消しで Normal、通常/バフ中なら1段階アップ
-	auto* player = GetHitObject<Player>(hitPair, CharacterID::PlayerID());
-	if (player)
+	// ジャスト回避が成立した瞬間：ボスの調子を動揺方向へ進める
+	// （強気中なら帳消しでNormal、通常/動揺中なら1段階動揺が深まる）
+	if (auto* boss = GetBossFromAttackPair(hitPair))
 	{
-		auto* status = player->GetStatus()->As<PlayerStatus>();
-		if (status) { status->GetEmotionSystem().OnJustAvoid(); }
+		auto* bossStatus = boss->GetStatus()->As<BossStatus>();
+		if (bossStatus) { bossStatus->GetEmotionSystem().OnJustAvoidedByPlayer(); }
 	}
 
 	// TODO: スローモーション演出、カウンター攻撃ウィンドウの開放、専用エフェクト再生など
-	// todo for test : 値の視覚化（ジャスト回避成功時に感情レベルが上がることを確認）
 }
 
-void CollisionHitManager::NotifyEmotionStrongHit(Pair& hitPair)
+void CollisionHitManager::OnBossStrongAttackHit(BossCharacter* boss)
 {
-	// 強攻撃を受けたプレイヤーの感情レベルを下降させる
-	// バフ中なら帳消しで Normal、通常/デバフ中なら1段階ダウン
-	// HitStamp・Spin・チャージレーザーの3種が強攻撃に該当する
-	auto* player = GetHitObject<Player>(hitPair, CharacterID::PlayerID());
-	if (!player) { return; }
-	auto* status = player->GetStatus()->As<PlayerStatus>();
-	if (status) { status->GetEmotionSystem().OnStrongAttackHit(); }
+	// ボスの特定の攻撃（HitStamp・チャージレーザー・SpinAttack・ThrowRock）がプレイヤーにヒットした瞬間：
+	// ボスの調子を強気方向へ進める（動揺中なら帳消しでNormal、通常/強気中なら1段階強気になる）
+	if (!boss) { return; }
+	auto* bossStatus = boss->GetStatus()->As<BossStatus>();
+	if (bossStatus) { bossStatus->GetEmotionSystem().OnAttackHitPlayer(); }
 }
 
 bool CollisionHitManager::IsPlayerInvinciblePair(const Pair& hitPair)
@@ -504,7 +525,7 @@ void CollisionHitManager::UpdateBossHitStampPair(Pair& hitPair)
 		if (onDamageNotify) onDamageNotify(result.damage, DamageNotifyType::TakeHit, result.isCritical); // ダメージの情報を通知
 		UpdateTakeHitSound(); // 攻撃が当たったSEを流す
 		g_pad[0]->SetVibration(vibrationTime, vibrationForce);
-		NotifyEmotionStrongHit(hitPair); // 強攻撃：感情レベルを下降させる
+		OnBossStrongAttackHit(boss); // ボスの特定の攻撃を受けた判定
 	}
 
 	// エフェクト
@@ -546,7 +567,7 @@ void CollisionHitManager::UpdateBossSpinPair(Pair& hitPair)
 		if (onDamageNotify) onDamageNotify(result.damage, DamageNotifyType::TakeHit, result.isCritical); // ダメージの情報を通知
 		UpdateTakeHitSound(); // 攻撃が当たったSEを流す
 		g_pad[0]->SetVibration(vibrationTime, vibrationForce);
-		NotifyEmotionStrongHit(hitPair); // 強攻撃：感情レベルを下降させる
+		OnBossStrongAttackHit(boss); // ボスの特定の攻撃を受けた判定
 	}
 	
 
@@ -599,6 +620,7 @@ void CollisionHitManager::UpdateBossThrowRockPair(Pair& hitPair)
 		if (onDamageNotify) onDamageNotify(result.damage, DamageNotifyType::TakeHit, result.isCritical); // ダメージの情報を通知
 		UpdateTakeHitSound(); // 攻撃が当たったSEを流す
 		g_pad[0]->SetVibration(vibrationTime, vibrationForce);
+		OnBossStrongAttackHit(boss); // ボスの特定の攻撃を受けた判定
 	}
 
 	// エフェクト
@@ -677,7 +699,7 @@ void CollisionHitManager::UpdateBossLaserStrongPair(Pair& hitPair)
 		if (onDamageNotify) onDamageNotify(result.damage, DamageNotifyType::TakeHit, result.isCritical); // ダメージの情報を通知
 		UpdateTakeHitSound(); // 攻撃が当たったSEを流す
 		g_pad[0]->SetVibration(vibrationTime, vibrationForce);
-		NotifyEmotionStrongHit(hitPair); // 強攻撃：感情レベルを下降させる
+		OnBossStrongAttackHit(boss); // ボスの特定の攻撃を受けた判定
 	}
 
 	// エフェクト

@@ -35,7 +35,7 @@ void EffectManager::Update()
 }
 
 
-EffectHandle EffectManager::PlayEffect(const int kind, const Vector3& position, const Quaternion& rotation, const Vector3& scale)
+EffectHandle EffectManager::PlayEffect(const int kind, const Vector3& position, const Quaternion& rotation, const Vector3& scale, const float speed)
 {
 	// ハンドルが最大数になったら使えない
 	// NOTE: そんなに再生するはずがない
@@ -49,6 +49,7 @@ EffectHandle EffectManager::PlayEffect(const int kind, const Vector3& position, 
 	m_effect->SetRotation(rotation);
 	m_effect->SetScale(scale);
 	m_effect->Play();
+	m_effect->SetSpeed(speed);
 
 	// ハンドルとエフェクトをmapに登録してから返す
 	EffectHandle handle = effectHandleCount_++;
@@ -94,6 +95,13 @@ void EffectManager::SetEffectScale(const EffectHandle handle, const Vector3& pos
 	auto* effect = FindEffect(handle);
 	if (effect == nullptr) { return; }
 	effect->SetScale(pos);
+}
+
+void EffectManager::SetEffectSpeed(const EffectHandle handle, const float speed)
+{
+	auto* effect = FindEffect(handle);
+	if (effect == nullptr) { return; }
+	effect->SetSpeed(speed);
 }
 
 

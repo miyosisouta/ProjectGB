@@ -89,6 +89,14 @@ namespace nsK2EngineLow {
 			return EffectEngine::GetInstance()->IsPlay(m_handle);
 		}
 		/*!
+		 *@brief	再生速度を設定（1.0が等倍）。Play()以降いつ呼んでもよい。
+		 */
+		void SetSpeed(float speed)
+		{
+			m_speed = speed;
+			EffectEngine::GetInstance()->SetSpeed(m_handle, m_speed);
+		}
+		/*!
 		 *@brief	更新。
 		 */
 		void Update();
@@ -98,5 +106,6 @@ namespace nsK2EngineLow {
 		Vector3 m_position;				//座標。
 		Quaternion m_rotation;;			//回転。
 		Vector3 m_scale = g_vec3One;	//拡大率。
+		float m_speed = 1.0f;			//再生速度（1.0が等倍）。Play()時に再適用する。
 	};
 }

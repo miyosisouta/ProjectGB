@@ -12,58 +12,64 @@ EmotionSystem::EmotionSystem()
 void EmotionSystem::Init()
 {
     // JSONパラメーターから倍率テーブルを上書きロードする
-    // コンストラクタ時点では ParameterManager が未初期化なので PlayerStatus::Init() から呼ぶ
+    // コンストラクタ時点では ParameterManager が未初期化なので BossStatus::Init() から呼ぶ
     const auto* param = ParameterManager::Get().GetEmotionParam();
     if (!param) { return; }
     for (int i = 0; i < 7; i++)
     {
-        modifierTable_[i].attackMul = param->modifiers[i].attackMul;
-        modifierTable_[i].speedMul  = param->modifiers[i].speedMul;
+        modifierTable_[i].attackMul         = param->modifiers[i].attackMul;
+        modifierTable_[i].attackSpeedMul    = param->modifiers[i].attackSpeedMul;
+        modifierTable_[i].damageTakenMul    = param->modifiers[i].damageTakenMul;
+        modifierTable_[i].animationSpeedMul = param->modifiers[i].animationSpeedMul;
+        modifierTable_[i].effectSpeedMul    = param->modifiers[i].effectSpeedMul;
     }
 }
 
 void EmotionSystem::InitModifierTable()
 {
     // インデックス = static_cast<int>(level) + 3
-    modifierTable_[0] = { 0.5f, 0.6f };  // Debuff3: 攻撃0.5倍 速度0.6倍
-    modifierTable_[1] = { 0.8f, 0.8f };  // Debuff2: 攻撃0.8倍 速度0.8倍
-    modifierTable_[2] = { 0.9f, 0.8f };  // Debuff1: 攻撃0.9倍 速度0.8倍
-    modifierTable_[3] = { 1.0f, 1.0f };  // Normal:  等倍
-    modifierTable_[4] = { 1.1f, 1.0f };  // Buff1:   攻撃1.1倍
-    modifierTable_[5] = { 1.2f, 1.0f };  // Buff2:   攻撃1.2倍
-    modifierTable_[6] = { 1.5f, 1.0f };  // Buff3:   攻撃1.5倍
+    // JSON未読み込み時のフォールバック値。実際の効果量は EmotionParameter.json 側で調整する
+    // 攻撃力・攻撃速度は「強気になるほど上がる」、被ダメージは「動揺するほど上がる」軸で設計している
+    // animationSpeedMul/effectSpeedMul は演出用の値。デフォルトではattackSpeedMulと同じ値にしているが、JSON側で独立に調整できる
+    modifierTable_[0] = { 1.15f, 0.85f, 1.5f, 0.85f, 0.85f };  // Debuff3: 攻撃力上昇(小) 攻撃速度Down(小) 被ダメージUp(大)
+    modifierTable_[1] = { 1.05f, 1.0f,  1.2f, 1.0f,  1.0f  };  // Debuff2: 攻撃力上昇(微) 被ダメージUp(小)
+    modifierTable_[2] = { 1.0f,  1.0f,  1.1f, 1.0f,  1.0f  };  // Debuff1: 被ダメージUp(微)
+    modifierTable_[3] = { 1.0f,  1.0f,  1.0f, 1.0f,  1.0f  };  // Normal:  等倍
+    modifierTable_[4] = { 1.1f,  1.0f,  1.0f, 1.0f,  1.0f  };  // Buff1:   攻撃力Up(微)
+    modifierTable_[5] = { 1.2f,  1.05f, 1.0f, 1.05f, 1.05f };  // Buff2:   攻撃力Up(小) 攻撃速度Up(微)
+    modifierTable_[6] = { 1.5f,  1.15f, 0.8f, 1.15f, 1.15f };  // Buff3:   攻撃力Up(大) 攻撃速度Up(小) 被ダメージDown(小)
 }
 
-void EmotionSystem::OnJustAvoid()
+void EmotionSystem::OnAttackHitPlayer()
 {
     int current = static_cast<int>(currentLevel_);
 
-    // デバフ中はジャスト回避で帳消し→即 Normal に戻す（1段階ずつではない）
-    // 仕様：「その前にデバフがかかっている場合は、デバフが帳消しになり通常状態になる」
+    // 動揺中（Debuff）に攻撃が当たったら、動揺が晴れて即 Normal に戻す（1段階ずつではない）
     if (current < 0)
     {
         ChangeLevel(EmotionLevel::Normal);
         return;
     }
 
-    // 通常/バフ中は1段階上昇（上限 Buff3 でクランプ）
+    // 通常/強気中は1段階強気になる（上限 Buff3 でクランプ）
     // windows.h の min マクロと衝突するため () で囲んで展開を防ぐ
     int next = (std::min)(current + 1, LevelMax);
     ChangeLevel(static_cast<EmotionLevel>(next));
 }
 
-void EmotionSystem::OnStrongAttackHit()
+void EmotionSystem::OnJustAvoidedByPlayer()
 {
     int current = static_cast<int>(currentLevel_);
 
-    // バフ中は強攻撃被弾で帳消し→即 Normal に戻す（1段階ずつではない）
+    // 強気中（Buff）にジャスト回避されたら、調子の良さが帳消しになり即 Normal に戻す（1段階ずつではない）
+    // 仕様：「ボスにバフがついているときにジャスト回避を行った場合、バフの効果はすべて消されて通常状態になる」
     if (current > 0)
     {
         ChangeLevel(EmotionLevel::Normal);
         return;
     }
 
-    // 通常/デバフ中は1段階下降（下限 Debuff3 でクランプ）
+    // 通常/動揺中は1段階動揺が深まる（下限 Debuff3 でクランプ）
     // windows.h の max マクロと衝突するため () で囲んで展開を防ぐ
     int next = (std::max)(current - 1, LevelMin);
     ChangeLevel(static_cast<EmotionLevel>(next));
@@ -81,10 +87,28 @@ float EmotionSystem::GetAttackMul() const
     return modifierTable_[idx].attackMul;
 }
 
-float EmotionSystem::GetSpeedMul() const
+float EmotionSystem::GetAttackSpeedMul() const
 {
     int idx = static_cast<int>(currentLevel_) + 3;
-    return modifierTable_[idx].speedMul;
+    return modifierTable_[idx].attackSpeedMul;
+}
+
+float EmotionSystem::GetDamageTakenMul() const
+{
+    int idx = static_cast<int>(currentLevel_) + 3;
+    return modifierTable_[idx].damageTakenMul;
+}
+
+float EmotionSystem::GetAnimationSpeedMul() const
+{
+    int idx = static_cast<int>(currentLevel_) + 3;
+    return modifierTable_[idx].animationSpeedMul;
+}
+
+float EmotionSystem::GetEffectSpeedMul() const
+{
+    int idx = static_cast<int>(currentLevel_) + 3;
+    return modifierTable_[idx].effectSpeedMul;
 }
 
 void EmotionSystem::AddObserver(IEmotionObserver* observer)

@@ -28,10 +28,10 @@ void BossCharacter::SetupAnimation()
 	}
 }
 
-void BossCharacter::PlayAnimation(const int id,const int animSpeed)
+void BossCharacter::PlayAnimation(const int id,const float animSpeed)
 {
 	modelRender_.PlayAnimation(id); // Idをもとにそのアニメーションの再生
-	modelRender_.SetAnimationSpeed(animSpeed);
+	modelRender_.SetAnimationSpeed(animSpeed); // 小数(0.5倍速など)も正しく反映されるようfloatで受け取る
 }
 
 /** ===================================================== */
@@ -136,7 +136,7 @@ bool BossCharacter::Start()
 void BossCharacter::Update()
 {
 	// アクティブでないなら更新しない
-	if (!isUpdate_) return; 
+	if (!isUpdate_) return;
 
 
 	// ボスの移動処理

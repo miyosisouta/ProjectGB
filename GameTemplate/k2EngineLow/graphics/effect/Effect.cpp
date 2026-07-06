@@ -27,6 +27,8 @@ namespace nsK2EngineLow {
 		EffectEngine::GetInstance()->Stop(m_handle);
 		//新しく再生。
 		m_handle = EffectEngine::GetInstance()->Play(m_effect);
+		//SetSpeed()がPlay()より先に呼ばれていた場合のため、新しいハンドルに速度を再適用する。
+		EffectEngine::GetInstance()->SetSpeed(m_handle, m_speed);
 	}
 	void Effect::Update()
 	{

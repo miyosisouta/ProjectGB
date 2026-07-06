@@ -43,6 +43,14 @@ Quaternion ParseRotation(const nlohmann::json& arr)
 }
 
 
+// ネストしたJSONオブジェクトを安全に取得する（無ければ空オブジェクトを返す）
+// BossStateParameter.json のように「攻撃ごとにネストしたオブジェクト」を読むときに使う
+nlohmann::json GetSubObject(const nlohmann::json& j, const char* key)
+{
+	return (j.contains(key) && j[key].is_object()) ? j[key] : nlohmann::json::object();
+}
+
+
 /*====================================*/
 /* パラメータマネージャー */
 /*====================================*/
@@ -422,27 +430,136 @@ void ParameterManager::LoadEmotionParamData(const char* path)
 				const auto& arr = j["modifiers"];
 				for (int i = 0; i < 7 && i < static_cast<int>(arr.size()); i++)
 				{
-					p.modifiers[i].attackMul = arr[i].value("attackMul", 1.0f);
-					p.modifiers[i].speedMul  = arr[i].value("speedMul",  1.0f);
+					p.modifiers[i].attackMul         = arr[i].value("attackMul",         1.0f);
+					p.modifiers[i].attackSpeedMul    = arr[i].value("attackSpeedMul",    1.0f);
+					p.modifiers[i].damageTakenMul    = arr[i].value("damageTakenMul",    1.0f);
+					p.modifiers[i].animationSpeedMul = arr[i].value("animationSpeedMul", 1.0f);
+					p.modifiers[i].effectSpeedMul    = arr[i].value("effectSpeedMul",    1.0f);
 				}
 			}
 			// effect scale
 			p.buffEffectScale   = j.value("buffEffectScale",   1.0f);
 			p.debuffEffectScale = j.value("debuffEffectScale", 1.0f);
-			// effect position offset
-			if (j.contains("buffEffectOffset") && j["buffEffectOffset"].is_object())
+			// effect position offset（Yのみ。X/Zはボス座標をそのまま使う）
+			p.buffEffectOffsetY   = j.value("buffEffectOffsetY",   0.0f);
+			p.debuffEffectOffsetY = j.value("debuffEffectOffsetY", 0.0f);
+		}
+	);
+}
+
+
+// ============================================================
+//  BossStateParameter.json 読み込みヘルパー
+//  攻撃ごとにネストしたオブジェクトから読み込む（timing/collision/effect/movement の分類はコメント参照）
+// ============================================================
+void ParameterManager::LoadBossStateParamData(const char* path)
+{
+	ParameterManager::Get().LoadParameterFromArray<MasterBossStateParameter>(
+		path,
+		"BossState",
+		[](const nlohmann::json& j, MasterBossStateParameter& p)
+		{
+			// 共通
 			{
-				const auto& o = j["buffEffectOffset"];
-				p.buffEffectOffset.x = o.value("x", 0.0f);
-				p.buffEffectOffset.y = o.value("y", 0.0f);
-				p.buffEffectOffset.z = o.value("z", 0.0f);
+				const auto o = GetSubObject(j, "common");
+				p.common.shortDistance         = o.value("shortDistance",         p.common.shortDistance);
+				p.common.midDistance           = o.value("midDistance",           p.common.midDistance);
+				p.common.longDistance          = o.value("longDistance",          p.common.longDistance);
+				p.common.rotateSpeed           = o.value("rotateSpeed",           p.common.rotateSpeed);
+				p.common.damageRingEffectScale = o.value("damageRingEffectScale", p.common.damageRingEffectScale);
 			}
-			if (j.contains("debuffEffectOffset") && j["debuffEffectOffset"].is_object())
+
+			// 待機
 			{
-				const auto& o = j["debuffEffectOffset"];
-				p.debuffEffectOffset.x = o.value("x", 0.0f);
-				p.debuffEffectOffset.y = o.value("y", 0.0f);
-				p.debuffEffectOffset.z = o.value("z", 0.0f);
+				const auto o = GetSubObject(j, "idle");
+				p.idle.endTime = o.value("endTime", p.idle.endTime);
+			}
+
+			// 走る
+			{
+				const auto o = GetSubObject(j, "run");
+				p.run.moveSpeed          = o.value("moveSpeed",          p.run.moveSpeed);
+				p.run.seLoopInterval     = o.value("seLoopInterval",     p.run.seLoopInterval);
+				p.run.effectLoopInterval = o.value("effectLoopInterval", p.run.effectLoopInterval);
+				if (o.contains("effectScale")) { p.run.effectScale = ParseVector3(o["effectScale"]); }
+			}
+
+			// 通常攻撃
+			{
+				const auto o = GetSubObject(j, "normalAttack");
+				p.normalAttack.beginTime          = o.value("beginTime",          p.normalAttack.beginTime);
+				p.normalAttack.collisionResetTime = o.value("collisionResetTime", p.normalAttack.collisionResetTime);
+				p.normalAttack.endTime            = o.value("endTime",            p.normalAttack.endTime);
+				p.normalAttack.collisionForward    = o.value("collisionForward",   p.normalAttack.collisionForward);
+				p.normalAttack.collisionHeight     = o.value("collisionHeight",    p.normalAttack.collisionHeight);
+				p.normalAttack.collisionSize        = o.value("collisionSize",       p.normalAttack.collisionSize);
+			}
+
+			// ヒットスタンプ
+			{
+				const auto o = GetSubObject(j, "hitStamp");
+				p.hitStamp.upBeginTime          = o.value("upBeginTime",          p.hitStamp.upBeginTime);
+				p.hitStamp.overheadMoveTime     = o.value("overheadMoveTime",     p.hitStamp.overheadMoveTime);
+				p.hitStamp.fallBeginTime        = o.value("fallBeginTime",        p.hitStamp.fallBeginTime);
+				p.hitStamp.rangeSize            = o.value("rangeSize",            p.hitStamp.rangeSize);
+				if (o.contains("jumpHeight")) { p.hitStamp.jumpHeight = ParseVector3(o["jumpHeight"]); }
+				p.hitStamp.verticalVelocity     = o.value("verticalVelocity",     p.hitStamp.verticalVelocity);
+				p.hitStamp.upSpeed              = o.value("upSpeed",              p.hitStamp.upSpeed);
+				p.hitStamp.downSpeed            = o.value("downSpeed",            p.hitStamp.downSpeed);
+				p.hitStamp.gravityPower         = o.value("gravityPower",         p.hitStamp.gravityPower);
+				p.hitStamp.effectScaleBasis     = o.value("effectScaleBasis",     p.hitStamp.effectScaleBasis);
+				p.hitStamp.smokeEffectScale      = o.value("smokeEffectScale",      p.hitStamp.smokeEffectScale);
+				p.hitStamp.shockWaveEffectScale = o.value("shockWaveEffectScale", p.hitStamp.shockWaveEffectScale);
+			}
+
+			// 回転攻撃
+			{
+				const auto o = GetSubObject(j, "spin");
+				p.spin.attackStartTime    = o.value("attackStartTime",    p.spin.attackStartTime);
+				p.spin.attackEndTime      = o.value("attackEndTime",      p.spin.attackEndTime);
+				p.spin.seLoopInterval     = o.value("seLoopInterval",     p.spin.seLoopInterval);
+				p.spin.effectLoopInterval = o.value("effectLoopInterval", p.spin.effectLoopInterval);
+				p.spin.moveSpeed          = o.value("moveSpeed",          p.spin.moveSpeed);
+				p.spin.overMoveDistance   = o.value("overMoveDistance",   p.spin.overMoveDistance);
+				p.spin.effectScaleBasis   = o.value("effectScaleBasis",   p.spin.effectScaleBasis);
+				p.spin.indicatorRangeSize = o.value("indicatorRangeSize", p.spin.indicatorRangeSize);
+				p.spin.indicatorLength    = o.value("indicatorLength",    p.spin.indicatorLength);
+				p.spin.indicatorForward   = o.value("indicatorForward",   p.spin.indicatorForward);
+			}
+
+			// 岩を投げる攻撃
+			{
+				const auto o = GetSubObject(j, "throwRock");
+				p.throwRock.beginTime          = o.value("beginTime",          p.throwRock.beginTime);
+				p.throwRock.endTime            = o.value("endTime",            p.throwRock.endTime);
+				p.throwRock.overMoveDistance    = o.value("overMoveDistance",   p.throwRock.overMoveDistance);
+				p.throwRock.indicatorLength     = o.value("indicatorLength",    p.throwRock.indicatorLength);
+				p.throwRock.indicatorBaseSize   = o.value("indicatorBaseSize",  p.throwRock.indicatorBaseSize);
+				p.throwRock.indicatorForward    = o.value("indicatorForward",   p.throwRock.indicatorForward);
+				p.throwRock.indicatorRangeSize = o.value("indicatorRangeSize", p.throwRock.indicatorRangeSize);
+				p.throwRock.rockCollisionSize   = o.value("rockCollisionSize",  p.throwRock.rockCollisionSize);
+			}
+
+			// レーザー攻撃
+			{
+				const auto o = GetSubObject(j, "laser");
+				p.laser.initialShotTime       = o.value("initialShotTime",       p.laser.initialShotTime);
+				p.laser.attackTime            = o.value("attackTime",            p.laser.attackTime);
+				p.laser.shotIntervalNormal    = o.value("shotIntervalNormal",    p.laser.shotIntervalNormal);
+				p.laser.shotIntervalCharge    = o.value("shotIntervalCharge",    p.laser.shotIntervalCharge);
+				p.laser.shotCountNormal       = o.value("shotCountNormal",       p.laser.shotCountNormal);
+				p.laser.shotCountMult         = o.value("shotCountMult",         p.laser.shotCountMult);
+				if (o.contains("chargeScale")) { p.laser.chargeScale = ParseVector3(o["chargeScale"]); }
+				p.laser.collisionScale        = o.value("collisionScale",        p.laser.collisionScale);
+				p.laser.indicatorRadiusNormal = o.value("indicatorRadiusNormal", p.laser.indicatorRadiusNormal);
+				p.laser.indicatorRadiusCharge = o.value("indicatorRadiusCharge", p.laser.indicatorRadiusCharge);
+				p.laser.effectScaleFactor     = o.value("effectScaleFactor",     p.laser.effectScaleFactor);
+			}
+
+			// 死亡
+			{
+				const auto o = GetSubObject(j, "death");
+				p.death.animationTime = o.value("animationTime", p.death.animationTime);
 			}
 		}
 	);

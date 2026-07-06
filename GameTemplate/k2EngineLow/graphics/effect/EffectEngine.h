@@ -100,6 +100,15 @@ namespace nsK2EngineLow {
 		/// <param name="effectHandle"></param>
 		void Stop(int effectHandle);
 		/// <summary>
+		/// 再生速度を設定（1.0が等倍）。
+		/// </summary>
+		/// <param name="effectHandle"></param>
+		/// <param name="speed"></param>
+		void SetSpeed(int effectHandle, float speed)
+		{
+			m_manager->SetSpeed(effectHandle, speed);
+		}
+		/// <summary>
 		/// エフェクトをロード。
 		/// </summary>
 		Effekseer::EffectRef LoadEffect(const int number);
