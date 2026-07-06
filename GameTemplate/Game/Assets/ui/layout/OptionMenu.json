@@ -10,31 +10,30 @@
         "scale": [1, 1, 1]
       },
 
-
-
       {
-        "coment": "タイトル:アイコン",
+        "coment": "設定:アイコン",
         "type": "UIIcon",
         "name": "title_icon",
         "asset": "Assets/ui/optionUI/title/haguruma.DDS",
         "width": 150,
         "height": 140,
-        "position": [-850, 450, 0],
+        "position": [-850, 455, 0],
         "scale": [1, 1, 1],
         "rotation": 0,
         "color": [1, 1, 1, 1]
       },
       {
-        "coment": "タイトル:文字",
+        "coment": "設定:文字",
         "type": "UIIcon",
         "name": "title_ward",
-        "asset": "Assets/ui/optionUI/title/option.DDS",
-        "width": 220,
+        "asset": "Assets/ui/optionUI/title/title_text.DDS",
+        "width": 350,
         "height": 100,
-        "position": [-620, 450, 0],
+        "position": [-720, 450, 0],
         "scale": [1, 1, 1],
         "rotation": 0,
-        "color": [1, 1, 1, 1]
+        "color": [1, 1, 1, 1],
+        "pivot": [0,0.5]
       },
 
 
@@ -55,9 +54,9 @@
         "coment": "文字:サウンド",
         "type": "UIIcon",
         "name": "word_sound",
-        "asset": "Assets/ui/optionUI/word/sound_ward.DDS",
+        "asset": "Assets/ui/optionUI/word/title_sound.DDS",
         "width": 320,
-        "height": 80,
+        "height": 60,
         "position": [-550, -100, 0],
         "scale": [1, 1, 1],
         "rotation": 0,
@@ -83,9 +82,9 @@
         "coment": "文字:コントローラー",
         "type": "UIIcon",
         "name": "word_controller",
-        "asset": "Assets/ui/optionUI/word/controller_ward.DDS",
+        "asset": "Assets/ui/optionUI/word/controller_text.DDS",
         "width": 320,
-        "height": 80,
+        "height": 60,
         "position": [0, -100, 0],
         "scale": [1, 1, 1],
         "rotation": 0,
@@ -137,9 +136,9 @@
         "coment": "文字:カメラ",
         "type": "UIIcon",
         "name": "word_camera",
-        "asset": "Assets/ui/optionUI/word/camera_ward.DDS",
+        "asset": "Assets/ui/optionUI/word/title2.DDS",
         "width": 320,
-        "height": 80,
+        "height": 60,
         "position": [550, -100, 0],
         "scale": [1, 1, 1],
         "rotation": 0,
@@ -207,6 +206,15 @@
       
 
 
+      {
+        "comment": "へんこうボタンアイコン",
+        "type": "UIPrefab",
+        "name": "changeIcon",
+        "source": "Assets/ui/layout/ChangeButton.json",
+        "position": [335, -500, 0],
+        "scale": [1, 1, 1],
+        "color": [0, 0, 0, 1]
+      },
       {
         "comment": "戻るボタンアイコン",
         "type": "UIPrefab",

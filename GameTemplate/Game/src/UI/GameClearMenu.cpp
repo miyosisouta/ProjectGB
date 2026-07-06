@@ -158,7 +158,7 @@ void GameClearMenu::InitializeLogic()
 		effectRenderList_.push_back(std::make_unique<ParticleEffectRender>());
 		char jsonPath[] = "Assets/ui/vfx/effect_mission_maru/effect_mission_maru_1.json";
 		jsonPath[54] = '1' + static_cast<char>(i);
-		effectRenderList_[i]->Init(jsonPath, "Assets/ui/inGameUI/mission/maru.dds", 128.0f, 128.0f);
+		effectRenderList_[i]->Init(jsonPath, "Assets/ui/inGameUI/mission/maru.dds", 150.0f, 150.0f);
 		effectRenderList_[i]->EnableHotReload();
 	}
 
@@ -166,8 +166,7 @@ void GameClearMenu::InitializeLogic()
 	// IsCleared()をReveal時点で判定することでゴリラ/亀いずれも同じタイミングで再生
 	const float revealTimes[]      = { 7.0f,  7.5f,  8.0f   };
 	// X=-550: medal_gold の localX(-220) × scale(2.5) = ワールドX -550
-	// Y: 各カードのワールドY(60/-90/-240) から -30 でメダルの少し下
-	const float effectYPositions[] = { 30.0f, -120.0f, -270.0f };
+	const float effectYPositions[] = { 60.0f, -90.0f, -240.0f };
 	for (int i = 0; i < 3; i++)
 	{
 		const float effectDelay = revealTimes[i] + 0.5f;
@@ -245,7 +244,6 @@ void GameClearMenu::ShowMissionBackground(int index)
 				// 現在のカウントを設定
 				const int count = mission->GetCurrentCount();
 				countDigit->SetNumber(count);
-				countDigit->transform.localPosition.x = (count >= 10) ? 105.0f : 140.0f;
 			}
 		}
 	}

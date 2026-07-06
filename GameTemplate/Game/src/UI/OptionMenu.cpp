@@ -210,19 +210,14 @@ void OptionMenu::AnimationIconAttach()
 	// サウンドアイコンのアニメーションアタッチ
 	auto* sound = GetUI<UIIcon>(Hash32("icon_sound"));
 	UIAnimationFactory::Attach<UIScaleAnimation>(sound, Hash32("Option_soundIcon_scaleUp"));
-	//auto* sound = GetUI<UIIcon>(Hash32("icon_sound"));
 	UIAnimationFactory::Attach<UIRotationAnimation>(sound, Hash32("sound_rotation"));
 
 	// コントローラーアイコンのアニメーションアタッチ
 	auto* controller = GetUI<UIIcon>(Hash32("icon_controller"));
 	UIAnimationFactory::Attach<UIScaleAnimation>(controller, Hash32("Option_controllerIcon_scaleUp"));
-	//auto* controller = GetUI<UIIcon>(Hash32("icon_controller"));
 	UIAnimationFactory::Attach<UITranslateOffsetAnimation>(controller, Hash32("controller_posYUp"));
-	//auto* controller = GetUI<UIIcon>(Hash32("icon_controller"));
 	UIAnimationFactory::Attach<UITranslateOffsetAnimation>(controller, Hash32("controller_posYDown"));
-	//auto* controller = GetUI<UIIcon>(Hash32("icon_controller"));
 	UIAnimationFactory::Attach<UIScaleAnimation>(controller, Hash32("controller_scaleDown"));
-	//auto* controller = GetUI<UIIcon>(Hash32("icon_controller"));
 	UIAnimationFactory::Attach<UIScaleAnimation>(controller, Hash32("controller_default"));
 
 	// カメラアイコンのアニメーションアタッチ
@@ -232,9 +227,7 @@ void OptionMenu::AnimationIconAttach()
 	UIAnimationFactory::Attach<UIScaleAnimation>(gear1, Hash32("Option_gearIcon_scaleUp"));
 	auto* gear2 = GetUI<UIIcon>(Hash32("icon_camera_gear2"));
 	UIAnimationFactory::Attach<UIScaleAnimation>(gear2, Hash32("Option_gear2Icon_scaleUp"));
-	//auto* gear1 = GetUI<UIIcon>(Hash32("icon_camera_gear"));
 	UIAnimationFactory::Attach<UIRotationAnimation>(gear1, Hash32("gear_rotation_Left"));
-	//auto* gear2 = GetUI<UIIcon>(Hash32("icon_camera_gear2"));
 	UIAnimationFactory::Attach<UIRotationAnimation>(gear2, Hash32("sound_rotation_Right"));
 
 }
@@ -243,7 +236,6 @@ void OptionMenu::SoundIconAnimation()
 {
 	// 拡大
 	auto* sound = GetUI<UIIcon>(Hash32("icon_sound"));
-	//UIAnimationFactory::Attach<UIScaleAnimation>(sound, Hash32("Option_soundIcon_scaleUp"));
 	auto* animation = sound->FindAnimation(Hash32("Option_soundIcon_scaleUp"));
 	animation->Clear();
 	animation->Play();
@@ -252,14 +244,12 @@ void OptionMenu::SoundIconAnimation()
 	taskScheduler->AddLoopTimer(id, 2.0f, [&]()
 		{
 			auto* sound = GetUI<UIIcon>(Hash32("icon_sound"));
-			//UIAnimationFactory::Attach<UIRotationAnimation>(sound, Hash32("sound_rotation"));
 			auto* animation = sound->FindAnimation(Hash32("sound_rotation"));
 			animation->Play();
 		});
 	taskScheduler->AddLoopTimer(id, 3.4f, [&]()
 		{
 			auto* sound = GetUI<UIIcon>(Hash32("icon_sound"));
-			//UIAnimationFactory::Attach<UIRotationAnimation>(sound, Hash32("sound_rotation"));
 			auto* animation = sound->FindAnimation(Hash32("sound_rotation"));
 			animation->Stop();
 		}, false);
@@ -270,7 +260,6 @@ void OptionMenu::ControllerIconAnimation()
 {
 	// 拡大
 	auto* controller = GetUI<UIIcon>(Hash32("icon_controller"));
-	//UIAnimationFactory::Attach<UIScaleAnimation>(controller, Hash32("Option_controllerIcon_scaleUp"));
 	auto* animation = controller->FindAnimation(Hash32("Option_controllerIcon_scaleUp"));
 	animation->Clear();
 	animation->Play();
@@ -279,7 +268,6 @@ void OptionMenu::ControllerIconAnimation()
 	taskScheduler->AddLoopTimer(id, 2.0, [&]()
 		{
 			auto* controller = GetUI<UIIcon>(Hash32("icon_controller"));
-			//UIAnimationFactory::Attach<UITranslateOffsetAnimation>(controller, Hash32("controller_posYUp"));
 			auto* animation = controller->FindAnimation(Hash32("controller_posYUp"));
 			animation->Clear();
 			animation->Play();
@@ -287,14 +275,12 @@ void OptionMenu::ControllerIconAnimation()
 	taskScheduler->AddLoopTimer(id, 2.3f, [&]()
 		{
 			auto* controller = GetUI<UIIcon>(Hash32("icon_controller"));
-			//UIAnimationFactory::Attach<UITranslateOffsetAnimation>(controller, Hash32("controller_posYUp"));
 			auto* animation = controller->FindAnimation(Hash32("controller_posYUp"));
 			animation->Stop();
 		}, false);
 	taskScheduler->AddLoopTimer(id, 2.4, [&]()
 		{
 			auto* controller = GetUI<UIIcon>(Hash32("icon_controller"));
-			//UIAnimationFactory::Attach<UITranslateOffsetAnimation>(controller, Hash32("controller_posYDown"));
 			auto* animation = controller->FindAnimation(Hash32("controller_posYDown"));
 			animation->Clear();
 			animation->Play();
@@ -302,15 +288,12 @@ void OptionMenu::ControllerIconAnimation()
 	taskScheduler->AddLoopTimer(id, 2.7f, [&]()
 		{
 			auto* controller = GetUI<UIIcon>(Hash32("icon_controller"));
-			//UIAnimationFactory::Attach<UITranslateOffsetAnimation>(controller, Hash32("controller_posYDown"));
 			auto* animation = controller->FindAnimation(Hash32("controller_posYDown"));
 			animation->Stop();
 		}, false);
 	taskScheduler->AddLoopTimer(id, 2.6, [&]()
 		{
 			auto* controller = GetUI<UIIcon>(Hash32("icon_controller"));
-			//controller->SetPivot(Vector2(0.5f, 0.0f));
-			//UIAnimationFactory::Attach<UIScaleAnimation>(controller, Hash32("controller_scaleDown"));
 			auto* animation = controller->FindAnimation(Hash32("controller_scaleDown"));
 			animation->Clear();
 			animation->Play();
@@ -318,14 +301,12 @@ void OptionMenu::ControllerIconAnimation()
 	taskScheduler->AddLoopTimer(id, 3.0f, [&]()
 		{
 			auto* controller = GetUI<UIIcon>(Hash32("icon_controller"));
-			//UIAnimationFactory::Attach<UIScaleAnimation>(controller, Hash32("controller_scaleDown"));
 			auto* animation = controller->FindAnimation(Hash32("controller_scaleDown"));
 			animation->Stop();
 		}, false);
 	taskScheduler->AddLoopTimer(id, 2.9, [&]()
 		{
 			auto* controller = GetUI<UIIcon>(Hash32("icon_controller"));
-			//UIAnimationFactory::Attach<UIScaleAnimation>(controller, Hash32("controller_default"));
 			auto* animation = controller->FindAnimation(Hash32("controller_default"));
 			animation->Clear();
 			animation->Play();
@@ -333,7 +314,6 @@ void OptionMenu::ControllerIconAnimation()
 	taskScheduler->AddLoopTimer(id, 3.3f, [&]()
 		{
 			auto* controller = GetUI<UIIcon>(Hash32("icon_controller"));
-			//UIAnimationFactory::Attach<UIScaleAnimation>(controller, Hash32("controller_default"));
 			auto* animation = controller->FindAnimation(Hash32("controller_default"));
 			animation->Stop();
 		}, false);
@@ -344,19 +324,16 @@ void OptionMenu::CameraIconAnimation()
 {
 	// 拡大
 	auto* camera = GetUI<UIIcon>(Hash32("icon_camera"));
-	//UIAnimationFactory::Attach<UIScaleAnimation>(camera, Hash32("Option_cameraIcon_scaleUp"));
 	auto* animation = camera->FindAnimation(Hash32("Option_cameraIcon_scaleUp"));
 	animation->Clear();
 	animation->Play();
 	// 拡大
 	auto* gear1 = GetUI<UIIcon>(Hash32("icon_camera_gear"));
-	//UIAnimationFactory::Attach<UIScaleAnimation>(gear1, Hash32("Option_gearIcon_scaleUp"));
 	auto* gear1Anim = gear1->FindAnimation(Hash32("Option_gearIcon_scaleUp"));
 	animation->Clear();
 	gear1Anim->Play();
 	// 拡大
 	auto* gear2 = GetUI<UIIcon>(Hash32("icon_camera_gear2"));
-	//UIAnimationFactory::Attach<UIScaleAnimation>(gear2, Hash32("Option_gear2Icon_scaleUp"));
 	auto* gear2Anim = gear2->FindAnimation(Hash32("Option_gear2Icon_scaleUp"));
 	animation->Clear();
 	gear2Anim->Play();
@@ -366,11 +343,8 @@ void OptionMenu::CameraIconAnimation()
 	taskScheduler->AddLoopTimer(id, 2.0, [&]()
 		{
 			auto* gear1 = GetUI<UIIcon>(Hash32("icon_camera_gear"));
-			//UIAnimationFactory::Attach<UIRotationAnimation>(gear1, Hash32("gear_rotation_Left"));
 			auto* gear1Anim = gear1->FindAnimation(Hash32("gear_rotation_Left"));
-			//
 			auto* gear2 = GetUI<UIIcon>(Hash32("icon_camera_gear2"));
-			//UIAnimationFactory::Attach<UIRotationAnimation>(gear2, Hash32("sound_rotation_Right"));
 			auto* gear2Anim = gear2->FindAnimation(Hash32("sound_rotation_Right"));
 			gear1Anim->Play();
 			gear2Anim->Play();
@@ -378,10 +352,8 @@ void OptionMenu::CameraIconAnimation()
 	taskScheduler->AddLoopTimer(id, 3.2f, [&]()
 		{
 			auto* gear1 = GetUI<UIIcon>(Hash32("icon_camera_gear"));
-			//UIAnimationFactory::Attach<UIRotationAnimation>(gear1, Hash32("gear_rotation_Left"));
 			auto* gear1Anim = gear1->FindAnimation(Hash32("gear_rotation_Left"));
 			auto* gear2 = GetUI<UIIcon>(Hash32("icon_camera_gear2"));
-			//UIAnimationFactory::Attach<UIRotationAnimation>(gear2, Hash32("sound_rotation_Right"));
 			auto* gear2Anim = gear2->FindAnimation(Hash32("sound_rotation_Right"));
 			gear2Anim->Stop();
 			gear1Anim->Stop();
@@ -455,7 +427,6 @@ void OptionMenu::ResetIcon()
 bool OptionMenu::IsSelectSound() const
 {
 	// 0は「サウンド」なので
-	//return selector_->GetValue() == 0;
 	return selectOptionType == SOUND_OPTION_TYPE;
 }
 
@@ -463,7 +434,6 @@ bool OptionMenu::IsSelectSound() const
 bool OptionMenu::IsSelectKeyConfig() const
 {
 	// 1は「キー」なので
-	//return selector_->GetValue() == 1;
 	return selectOptionType == KEY_OPTION_TYPE;
 }
 
@@ -471,6 +441,5 @@ bool OptionMenu::IsSelectKeyConfig() const
 bool OptionMenu::IsSelectCamera() const
 {
 	// 2は「カメラ」なので
-	//return selector_->GetValue() == 2;
 	return selectOptionType == CAMERA_OPTION_TYPE;
 }

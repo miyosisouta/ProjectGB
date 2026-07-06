@@ -78,11 +78,11 @@ void TitleMenu::Update()
 
 
 void TitleMenu::Render(RenderContext& rc)
-{
+{	
+	effectRender->Draw(rc);
+	effectRenderB->Draw(rc);
+
 	MenuBase::Render(rc);
-	
-	//effectRender->Draw(rc);
-	//effectRenderB->Draw(rc);
 }
 
 
@@ -118,6 +118,14 @@ void TitleMenu::InitializeLogic()
 			{
 				auto* gabu = GetUI<UIIcon>(Hash32("Title_gabu"));
 				auto* animation = gabu->FindAnimation(Hash32("gabu_scaleDown"));
+				animation->Play();
+			});
+		// がぶっとの文字アニメーション 通常サイズに戻る
+		UIAnimationFactory::Attach<UIScaleAnimation>(gabu, Hash32("gabu_normalscale"));
+		taskScheduler->AddTimer(2.8f, [&]()
+			{
+				auto* gabu = GetUI<UIIcon>(Hash32("Title_gabu"));
+				auto* animation = gabu->FindAnimation(Hash32("gabu_normalscale"));
 				animation->Play();
 			});
 		// バスターの文字アニメーション どーん
@@ -156,7 +164,7 @@ void TitleMenu::InitializeLogic()
 
 		effectRenderB = std::make_unique<ParticleEffectRender>();
 		effectRenderB->Init("Assets/ui/vfx/effect_sparkle.json", "Assets/ui/titleUI/kira.dds", 128.0f, 128.0f);
-		effectRenderB->SetPosition(Vector3(-280.0f, 200, 0.0f));
+		effectRenderB->SetPosition(Vector3(-250.0f, 200, 0.0f));
 		effectRenderB->EnableHotReload();
 
 		taskScheduler->AddTimer(4.0f, [&]()
@@ -166,9 +174,6 @@ void TitleMenu::InitializeLogic()
 			});
 	}
 	
-	// タイトルの水色背景は 3D 背景があるため非表示
-	auto* back = GetUI<UIIcon>(Hash32("title_back"));
-	back->isDraw = false;
 
 	// 非表示 はじめる
 	auto* start = GetUI<UIIcon>(Hash32("Title_start"));
@@ -206,4 +211,10 @@ bool TitleMenu::IsSelectExit() const
 {
 	// 2は「おわり」なので
 	return selector_->GetValue() == 2;
+}
+
+void TitleMenu::StopEffect()
+{
+	effectRender->Reset();
+	effectRenderB->Reset();
 }

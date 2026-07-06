@@ -1,0 +1,30 @@
+{
+  "canvas": {
+    "elements": [
+       {
+        "comment": "十字ボタン：上下",
+        "type": "UIIcon",
+        "name": "selectButton_icon",
+        "asset": "Assets/ui/option/select/ud.DDS",
+        "width": 53,
+        "height": 53,
+        "position": [0, 0, 0],
+        "scale": [1, 1, 1],
+        "rotation": 0,
+        "color": [1, 1, 1, 1]
+      },
+      {
+        "comment": "十字ボタン：文字",
+        "type": "UIIcon",
+        "name": "selectButton_text",
+        "asset": "Assets/ui/option/select/erabu.DDS",
+        "width": 120,
+        "height": 40,
+        "position": [95, 0, 0],
+        "scale": [1, 1, 1],
+        "rotation": 0,
+        "color": [1, 1, 1, 1]
+      }
+    ]
+}
+}

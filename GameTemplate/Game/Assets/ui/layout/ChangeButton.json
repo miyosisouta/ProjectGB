@@ -1,0 +1,30 @@
+{
+  "canvas": {
+    "elements": [
+       {
+        "comment": "十字ボタン：左右",
+        "type": "UIIcon",
+        "name": "changeButton_icon",
+        "asset": "Assets/ui/option/change/lr.DDS",
+        "width": 53,
+        "height": 53,
+        "position": [0, 0, 0],
+        "scale": [1, 1, 1],
+        "rotation": 0,
+        "color": [1, 1, 1, 1]
+      },
+      {
+        "comment": "十字ボタン：文字",
+        "type": "UIIcon",
+        "name": "changeButton_text",
+        "asset": "Assets/ui/option/change/henko.DDS",
+        "width": 140,
+        "height": 40,
+        "position": [100, 0, 0],
+        "scale": [1, 1, 1],
+        "rotation": 0,
+        "color": [1, 1, 1, 1]
+      }
+    ]
+}
+}

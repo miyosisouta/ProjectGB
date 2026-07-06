@@ -44,8 +44,8 @@
             "comment": "タイトル画面：がぶっと",
             "key": "gabu_scaleUp",
             "valueType": "Vector3",
-            "startValue": { "x": 0.0, "y": 0.0, "z": 0.0 },
-            "endValue":   { "x": 2.0, "y": 2.0, "z": 2.0 },
+            "startValue": { "x": 1.0, "y": 1.0, "z": 1.0 },
+            "endValue":   { "x": 3.0, "y": 0.5, "z": 1.0 },
             "duration": 0.5,
             "easing": "EaseOut",
             "loop": "Once"
@@ -54,10 +54,20 @@
             "comment": "タイトル画面：がぶっと",
             "key": "gabu_scaleDown",
             "valueType": "Vector3",
-            "startValue": { "x": 2.0, "y": 2.0, "z": 2.0 },
-            "endValue":   { "x": 1.0, "y": 1.0, "z": 1.0 },
+            "startValue": { "x": 3.0, "y": 0.5, "z": 1.0 },
+            "endValue":   { "x": 1.0, "y": 2.0, "z": 1.0 },
             "duration": 0.3,
             "easing": "EaseIn",
+            "loop": "Once"
+        },
+        {
+            "comment": "タイトル画面：がぶっと",
+            "key": "gabu_normalscale",
+            "valueType": "Vector3",
+            "startValue": { "x": 1.0, "y": 2.0, "z": 1.0 },
+            "endValue":   { "x": 1.0, "y": 1.0, "z": 1.0 },
+            "duration": 0.2,
+            "easing": "EaseOut",
             "loop": "Once"
         },
         {

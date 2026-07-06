@@ -13,27 +13,29 @@
 
 
       {
-        "comment": "タイトル",
+        "comment": "タイトル文字",
         "type": "UIIcon",
         "name": ",word1",
-        "asset": "Assets/ui/SoundOption/title/soundoption.DDS",
-        "width": 520,
+        "asset": "Assets/ui/SoundOption/title/title_sound.DDS",
+        "width": 650,
         "height": 100,
-        "position": [-480, 450, 0],
+        "position": [-720, 450, 0],
         "scale": [1, 1, 1],
         "rotation": 0,
-        "color": [1, 1, 1, 1]
+        "color": [1, 1, 1, 1],
+        "pivot": [0,0.5]
       },
       {
         "type": "UIIcon",
         "name": "sound",
         "asset": "Assets/ui/SoundOption/title/sound.DDS",
         "width": 120,
-        "height": 110,
-        "position": [-850, 455, 0],
+        "height": 100,
+        "position": [-900, 450, 0],
         "scale": [1, 1, 1],
         "rotation": 0,
-        "color": [1, 1, 1, 1]
+        "color": [1, 1, 1, 1],
+        "pivot": [0,0.5]
       },
 
 
@@ -44,7 +46,7 @@
         "asset": "Assets/ui/option/button/fade2.DDS",
         "width": 1800,
         "height": 150,
-        "position": [0, 250, 0],
+        "position": [0, 200, 0],
         "scale": [1, 1, 1],
         "rotation": 0,
         "color": [1, 1, 1, 1]
@@ -55,7 +57,7 @@
         "asset": "Assets/ui/option/button/fade2.DDS",
         "width": 1800,
         "height": 150,
-        "position": [0, 25, 0],
+        "position": [0, -25, 0],
         "scale": [1, 1, 1],
         "rotation": 0,
         "color": [1, 1, 1, 1]
@@ -66,7 +68,7 @@
         "asset": "Assets/ui/option/button/fade2.DDS",
         "width": 1800,
         "height": 150,
-        "position": [0, -200, 0],
+        "position": [0, -250, 0],
         "scale": [1, 1, 1],
         "rotation": 0,
         "color": [1, 1, 1, 1]
@@ -80,7 +82,7 @@
         "asset": "Assets/ui/option/button/walu.DDS",
         "width": 1800,
         "height": 75,
-        "position": [0, 250, 0],
+        "position": [0, 200, 0],
         "scale": [1, 2, 1],
         "rotation": 0,
         "color": [1, 1, 1, 1]
@@ -94,7 +96,7 @@
         "asset": "Assets/ui/SoundOption/moji/master.DDS",
         "width": 250,
         "height": 40,
-        "position": [-750, 250, 0],
+        "position": [-750, 200, 0],
         "scale": [1, 1, 1],
         "rotation": 0,
         "color": [1, 1, 1, 1]
@@ -105,7 +107,7 @@
         "asset": "Assets/ui/SoundOption/moji/bgm.DDS",
         "width": 250,
         "height": 40,
-        "position": [-750, 20, 0],
+        "position": [-750, -25, 0],
         "scale": [1, 1, 1],
         "rotation": 0,
         "color": [1, 1, 1, 1]
@@ -116,7 +118,7 @@
         "asset": "Assets/ui/SoundOption/moji/se.DDS",
         "width": 250,
         "height": 40,
-        "position": [-750, -200, 0],
+        "position": [-750, -250, 0],
         "scale": [1, 1, 1],
         "rotation": 0,
         "color": [1, 1, 1, 1]
@@ -130,7 +132,7 @@
         "asset": "Assets/ui/SoundOption/bar/ber_back.DDS",
         "width": 85,
         "height": 57.5,
-        "position": [96, 250, 0],
+        "position": [96, 200, 0],
         "scale": [12, 1, 1],
         "rotation": 0,
         "color": [1, 1, 1, 1]
@@ -141,7 +143,7 @@
         "asset": "Assets/ui/SoundOption/bar/ber_lr.DDS",
         "width": 25,
         "height": 53,
-        "position": [600, 250.5, 0],
+        "position": [600, 200.5, 0],
         "scale": [1, 1, 1],
         "rotation": 180,
         "color": [1, 1, 1, 1]
@@ -152,7 +154,7 @@
         "asset": "Assets/ui/SoundOption/bar/ber_lr.DDS",
         "width": 25,
         "height": 53,
-        "position": [-396, 250.5, 0],
+        "position": [-396, 200.5, 0],
         "scale": [1, 1, 1],
         "rotation": 0,
         "color": [1, 1, 1, 1]
@@ -163,7 +165,7 @@
         "asset": "Assets/ui/SoundOption/bar/ber_green_lr.DDS",
         "width": 23,
         "height": 45,
-        "position": [-392, 250.5, 0],
+        "position": [-392, 200.5, 0],
         "scale": [1, 1, 1],
         "rotation": 0,
         "color": [1, 1, 1, 1]
@@ -174,7 +176,7 @@
         "asset": "Assets/ui/SoundOption/bar/ber_green_white.DDS",
         "width": 81,
         "height": 45,
-        "position": [-383, 250, 0],
+        "position": [-383, 200, 0],
         "scale": [12, 1, 1],
         "rotation": 0,
         "color": [0.14, 0.9, 0.48, 1]
@@ -185,7 +187,7 @@
         "asset": "Assets/ui/SoundOption/bar/ber_maru.DDS",
         "width": 60,
         "height": 60,
-        "position": [600, 250, 0],
+        "position": [600, 200, 0],
         "scale": [1, 1, 1],
         "rotation": 0,
         "color": [1, 1, 1, 1]
@@ -196,7 +198,7 @@
         "asset": "Assets/ui/SoundOption/bar/ber_waku.DDS",
         "width": 65,
         "height": 65,
-        "position": [600, 250, 0],
+        "position": [600, 200, 0],
         "scale": [1, 1, 1],
         "rotation": 0,
         "color": [1, 1, 1, 1]
@@ -207,7 +209,7 @@
         "asset": "Assets/ui/SoundOption/speaker/mute.DDS",
         "width": 100,
         "height": 80,
-        "position": [-570, 250, 0],
+        "position": [-570, 200, 0],
         "scale": [1, 1, 1],
         "rotation": 0,
         "color": [1, 1, 1, 1]
@@ -218,7 +220,7 @@
         "asset": "Assets/ui/SoundOption/speaker/sound_1.DDS",
         "width": 100,
         "height": 80,
-        "position": [-570, 250, 0],
+        "position": [-570, 200, 0],
         "scale": [1, 1, 1],
         "rotation": 0,
         "color": [1, 1, 1, 1]
@@ -229,7 +231,7 @@
         "asset": "Assets/ui/SoundOption/speaker/sound_2.DDS",
         "width": 100,
         "height": 80,
-        "position": [-570, 250, 0],
+        "position": [-570, 200, 0],
         "scale": [1, 1, 1],
         "rotation": 0,
         "color": [1, 1, 1, 1]
@@ -240,7 +242,7 @@
         "asset": "Assets/ui/SoundOption/speaker/sound_3.DDS",
         "width": 100,
         "height": 80,
-        "position": [-570, 250, 0],
+        "position": [-570, 200, 0],
         "scale": [1, 1, 1],
         "rotation": 0,
         "color": [1, 1, 1, 1]
@@ -254,7 +256,7 @@
         "asset": "Assets/ui/SoundOption/bar/ber_back.DDS",
         "width": 85,
         "height": 57.5,
-        "position": [96, 25, 0],
+        "position": [96, -25.5, 0],
         "scale": [12, 1, 1],
         "rotation": 0,
         "color": [1, 1, 1, 1]
@@ -265,7 +267,7 @@
         "asset": "Assets/ui/SoundOption/bar/ber_lr.DDS",
         "width": 25,
         "height": 53,
-        "position": [600, 25.5, 0],
+        "position": [600, -25.5, 0],
         "scale": [1, 1, 1],
         "rotation": 180,
         "color": [1, 1, 1, 1]
@@ -276,7 +278,7 @@
         "asset": "Assets/ui/SoundOption/bar/ber_lr.DDS",
         "width": 25,
         "height": 53,
-        "position": [-396, 25.5, 0],
+        "position": [-396, -25.5, 0],
         "scale": [1, 1, 1],
         "rotation": 0,
         "color": [1, 1, 1, 1]
@@ -287,7 +289,7 @@
         "asset": "Assets/ui/SoundOption/bar/ber_green_lr.DDS",
         "width": 23,
         "height": 45,
-        "position": [-392, 25.5, 0],
+        "position": [-392, -25.5, 0],
         "scale": [1, 1, 1],
         "rotation": 0,
         "color": [1, 1, 1, 1]
@@ -298,7 +300,7 @@
         "asset": "Assets/ui/SoundOption/bar/ber_green_white.DDS",
         "width": 81,
         "height": 45,
-        "position": [-383, 25, 0],
+        "position": [-383, -25, 0],
         "scale": [12, 1, 1],
         "rotation": 0,
         "color": [0.14, 0.9, 0.48, 1]
@@ -309,7 +311,7 @@
         "asset": "Assets/ui/SoundOption/bar/ber_maru.DDS",
         "width": 60,
         "height": 60,
-        "position": [600, 25, 0],
+        "position": [600, -25, 0],
         "scale": [1, 1, 1],
         "rotation": 0,
         "color": [1, 1, 1, 1]
@@ -320,7 +322,7 @@
         "asset": "Assets/ui/SoundOption/bar/ber_waku.DDS",
         "width": 65,
         "height": 65,
-        "position": [600, 25, 0],
+        "position": [600, -25, 0],
         "scale": [1, 1, 1],
         "rotation": 0,
         "color": [1, 1, 1, 1]
@@ -331,7 +333,7 @@
         "asset": "Assets/ui/SoundOption/speaker/mute.DDS",
         "width": 100,
         "height": 80,
-        "position": [-570, 20, 0],
+        "position": [-570, -25, 0],
         "scale": [1, 1, 1],
         "rotation": 0,
         "color": [0.14, 0.9, 0.48, 1]
@@ -342,7 +344,7 @@
         "asset": "Assets/ui/SoundOption/speaker/sound_1.DDS",
         "width": 100,
         "height": 80,
-        "position": [-570, 20, 0],
+        "position": [-570, -25, 0],
         "scale": [1, 1, 1],
         "rotation": 0,
         "color": [1, 1, 1, 1]
@@ -353,7 +355,7 @@
         "asset": "Assets/ui/SoundOption/speaker/sound_2.DDS",
         "width": 100,
         "height": 80,
-        "position": [-570, 20, 0],
+        "position": [-570, -25, 0],
         "scale": [1, 1, 1],
         "rotation": 0,
         "color": [1, 1, 1, 1]
@@ -364,7 +366,7 @@
         "asset": "Assets/ui/SoundOption/speaker/sound_3.DDS",
         "width": 100,
         "height": 80,
-        "position": [-570, 20, 0],
+        "position": [-570, -25, 0],
         "scale": [1, 1, 1],
         "rotation": 0,
         "color": [1, 1, 1, 1]
@@ -378,7 +380,7 @@
         "asset": "Assets/ui/SoundOption/bar/ber_back.DDS",
         "width": 85,
         "height": 57.5,
-        "position": [96, -200, 0],
+        "position": [96, -250, 0],
         "scale": [12, 1, 1],
         "rotation": 0,
         "color": [1, 1, 1, 1]
@@ -389,7 +391,7 @@
         "asset": "Assets/ui/SoundOption/bar/ber_lr.DDS",
         "width": 25,
         "height": 53,
-        "position": [600, -200, 0],
+        "position": [600, -250, 0],
         "scale": [1, 1, 1],
         "rotation": 180,
         "color": [1, 1, 1, 1]
@@ -400,7 +402,7 @@
         "asset": "Assets/ui/SoundOption/bar/ber_lr.DDS",
         "width": 25,
         "height": 53,
-        "position": [-396, -200, 0],
+        "position": [-396, -250, 0],
         "scale": [1, 1, 1],
         "rotation": 0,
         "color": [1, 1, 1, 1]
@@ -411,7 +413,7 @@
         "asset": "Assets/ui/SoundOption/bar/ber_green_lr.DDS",
         "width": 23,
         "height": 45,
-        "position": [-392, -200, 0],
+        "position": [-392, -250, 0],
         "scale": [1, 1, 1],
         "rotation": 0,
         "color": [1, 1, 1, 1]
@@ -422,7 +424,7 @@
         "asset": "Assets/ui/SoundOption/bar/ber_green_white.DDS",
         "width": 81,
         "height": 45,
-        "position": [-383, -200, 0],
+        "position": [-383, -250, 0],
         "scale": [12, 1, 1],
         "rotation": 0,
         "color": [0.14, 0.9, 0.48, 1]
@@ -433,7 +435,7 @@
         "asset": "Assets/ui/SoundOption/bar/ber_maru.DDS",
         "width": 60,
         "height": 60,
-        "position": [600, -200, 0],
+        "position": [600, -250, 0],
         "scale": [1, 1, 1],
         "rotation": 0,
         "color": [1, 1, 1, 1]
@@ -444,7 +446,7 @@
         "asset": "Assets/ui/SoundOption/bar/ber_waku.DDS",
         "width": 65,
         "height": 65,
-        "position": [600, -200, 0],
+        "position": [600, -250, 0],
         "scale": [1, 1, 1],
         "rotation": 0,
         "color": [1, 1, 1, 1]
@@ -455,7 +457,7 @@
         "asset": "Assets/ui/SoundOption/speaker/mute.DDS",
         "width": 100,
         "height": 80,
-        "position": [-570, -200, 0],
+        "position": [-570, -250, 0],
         "scale": [1, 1, 1],
         "rotation": 0,
         "color": [0.14, 0.9, 0.48, 1]
@@ -466,7 +468,7 @@
         "asset": "Assets/ui/SoundOption/speaker/sound_1.DDS",
         "width": 100,
         "height": 80,
-        "position": [-570, -200, 0],
+        "position": [-570, -250, 0],
         "scale": [1, 1, 1],
         "rotation": 0,
         "color": [1, 1, 1, 1]
@@ -477,7 +479,7 @@
         "asset": "Assets/ui/SoundOption/speaker/sound_2.DDS",
         "width": 100,
         "height": 80,
-        "position": [-570, -200, 0],
+        "position": [-570, -250, 0],
         "scale": [1, 1, 1],
         "rotation": 0,
         "color": [1, 1, 1, 1]
@@ -488,7 +490,7 @@
         "asset": "Assets/ui/SoundOption/speaker/sound_3.DDS",
         "width": 100,
         "height": 80,
-        "position": [-570, -200, 0],
+        "position": [-570, -250, 0],
         "scale": [1, 1, 1],
         "rotation": 0,
         "color": [1, 1, 1, 1]
@@ -500,11 +502,29 @@
 
      
       {
-        "comment": "デフォルトサウンドアイコン",
+        "comment": "へんこうボタンアイコン",
         "type": "UIPrefab",
-        "name": "DefaultSoundIcon",
+        "name": "changeIcon",
+        "source": "Assets/ui/layout/ChangeButton.json",
+        "position": [325, -500, 0],
+        "scale": [1, 1, 1],
+        "color": [0, 0, 0, 1]
+      },
+      {
+        "comment": "えらぶボタンアイコン",
+        "type": "UIPrefab",
+        "name": "selectIcon",
+        "source": "Assets/ui/layout/SelectButton.json",
+        "position": [120, -500, 0],
+        "scale": [1, 1, 1],
+        "color": [0, 0, 0, 1]
+      },
+      {
+        "comment": "デフォルトアイコン",
+        "type": "UIPrefab",
+        "name": "DefaultIcon",
         "source": "Assets/ui/layout/DefaultButton.json",
-        "position": [0, -420, 0],
+        "position": [540, -500, 0],
         "scale": [1, 1, 1]
       },
       {
@@ -513,14 +533,6 @@
         "name": "returnIcon",
         "source": "Assets/ui/layout/RetrunButton.json",
         "position": [790, -500, 0],
-        "scale": [1, 1, 1]
-      },
-      {
-        "comment": "決定ボタンアイコン",
-        "type": "UIPrefab",
-        "name": "decisionIcon",
-        "source": "Assets/ui/layout/DecisionButton.json",
-        "position": [560, -500, 0],
         "scale": [1, 1, 1]
       }
     ]

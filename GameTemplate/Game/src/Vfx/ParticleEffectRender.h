@@ -148,6 +148,8 @@ public:
 
     void Play()
     {
+        // いつ読んでも最初から再生されるようにした
+        Reset();
         emitter_.Play();
     }
 
