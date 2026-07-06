@@ -327,6 +327,12 @@ void BattleManager::Update()
 			// プレイヤー死亡 / 時間切れ → ゲームオーバー
 			if (player_->GetStatus()->IsDead() || gameTimer_.IsTimeUp()) {
 				SetupOverCutScene();				// ゲームオーバーカットシーン
+				if (player_) {
+					auto* stateMachine = player_->GetStateMachine();
+					stateMachine->ResetInput();					// ステートマシーンに設定してある入力関係の値をすべてリセット
+					player_->SetMoveVelocity(Vector3::Zero);	// プレイヤーの元の移動量を0に
+					playerController_->Deactivate();			// プレイヤーが操作できないようにする(回転も止める)
+				}
 				gameState_ = GameState::ResultOver;	// ゲームオーバーリザルトに移行
 			}
 			break;

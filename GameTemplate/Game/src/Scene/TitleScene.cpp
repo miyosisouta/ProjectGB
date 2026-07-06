@@ -74,6 +74,7 @@ void TitleScene::Update()
 					SoundManager::Get().PlaySE(enSoundKind_Menu_Decide);
 					// タイトルUIを即座に非表示 → 犬を走らせる
 					if (auto* c = titleMenu->GetCanvas()) c->color.w = 0.0f;
+					titleMenu->StopEffect(); // 星のキラキラエフェクトも消す
 					titleBackground_->StartPlayerRunOff();
 					pendingLoad_ = PendingLoad::WaitingForDog;
 				}
