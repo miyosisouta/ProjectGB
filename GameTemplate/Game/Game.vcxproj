@@ -310,6 +310,7 @@
     <ClCompile Include="src\UI\MissionMenu.cpp" />
     <ClCompile Include="src\UI\OptionMenu.cpp" />
     <ClCompile Include="src\UI\PauseMenu.cpp" />
+    <ClCompile Include="src\UI\PlayGameMenu.cpp" />
     <ClCompile Include="src\UI\SkillSelectMenu.cpp" />
     <ClCompile Include="src\UI\SoundOptionMenu.cpp" />
     <ClCompile Include="src\UI\TimerMenu.cpp" />
@@ -431,6 +432,7 @@
     <ClInclude Include="src\UI\MissionMenu.h" />
     <ClInclude Include="src\UI\OptionMenu.h" />
     <ClInclude Include="src\UI\PauseMenu.h" />
+    <ClInclude Include="src\UI\PlayGameMenu.h" />
     <ClInclude Include="src\UI\SkillSelectMenu.h" />
     <ClInclude Include="src\UI\SoundOptionMenu.h" />
     <ClInclude Include="src\UI\TimerMenu.h" />

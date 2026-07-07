@@ -25,6 +25,8 @@ public:
 
 	/** 「はじめる」を選んでいるか */
 	bool IsSelectStat() const;
+	/** 「あそびかた」を選んでいるか */
+	bool IsSelectPlay() const;
 	/** 「設定」を選んでいるか */
 	bool IsSelectOption() const;
 	/** 「おわり」を選んでいるか */

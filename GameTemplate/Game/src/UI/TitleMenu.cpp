@@ -21,6 +21,7 @@ void TitleMenu::Update()
 	
 
 	auto* startPositionDummy = GetUI<UIDummy>(Hash32("StartPositionDummy"));
+	auto* playPositionDummy = GetUI<UIDummy>(Hash32("PlayPositionDummy"));
 	auto* OptionPositionDummy = GetUI<UIDummy>(Hash32("OptionPositionDummy"));
 	auto* exitPositionDummy = GetUI<UIDummy>(Hash32("ExitPositionDummy"));
 	
@@ -29,6 +30,7 @@ void TitleMenu::Update()
 		const int selectIndex = selector_->GetValue();
 		Vector3 selectPositionList[] = {
 			startPositionDummy->transform.position,
+			playPositionDummy->transform.position,
 			OptionPositionDummy->transform.position,
 			exitPositionDummy->transform.position
 		};
@@ -50,19 +52,23 @@ void TitleMenu::Update()
 
 			AbuttonColor->isDraw = false;
 
-			// 非表示 はじめる
+			// 表示 はじめる
 			auto* start = GetUI<UIIcon>(Hash32("Title_start"));
 			start->isDraw = true;
 
-			// 非表示 サウンド
-			auto* sound = GetUI<UIIcon>(Hash32("Title_option"));
-			sound->isDraw = true;
+			// 表示 あそびかた
+			auto* play = GetUI<UIIcon>(Hash32("Title_play"));
+			play->isDraw = true;
 
-			// 非表示 おわる
+			// 表示 せってい
+			auto* option = GetUI<UIIcon>(Hash32("Title_option"));
+			option->isDraw = true;
+
+			// 表示 おわる
 			auto* exit = GetUI<UIIcon>(Hash32("Title_exit"));
 			exit->isDraw = true;
 
-			// 非表示 にくきゅう
+			// 表示 にくきゅう
 			auto* select = GetUI<UIIcon>(Hash32("Title_nikukyu_button"));
 			select->isDraw = true;
 
@@ -88,7 +94,7 @@ void TitleMenu::Render(RenderContext& rc)
 
 void TitleMenu::InitializeLogic()
 {
-	selector_ = std::make_unique<IntSelector>(0, 2, 1, 0);
+	selector_ = std::make_unique<IntSelector>(0, 3, 1, 0);
 
 	taskScheduler = std::make_unique<TaskSchedulerSystem>();
 
@@ -179,6 +185,10 @@ void TitleMenu::InitializeLogic()
 	auto* start = GetUI<UIIcon>(Hash32("Title_start"));
 	start->isDraw = false;
 
+	// 非表示 あそびかた
+	auto* play = GetUI<UIIcon>(Hash32("Title_play"));
+	play->isDraw = false;
+
 	// 非表示 設定
 	auto* option = GetUI<UIIcon>(Hash32("Title_option"));
 	option->isDraw = false;
@@ -199,18 +209,23 @@ bool TitleMenu::IsSelectStat() const
 	return selector_->GetValue() == 0;
 }
 
+bool TitleMenu::IsSelectPlay() const
+{
+	// 1は「あそびかた」なので
+	return selector_->GetValue() == 1;
+}
 
 bool TitleMenu::IsSelectOption() const
 {
-	// 1は「設定」なので
-	return selector_->GetValue() == 1;
+	// 2は「設定」なので
+	return selector_->GetValue() == 2;
 }
 
 
 bool TitleMenu::IsSelectExit() const
 {
-	// 2は「おわり」なので
-	return selector_->GetValue() == 2;
+	// 3は「おわり」なので
+	return selector_->GetValue() == 3;
 }
 
 void TitleMenu::StopEffect()
