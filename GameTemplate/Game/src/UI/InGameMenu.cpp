@@ -273,22 +273,22 @@ void InGameMenu::Update()
 	else if (staminaRate >= 1.0f)
 	{
 		staminaGauge_.SetGaugeColor(Vector4(0.0f, 0.0f, 0.0f, 0.0f));
-		staminaGauge_.SetBgColor({ 0.0f, 0.0f, 0.0f, 1.0f });
+		staminaGauge_.SetBgColor({ 0.3f, 0.3f, 0.3f, 1.0f });
 	}
 	else if (staminaRate >= 0.5f)
 	{
 		staminaGauge_.SetGaugeColor({ 0.3f,1.0f,0.3f,1.0f });
-		staminaGauge_.SetBgColor({ 0.0f, 0.0f, 0.0f, 1.0f });
+		staminaGauge_.SetBgColor({ 0.3f, 0.3f, 0.3f, 1.0f });
 	}
 	else if (staminaRate >= 0.25f)
 	{
 		staminaGauge_.SetGaugeColor({ 1.0f,1.0f,0.3f,1.0f });
-		staminaGauge_.SetBgColor({ 0.0f, 0.0f, 0.0f, 1.0f });
+		staminaGauge_.SetBgColor({ 0.3f, 0.3f, 0.3f, 1.0f });
 	}
 	else
 	{
 		staminaGauge_.SetGaugeColor({ 1.0f,0.3f,0.3f,1.0f });
-		staminaGauge_.SetBgColor({ 0.0f, 0.0f, 0.0f, 1.0f });
+		staminaGauge_.SetBgColor({ 0.3f, 0.3f, 0.3f, 1.0f });
 	}
 
 	// 枯渇時：スキルボタンA（回避/ダッシュ）のグレー化と枯渇アイコン表示

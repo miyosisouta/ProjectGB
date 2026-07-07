@@ -1,6 +1,6 @@
 ﻿/**
  * KeyConfigOptionMenu.h
- * 制限時間
+ * ボタン設定
  */
 #pragma once
 #include "Menu.h"
