@@ -109,6 +109,7 @@
     <ClCompile Include="src\Battle\GamePhaseManager.cpp" />
     <ClCompile Include="src\Emotion\EmotionSystem.cpp" />
     <ClCompile Include="src\Emotion\EmotionEffectObserver.cpp" />
+    <ClCompile Include="src\UI\PlayGameMenu.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Game.h" />
@@ -231,5 +232,6 @@
     <ClInclude Include="src\Emotion\IBossStatusModifier.h" />
     <ClInclude Include="src\Emotion\IEmotionObserver.h" />
     <ClInclude Include="src\Emotion\EmotionEffectObserver.h" />
+    <ClInclude Include="src\UI\PlayGameMenu.h" />
   </ItemGroup>
 </Project>

@@ -22,6 +22,7 @@
 #include "src/UI/KeyConfigOptionMenu.h"
 #include "src/UI/WarningButtonWindow.h"
 #include "src/UI/CameraOptionMenu.h"
+#include "src/UI/PlayGameMenu.h"
 #include "src/UI/UIScreenManager.h"
 
 namespace
@@ -60,6 +61,10 @@ void TitleScene::Update()
 	auto* titleMenu = dynamic_cast<TitleMenu*>(menu);
 	if (titleMenu) {
 		// 遷移してもよいか
+		if (playGameMenuWasActive_ && !UIScreenManager::Get().IsTransitioning()) {
+			playGameMenuWasActive_ = false;
+			titleBackground_->SetScrollEnabled(true); // タイトルのスクロール開始
+		}
 		if (optionMenuWasActive_ && !UIScreenManager::Get().IsTransitioning()) {
 			optionMenuWasActive_ = false;
 			titleBackground_->SetScrollEnabled(true); // タイトルのスクロール開始
@@ -77,6 +82,16 @@ void TitleScene::Update()
 					titleMenu->StopEffect(); // 星のキラキラエフェクトも消す
 					titleBackground_->StartPlayerRunOff();
 					pendingLoad_ = PendingLoad::WaitingForDog;
+				}
+			}
+
+			// あそびかたを選んでいる場合
+			if (titleMenu->IsSelectPlay()) {
+				if (g_pad[0]->IsTrigger(enButtonA)) {
+					SoundManager::Get().PlaySE(enSoundKind_Menu_Decide);
+					titleBackground_->SetScrollEnabled(false); // タイトルのスクロール停止
+					playGameMenuWasActive_ = true; // オプションメニューを開く
+					UIScreenManager::Get().Push<PlayGameMenu>("Assets/ui/layout/PlayGameMenu.json", UITransitionMode::Push, UIScreenTransitionPreset::FadeInOut());
 				}
 			}
 
@@ -260,6 +275,19 @@ void TitleScene::Update()
 			}
 		}
 	}
+
+
+	// -------------------------------------------------------
+	// あそびかた
+	// -------------------------------------------------------
+	auto* playMenu = dynamic_cast<PlayGameMenu*>(menu);
+	if (playMenu) {
+		if (!UIScreenManager::Get().IsTransitioning() && g_pad[0]->IsTrigger(enButtonB)) {
+			SoundManager::Get().PlaySE(enSoundKind_Menu_Return);
+			UIScreenManager::Get().Pop();
+		}
+	}
+
 
 	// -------------------------------------------------------
 	// オプション系

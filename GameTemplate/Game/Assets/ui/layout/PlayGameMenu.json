@@ -1,0 +1,137 @@
+{
+  "canvas": {
+    "elements": [
+       {
+        "comment": "オプションの背景",
+        "type": "UIPrefab",
+        "name": "optionBack",
+        "source": "Assets/ui/layout/OptionBack.json",
+        "position": [0, 0, 0],
+        "scale": [1, 1, 1]
+      },
+
+
+
+      {
+        "coment": "タイトルアイコン",
+        "type": "UIIcon",
+        "name": "titleIcon",
+        "asset": "Assets/ui/playGameUI/icon.DDS",
+        "width": 160,
+        "height": 120,
+        "position": [-850, 445, 0],
+        "scale": [1, 1, 1],
+        "rotation": 0,
+        "color": [1, 1, 1, 1]
+      },
+      {
+        "coment": "タイトル文字",
+        "type": "UIIcon",
+        "name": "titleObi",
+        "asset": "Assets/ui/playGameUI/play_text.DDS",
+        "width": 380,
+        "height": 100,
+        "position": [-750, 440, 0],
+        "scale": [1, 1, 1],
+        "rotation": 0,
+        "color": [1, 1, 1, 1],
+        "pivot": [0,0.5]
+      },
+
+
+
+      {
+        "coment": "左矢印",
+        "type": "UIIcon",
+        "name": "leftArrow",
+        "asset": "Assets/ui/playGameUI/next.DDS",
+        "width": 80,
+        "height": 80,
+        "position": [-850, 0, 0],
+        "scale": [1, 1, 1],
+        "rotation": 180,
+        "color": [1, 1, 1, 1],
+        "isDraw": false
+      },
+      {
+        "coment": "右矢印",
+        "type": "UIIcon",
+        "name": "rightArrow",
+        "asset": "Assets/ui/playGameUI/next.DDS",
+        "width": 80,
+        "height": 80,
+        "position": [850, 0, 0],
+        "scale": [1, 1, 1],
+        "rotation": 0,
+        "color": [1, 1, 1, 1],
+        "isDraw": true
+      },
+
+
+
+      {
+        "coment": "1ページ目",
+        "type": "UIIcon",
+        "name": "no1",
+        "asset": "Assets/ui/playGameUI/no1.DDS",
+        "width": 1400,
+        "height": 700,
+        "position": [0, -50, 0],
+        "scale": [1, 1, 1],
+        "rotation": 0,
+        "color": [1, 1, 1, 1],
+        "isDraw": true
+      },
+      {
+        "coment": "2ページ目",
+        "type": "UIIcon",
+        "name": "no2",
+        "asset": "Assets/ui/playGameUI/no2.DDS",
+        "width": 1550,
+        "height": 650,
+        "position": [0, -30, 0],
+        "scale": [1, 1, 1],
+        "rotation": 0,
+        "color": [1, 1, 1, 1],
+        "isDraw": false
+      },
+      {
+        "coment": "3ページ目",
+        "type": "UIIcon",
+        "name": "no3",
+        "asset": "Assets/ui/playGameUI/no3.DDS",
+        "width": 1500,
+        "height": 700,
+        "position": [0, -50, 0],
+        "scale": [1, 1, 1],
+        "rotation": 0,
+        "color": [1, 1, 1, 1],
+        "isDraw": false
+      },
+
+
+
+
+
+
+
+      {
+        "comment": "へんこうボタンアイコン",
+        "type": "UIPrefab",
+        "name": "changeIcon",
+        "source": "Assets/ui/layout/ChangeButton.json",
+        "position": [560, -500, 0],
+        "scale": [1, 1, 1],
+        "color": [0, 0, 0, 1]
+      },
+      {
+        "comment": "戻るボタンアイコン",
+        "type": "UIPrefab",
+        "name": "returnIcon",
+        "source": "Assets/ui/layout/RetrunButton.json",
+        "position": [790, -500, 0],
+        "scale": [1, 1, 1]
+      }
+    ]
+}
+}

@@ -20,6 +20,7 @@ private:
 
 	TitleBackground* titleBackground_ = nullptr;
 	bool        isRequestScene        = false;
+	bool        playGameMenuWasActive_ = false;
 	bool        optionMenuWasActive_  = false;
 	PendingLoad pendingLoad_          = PendingLoad::None;
 	float       loadingTimer_         = 0.0f;

@@ -14,12 +14,12 @@
 
 
 #include "src/UI/Layout.h"
-#include "src/UI/SoundOptionMenu.h"
+#include "src/UI/TitleMenu.h"
 
 
 DebugScene::DebugScene()
 {
-	titleBackground_ = NewGO<TitleBackground>(0, "SoundOptionMenu");
+	//titleBackground_ = NewGO<TitleBackground>(0, "SoundOptionMenu");
 }
 
 
@@ -35,7 +35,7 @@ bool DebugScene::Start()
 {
 	// UI
 	layout_ = new Layout;
-	layout_->Initialize<SoundOptionMenu>("Assets/ui/Layout/SoundOptionMenu.json");
+	layout_->Initialize<TitleMenu>("Assets/ui/Layout/TitleMenu.json");
 
 
 	// タイトル
@@ -49,7 +49,7 @@ void DebugScene::Update()
 {
 	// UI
 	//taskScheduler_->Update(g_gameTime->GetFrameDeltaTime());
-	SoundOptionMenu* menu = static_cast<SoundOptionMenu*>(layout_->GetMenu());
+	TitleMenu* menu = static_cast<TitleMenu*>(layout_->GetMenu());
 	
 	layout_->Update();
 }

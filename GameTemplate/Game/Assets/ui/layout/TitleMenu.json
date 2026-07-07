@@ -95,7 +95,19 @@
         "asset": "Assets/ui/titleUI/start.DDS",
         "width": 300,
         "height": 50,
-        "position": [0, -180, 0],
+        "position": [0, -140, 0],
+        "scale": [1, 1, 1],
+        "rotation": 0,
+        "color": [1, 1, 1, 1]
+      },
+      {
+        "coment": "タイトルメニュー:あそびかた",
+        "type": "UIIcon",
+        "name": "Title_play",
+        "asset": "Assets/ui/titleUI/play_text.DDS",
+        "width": 330,
+        "height": 50,
+        "position": [0, -250, 0],
         "scale": [1, 1, 1],
         "rotation": 0,
         "color": [1, 1, 1, 1]
@@ -107,7 +119,7 @@
         "asset": "Assets/ui/titleUI/title.DDS",
         "width": 290,
         "height": 45,
-        "position": [0, -300, 0],
+        "position": [0, -360, 0],
         "scale": [1, 1, 1],
         "rotation": 0,
         "color": [1, 1, 1, 1]
@@ -119,7 +131,7 @@
         "asset": "Assets/ui/titleUI/exit.DDS",
         "width": 220,
         "height": 50,
-        "position": [0, -420, 0],
+        "position": [0, -470, 0],
         "scale": [1, 1, 1],
         "rotation": 0,
         "color": [1, 1, 1, 1]
@@ -130,19 +142,25 @@
         "comment": "ダミー(はじめる座標取得用)",
         "type": "UIDummy",
         "name": "StartPositionDummy",
-        "position": [-210, -180, 0]
+        "position": [-210, -140, 0]
+      },
+      {
+        "comment": "ダミー(あそびかた座標取得用)",
+        "type": "UIDummy",
+        "name": "PlayPositionDummy",
+        "position": [-230, -250, 0]
       },
       {
         "comment": "ダミー(設定座標取得用)",
         "type": "UIDummy",
         "name": "OptionPositionDummy",
-        "position": [-210, -300, 0]
+        "position": [-210, -360, 0]
       },
       {
         "comment": "ダミー(おわる座標取得用)",
         "type": "UIDummy",
         "name": "ExitPositionDummy",
-        "position": [-170, -420, 0]
+        "position": [-170, -470, 0]
       }
     ]
 }

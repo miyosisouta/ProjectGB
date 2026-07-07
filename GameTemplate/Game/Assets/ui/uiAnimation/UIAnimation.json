@@ -872,6 +872,28 @@
             "duration": 0.2,
             "easing": "EaseIn",
             "loop": "Once"
+        },
+
+
+        {
+            "comment": "やじるし:左に動く",
+            "key": "arrow_posLeft",
+            "valueType": "Vector3",
+            "startValue": { "x": 0, "y": 0, "z": 0},
+            "endValue":   { "x": -15, "y": 0, "z": 0},
+            "duration": 1.0,
+            "easing": "EaseOut",
+            "loop": "Loop"
+        },
+        {
+            "comment": "やじるし:右に動く",
+            "key": "arrow_posRight",
+            "valueType": "Vector3",
+            "startValue": { "x": 0, "y": 0, "z": 0},
+            "endValue":   { "x": 15, "y": 0, "z": 0},
+            "duration": 1.0,
+            "easing": "EaseOut",
+            "loop": "Loop"
         }
     ]
 }
