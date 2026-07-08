@@ -51,6 +51,10 @@ enum enSoundKind
 	enSoundKind_InGame,
 	enSoundKind_GameClear,
 	enSoundKind_GameOver,
+
+	/** ゲームクリアリザルト：ミッション */
+	enSoundKind_Slide,
+	enSoundKind_Mission_Clear,
 	enSoundKind_SE_Max,
 };
 
@@ -108,6 +112,10 @@ static SoundInformation soundInformation[enSoundKind_SE_Max] =
 	SoundInformation("Assets/Audio/BGM/SkillSelect.wav"),	//!< スキル選択
 	SoundInformation("Assets/Audio/BGM/InGame.wav"),		//!< インゲーム
 	SoundInformation("Assets/Audio/BGM/GameClear.wav"),		//!< ゲームクリア
-	SoundInformation("Assets/Audio/BGM/GameOver.wav")		//!< ゲームオーバー
+	SoundInformation("Assets/Audio/BGM/GameOver.wav"),		//!< ゲームオーバー
+
+	/** ゲームクリアリザルト：ミッション */
+	SoundInformation("Assets/Audio/SE/Result/slide.wav"),
+	SoundInformation("Assets/Audio/SE/Result/mission_clear.wav")
 };
 

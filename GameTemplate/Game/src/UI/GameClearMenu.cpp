@@ -208,6 +208,9 @@ void GameClearMenu::ShowMissionBackground(int index)
 	if (!canvas) return;
 	canvas->isDraw = true;
 
+	// スライドSE再生
+	SoundManager::Get().PlaySE(enSoundKind_Slide);
+
 	// ミッションテキストをスライドと同時に表示
 	{
 		struct MissionTextEntry { MissionID id; const char* name; };
@@ -297,6 +300,9 @@ void GameClearMenu::RevealMission(int index)
 				medalGold->FindAnimation(Hash32("mission_medaru_scale"))->Play();
 			}
 			if (medalNo) medalNo->isDraw = false;
+
+			// クリアSE再生
+			SoundManager::Get().PlaySE(enSoundKind_Mission_Clear);
 		}
 		else
 		{
