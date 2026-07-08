@@ -378,6 +378,8 @@ struct MasterEmotionParameter : public IMasterParameter
 	float         debuffEffectScale = 1.0f;  //!< 動揺エフェクトのスケール（一様）
 	float         buffEffectOffsetY   = 0.0f;  //!< 強気化エフェクトのボス位置からのYオフセット（XZはボス座標のまま）
 	float         debuffEffectOffsetY = 0.0f;  //!< 動揺エフェクトのボス位置からのYオフセット（XZはボス座標のまま）
+	float         buffSeVolumeBoost   = 1.0f;  //!< 強気化SEの追加音量倍率（通常のマスター×SE計算値に掛ける。素材音源の収録音量差を補うためのもの）
+	float         debuffSeVolumeBoost = 1.0f;  //!< 動揺SEの追加音量倍率（同上）
 };
 
 /**
@@ -504,6 +506,54 @@ struct MasterBossStateParameter : public IMasterParameter
 	} death;
 };
 
+/**
+ * ボスHP閾値カットシーンのパラメーター（ボスの種類ごとに設定）
+ * BossPhaseCutSceneParameter.json の "BossPhaseCutScene" 配列から読み込む
+ * "key" フィールドでボスを識別する (例: "Gorilla", "Turtle")
+ */
+struct MasterBossPhaseCutSceneParameter : public IMasterParameter
+{
+	appParameter(MasterBossPhaseCutSceneParameter);
+
+	std::string key;					//!< ボス識別キー (例: "Gorilla", "Turtle")
+	float angryHpRatio = 0.5f;			//!< 「怒り状態」カットシーンに入るHP割合の閾値
+	float tiredHpRatio = 0.25f;			//!< 「疲れ状態」カットシーンに入るHP割合の閾値
+	float cameraDistance = 300.0f;		//!< ボス正面からのカメラ距離
+	float cameraHeight = 150.0f;		//!< 注視点・カメラ位置の高さオフセット
+	float cameraEaseDuration = 1.2f;	//!< カメラが通常視点⇔ボス正面をイージングで移動する秒数（往復とも同じ秒数）
+	float cutsceneDuration = 5.0f;		//!< カメラをボスの正面に合わせてから、通常視点に戻すまでの秒数
+	float bossIdleHoldDuration = 3.0f;	//!< 視点が戻ってからボスAIを再開するまでの待機秒数（戻った瞬間に攻撃が当たって見えるのを防ぐ）
+	float iconOffsetY = 0.0f;			//!< 怒り/疲れマーク(angry1/2, tired1/2/3)のY座標に加えるオフセット。ボスごとに立ち位置・高さが違うための調整値
+	float tiredIconOffsetX = 0.0f;		//!< 疲れマーク(tired1/2/3)を外側(X方向)にずらす量。tired1/3は+X、tired2は-X側へ適用する
+
+	// HP25%演出：ボスの前後傾き（X軸回転）
+	float pitchForwardDeg         = 20.0f;	//!< 前方向へ傾ける角度
+	float pitchForwardEaseDuration = 0.65f;	//!< 0度→pitchForwardDegへイージングする秒数
+	float pitchHoldDuration        = 2.25f;	//!< 前傾きのまま静止する秒数（左右揺れ・疲れマークの演出もこの間に行う）
+	float pitchBackEaseDuration    = 0.65f;	//!< pitchForwardDeg→0度へイージングで戻す秒数
+
+	// HP25%演出：ボスの左右揺れ（Y軸回転）。静止時間(pitchHoldDuration)を4等分し、
+	// 0→-A→+A→-A→0度と往復させる（Aがこの振れ幅）
+	float yawWobbleAmplitudeDeg = 10.0f;	//!< 左右揺れの振れ幅（度）
+
+	// HP25%演出：疲れマーク(tired1/2/3)の弧移動
+	float tiredArcRiseDuration     = 0.2f;	//!< 弧の上昇にかける秒数
+	float tiredArcDriftDuration    = 0.3f;	//!< 弧の下降（横移動）にかける秒数
+	float tiredStaggerInterval     = 0.6f;	//!< tired1→2→3を開始する間隔（秒）
+
+	// カットシーン専用のバフ/デバフエフェクト位置オフセット（通常のインゲーム中のオフセットはEmotionParameter.json側）
+	float debuffEffectOffsetYOverride = 10.0f;	//!< HP25%演出中の動揺エフェクトのYオフセット上書き値
+	float buffEffectOffsetYOverride   = 10.0f;	//!< HP50%演出中の強気化エフェクトのYオフセット上書き値
+
+	// HP50%演出：ボスのジャンプ演出・怒りマークのスケールパルス
+	int   bossJumpCount          = 2;		//!< ジャンプ→着地を繰り返す回数
+	float iconScaleDownDuration   = 0.2f;	//!< 怒りマークが縮むのにかける秒数
+	float iconScaleUpDuration     = 0.35f;	//!< 怒りマークが元の大きさに戻るのにかける秒数
+	float icon2PulseDelay         = 0.2f;	//!< 2枚目の怒りマークのパルスを1枚目からずらす秒数
+	float angry1BaseScale         = 1.0f;	//!< 怒りマーク1の基準スケール（BossPhaseCutSceneUI.jsonのscaleと合わせること。パルス停止時に戻す値）
+	float angry2BaseScale         = 0.8f;	//!< 怒りマーク2の基準スケール（BossPhaseCutSceneUI.jsonのscaleと合わせること。パルス停止時に戻す値）
+};
+
 /** defineの使用終了 */
 #undef appParameter
 
@@ -545,6 +595,7 @@ public:
 	void LoadTitleBGParamData(const char* path);
 	void LoadEmotionParamData(const char* path);
 	void LoadBossStateParamData(const char* path);
+	void LoadBossPhaseCutSceneParamData(const char* path);
 
 public:
 	/**
@@ -835,6 +886,16 @@ public:
 	const MasterBossStateParameter* GetBossStateParam() const
 	{
 		return GetParameter<MasterBossStateParameter>(0);
+	}
+
+	/** キー(ボス名)でボスHP閾値カットシーンパラメーターを取得するショートカット */
+	const MasterBossPhaseCutSceneParameter* GetBossPhaseCutSceneParam(const std::string& key)
+	{
+		return FindParameter<MasterBossPhaseCutSceneParameter>(
+			[&key](const MasterBossPhaseCutSceneParameter& p) {
+				return p.key == key;
+			}
+		);
 	}
 
 

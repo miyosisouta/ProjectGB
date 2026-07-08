@@ -60,7 +60,7 @@ public:
     /** 強気中（Buff）→調子の良さが帳消しになりNormal、通常/動揺中（Debuff）→1段階動揺が深まる */
     void OnJustAvoidedByPlayer();
 
-    /** HP閾値などで強制的にレベルをセットする（GamePhaseManager から呼ぶ） */
+    /** HP閾値などで強制的にレベルをセットする（BossEmotionPhaseManager から呼ぶ） */
     void ForceSetLevel(EmotionLevel level);
 
     /** 現在の感情レベルを取得する（UI・デバッグ用） */

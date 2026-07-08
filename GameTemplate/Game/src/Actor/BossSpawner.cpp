@@ -22,9 +22,11 @@ BossSpawner::~BossSpawner()
 void BossSpawner::Update()
 {
 	// コントローラの更新
+	// NOTE: Update()は直接呼んでいるため、UpdateWrapper()と違いActivate/Deactivateが自動では反映されない。
+	//       ここで明示的にIsActive()を見て、Deactivate中はAIの行動選択自体を止める。
 	{
 		if (playerController_) { playerController_->Update(); } // プレイヤーのコントローラーの更新
-		if (bossController_) { bossController_->Update(); } // ボスのコントローラーの更新
+		if (bossController_ && bossController_->IsActive()) { bossController_->Update(); } // ボスのコントローラーの更新
 	}
 
 

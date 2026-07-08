@@ -443,6 +443,9 @@ void ParameterManager::LoadEmotionParamData(const char* path)
 			// effect position offset（Yのみ。X/Zはボス座標をそのまま使う）
 			p.buffEffectOffsetY   = j.value("buffEffectOffsetY",   0.0f);
 			p.debuffEffectOffsetY = j.value("debuffEffectOffsetY", 0.0f);
+			// SEの追加音量倍率（素材音源の収録音量差を補うためのもの）
+			p.buffSeVolumeBoost   = j.value("buffSeVolumeBoost",   1.0f);
+			p.debuffSeVolumeBoost = j.value("debuffSeVolumeBoost", 1.0f);
 		}
 	);
 }
@@ -561,6 +564,51 @@ void ParameterManager::LoadBossStateParamData(const char* path)
 				const auto o = GetSubObject(j, "death");
 				p.death.animationTime = o.value("animationTime", p.death.animationTime);
 			}
+		}
+	);
+}
+
+
+void ParameterManager::LoadBossPhaseCutSceneParamData(const char* path)
+{
+	ParameterManager::Get().LoadParameterFromArray<MasterBossPhaseCutSceneParameter>(
+		path,
+		"BossPhaseCutScene",
+		[](const nlohmann::json& j, MasterBossPhaseCutSceneParameter& p)
+		{
+			// key: ボス識別子 (必須)
+			p.key = j.value("key", "");
+
+			p.angryHpRatio        = j.value("angryHpRatio",        p.angryHpRatio);
+			p.tiredHpRatio        = j.value("tiredHpRatio",        p.tiredHpRatio);
+			p.cameraDistance      = j.value("cameraDistance",      p.cameraDistance);
+			p.cameraHeight        = j.value("cameraHeight",        p.cameraHeight);
+			p.cameraEaseDuration  = j.value("cameraEaseDuration",  p.cameraEaseDuration);
+			p.cutsceneDuration    = j.value("cutsceneDuration",    p.cutsceneDuration);
+			p.bossIdleHoldDuration = j.value("bossIdleHoldDuration", p.bossIdleHoldDuration);
+			p.iconOffsetY         = j.value("iconOffsetY",         p.iconOffsetY);
+			p.tiredIconOffsetX    = j.value("tiredIconOffsetX",    p.tiredIconOffsetX);
+
+			p.pitchForwardDeg         = j.value("pitchForwardDeg",         p.pitchForwardDeg);
+			p.pitchForwardEaseDuration = j.value("pitchForwardEaseDuration", p.pitchForwardEaseDuration);
+			p.pitchHoldDuration        = j.value("pitchHoldDuration",        p.pitchHoldDuration);
+			p.pitchBackEaseDuration    = j.value("pitchBackEaseDuration",    p.pitchBackEaseDuration);
+
+			p.yawWobbleAmplitudeDeg = j.value("yawWobbleAmplitudeDeg", p.yawWobbleAmplitudeDeg);
+
+			p.tiredArcRiseDuration  = j.value("tiredArcRiseDuration",  p.tiredArcRiseDuration);
+			p.tiredArcDriftDuration = j.value("tiredArcDriftDuration", p.tiredArcDriftDuration);
+			p.tiredStaggerInterval  = j.value("tiredStaggerInterval",  p.tiredStaggerInterval);
+
+			p.debuffEffectOffsetYOverride = j.value("debuffEffectOffsetYOverride", p.debuffEffectOffsetYOverride);
+			p.buffEffectOffsetYOverride   = j.value("buffEffectOffsetYOverride",   p.buffEffectOffsetYOverride);
+
+			p.bossJumpCount        = j.value("bossJumpCount",        p.bossJumpCount);
+			p.iconScaleDownDuration = j.value("iconScaleDownDuration", p.iconScaleDownDuration);
+			p.iconScaleUpDuration   = j.value("iconScaleUpDuration",   p.iconScaleUpDuration);
+			p.icon2PulseDelay       = j.value("icon2PulseDelay",       p.icon2PulseDelay);
+			p.angry1BaseScale       = j.value("angry1BaseScale",       p.angry1BaseScale);
+			p.angry2BaseScale       = j.value("angry2BaseScale",       p.angry2BaseScale);
 		}
 	);
 }

@@ -9,6 +9,7 @@
 
 #include "src/Battle/BattleManager.h"
 #include "src/Core/PouseMenu.h"
+#include "src/Effect/EffectManager.h"
 #include "src/Scene/OutGameScene.h"
 #include "src/Scene/TitleScene.h"
 #include "src/Sound/SoundManager.h"
@@ -51,7 +52,10 @@ void InGameScene::Update()
 {
 	BattleManager::Get().Update();		//BattleManagerの更新
 
-	layout_->Update();
+	// ボスHP閾値カットシーン中はインゲームHUD（HPバー・攻撃方法など）の更新を止める
+	if (!BattleManager::Get().IsBossPhaseCutsceneActive()) {
+		layout_->Update();
+	}
 
 
 	// ポーズメニューの呼び出し
@@ -90,7 +94,7 @@ void InGameScene::Update()
 void InGameScene::Render(RenderContext& rc)
 {
 	BattleManager::Get().Render(rc);
-	if (BattleManager::Get().IsCutScene()) {
+	if (BattleManager::Get().IsCutScene() || BattleManager::Get().IsBossPhaseCutsceneActive()) {
 		return;
 	}
 	layout_->Render(rc);
@@ -112,8 +116,11 @@ bool InGameScene::RequestScene(uint32_t& id)
 	// ポーズ画面からタイトルへ戻る
 	if (pouseMenu_->IsReturnTitle() == true) {
 		id = TitleScene::ID();
+
+		// 再生中のエフェクト（攻撃予測線・Spinなど）が残らないようにすべて停止する
+		EffectManager::Get().StopAllEffects();
 		SoundManager::Get().StopBGM();
-	 
+
 		return true;
 	}
 	// ゲーム演出終了からタイトルへもどる

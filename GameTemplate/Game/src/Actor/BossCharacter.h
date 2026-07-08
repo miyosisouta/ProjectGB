@@ -31,6 +31,24 @@ public:
 	void SetMoveStop(const bool flg = true) { isMoveStop_ = flg; }	//!< 設定
 	bool IsMoveStop() { return isMoveStop_; }						//!< 取得
 
+	/**
+	 * カットシーン演出用：基準の向き(baseRotation)に対して、前後(X軸)・左右(Y軸)の回転オフセットを加えた向きを毎フレーム絶対値で設定する。
+	 * イージングなど「時間経過で角度が変化する」演出向けに、呼び出し側で計算した角度をそのまま渡す想定。
+	 * isMoveStop_中はUpdate()内の回転同期処理(transform_.localRotation = targetPlayerRot_)がスキップされるため、
+	 * AI/移動を介さずここで直接ローカル回転とモデルへ即反映する。
+	 */
+	void SetCutsceneTiltOffset(const Quaternion& baseRotation, const float pitchOffsetRad, const float yawOffsetRad)
+	{
+		Quaternion pitchOffset;
+		pitchOffset.SetRotationX(pitchOffsetRad);
+		Quaternion yawOffset;
+		yawOffset.SetRotationY(yawOffsetRad);
+		// 左右(Y)は基準の向きと同じ軸なのでbaseRotationと合成し、前後(X)はモデルのローカル軸で回すよう最後に掛ける
+		transform_.localRotation = baseRotation * yawOffset * pitchOffset;
+		transform_.UpdateTransform();
+		modelRender_.SetRotation(transform_.rotation);
+	}
+
 /** =================================================================== */
 /** アニメーション関連の関数 */
 /** =================================================================== */
@@ -40,6 +58,8 @@ public:
 	void SetupAnimation();
 	/** アニメーションの再生 */
 	void PlayAnimation(const int id, const float animSpeed = 1.0f);
+	/** 現在のアニメーションが再生中か（ループしないアニメーションが最後まで再生し終わったか判定する用） */
+	bool IsPlayingAnimation() const { return modelRender_.IsPlayingAnimation(); }
 
 
 /** =================================================================== */

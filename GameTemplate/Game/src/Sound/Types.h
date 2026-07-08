@@ -39,6 +39,10 @@ enum enSoundKind
 	enSoundKind_Menu_Move,
 	enSoundKind_Menu_Return,
 
+	/** インゲーム */
+	enSoundKind_InGame_Buff,
+	enSoundKind_InGame_Debuff,
+
 	/* BGM */
 	enSoundKind_BGM,
 	enSoundKind_Title = enSoundKind_BGM,
@@ -80,8 +84,8 @@ static SoundInformation soundInformation[enSoundKind_SE_Max] =
 
 	/** ボス */
 	SoundInformation("Assets/Audio/SE/Enemy/Common/Footsteps.wav"),			// 走る
-	SoundInformation("Assets/Audio/SE/Enemy/Common/NormalAttack.wav"),		// 通常攻撃
-	SoundInformation("Assets/Audio/SE/Enemy/Common/FallAttack.wav"),		// ヒットスタンプ
+	SoundInformation("Assets/Audio/SE/Enemy/Common/NormalAttack.wav"),		// 通常攻撃	
+	SoundInformation("Assets/Audio/SE/Enemy/Common/FallAttack.wav"),		// ヒットスタンプ 10
 	SoundInformation("Assets/Audio/SE/Enemy/Common/SpinAttack.wav"),		// 回転攻撃
 	SoundInformation("Assets/Audio/SE/Enemy/Common/SlowAttack.wav"),		// 岩投げる
 	SoundInformation("Assets/Audio/SE/Enemy/Common/Thunder_Weak.wav"),		// 弱い雷
@@ -94,6 +98,9 @@ static SoundInformation soundInformation[enSoundKind_SE_Max] =
 	SoundInformation("Assets/Audio/SE/Menu/Move.wav"),
 	SoundInformation("Assets/Audio/SE/Menu/Return.wav"),
 
+	/** インゲーム */
+	SoundInformation("Assets/Audio/SE/InGame/Buff.wav"), // 20
+	SoundInformation("Assets/Audio/SE/InGame/Debuff.wav"),
 
 	/** BGM **************************/
 	SoundInformation("Assets/Audio/BGM/Title.wav"),			//!< タイトル

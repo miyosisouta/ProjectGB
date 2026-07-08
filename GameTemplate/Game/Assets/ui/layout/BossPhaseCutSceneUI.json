@@ -1,0 +1,71 @@
+{
+  "canvas": {
+    "elements": [
+      {
+        "coment": "ボスHP閾値カットシーン：怒りマーク1（試作。位置・大きさは仮値）",
+        "type": "UIIcon",
+        "name": "angry1",
+        "asset": "Assets/ui/inGameUI/cutScene/angry.DDS",
+        "width": 200,
+        "height": 200,
+        "position": [165, 365, 0],
+        "scale": [0.8, 0.8, 0.8],
+        "rotation": 0,
+        "color": [1, 1, 1, 1],
+        "isDraw": false
+      },
+      {
+        "coment": "ボスHP閾値カットシーン：怒りマーク2（試作。位置・大きさは仮値）",
+        "type": "UIIcon",
+        "name": "angry2",
+        "asset": "Assets/ui/inGameUI/cutScene/angry.DDS",
+        "width": 200,
+        "height": 200,
+        "position": [240, 180, 0],
+        "scale": [0.8, 0.8, 0.8],
+        "rotation": 0,
+        "color": [1, 1, 1, 1],
+        "isDraw": false
+      },
+      {
+        "coment": "ボスHP閾値カットシーン：疲れマーク1（試作。位置・大きさは仮値）",
+        "type": "UIIcon",
+        "name": "tired1",
+        "asset": "Assets/ui/inGameUI/cutScene/tired.DDS",
+        "width": 200,
+        "height": 200,
+        "position": [220, 330, 0],
+        "scale": [0.8, 0.8, 0.8],
+        "rotation": 0,
+        "color": [1, 1, 1, 1],
+        "isDraw": false
+      },
+      {
+        "coment": "ボスHP閾値カットシーン：疲れマーク2（試作。位置・大きさは仮値。1のX座標を反転し、Yを少し下げ、全体的に外側へ寄せた位置。scale.xを負にして縦軸(左右)反転）",
+        "type": "UIIcon",
+        "name": "tired2",
+        "asset": "Assets/ui/inGameUI/cutScene/tired.DDS",
+        "width": 200,
+        "height": 200,
+        "position": [-220, 300, 0],
+        "scale": [-0.8, 0.8, 0.8],
+        "rotation": 0,
+        "color": [1, 1, 1, 1],
+        "isDraw": false
+      },
+      {
+        "coment": "ボスHP閾値カットシーン：疲れマーク3（試作。位置・大きさは仮値。1と同じ側(X正方向)で、2より少し下の位置）",
+        "type": "UIIcon",
+        "name": "tired3",
+        "asset": "Assets/ui/inGameUI/cutScene/tired.DDS",
+        "width": 200,
+        "height": 200,
+        "position": [225, 270, 0],
+        "scale": [0.8, 0.8, 0.8],
+        "rotation": 0,
+        "color": [1, 1, 1, 1],
+        "isDraw": false
+      }
+    ]
+  }
+}

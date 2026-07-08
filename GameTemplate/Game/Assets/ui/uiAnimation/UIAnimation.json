@@ -876,6 +876,141 @@
 
 
         {
+            "comment": "ボスHP閾値カットシーン：怒りマーク1 縮小（ベーススケール1.0。速く縮む）",
+            "key": "angry1_scaleDown",
+            "valueType": "Vector3",
+            "startValue": { "x": 1.0, "y": 1.0, "z": 1.0 },
+            "endValue":   { "x": 0.7, "y": 0.7, "z": 0.7 },
+            "duration": 0.2,
+            "easing": "EaseIn",
+            "loop": "Once"
+        },
+        {
+            "comment": "ボスHP閾値カットシーン：怒りマーク1 拡大（ベーススケール1.0に戻る。やや遅め）",
+            "key": "angry1_scaleUp",
+            "valueType": "Vector3",
+            "startValue": { "x": 0.7, "y": 0.7, "z": 0.7 },
+            "endValue":   { "x": 1.0, "y": 1.0, "z": 1.0 },
+            "duration": 0.35,
+            "easing": "EaseOut",
+            "loop": "Once"
+        },
+        {
+            "comment": "ボスHP閾値カットシーン：怒りマーク2 縮小（ベーススケール0.8。速く縮む）",
+            "key": "angry2_scaleDown",
+            "valueType": "Vector3",
+            "startValue": { "x": 0.8, "y": 0.8, "z": 0.8 },
+            "endValue":   { "x": 0.6, "y": 0.6, "z": 0.6 },
+            "duration": 0.2,
+            "easing": "EaseIn",
+            "loop": "Once"
+        },
+        {
+            "comment": "ボスHP閾値カットシーン：怒りマーク2 拡大（ベーススケール0.8に戻る。やや遅め）",
+            "key": "angry2_scaleUp",
+            "valueType": "Vector3",
+            "startValue": { "x": 0.6, "y": 0.6, "z": 0.6 },
+            "endValue":   { "x": 0.8, "y": 0.8, "z": 0.8 },
+            "duration": 0.35,
+            "easing": "EaseOut",
+            "loop": "Once"
+        },
+
+        {
+            "comment": "ボスHP閾値カットシーン：疲れマーク1 弧の上昇（アタッチ時の初期位置からの相対オフセット。ボスの種類が変わっても同じ相対量で動く。試作値）",
+            "key": "tired1_arcRise",
+            "valueType": "Vector3",
+            "startValue": { "x": 0.0, "y": 0.0, "z": 0.0 },
+            "endValue":   { "x": 25.0, "y": 55.0, "z": 0.0 },
+            "duration": 0.2,
+            "easing": "EaseOut",
+            "loop": "Once"
+        },
+        {
+            "comment": "ボスHP閾値カットシーン：疲れマーク1 弧の下降（上昇のピークより低い位置まで落ちる。初期位置からの相対オフセット。試作値）",
+            "key": "tired1_arcDrift",
+            "valueType": "Vector3",
+            "startValue": { "x": 25.0, "y": 55.0, "z": 0.0 },
+            "endValue":   { "x": 120.0, "y": -25.0, "z": 0.0 },
+            "duration": 0.3,
+            "easing": "EaseIn",
+            "loop": "Once"
+        },
+        {
+            "comment": "ボスHP閾値カットシーン：疲れマーク1 透明度フェードアウト（弧の動き全体と同じ0.5秒）",
+            "key": "tired1_fadeOut",
+            "valueType": "Vector4",
+            "startValue": { "x": 1.0, "y": 1.0, "z": 1.0, "w": 1.0 },
+            "endValue":   { "x": 1.0, "y": 1.0, "z": 1.0, "w": 0.0 },
+            "duration": 0.5,
+            "easing": "EaseIn",
+            "loop": "Once"
+        },
+
+        {
+            "comment": "ボスHP閾値カットシーン：疲れマーク2 弧の上昇（1と左右対称。アタッチ時の初期位置からの相対オフセット。試作値）",
+            "key": "tired2_arcRise",
+            "valueType": "Vector3",
+            "startValue": { "x": 0.0, "y": 0.0, "z": 0.0 },
+            "endValue":   { "x": -25.0, "y": 55.0, "z": 0.0 },
+            "duration": 0.2,
+            "easing": "EaseOut",
+            "loop": "Once"
+        },
+        {
+            "comment": "ボスHP閾値カットシーン：疲れマーク2 弧の下降（1と左右対称。上昇のピークより低い位置まで落ちる。初期位置からの相対オフセット。試作値）",
+            "key": "tired2_arcDrift",
+            "valueType": "Vector3",
+            "startValue": { "x": -25.0, "y": 55.0, "z": 0.0 },
+            "endValue":   { "x": -120.0, "y": -25.0, "z": 0.0 },
+            "duration": 0.3,
+            "easing": "EaseIn",
+            "loop": "Once"
+        },
+        {
+            "comment": "ボスHP閾値カットシーン：疲れマーク2 透明度フェードアウト（弧の動き全体と同じ0.5秒）",
+            "key": "tired2_fadeOut",
+            "valueType": "Vector4",
+            "startValue": { "x": 1.0, "y": 1.0, "z": 1.0, "w": 1.0 },
+            "endValue":   { "x": 1.0, "y": 1.0, "z": 1.0, "w": 0.0 },
+            "duration": 0.5,
+            "easing": "EaseIn",
+            "loop": "Once"
+        },
+
+        {
+            "comment": "ボスHP閾値カットシーン：疲れマーク3 弧の上昇（1と同じ向き。アタッチ時の初期位置からの相対オフセット。試作値）",
+            "key": "tired3_arcRise",
+            "valueType": "Vector3",
+            "startValue": { "x": 0.0, "y": 0.0, "z": 0.0 },
+            "endValue":   { "x": 25.0, "y": 55.0, "z": 0.0 },
+            "duration": 0.2,
+            "easing": "EaseOut",
+            "loop": "Once"
+        },
+        {
+            "comment": "ボスHP閾値カットシーン：疲れマーク3 弧の下降（1と同じ向き。上昇のピークより低い位置まで落ちる。初期位置からの相対オフセット。試作値）",
+            "key": "tired3_arcDrift",
+            "valueType": "Vector3",
+            "startValue": { "x": 25.0, "y": 55.0, "z": 0.0 },
+            "endValue":   { "x": 120.0, "y": -25.0, "z": 0.0 },
+            "duration": 0.3,
+            "easing": "EaseIn",
+            "loop": "Once"
+        },
+        {
+            "comment": "ボスHP閾値カットシーン：疲れマーク3 透明度フェードアウト（弧の動き全体と同じ0.5秒）",
+            "key": "tired3_fadeOut",
+            "valueType": "Vector4",
+            "startValue": { "x": 1.0, "y": 1.0, "z": 1.0, "w": 1.0 },
+            "endValue":   { "x": 1.0, "y": 1.0, "z": 1.0, "w": 0.0 },
+            "duration": 0.5,
+            "easing": "EaseIn",
+            "loop": "Once"
+        },
+
+
+        {
             "comment": "やじるし:左に動く",
             "key": "arrow_posLeft",
             "valueType": "Vector3",

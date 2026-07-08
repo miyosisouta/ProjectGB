@@ -28,5 +28,7 @@ void Actor::Update()
 
 void Actor::Render(RenderContext& rc)
 {
+	if (!isDraw_) { return; } // 非表示設定中は描画をスキップ
+
 	modelRender_.Draw(rc);
 }
