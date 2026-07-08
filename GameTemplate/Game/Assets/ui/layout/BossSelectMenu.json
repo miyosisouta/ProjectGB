@@ -38,33 +38,9 @@
         "color": [1, 1, 1, 1],
         "pivot": [0,0.5]
       },
-      {
-        "coment": "ボスタイトル:どっちを選ぶ？",
-        "type": "UIIcon",
-        "name": "bossSelect_Word",
-        "asset": "Assets/ui/bossSelectUI/title/moji.DDS",
-        "width": 900,
-        "height": 70,
-        "position": [0, 280, 0],
-        "scale": [1, 1, 1],
-        "rotation": 0,
-        "color": [1, 1, 1, 1]
-      },
 
 
 
-      {
-        "coment": "ボス:芝生",
-        "type": "UIIcon",
-        "name": "boss_grass_right",
-        "asset": "Assets/ui/bossSelectUI/boss/kusa.DDS",
-        "width": 480,
-        "height": 150,
-        "position": [-450, -270, 0],
-        "scale": [1, 1, 1],
-        "rotation": 0,
-        "color": [1, 1, 1, 1]
-      },
       {
         "coment": "ボス:芝生",
         "type": "UIIcon",
@@ -72,7 +48,7 @@
         "asset": "Assets/ui/bossSelectUI/boss/kusa.DDS",
         "width": 480,
         "height": 150,
-        "position": [450, -270, 0],
+        "position": [-600, -150, 0],
         "scale": [1, 1, 1],
         "rotation": 0,
         "color": [1, 1, 1, 1]
@@ -82,13 +58,14 @@
         "type": "UIIcon",
         "name": "boss_gorilla",
         "asset": "Assets/ui/bossSelectUI/boss/gorira.DDS",
-        "width": 300,
-        "height": 350,
-        "position": [-450, -290, 0],
+        "width": 350,
+        "height": 400,
+        "position": [-600, -150, 0],
         "scale": [1, 1, 1],
         "rotation": 0,
         "color": [1, 1, 1, 1],
-        "pivot": [0.5, 0.0]
+        "pivot": [0.5, 0.0],
+        "isDraw": true
       },
       {
         "coment": "ボス:かめ",
@@ -97,42 +74,206 @@
         "asset": "Assets/ui/bossSelectUI/boss/kame.DDS",
         "width": 400,
         "height": 200,
-        "position": [450, -320, 0],
+        "position": [-600, -180, 0],
         "scale": [1, 1, 1],
         "rotation": 0,
         "color": [1, 1, 1, 1],
-        "pivot": [0.5, 0.0]
+        "pivot": [0.5, 0.0],
+        "isDraw": false
       },
+
       
 
+      {
+        "coment": "ボス:ふきだし",
+        "type": "UIIcon",
+        "name": "boss_balloon",
+        "asset": "Assets/ui/bossSelectUI/boss/hukidashi.DDS",
+        "width": 1150,
+        "height": 500,
+        "position": [235, 90, 0],
+        "scale": [1, 1, 1],
+        "rotation": 0,
+        "color": [1, 1, 1, 1]
+      },
+
+      {
+        "coment": "ゴリラ：説明",
+        "type": "UIIcon",
+        "name": "boss_text_gorilla",
+        "asset": "Assets/ui/bossSelectUI/text/gollira_text.DDS",
+        "width": 1000,
+        "height": 230,
+        "position": [270, 190, 0],
+        "scale": [1, 1, 1],
+        "rotation": 0,
+        "color": [1, 1, 1, 1],
+        "isDraw": true
+      },
+      {
+        "coment": "ゴリラ：ミッション",
+        "type": "UIIcon",
+        "name": "boss_mission_gorilla",
+        "asset": "Assets/ui/bossSelectUI/text/mission_gollira.DDS",
+        "width": 450,
+        "height": 150,
+        "position": [70, -60, 0],
+        "scale": [1, 1, 1],
+        "rotation": 0,
+        "color": [1, 1, 1, 1],
+        "isDraw": true
+      },
 
 
       {
-        "coment": "枠:ゴリラ",
+        "coment": "かめ：説明",
         "type": "UIIcon",
-        "name": "bossSelect_Frame_Gollira",
-        "asset": "Assets/ui/bossSelectUI/boss/sentaku.DDS",
-        "width": 520,
-        "height": 520,
-        "position": [-450, -100, 0],
+        "name": "boss_text_turtle",
+        "asset": "Assets/ui/bossSelectUI/text/kame_text.DDS",
+        "width": 1000,
+        "height": 230,
+        "position": [270, 190, 0],
         "scale": [1, 1, 1],
         "rotation": 0,
         "color": [1, 1, 1, 1],
         "isDraw": false
       },
       {
-        "coment": "枠:かめ",
+        "coment": "かめ：ミッション",
         "type": "UIIcon",
-        "name": "bossSelect_Frame_Turtle",
-        "asset": "Assets/ui/bossSelectUI/boss/sentaku.DDS",
-        "width": 520,
-        "height": 520,
-        "position": [450, -100, 0],
+        "name": "boss_mission_turtle",
+        "asset": "Assets/ui/bossSelectUI/text/mission_kame.DDS",
+        "width": 550,
+        "height": 150,
+        "position": [120, -60, 0],
         "scale": [1, 1, 1],
         "rotation": 0,
         "color": [1, 1, 1, 1],
         "isDraw": false
       },
+
+
+
+
+      {
+        "coment": "下アイコン:ゴリラ",
+        "type": "UIIcon",
+        "name": "icon_Gollira",
+        "asset": "Assets/ui/bossSelectUI/boss/icon_gollira.DDS",
+        "width": 225,
+        "height": 225,
+        "position": [-200,-325, 0],
+        "scale": [1, 1, 1],
+        "rotation": 0,
+        "color": [1, 1, 1, 1]
+      },
+      {
+        "coment": "下アイコン:かめ",
+        "type": "UIIcon",
+        "name": "icon_Turtle",
+        "asset": "Assets/ui/bossSelectUI/boss/icon_kame.DDS",
+        "width": 225,
+        "height": 225,
+        "position": [200, -325, 0],
+        "scale": [1, 1, 1],
+        "rotation": 0,
+        "color": [1, 1, 1, 1]
+      },
+      {
+        "coment": "フェード:ゴリラ",
+        "type": "UIIcon",
+        "name": "gollira_fade",
+        "asset": "Assets/ui/bossSelectUI/boss/fade.DDS",
+        "width": 225,
+        "height": 225,
+        "position": [-200, -325, 0],
+        "scale": [1, 1, 1],
+        "rotation": 0,
+        "color": [0, 0, 0, 0.7],
+        "isDraw": false
+      },
+      {
+        "coment": "フェード:かめ",
+        "type": "UIIcon",
+        "name": "turtle_fade",
+        "asset": "Assets/ui/bossSelectUI/boss/fade.DDS",
+        "width": 225,
+        "height": 225,
+        "position": [200, -325, 0],
+        "scale": [1, 1, 1],
+        "rotation": 0,
+        "color": [0, 0, 0, 0.7],
+        "isDraw": false
+      },
+
+
+
+      {
+        "coment": "メダルアイコン:1",
+        "type": "UIIcon",
+        "name": "medaru_1",
+        "asset": "Assets/ui/bossSelectUI/boss/medaru.DDS",
+        "width": 50,
+        "height": 50,
+        "position": [-190, -5, 0],
+        "scale": [1, 1, 1],
+        "rotation": 0,
+        "color": [1, 1, 1, 1]
+      },
+      {
+        "coment": "メダルアイコン:2",
+        "type": "UIIcon",
+        "name": "medaru_2",
+        "asset": "Assets/ui/bossSelectUI/boss/medaru.DDS",
+        "width": 50,
+        "height": 50,
+        "position": [-190, -60, 0],
+        "scale": [1, 1, 1],
+        "rotation": 0,
+        "color": [1, 1, 1, 1]
+      },
+      {
+        "coment": "メダルアイコン:3",
+        "type": "UIIcon",
+        "name": "medaru_3",
+        "asset": "Assets/ui/bossSelectUI/boss/medaru.DDS",
+        "width": 50,
+        "height": 50,
+        "position": [-190, -115, 0],
+        "scale": [1, 1, 1],
+        "rotation": 0,
+        "color": [1, 1, 1, 1]
+      },
+
+
+      {
+        "coment": "下アイコン枠:ゴリラ",
+        "type": "UIIcon",
+        "name": "icon_Frame_Gollira",
+        "asset": "Assets/ui/bossSelectUI/boss/flame.DDS",
+        "width": 225,
+        "height": 225,
+        "position": [-200, -325, 0],
+        "scale": [1, 1, 1],
+        "rotation": 0,
+        "color": [1, 1, 1, 1],
+        "isDraw": true
+      },
+      {
+        "coment": "下アイコン枠:かめ",
+        "type": "UIIcon",
+        "name": "icon_Frame_Turtle",
+        "asset": "Assets/ui/bossSelectUI/boss/flame.DDS",
+        "width": 225,
+        "height": 225,
+        "position": [200, -325, 0],
+        "scale": [1, 1, 1],
+        "rotation": 0,
+        "color": [1, 1, 1, 1],
+        "isDraw": false
+      },
+
+
 
 
 
@@ -146,7 +287,7 @@
         "comment": "ダミー(カメの最初のサイズ)",
         "type": "UIDummy",
         "name": "InitTurtle",
-        "position": [450, -320, 0],
+        "position": [-600, -180, 0],
         "scale": [1, 1, 1]
       },
       

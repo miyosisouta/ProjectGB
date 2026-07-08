@@ -48,21 +48,64 @@ void BossSelectMenu::Update()
 	// 選択中のカーソル処理
 	{
 		// 青色の枠
-		auto* selectFrameGollira = GetUI<UIIcon>(Hash32("bossSelect_Frame_Gollira"));
-		auto* selectFlameTurtle = GetUI<UIIcon>(Hash32("bossSelect_Frame_Turtle"));
+		auto* selectFrameGollira = GetUI<UIIcon>(Hash32("icon_Frame_Gollira"));
+		auto* selectFlameTurtle = GetUI<UIIcon>(Hash32("icon_Frame_Turtle"));
+		// 選択中のフェード
+		auto* noSelectGolliraFade = GetUI<UIIcon>(Hash32("gollira_fade"));
+		auto* noSelectTurtleFade = GetUI<UIIcon>(Hash32("turtle_fade"));
+		// テキストの変更
+		// ごりら
+		auto* gollira = GetUI<UIIcon>(Hash32("boss_gorilla"));
+		auto* textGollira = GetUI<UIIcon>(Hash32("boss_text_gorilla"));
+		auto* textMissionGollira = GetUI<UIIcon>(Hash32("boss_mission_gorilla"));
+		// かめ
+		auto* turtle = GetUI<UIIcon>(Hash32("boss_turtle"));
+		auto* textTurtle = GetUI<UIIcon>(Hash32("boss_text_turtle"));
+		auto* textMissionTurtle = GetUI<UIIcon>(Hash32("boss_mission_turtle"));
+
 		switch (selectBossType)
 		{
 			case BOSS_GOLLIRA_TYPE:
 			{
+				// 選択の枠
 				selectFrameGollira->isDraw = true;
+				// ゴリラの情報
+				gollira->isDraw = true;
+				textGollira->isDraw = true;
+				textMissionGollira->isDraw = true;
+
+				// フェードの切り替え
+				noSelectGolliraFade->isDraw = false;
+				noSelectTurtleFade->isDraw = true;
+
+				// カメの情報を消す
+				turtle->isDraw = false;
 				selectFlameTurtle->isDraw = false;
+				textTurtle->isDraw = false;
+				textMissionTurtle->isDraw = false;
 				
 				break;
 			}
 			case BOSS_TURTLE_TYPE:
 			{
+				// 選択の枠
 				selectFlameTurtle->isDraw = true;
+				// カメの情報
+				turtle->isDraw = true;
+				textTurtle->isDraw = true;
+				textMissionTurtle->isDraw = true;
+
+				// フェードの切り替え
+				noSelectGolliraFade->isDraw = true;
+				noSelectTurtleFade->isDraw = false;
+
+				// ゴリラの情報を消す
+				gollira->isDraw = false;
 				selectFrameGollira->isDraw = false;
+				textGollira->isDraw = false;
+				textMissionGollira->isDraw = false;
+
+
 				break;
 			}
 		}
