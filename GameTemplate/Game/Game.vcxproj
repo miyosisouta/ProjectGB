@@ -241,7 +241,7 @@
     <ClCompile Include="src\Actor\PlayerState.cpp" />
     <ClCompile Include="src\Actor\StateMachine.cpp" />
     <ClCompile Include="src\Battle\BattleManager.cpp" />
-    <ClCompile Include="src\Battle\GamePhaseManager.cpp" />
+    <ClCompile Include="src\Battle\BossEmotionPhaseManager.cpp" />
     <ClCompile Include="src\Battle\Mission.cpp" />
     <ClCompile Include="src\Battle\MissionCondition.cpp" />
     <ClCompile Include="src\Battle\MissionEvent.cpp" />
@@ -296,6 +296,7 @@
     <ClCompile Include="src\Stage\StageBase.cpp" />
     <ClCompile Include="src\Stage\StageManager.cpp" />
     <ClCompile Include="src\UI\BootMenu.cpp" />
+    <ClCompile Include="src\UI\BossPhaseCutSceneMenu.cpp" />
     <ClCompile Include="src\UI\BossSelectMenu.cpp" />
     <ClCompile Include="src\UI\CameraOptionMenu.cpp" />
     <ClCompile Include="src\UI\CheckStartWindow.cpp" />
@@ -355,7 +356,7 @@
     <ClInclude Include="src\Actor\PlayerState.h" />
     <ClInclude Include="src\Actor\StateMachine.h" />
     <ClInclude Include="src\Battle\BattleManager.h" />
-    <ClInclude Include="src\Battle\GamePhaseManager.h" />
+    <ClInclude Include="src\Battle\BossEmotionPhaseManager.h" />
     <ClInclude Include="src\Battle\Mission.h" />
     <ClInclude Include="src\Battle\MissionCondition.h" />
     <ClInclude Include="src\Battle\MissionEvent.h" />
@@ -418,6 +419,7 @@
     <ClInclude Include="src\Stage\StageManager.h" />
     <ClInclude Include="src\Types.h" />
     <ClInclude Include="src\UI\BootMenu.h" />
+    <ClInclude Include="src\UI\BossPhaseCutSceneMenu.h" />
     <ClInclude Include="src\UI\BossSelectMenu.h" />
     <ClInclude Include="src\UI\CameraOptionMenu.h" />
     <ClInclude Include="src\UI\CheckStartWindow.h" />

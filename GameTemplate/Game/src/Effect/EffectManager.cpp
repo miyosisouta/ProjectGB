@@ -76,6 +76,14 @@ void EffectManager::StopEffect(const EffectHandle handle)
 	effectList_.erase(it); // ← 停止したらmapからも削除する
 }
 
+void EffectManager::StopAllEffects()
+{
+	for (auto& it : effectList_) {
+		it.second->Stop();
+	}
+	effectList_.clear();
+}
+
 void EffectManager::SetEffectPosition(const EffectHandle handle, const Vector3& pos)
 {
 	auto* effect = FindEffect(handle);

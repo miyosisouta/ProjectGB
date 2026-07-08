@@ -84,10 +84,17 @@ public:
         if (bgm_) bgm_->SetVolume(ComputeVolume(SoundVolumeType::BGM) * bgmVolumeScale_);
     }
 
-    /** SE再生 */
-    SoundHandle PlaySE(const int kind, const bool isLood = false, const bool is3D = false);
+    /**
+     * SE再生
+     * @param volumeScale 通常の音量計算(マスター×SE)に掛ける追加の倍率。
+     *                    XAudio2のボイス音量は1.0を超えて指定できる（増幅）ため、
+     *                    素材音源の収録音量が小さいSEだけ底上げしたい場合に使う。
+     */
+    SoundHandle PlaySE(const int kind, const bool isLood = false, const bool is3D = false, const float volumeScale = 1.0f);
     /** SE停止 */
     void StopSE(const SoundHandle handle);
+    /** 再生中の（ループ）SEをすべて停止する。カットシーン開始時などに使用する */
+    void StopAllSE();
 
 #ifdef K2_DEBUG
     /** BGM と ループSE をその場で一時停止する */

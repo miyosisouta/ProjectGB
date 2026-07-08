@@ -15,6 +15,8 @@ protected:
 
 	ActorStatus* status_ = nullptr; //!< ステータス
 
+	bool isDraw_ = true; //!< 描画するか（falseにするとRenderで描画をスキップする）
+
 
 public:
 	/* コンストラクタ */
@@ -40,4 +42,9 @@ public:
 
 	/* ステータスを取得 */
 	ActorStatus* GetStatus() { return status_; }
+
+	/** 描画の可否を設定する（カットシーンなどで一時的に非表示にしたい場合に使用） */
+	void SetDraw(bool isDraw) { isDraw_ = isDraw; }
+	/** 描画中か？ */
+	bool GetDraw() const { return isDraw_; }
 };

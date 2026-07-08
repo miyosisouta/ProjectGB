@@ -56,6 +56,8 @@ public:
     EffectHandle PlayEffect(const int kind, const Vector3& position, const Quaternion& rotation, const Vector3& scale, const float speed = 1.0f);
     /** エフェクト停止 */
     void StopEffect(const EffectHandle handle);
+    /** 再生中の（ループ）エフェクトをすべて停止する。カットシーン開始時などに使用する */
+    void StopAllEffects();
 
     /**
      * 追従エフェクトの位置を更新する

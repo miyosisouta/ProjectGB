@@ -69,6 +69,7 @@
     <ClCompile Include="src\Stage\StageBase.cpp" />
     <ClCompile Include="src\Stage\StageManager.cpp" />
     <ClCompile Include="src\UI\BootMenu.cpp" />
+    <ClCompile Include="src\UI\BossPhaseCutSceneMenu.cpp" />
     <ClCompile Include="src\UI\BossSelectMenu.cpp" />
     <ClCompile Include="src\UI\GameClearMenu.cpp" />
     <ClCompile Include="src\UI\GameOverMenu.cpp" />
@@ -106,7 +107,7 @@
     <ClCompile Include="src\UI\CameraOptionMenu.cpp" />
     <ClCompile Include="src\Camera\CameraConfig.cpp" />
     <ClCompile Include="src\Scene\TitleBackground.cpp" />
-    <ClCompile Include="src\Battle\GamePhaseManager.cpp" />
+    <ClCompile Include="src\Battle\BossEmotionPhaseManager.cpp" />
     <ClCompile Include="src\Emotion\EmotionSystem.cpp" />
     <ClCompile Include="src\Emotion\EmotionEffectObserver.cpp" />
     <ClCompile Include="src\UI\PlayGameMenu.cpp" />
@@ -184,6 +185,7 @@
     <ClInclude Include="src\Stage\StageManager.h" />
     <ClInclude Include="src\Types.h" />
     <ClInclude Include="src\UI\BootMenu.h" />
+    <ClInclude Include="src\UI\BossPhaseCutSceneMenu.h" />
     <ClInclude Include="src\UI\BossSelectMenu.h" />
     <ClInclude Include="src\UI\GameClearMenu.h" />
     <ClInclude Include="src\UI\GameOverMenu.h" />
@@ -227,7 +229,7 @@
     <ClInclude Include="src\Util\DamageNotify.h" />
     <ClInclude Include="src\Camera\CameraConfig.h" />
     <ClInclude Include="src\Scene\TitleBackground.h" />
-    <ClInclude Include="src\Battle\GamePhaseManager.h" />
+    <ClInclude Include="src\Battle\BossEmotionPhaseManager.h" />
     <ClInclude Include="src\Emotion\EmotionSystem.h" />
     <ClInclude Include="src\Emotion\IBossStatusModifier.h" />
     <ClInclude Include="src\Emotion\IEmotionObserver.h" />

@@ -34,7 +34,7 @@ public:
 	/** ボスの攻撃対象を設定するための中間管理 */
 	void SetAttackTarger(Player* target) { attackTarget_ = target; }
 
-	// GamePhaseManager が HP 監視のためにボス本体を参照するために使う
+	// BossEmotionPhaseManager や BattleManager が HP 監視のためにボス本体を参照するために使う
 	BossCharacter* GetBoss() const { return boss_; }
 
 	/** 更新の可否状態を設定 */

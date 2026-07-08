@@ -806,7 +806,7 @@ public:
         return mul;
     }
 
-    // 感情システムへのアクセス（CollisionHitManager や GamePhaseManager から使う）
+    // 感情システムへのアクセス（CollisionHitManager や BossEmotionPhaseManager から使う）
     EmotionSystem& GetEmotionSystem() { return emotionSystem_; }
 
 public:

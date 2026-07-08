@@ -1,0 +1,72 @@
+{
+    "BossPhaseCutScene": [
+        {
+            "comment": "ボス閾値カットシーンのパラメーター",
+            "key": "Gorilla",
+            "angryHpRatio": 0.5,
+            "tiredHpRatio": 0.25,
+            "cameraDistance": 450.0,
+            "cameraHeight": 130.0,
+            "cameraEaseDuration": 1.0,
+            "cutsceneDuration": 2.5,
+            "bossIdleHoldDuration": 3.0,
+            "iconOffsetY": 0.0,
+            "tiredIconOffsetX": 0.0,
+
+            "pitchForwardDeg": 20.0,
+            "pitchForwardEaseDuration": 0.65,
+            "pitchHoldDuration": 2.25,
+            "pitchBackEaseDuration": 0.65,
+
+            "yawWobbleAmplitudeDeg": 10.0,
+
+            "tiredArcRiseDuration": 0.2,
+            "tiredArcDriftDuration": 0.3,
+            "tiredStaggerInterval": 0.6,
+
+            "debuffEffectOffsetYOverride": 10.0,
+            "buffEffectOffsetYOverride": 10.0,
+
+            "bossJumpCount": 2,
+            "iconScaleDownDuration": 0.2,
+            "iconScaleUpDuration": 0.35,
+            "icon2PulseDelay": 0.2,
+            "angry1BaseScale": 1.0,
+            "angry2BaseScale": 0.8
+        },
+        {
+            "comment": "ボスHP50%/25%閾値カットシーンのパラメーター",
+            "key": "Turtle",
+            "angryHpRatio": 0.5,
+            "tiredHpRatio": 0.25,
+            "cameraDistance": 500.0,
+            "cameraHeight": 80.0,
+            "cameraEaseDuration": 1.2,
+            "cutsceneDuration": 5.0,
+            "bossIdleHoldDuration": 3.0,
+            "iconOffsetY": -250.0,
+            "tiredIconOffsetX": 45.0,
+
+            "pitchForwardDeg": 20.0,
+            "pitchForwardEaseDuration": 0.65,
+            "pitchHoldDuration": 2.25,
+            "pitchBackEaseDuration": 0.65,
+
+            "yawWobbleAmplitudeDeg": 10.0,
+
+            "tiredArcRiseDuration": 0.2,
+            "tiredArcDriftDuration": 0.3,
+            "tiredStaggerInterval": 0.6,
+
+            "debuffEffectOffsetYOverride": 10.0,
+            "buffEffectOffsetYOverride": 10.0,
+
+            "bossJumpCount": 2,
+            "iconScaleDownDuration": 0.2,
+            "iconScaleUpDuration": 0.35,
+            "icon2PulseDelay": 0.2,
+            "angry1BaseScale": 1.0,
+            "angry2BaseScale": 0.8
+        }
+    ]
+}

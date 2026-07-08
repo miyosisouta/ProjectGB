@@ -102,7 +102,7 @@ void SoundManager::StopBGM()
 }
 
 
-SoundHandle SoundManager::PlaySE(const int kind, const bool isLood, const bool is3D)
+SoundHandle SoundManager::PlaySE(const int kind, const bool isLood, const bool is3D, const float volumeScale)
 {
 	// ハンドルが最大数になったら使えない
 	// NOTE: そんなに再生するはずがない
@@ -112,7 +112,8 @@ SoundHandle SoundManager::PlaySE(const int kind, const bool isLood, const bool i
 	}
 	auto* se = NewGO<SoundSource>(0, "se");
 	se->Init(kind, is3D);
-	se->SetVolume(ComputeVolume(SoundVolumeType::SE));
+	// XAudio2のボイス音量は1.0を超えて指定できる（増幅）ため、volumeScaleで素材音源の収録音量差を補える
+	se->SetVolume(ComputeVolume(SoundVolumeType::SE) * volumeScale);
 	se->Play(isLood);
 
 	const auto handle = soundHandleCount_++;
@@ -133,6 +134,13 @@ void SoundManager::StopSE(const SoundHandle handle)
 		return;
 	}
 	se->Stop();
+}
+
+void SoundManager::StopAllSE()
+{
+	for (auto& it : seList_) {
+		it.second->Stop();
+	}
 }
 
 #ifdef K2_DEBUG

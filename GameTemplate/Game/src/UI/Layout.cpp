@@ -231,6 +231,16 @@ void Layout::Render(RenderContext& rc)
 
 void Layout::Reload()
 {
+#ifdef APP_ENABLE_LAYOUT_HOTRELOAD
+    // ここで最終更新時刻を記録しておかないと、lastUpdateTime_ が初期値0のままになり、
+    // Initialize() 直後の最初の Layout::Update() で「変更あり」と誤判定して
+    // 即座にもう一度 Reload() が走ってしまう（アタッチ済みのUIAnimationなどが消える原因になる）
+    struct stat st;
+    if (stat(filePath_.c_str(), &st) == 0) {
+        lastUpdateTime_ = st.st_mtime;
+    }
+#endif // APP_ENABLE_LAYOUT_HOTRELOAD
+
     // Canvas は必ず生成する。
     // ファイルが開けなくても canvas が nullptr のままになると
     // MenuBase::Update でクラッシュするため、先に生成しておく。

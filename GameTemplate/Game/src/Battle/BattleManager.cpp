@@ -26,6 +26,7 @@
 
 #include "src/Stage/GrassBendManager.h"
 #include "src/UI/Menu.h"
+#include "src/UI/BossPhaseCutSceneMenu.h"
 #include "src/UI/GameClearMenu.h"
 #include "src/UI/GameOverMenu.h"
 #include "src/UI/GameStartMenu.h"
@@ -173,10 +174,6 @@ BattleManager::BattleManager()
 		CollisionHitManager::Get().onDamageNotify = [this](int damage, DamageNotifyType type, bool isCritical)
 			{
 				PushDamageNotify(damage, type, isCritical);
-#ifdef K2_DEBUG
-				// todo for test : ボスがプレイヤーに与えたダメージ量を記録する（値の視覚化用）
-				if (type == DamageNotifyType::TakeHit) { lastBossDamageToPlayer_ = damage; }
-#endif
 			};
 	}
 }
@@ -233,22 +230,26 @@ void BattleManager::Update()
 		}
 		case GameState::Playing:
 		{
-			// GamePhaseManager の遅延初期化
+			// BossEmotionPhaseManager の遅延初期化
 			// コンストラクタ時点では BossCharacter::Start() が未完了のため、
 			// Playing に入った最初のフレームで Init() する
-			if (!gamePhaseManagerInitialized_)
+			if (!bossEmotionPhaseManagerInitialized_)
 			{
 				auto* boss = boss_->GetBoss();
 				auto* bossStatus = boss ? boss->GetStatus()->As<BossStatus>() : nullptr;
 				if (bossStatus)
 				{
-					gamePhaseManager_.Init(boss, &bossStatus->GetEmotionSystem());
+					bossEmotionPhaseManager_.Init(boss, &bossStatus->GetEmotionSystem());
 					emotionEffectObserver_.Init(boss, &bossStatus->GetEmotionSystem());
-					gamePhaseManagerInitialized_ = true;
+					bossEmotionPhaseManagerInitialized_ = true;
 				}
 			}
-			gamePhaseManager_.Update();
-			emotionEffectObserver_.Update();
+			bossEmotionPhaseManager_.Update(); // ダメージ通知管理
+			emotionEffectObserver_.Update(); // 感情システム : 条件により、ボスにバフデバフがかかる
+			CheckBossPhaseCutsceneTrigger(); // ボスHP50%/25%でズームアウト演出を開始する
+			cutSceneScheduler_->Update(g_gameTime->GetFrameDeltaTime()); // ボスHP閾値カットシーンのタイマーを進める
+			UpdateBossPhaseCutsceneCamera(g_gameTime->GetFrameDeltaTime()); // ボスHP閾値カットシーンのカメライージングを進める
+			UpdateBossPhaseCutsceneTilt(g_gameTime->GetFrameDeltaTime()); // HP25%演出：ボスの前後傾き・左右揺れイージングを進める
 
 			gameTimer_.Update();
 			boss_->Update();
@@ -369,43 +370,6 @@ void BattleManager::Render(RenderContext& rc)
 {
 	uiManager_.Render(rc);
 	AttackObjectManager::Get().Render(rc);
-
-#ifdef K2_DEBUG
-	// todo for test : 値の視覚化（ボスの攻撃力・攻撃速度倍率・被ダメージ倍率・プレイヤーへの与ダメージを表示する）
-	if (auto* boss = boss_->GetBoss())
-	{
-		if (auto* bossStatus = boss->GetStatus()->As<BossStatus>())
-		{
-			wchar_t atkBuf[64];
-			swprintf_s(atkBuf, L"BossATK      : %d", bossStatus->GetAttack());
-			debugBossAttackText_.SetPosition(300.0f, 300.0f, 0.0f);
-			debugBossAttackText_.SetColor(1.0f, 1.0f, 1.0f, 1.0f);
-			debugBossAttackText_.SetText(atkBuf);
-			debugBossAttackText_.Draw(rc);
-
-			wchar_t spdBuf[64];
-			swprintf_s(spdBuf, L"BossSpeedMul : %.2f", bossStatus->GetAttackSpeedMul());
-			debugBossAttackSpeedText_.SetPosition(300.0f, 200.0f, 0.0f);
-			debugBossAttackSpeedText_.SetColor(1.0f, 1.0f, 1.0f, 1.0f);
-			debugBossAttackSpeedText_.SetText(spdBuf);
-			debugBossAttackSpeedText_.Draw(rc);
-
-			wchar_t dmgBuf[64];
-			swprintf_s(dmgBuf, L"BossDamageMul: %.2f", bossStatus->GetDamageTakenMul());
-			debugBossDamageTakenText_.SetPosition(300.0f, 100.0f, 0.0f);
-			debugBossDamageTakenText_.SetColor(1.0f, 1.0f, 1.0f, 1.0f);
-			debugBossDamageTakenText_.SetText(dmgBuf);
-			debugBossDamageTakenText_.Draw(rc);
-
-			wchar_t dealtBuf[64];
-			swprintf_s(dealtBuf, L"BossDamageDealt: %d", lastBossDamageToPlayer_);
-			debugBossDamageDealtText_.SetPosition(300.0f, 0.0f, 0.0f);
-			debugBossDamageDealtText_.SetColor(1.0f, 1.0f, 1.0f, 1.0f);
-			debugBossDamageDealtText_.SetText(dealtBuf);
-			debugBossDamageDealtText_.Draw(rc);
-		}
-	}
-#endif
 }
 
 
@@ -456,6 +420,7 @@ bool BattleManager::UpdateEntryBoss()
 
 	if (g_pad[0]->IsTrigger(enButtonA)) {
 		isPlayingEntryBoss_ = false;
+		cutSceneScheduler_->Reset(); // スキップ時、まだ発火していない演出タイマー（2/3カット目・終了カット）を破棄する
 		CameraManager::Get().Unregister(GameCamera::ID());
 		CameraManager::Get().Register(GameCamera::ID(), gameCameraController_);
 		CameraManager::Get().SwitchCamera(gameCameraController_);
@@ -685,6 +650,433 @@ void BattleManager::SetupOverCutScene()
 
 	// ゲームオーバー時のuiAnimationをセットアップ
 	uiManager_.SetupCutScene<GameOverMenu>("Assets/ui/layout/GameOverMenu.json");
+}
+
+
+void BattleManager::CheckBossPhaseCutsceneTrigger()
+{
+	auto* boss = boss_->GetBoss();
+	auto* bossStatus = boss ? boss->GetStatus()->As<BossStatus>() : nullptr;
+	if (!bossStatus) { return; }
+
+	// ボスの種類ごとの閾値をマスターデータから取得（見つからない場合は構造体のデフォルト値を使う）
+	MasterBossPhaseCutSceneParameter defaultCutSceneParam;
+	const BossType stageType = CharacterDataBase::Get().GetStageType();
+	const auto* cutSceneParam = ParameterManager::Get().GetBossPhaseCutSceneParam(stageType == BossType::enGorilla ? "Gorilla" : "Turtle");
+	if (!cutSceneParam) { cutSceneParam = &defaultCutSceneParam; }
+
+	// HPの割合を計算
+	const float hpRatio = static_cast<float>(bossStatus->GetHP()) / static_cast<float>(bossStatus->GetMaxHP());
+
+	// HPが特定の割合を下回ったとき、怒り状態になる。(一度だけ)
+	if (!bossPhase50CutsceneTriggered_ && hpRatio <= cutSceneParam->angryHpRatio) {
+		bossPhase50CutsceneTriggered_ = true;
+		EnterBossPhaseCutscene(false);
+	}
+
+	// HPが特定の割合を下回ったとき、疲れた状態になる。(一度だけ)
+	if (!bossPhase25CutsceneTriggered_ && hpRatio <= cutSceneParam->tiredHpRatio) {
+		bossPhase25CutsceneTriggered_ = true;
+		EnterBossPhaseCutscene(true);
+	}
+}
+
+
+void BattleManager::EnterBossPhaseCutscene(const bool isPhase25)
+{
+	// プレイヤー・ボスを操作不能にし、再生中のエフェクト/サウンドを止める（他のカットシーンとも共通の汎用処理）
+	FreezePlayerAndBoss();
+
+	// プレイヤーが操作可能に戻るまでtrue。InGameSceneはこれを見てインゲームHUD（HPバー・攻撃方法など）の描画/更新を止める
+	isBossPhaseCutsceneActive_ = true;
+
+	// カットシーン中はプレイヤーモデルの描画も止める（カメラがボス正面に寄るため、画面内にプレイヤーが映り込まないように）
+	if (player_) { player_->SetDraw(false); }
+
+	// 怒りマークなど、このカットシーン専用のUI（初期状態は全部isDraw:false）をセットアップする
+	// アイコンのオフセット適用・UIAnimationのアタッチは BossPhaseCutSceneMenu::InitializeLogic() 側で行う
+	uiManager_.SetupCutScene<BossPhaseCutSceneMenu>("Assets/ui/layout/BossPhaseCutSceneUI.json");
+
+	// 演出用タイマーをリセットしてから使う
+	// （BossPhaseCutSceneMenu側は SetupCutScene() のたびに新規生成されるため、専用スケジューラーのリセットは不要）
+	cutSceneScheduler_->Reset();
+
+	auto* boss = boss_->GetBoss();
+	if (!boss) { return; }
+
+	// カメラ位置・演出内容はボスの種類ごとに異なるため、パラメータ取得の時点からボス別の関数に分ける
+	const BossType stageType = CharacterDataBase::Get().GetStageType();
+	if (stageType == BossType::enGorilla) {
+		SetupGorillaPhaseCutsceneCamera(boss, isPhase25);
+	}
+	else if (stageType == BossType::enTurtle) {
+		SetupTurtlePhaseCutsceneCamera(boss, isPhase25);
+	}
+}
+
+
+void BattleManager::SetupGorillaPhaseCutsceneCamera(BossCharacter* boss, const bool isPhase25)
+{
+	// ゴリラ用のカメラ・演出パラメータをマスターデータから取得（見つからない場合は構造体のデフォルト値を使う）
+	MasterBossPhaseCutSceneParameter defaultCutSceneParam;
+	const auto* cutSceneParam = ParameterManager::Get().GetBossPhaseCutSceneParam("Gorilla");
+	if (!cutSceneParam) { cutSceneParam = &defaultCutSceneParam; }
+
+	// ボスの座標を取得
+	const Vector3 bossPos = boss->GetTransformPosition();
+
+	// ボスが現在向いている方向（プレイヤーへの方向ではなく、ボス自身の回転から求める。
+	// 攻撃行動終了後などはプレイヤーの方を向いているとは限らないため）
+	// BossState.cpp の SetRotationY(atan2(diff.x, diff.z)) と同じ規約で、ローカル正面はワールド+Z
+	Vector3 bossForwardDir(0.0f, 0.0f, 1.0f);
+	boss->GetTransformRotation().Apply(bossForwardDir);
+	bossForwardDir.y = 0.0f; // 水平方向のみで向きを計算する
+	if (bossForwardDir.LengthSq() > 0.001f) { bossForwardDir.Normalize(); }
+	else { bossForwardDir = Vector3(0.0f, 0.0f, 1.0f); }
+
+	// 現在のゲームカメラのfov/クリップ距離を引き継ぎ、位置と注視点だけ差し替える
+	CameraData cutsceneCameraData = gameCameraController_->As<GameCamera>()->GetCameraData();
+	// カメラ位置 = ボス位置 から「ボスの正面方向」に cameraDistance 分離し、cameraHeight 分だけ上げた場所
+	cutsceneCameraData.position = bossPos + bossForwardDir * cutSceneParam->cameraDistance + Vector3(0.0f, cutSceneParam->cameraHeight, 0.0f);
+	// 注視点 = ボスの位置（同じ高さオフセットを加えてボスの顔付近を見るようにする）
+	cutsceneCameraData.target   = bossPos + Vector3(0.0f, cutSceneParam->cameraHeight, 0.0f);
+
+	StartBossPhaseCutsceneCamera(boss, isPhase25, cutsceneCameraData, *cutSceneParam);
+}
+
+
+void BattleManager::SetupTurtlePhaseCutsceneCamera(BossCharacter* boss, const bool isPhase25)
+{
+	// カメ用のカメラ・演出パラメータをマスターデータから取得（見つからない場合は構造体のデフォルト値を使う）
+	MasterBossPhaseCutSceneParameter defaultCutSceneParam;
+	const auto* cutSceneParam = ParameterManager::Get().GetBossPhaseCutSceneParam("Turtle");
+	if (!cutSceneParam) { cutSceneParam = &defaultCutSceneParam; }
+
+	const Vector3 bossPos = boss->GetTransformPosition();
+
+	// ボスが現在向いている方向（プレイヤーへの方向ではなく、ボス自身の回転から求める。
+	// 攻撃行動終了後などはプレイヤーの方を向いているとは限らないため）
+	// BossState.cpp の SetRotationY(atan2(diff.x, diff.z)) と同じ規約で、ローカル正面はワールド+Z
+	Vector3 bossForwardDir(0.0f, 0.0f, 1.0f);
+	boss->GetTransformRotation().Apply(bossForwardDir);
+	bossForwardDir.y = 0.0f; // 水平方向のみで向きを計算する（上下の傾きは無視）
+	if (bossForwardDir.LengthSq() > 0.001f) { bossForwardDir.Normalize(); }
+	else { bossForwardDir = Vector3(0.0f, 0.0f, 1.0f); }
+
+	// 現在のゲームカメラのfov/クリップ距離を引き継ぎ、位置と注視点だけ差し替える
+	CameraData cutsceneCameraData = gameCameraController_->As<GameCamera>()->GetCameraData();
+	// カメラ位置 = ボス位置 から「ボスの正面方向」に cameraDistance 分離し、cameraHeight 分だけ上げた場所
+	cutsceneCameraData.position = bossPos + bossForwardDir * cutSceneParam->cameraDistance + Vector3(0.0f, cutSceneParam->cameraHeight, 0.0f);
+	// 注視点 = ボスの位置（同じ高さオフセットを加えてボスの顔付近を見るようにする）
+	cutsceneCameraData.target   = bossPos + Vector3(0.0f, cutSceneParam->cameraHeight, 0.0f);
+
+	StartBossPhaseCutsceneCamera(boss, isPhase25, cutsceneCameraData, *cutSceneParam);
+}
+
+
+void BattleManager::StartBossPhaseCutsceneCamera(BossCharacter* boss, const bool isPhase25, const CameraData& cutsceneCameraData, const MasterBossPhaseCutSceneParameter& cutSceneParam)
+{
+	// タイマーのラムダで使う値をローカル変数にコピーしておく（cutSceneParamの参照そのものをキャプチャせずに済むように）
+	const float cameraEaseDuration    = cutSceneParam.cameraEaseDuration;
+	const float cutsceneDuration      = cutSceneParam.cutsceneDuration;
+	const float bossIdleHoldDuration  = cutSceneParam.bossIdleHoldDuration;
+
+	// イージングの開始地点＝現在の通常カメラ（演出終了後に戻ってくる先でもある）
+	bossPhaseCutsceneCameraStartData_  = gameCameraController_->As<GameCamera>()->GetCameraData();
+	// イージングの到達地点＝呼び出し元(Setup*PhaseCutsceneCamera)で計算したボス正面カメラ
+	bossPhaseCutsceneCameraTargetData_ = cutsceneCameraData;
+
+	// カットシーン用カメラは、まず現在の通常カメラと同じ状態で生成する（切り替えた瞬間に映像が飛ばないように）
+	auto bossFrontCamera = std::make_shared<GameCamera>();
+	bossFrontCamera->SetState(bossPhaseCutsceneCameraStartData_);
+	bossEntryCameraController_ = bossFrontCamera;
+
+	// 通常のゲームカメラをカットシーン用カメラに差し替えて表示を切り替える
+	CameraManager::Get().Unregister(GameCamera::ID());
+	CameraManager::Get().Register(GameCamera::ID(), bossEntryCameraController_);
+	CameraManager::Get().SwitchCamera(bossEntryCameraController_);
+
+	// 0→1にイージングさせ、その進捗値でstart/targetのカメラをブレンドする
+	// （瞬間移動ではなく、cameraEaseDuration秒かけてボス正面へ寄っていく。EaseOutで初動を速く、後半をゆっくりにする）
+	bossPhaseCutsceneCameraBlendCurve_.Initialize(0.0f, 1.0f, cameraEaseDuration, EasingType::EaseOut);
+	bossPhaseCutsceneCameraBlendCurve_.Play();
+
+	// HP25%演出: ボスの前後傾き（X軸回転）のイージング秒数・角度（BossPhaseCutSceneParameter.jsonで調整）
+	// 0→+pitchForwardDeg(pitchForwardEaseDuration秒) → 静止(pitchHoldDuration秒) → +pitchForwardDeg→0度(pitchBackEaseDuration秒)
+	const float pitchForwardDeg         = cutSceneParam.pitchForwardDeg;
+	const float pitchForwardEaseDuration = cutSceneParam.pitchForwardEaseDuration;
+	const float pitchHoldDuration        = cutSceneParam.pitchHoldDuration;
+	const float pitchBackEaseDuration    = cutSceneParam.pitchBackEaseDuration;
+
+	// カメラがボス正面に到着したタイミングで、専用演出を開始する
+	// 50%は通常攻撃アニメーションの流用、25%はX軸回転のイージングのみ。見え方次第で専用アニメーションに差し替える
+	cutSceneScheduler_->AddTimer(cameraEaseDuration, [this, boss, isPhase25, pitchForwardDeg, pitchForwardEaseDuration, cutSceneParam]()
+		{
+			if (isPhase25)
+			{
+				// HP25%用: 現在の向きを基準に、前方向へpitchForwardDeg度イージングさせる（角度・秒数はJSON側で調整）
+				if (boss)
+				{
+					bossPhaseCutscenePitchBaseRotation_ = boss->GetTransformRotation();
+					bossPhaseCutscenePitchCurve_.Initialize(0.0f, pitchForwardDeg, pitchForwardEaseDuration, EasingType::EaseInOut);
+					bossPhaseCutscenePitchCurve_.Play();
+				}
+				// 疲れマークの表示開始はUI側(BossPhaseCutSceneMenu::StartTiredMarks)に委譲する（後述のtiredStartTimeタイマーで呼び出す）
+
+				// カメラがボス正面に到着したこのタイミングでデバフ（Debuff3）とエフェクトを発生させる
+				// （HP25%を跨いだ瞬間ではなく、カットシーンの演出に同期させる）
+				// このカットシーンのエフェクトだけ再生位置を少し下げる（通常のインゲーム動揺エフェクトの位置はEmotionParameter.jsonのまま変えない）
+				// サウンドはEmotionEffectObserver::OnEmotionChanged()側で共通再生される（カットシーン以外のバフ/デバフ発生時も鳴る）
+				emotionEffectObserver_.SetNextDebuffEffectOffsetY(cutSceneParam.debuffEffectOffsetYOverride);
+				bossEmotionPhaseManager_.ForceApplyPhase25Debuff();
+			}
+			else
+			{
+				// HP50%用: ジャンプ→着地をbossJumpCount回行う（通常攻撃アニメーションは一旦破棄）
+				// 1回目の着地はUpdateBossPhaseCutsceneCamera()側で検知して次のジャンプにつなげ、
+				// bossJumpCount回終わったらIdleに戻す
+				if (boss) {
+					boss->PlayAnimation(BossAnimID::enAnimJump);
+					bossPhaseCutsceneJumpsRemaining_ = cutSceneParam.bossJumpCount;
+				}
+
+				// カメラがボス正面に到着したこのタイミングでバフ（Buff3）とエフェクトを発生させる
+				// （HP50%を跨いだ瞬間ではなく、カットシーンの演出に同期させる）
+				// このカットシーンのエフェクトだけ再生位置を少し上げる（通常のインゲーム強気化エフェクトの位置はEmotionParameter.jsonのまま変えない）
+				// サウンドはEmotionEffectObserver::OnEmotionChanged()側で共通再生される（カットシーン以外のバフ/デバフ発生時も鳴る）
+				emotionEffectObserver_.SetNextBuffEffectOffsetY(cutSceneParam.buffEffectOffsetYOverride);
+				bossEmotionPhaseManager_.ForceApplyPhase50Buff();
+
+				// 怒りマーク表示・スケールパルスの開始はUI側(BossPhaseCutSceneMenu)の自前タスクスケジューラーに任せる
+				if (auto* menu = GetBossPhaseCutSceneMenu()) { menu->StartAngryMarks(cutSceneParam); }
+			}
+		});
+
+	// HP25%演出: 前傾きで静止していた後、元の角度(0度)へイージングで戻す（試作）
+	if (isPhase25)
+	{
+		cutSceneScheduler_->AddTimer(cameraEaseDuration + pitchForwardEaseDuration + pitchHoldDuration, [this, pitchForwardDeg, pitchBackEaseDuration]()
+			{
+				bossPhaseCutscenePitchCurve_.Initialize(pitchForwardDeg, 0.0f, pitchBackEaseDuration, EasingType::EaseInOut);
+				bossPhaseCutscenePitchCurve_.Play();
+			});
+	}
+
+	// HP25%演出: 前傾きで静止している間(pitchHoldDuration秒)に、左右へ小刻みに揺らす（試作）
+	// 左へA度→右へ2A度→左へ2A度→右へA度、と4等分した秒数ごとにイージングさせると、ちょうどpitchHoldDuration秒で中央(0度)に戻る
+	if (isPhase25)
+	{
+		const float yawWobbleAmplitudeDeg  = cutSceneParam.yawWobbleAmplitudeDeg;
+		const float yawSegmentDuration     = pitchHoldDuration / 4.0f;
+		const float holdStartTime          = cameraEaseDuration + pitchForwardEaseDuration;
+
+		cutSceneScheduler_->AddTimer(holdStartTime, [this, yawWobbleAmplitudeDeg, yawSegmentDuration]()
+			{
+				// 中央(0度) → 左A度
+				bossPhaseCutsceneYawCurve_.Initialize(0.0f, -yawWobbleAmplitudeDeg, yawSegmentDuration, EasingType::EaseInOut);
+				bossPhaseCutsceneYawCurve_.Play();
+			});
+		cutSceneScheduler_->AddTimer(holdStartTime + yawSegmentDuration, [this, yawWobbleAmplitudeDeg, yawSegmentDuration]()
+			{
+				// 左A度 → 右2A度分移動（絶対角度としては右A度の位置）
+				bossPhaseCutsceneYawCurve_.Initialize(-yawWobbleAmplitudeDeg, yawWobbleAmplitudeDeg, yawSegmentDuration, EasingType::EaseInOut);
+				bossPhaseCutsceneYawCurve_.Play();
+			});
+		cutSceneScheduler_->AddTimer(holdStartTime + yawSegmentDuration * 2.0f, [this, yawWobbleAmplitudeDeg, yawSegmentDuration]()
+			{
+				// 右A度 → 左2A度分移動（絶対角度としては左A度の位置）
+				bossPhaseCutsceneYawCurve_.Initialize(yawWobbleAmplitudeDeg, -yawWobbleAmplitudeDeg, yawSegmentDuration, EasingType::EaseInOut);
+				bossPhaseCutsceneYawCurve_.Play();
+			});
+		cutSceneScheduler_->AddTimer(holdStartTime + yawSegmentDuration * 3.0f, [this, yawWobbleAmplitudeDeg, yawSegmentDuration]()
+			{
+				// 左A度 → 右A度分移動（中央=0度に戻る）
+				bossPhaseCutsceneYawCurve_.Initialize(-yawWobbleAmplitudeDeg, 0.0f, yawSegmentDuration, EasingType::EaseInOut);
+				bossPhaseCutsceneYawCurve_.Play();
+			});
+	}
+
+	// HP25%演出: ボスが左右への揺れ（Y軸回転）を始めてから戻り始める直前までの間(pitchHoldDuration秒)に、
+	// 疲れマーク1→2→3の順にtiredStaggerInterval秒間隔で開始する。
+	// 各マークは弧の上昇(tiredArcRiseDuration秒)→横方向への移動(UIAnimation.json側のtiredN_arcDriftの秒数)の2段階で移動しつつ、
+	// 同時に透明度もフェードアウトさせる（BossPhaseCutSceneParameter.jsonで調整）
+	if (isPhase25)
+	{
+		// ボスが左右への揺れ（Y軸回転）を始めるタイミング（=前傾きイージングが終わったタイミング）を基準にする
+		const float tiredStartTime = cameraEaseDuration + pitchForwardEaseDuration;
+
+		// 疲れマーク1→2→3の順次表示・弧移動・フェードアウトはUI側(BossPhaseCutSceneMenu)の自前タスクスケジューラーに委譲する
+		cutSceneScheduler_->AddTimer(tiredStartTime, [this, cutSceneParam]()
+			{
+				if (auto* menu = GetBossPhaseCutSceneMenu()) { menu->StartTiredMarks(cutSceneParam); }
+			});
+	}
+
+	// cutsceneDuration秒間演出を見せたら、カメラを戻し始めるのに合わせてマークも消す
+	cutSceneScheduler_->AddTimer(cameraEaseDuration + cutsceneDuration, [this, cameraEaseDuration, isPhase25, cutSceneParam]()
+		{
+			// target→startへイージングし直す（＝元の視点にcameraEaseDuration秒かけて戻す。こちらも初動を速く、後半をゆっくりにする）
+			bossPhaseCutsceneCameraBlendCurve_.Initialize(1.0f, 0.0f, cameraEaseDuration, EasingType::EaseOut);
+			bossPhaseCutsceneCameraBlendCurve_.Play();
+
+			// マークの非表示化・パルス停止・スケールリセットはUI側(BossPhaseCutSceneMenu)に任せる
+			if (auto* menu = GetBossPhaseCutSceneMenu()) { menu->EndMarks(isPhase25, cutSceneParam); }
+		});
+
+	// カメラが完全に戻った後、通常カメラへ切り替えてプレイヤーの操作・描画を復帰させる
+	cutSceneScheduler_->AddTimer(cameraEaseDuration + cutsceneDuration + cameraEaseDuration, [this]()
+		{
+			// カットシーン用カメラを外し、通常のゲームカメラへ登録し直して切り替える
+			CameraManager::Get().Unregister(GameCamera::ID());
+			CameraManager::Get().Register(GameCamera::ID(), gameCameraController_);
+			CameraManager::Get().SwitchCamera(gameCameraController_);
+
+			// プレイヤーの操作・描画を復帰させる
+			if (playerController_) { playerController_->Activate(); }
+			if (player_) { player_->SetDraw(true); }
+
+			// プレイヤーが動けるようになったのと同時にインゲームUI（タイマー・HPバー・攻撃方法など）の描画/更新を再開する
+			uiManager_.SetUpdateMask(UIManager::All);
+			uiManager_.SetDrawMask(UIManager::All);
+			uiManager_.ReleaseCutSceneLayout(); // 怒りマークなど、このカットシーン専用のUIを解放する
+			isBossPhaseCutsceneActive_ = false;
+
+			// プレイヤーが動けるようになったのと同時にゲーム内時間（制限時間タイマー）も再開する
+			SetPouse(false);
+		});
+
+	// 視点が戻ってからさらにbossIdleHoldDuration秒待ってからボスAIを再開する（戻った瞬間に攻撃が当たって見えるのを防ぐ）
+	// ExitBossPhaseCutscene() 側でボスAI再開やフラグの後始末を行う
+	cutSceneScheduler_->AddTimer(cameraEaseDuration + cutsceneDuration + cameraEaseDuration + bossIdleHoldDuration, [this]()
+		{
+			ExitBossPhaseCutscene();
+		});
+}
+
+
+void BattleManager::UpdateBossPhaseCutsceneCamera(const float deltaTime)
+{
+	// HP50%演出：ジャンプの着地（＝アニメーション再生終了）を検知したら、次のジャンプへつなげる。
+	// 2回終わったら待機アニメーションに戻す
+	if (bossPhaseCutsceneJumpsRemaining_ > 0)
+	{
+		if (auto* boss = boss_->GetBoss())
+		{
+			if (!boss->IsPlayingAnimation())
+			{
+				bossPhaseCutsceneJumpsRemaining_--;
+				if (bossPhaseCutsceneJumpsRemaining_ > 0) {
+					boss->PlayAnimation(BossAnimID::enAnimJump); // 2回目のジャンプ
+				} else {
+					boss->PlayAnimation(BossAnimID::enAnimIdle); // 2回終わったので待機に戻す
+				}
+			}
+		}
+	}
+
+	// イージング中でなければ何もしない（カットシーンを開始していない/イージングが完了している）
+	if (!bossPhaseCutsceneCameraBlendCurve_.IsPlaying()) { return; }
+
+	bossPhaseCutsceneCameraBlendCurve_.Update(deltaTime);
+
+	// 進捗値(0〜1)に応じてstart/targetのカメラデータをブレンドする
+	const float t = bossPhaseCutsceneCameraBlendCurve_.GetCurrentValue();
+	const CameraData blended = CameraData::Lerp(t, bossPhaseCutsceneCameraStartData_, bossPhaseCutsceneCameraTargetData_);
+
+	if (bossEntryCameraController_)
+	{
+		bossEntryCameraController_->As<GameCamera>()->SetState(blended);
+	}
+}
+
+
+void BattleManager::UpdateBossPhaseCutsceneTilt(const float deltaTime)
+{
+	const bool isPitchPlaying = bossPhaseCutscenePitchCurve_.IsPlaying();
+	const bool isYawPlaying   = bossPhaseCutsceneYawCurve_.IsPlaying();
+
+	// どちらのイージングも進行中でなければ何もしない（HP25%演出を開始していない/両方とも完了している）
+	if (!isPitchPlaying && !isYawPlaying) { return; }
+
+	// 進行中の方だけカーブを進め、直近の角度(度)を更新する（停止中の軸は直前の角度を保持し続ける）
+	if (isPitchPlaying)
+	{
+		bossPhaseCutscenePitchCurve_.Update(deltaTime);
+		bossPhaseCutscenePitchCurrentDeg_ = bossPhaseCutscenePitchCurve_.GetCurrentValue();
+	}
+	if (isYawPlaying)
+	{
+		bossPhaseCutsceneYawCurve_.Update(deltaTime);
+		bossPhaseCutsceneYawCurrentDeg_ = bossPhaseCutsceneYawCurve_.GetCurrentValue();
+	}
+
+	// 前後(X)・左右(Y)の角度(度)を基準の向きに加えて反映する
+	if (auto* boss = boss_->GetBoss())
+	{
+		boss->SetCutsceneTiltOffset(bossPhaseCutscenePitchBaseRotation_, Math::DegToRad(bossPhaseCutscenePitchCurrentDeg_), Math::DegToRad(bossPhaseCutsceneYawCurrentDeg_));
+	}
+}
+
+
+BossPhaseCutSceneMenu* BattleManager::GetBossPhaseCutSceneMenu() const
+{
+	return dynamic_cast<BossPhaseCutSceneMenu*>(uiManager_.GetCutSceneMenu());
+}
+
+
+void BattleManager::FreezePlayerAndBoss()
+{
+	// プレイヤーの処理
+	{
+		// ステートをリセット
+		if (player_) {
+			auto* stateMachine = player_->GetStateMachine();
+			stateMachine->ResetInput();				// ステートマシーンに設定してある入力関係の値をすべてリセット
+			player_->SetMoveVelocity(Vector3::Zero);	// プレイヤーの元の移動量を0に
+		}
+		// 操作不能
+		if (playerController_) { playerController_->Deactivate(); }
+	}
+
+	// ボスのAIを止める（アニメーション自体の更新は継続するので、こちらから ChangeState/PlayAnimation を呼べる）
+	if (boss_) { boss_->SetControlEnabled(false); }
+
+	// 再生中のエフェクト・サウンドをすべて止める
+	EffectManager::Get().StopAllEffects();
+	SoundManager::Get().StopAllSE();
+
+	// インゲームUI（タイマー・HPバー・攻撃方法など）の更新・描画を止める
+	// CutSceneビットだけは残す（このカットシーン専用の怒りマークなどをここで表示するため）
+	uiManager_.SetUpdateMask(UIManager::CutScene);
+	uiManager_.SetDrawMask(UIManager::CutScene);
+
+	// ゲーム内時間（制限時間タイマー）を止める
+	SetPouse(true);
+}
+
+
+void BattleManager::UnfreezePlayerAndBoss()
+{
+	if (playerController_) { playerController_->Activate(); }
+
+	if (boss_) {
+		// ボスのAIを再開する前に、必ずIdle状態から始まるようにする
+		if (auto* boss = boss_->GetBoss()) { boss->ChangeState(BossStateID::Idle); }
+		boss_->SetControlEnabled(true);
+	}
+
+	// インゲームUIの更新・描画を元に戻す
+	uiManager_.SetUpdateMask(UIManager::All);
+	uiManager_.SetDrawMask(UIManager::All);
+
+	// ゲーム内時間（制限時間タイマー）を再開する
+	SetPouse(false);
+}
+
+
+void BattleManager::ExitBossPhaseCutscene()
+{
+	UnfreezePlayerAndBoss();
 }
 
 
