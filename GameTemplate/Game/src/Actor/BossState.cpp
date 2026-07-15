@@ -743,6 +743,7 @@ void ThrowRockState::Enter()
 			);
 			// アニメーションを再生
 			boss_->PlayAnimation(BossAnimID::enAnimClicked, GetAnimationSpeedMul());
+			SoundManager::Get().PlaySE(enSoundKind_Boss_ThrowAttack); // 音の再生
 		});
 
 	taskScheduler_->AddTimer(p->throwRock.endTime / speedMul, [&]()
