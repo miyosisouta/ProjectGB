@@ -285,7 +285,7 @@ private:
 private:
 	Phase phase_ = Phase::enReady; //!< 処理段階
 	Mode mode_ = Mode::enMax; //!< 攻撃パターン
-	uint8_t weights_[enMax] = { 0,5,5 }; //!< 攻撃の重み
+	uint8_t weights_[enMax] = { 3,4,3 }; //!< 攻撃の重み
 	Vector3 targetPos_ = Vector3::Zero; //!< 攻撃対象の座標
 	EffectHandle laserEffectHandle_ = INVALID_EFFECT_HANDLE; //!< レーザーエフェクトのハンドル
 	AttackRange* attackRangeIndicator_ = nullptr; //!< 攻撃予測サークルインジケーター
