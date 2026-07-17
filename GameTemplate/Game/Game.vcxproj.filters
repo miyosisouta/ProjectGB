@@ -2,7 +2,6 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <ClCompile Include="Game.cpp" />
-    <ClCompile Include="main.cpp" />
     <ClCompile Include="src\Actor\Actor.cpp" />
     <ClCompile Include="src\Actor\ActorStatus.cpp" />
     <ClCompile Include="src\Actor\AttackObject.cpp" />
@@ -101,7 +100,6 @@
     <ClCompile Include="src\Vfx\ParticleModule.cpp" />
     <ClCompile Include="src\Vfx\ParticleValueProvider.cpp" />
     <ClCompile Include="stdafx.cpp" />
-    <ClCompile Include="system\system.cpp" />
     <ClCompile Include="src\UI\SkillSelectMenu.cpp" />
     <ClCompile Include="src\UI\CheckStartWindow.cpp" />
     <ClCompile Include="src\UI\CameraOptionMenu.cpp" />
@@ -111,6 +109,8 @@
     <ClCompile Include="src\Emotion\EmotionSystem.cpp" />
     <ClCompile Include="src\Emotion\EmotionEffectObserver.cpp" />
     <ClCompile Include="src\UI\PlayGameMenu.cpp" />
+    <ClCompile Include="system\system.cpp" />
+    <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Game.h" />
@@ -235,5 +235,13 @@
     <ClInclude Include="src\Emotion\IEmotionObserver.h" />
     <ClInclude Include="src\Emotion\EmotionEffectObserver.h" />
     <ClInclude Include="src\UI\PlayGameMenu.h" />
+    <ClInclude Include="resource.h" />
+    <ClInclude Include="resource1.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="gb.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="Game.rc" />
   </ItemGroup>
 </Project>

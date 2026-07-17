@@ -1,17 +1,20 @@
-#pragma once
+ï»¿#pragma once
 #define _CRT_SECURE_NO_WARNINGS
 
 #include "k2EnginePreCompile.h"
 using namespace nsK2EngineLow;
 using namespace nsK2Engine;
 
+// @test
+//#include <Windows.h>
+
 #include <src/json/json.hpp>
 
-#include "src/Types.h"			//!< ƒ^ƒCƒv
-#include "src/Math/Transform.h"	//!< ƒgƒ‰ƒ“ƒXƒtƒH[ƒ€
-#include "src/Memory/Array.h"	//!< ”z—ñ
+#include "src/Types.h"			//!< ã‚¿ã‚¤ãƒ—
+#include "src/Math/Transform.h"	//!< ãƒˆãƒ©ãƒ³ã‚¹ãƒ•ã‚©ãƒ¼ãƒ 
+#include "src/Memory/Array.h"	//!< é…åˆ—
 #include "src/Util/Crc32.h"
-#include "src/Util/Curve.h"     //!< ƒJ[ƒu
+#include "src/Util/Curve.h"     //!< ã‚«ãƒ¼ãƒ–
 #include "src/Util/TaskSchedulerSystem.h"
 #include "src/Util/Selector.h"
 #include "src/collision/GhostBody.h"
