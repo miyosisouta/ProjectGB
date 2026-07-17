@@ -28,9 +28,9 @@ void BossCharacter::SetupAnimation()
 	}
 }
 
-void BossCharacter::PlayAnimation(const int id,const float animSpeed)
+void BossCharacter::PlayAnimation(const int id,const float animSpeed, const float interpolateTime)
 {
-	modelRender_.PlayAnimation(id); // Idをもとにそのアニメーションの再生
+	modelRender_.PlayAnimation(id, interpolateTime); // Idをもとにそのアニメーションの再生（interpolateTimeで前のアニメーションからブレンド）
 	modelRender_.SetAnimationSpeed(animSpeed); // 小数(0.5倍速など)も正しく反映されるようfloatで受け取る
 }
 
@@ -178,6 +178,7 @@ void BossCharacter::Update()
 		// モデルへ反映
 		modelRender_.SetPosition(transform_.position);
 		modelRender_.SetRotation(transform_.rotation);
+		modelRender_.SetScale(transform_.scale);
 		modelRender_.Update();
 	}
 	

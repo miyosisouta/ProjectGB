@@ -4,6 +4,7 @@
  * 攻撃オブジェクトの管理クラス
  */
 class AttackObjectBase;
+class ThrowRockObject;
 class BossCharacter;
 class AttackObjectManager
 {
@@ -21,11 +22,13 @@ public:
     void Render(RenderContext& rc);
 
 public:
-    void CreateRock(
+    /** 岩オブジェクトを生成する。戻り値はLaunch()を呼ぶタイミングを制御するために呼び出し側で保持する想定 */
+    ThrowRockObject* CreateRock(
         BossCharacter* boss,
         const Vector3& startPos,
         const Vector3& direction,
         float collisionSize,
+        float spawnHeight = 10.0f,
         float speed = 1200.0f,
         float launchAngle = 15.0f,
         float gravity = 980.0f

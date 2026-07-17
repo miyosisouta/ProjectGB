@@ -513,6 +513,8 @@ void ParameterManager::LoadBossStateParamData(const char* path)
 				p.hitStamp.effectScaleBasis     = o.value("effectScaleBasis",     p.hitStamp.effectScaleBasis);
 				p.hitStamp.smokeEffectScale      = o.value("smokeEffectScale",      p.hitStamp.smokeEffectScale);
 				p.hitStamp.shockWaveEffectScale = o.value("shockWaveEffectScale", p.hitStamp.shockWaveEffectScale);
+				p.hitStamp.impactAnimLeadTime    = o.value("impactAnimLeadTime",   p.hitStamp.impactAnimLeadTime);
+				p.hitStamp.stateExitDelay        = o.value("stateExitDelay",       p.hitStamp.stateExitDelay);
 			}
 
 			// 回転攻撃
@@ -528,6 +530,8 @@ void ParameterManager::LoadBossStateParamData(const char* path)
 				p.spin.indicatorRangeSize = o.value("indicatorRangeSize", p.spin.indicatorRangeSize);
 				p.spin.indicatorLength    = o.value("indicatorLength",    p.spin.indicatorLength);
 				p.spin.indicatorForward   = o.value("indicatorForward",   p.spin.indicatorForward);
+				p.spin.jumpLeadTime       = o.value("jumpLeadTime",       p.spin.jumpLeadTime);
+				p.spin.jumpHeight         = o.value("jumpHeight",         p.spin.jumpHeight);
 			}
 
 			// 岩を投げる攻撃
@@ -541,6 +545,11 @@ void ParameterManager::LoadBossStateParamData(const char* path)
 				p.throwRock.indicatorForward    = o.value("indicatorForward",   p.throwRock.indicatorForward);
 				p.throwRock.indicatorRangeSize = o.value("indicatorRangeSize", p.throwRock.indicatorRangeSize);
 				p.throwRock.rockCollisionSize   = o.value("rockCollisionSize",  p.throwRock.rockCollisionSize);
+				p.throwRock.clickedBlendTime    = o.value("clickedBlendTime",   p.throwRock.clickedBlendTime);
+				p.throwRock.windUpSwayAmplitudeDeg    = o.value("windUpSwayAmplitudeDeg",    p.throwRock.windUpSwayAmplitudeDeg);
+				p.throwRock.windUpSwaySegmentDuration = o.value("windUpSwaySegmentDuration", p.throwRock.windUpSwaySegmentDuration);
+				p.throwRock.windUpSpawnHeight          = o.value("windUpSpawnHeight",         p.throwRock.windUpSpawnHeight);
+				p.throwRock.dustEffectScale             = o.value("dustEffectScale",           p.throwRock.dustEffectScale);
 			}
 
 			// レーザー攻撃
@@ -557,6 +566,12 @@ void ParameterManager::LoadBossStateParamData(const char* path)
 				p.laser.indicatorRadiusNormal = o.value("indicatorRadiusNormal", p.laser.indicatorRadiusNormal);
 				p.laser.indicatorRadiusCharge = o.value("indicatorRadiusCharge", p.laser.indicatorRadiusCharge);
 				p.laser.effectScaleFactor     = o.value("effectScaleFactor",     p.laser.effectScaleFactor);
+				p.laser.multiJumpHeight       = o.value("multiJumpHeight",       p.laser.multiJumpHeight);
+				p.laser.multiJumpDuration     = o.value("multiJumpDuration",     p.laser.multiJumpDuration);
+				p.laser.multiJumpCount        = o.value("multiJumpCount",        p.laser.multiJumpCount);
+				if (o.contains("chargeBodyScale")) { p.laser.chargeBodyScale = ParseVector3(o["chargeBodyScale"]); }
+				p.laser.chargeIndicatorDelay    = o.value("chargeIndicatorDelay",    p.laser.chargeIndicatorDelay);
+				p.laser.chargeScaleDownDuration = o.value("chargeScaleDownDuration", p.laser.chargeScaleDownDuration);
 			}
 
 			// 死亡

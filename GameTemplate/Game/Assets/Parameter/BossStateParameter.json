@@ -38,7 +38,7 @@
 
             "hitStamp": {
                 "comment": "ヒットスタンプパラメーター",
-                "upBeginTime": 0.5,
+                "upBeginTime": 0.8,
                 "overheadMoveTime": 2.0,
                 "fallBeginTime": 5.0,
                 "rangeSize": 70.0,
@@ -49,7 +49,9 @@
                 "gravityPower": -800.0,
                 "effectScaleBasis": 350.0,
                 "smokeEffectScale": 0.2,
-                "shockWaveEffectScale": 0.5
+                "shockWaveEffectScale": 0.5,
+                "impactAnimLeadTime": 0.1,
+                "stateExitDelay": 1.0
             },
 
             "spin": {
@@ -63,7 +65,9 @@
                 "effectScaleBasis": 250.0,
                 "indicatorRangeSize": 50.0,
                 "indicatorLength": 250.0,
-                "indicatorForward": 500.0
+                "indicatorForward": 500.0,
+                "jumpLeadTime": 1.5,
+                "jumpHeight": 150.0
             },
 
             "throwRock": {
@@ -75,7 +79,12 @@
                 "indicatorBaseSize": 200.0,
                 "indicatorForward": 600.0,
                 "indicatorRangeSize": 33.0,
-                "rockCollisionSize": 100.0
+                "rockCollisionSize": 100.0,
+                "clickedBlendTime": 0.15,
+                "windUpSwayAmplitudeDeg": 15.0,
+                "windUpSwaySegmentDuration": 0.3,
+                "windUpSpawnHeight": 10.0,
+                "dustEffectScale": 23.0
             },
 
             "laser": {
@@ -90,7 +99,13 @@
                 "collisionScale": 180.0,
                 "indicatorRadiusNormal": 45.0,
                 "indicatorRadiusCharge": 75.0,
-                "effectScaleFactor": 0.5
+                "effectScaleFactor": 0.5,
+                "multiJumpHeight": 100.0,
+                "multiJumpDuration": 1.0,
+                "multiJumpCount": 3,
+                "chargeBodyScale": [3.8, 3.8, 3.8],
+                "chargeIndicatorDelay": 1.0,
+                "chargeScaleDownDuration": 2.0
             },
 
             "death": {

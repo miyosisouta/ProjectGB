@@ -56,10 +56,12 @@ public:
 public:
 	/** アニメーションの読み込み */
 	void SetupAnimation();
-	/** アニメーションの再生 */
-	void PlayAnimation(const int id, const float animSpeed = 1.0f);
+	/** アニメーションの再生。interpolateTimeを指定すると、直前のアニメーションから指定秒数かけて滑らかにブレンドする */
+	void PlayAnimation(const int id, const float animSpeed = 1.0f, const float interpolateTime = 0.0f);
 	/** 現在のアニメーションが再生中か（ループしないアニメーションが最後まで再生し終わったか判定する用） */
 	bool IsPlayingAnimation() const { return modelRender_.IsPlayingAnimation(); }
+	/** 指定したアニメーションがこのボスに読み込まれているか（ボスの種類によって未使用のアニメーションIDがあるため、共有ステートから再生前に確認する用） */
+	bool HasAnimation(const int id) const { return id >= 0 && id < BossAnimID::enAnimNum && !param_.anims[id].filePath.empty(); }
 
 
 /** =================================================================== */
