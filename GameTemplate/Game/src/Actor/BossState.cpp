@@ -830,8 +830,16 @@ void ThrowRockState::StartAttack()
 				pendingRock_ = nullptr;
 			}
 
-			// アニメーションを再生（ワインドアップからclickedBlendTime秒かけて滑らかにブレンド）
-			boss_->PlayAnimation(BossAnimID::enAnimClicked, GetAnimationSpeedMul(), p->throwRock.clickedBlendTime);
+			// 岩の生成
+			AttackObjectManager::Get().CreateRock(
+				boss_,
+				startPos,
+				targetDir,
+				p->throwRock.rockCollisionSize
+			);
+			// アニメーションを再生
+			boss_->PlayAnimation(BossAnimID::enAnimClicked, GetAnimationSpeedMul());
+			SoundManager::Get().PlaySE(enSoundKind_Boss_ThrowAttack); // 音の再生
 		});
 
 	taskScheduler_->AddTimer(p->throwRock.endTime / speedMul, [&]()
