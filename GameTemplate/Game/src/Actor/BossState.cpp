@@ -832,6 +832,22 @@ void ThrowRockState::StartAttack()
 
 			// アニメーションを再生（ワインドアップからclickedBlendTime秒かけて滑らかにブレンド）
 			boss_->PlayAnimation(BossAnimID::enAnimClicked, GetAnimationSpeedMul(), p->throwRock.clickedBlendTime);
+			// ※通常攻撃(normalAttack)と同じ前方/高さオフセット値を使い回している（元コードの仕様を踏襲）
+			float attackForward = p->normalAttack.collisionForward;
+			float attackHeight = p->normalAttack.collisionHeight;
+			Vector3 startPos = bossPos + (forward * attackForward);
+			startPos.y = attackHeight;
+
+			// 岩の生成
+			AttackObjectManager::Get().CreateRock(
+				boss_,
+				startPos,
+				targetDir,
+				p->throwRock.rockCollisionSize
+			);
+			// アニメーションを再生
+			boss_->PlayAnimation(BossAnimID::enAnimClicked, GetAnimationSpeedMul());
+			SoundManager::Get().PlaySE(enSoundKind_Boss_ThrowAttack); // 音の再生
 		});
 
 	taskScheduler_->AddTimer(p->throwRock.endTime / speedMul, [&]()

@@ -91,7 +91,7 @@ static SoundInformation soundInformation[enSoundKind_SE_Max] =
 	SoundInformation("Assets/Audio/SE/Enemy/Common/NormalAttack.wav"),		// 通常攻撃	
 	SoundInformation("Assets/Audio/SE/Enemy/Common/FallAttack.wav"),		// ヒットスタンプ 10
 	SoundInformation("Assets/Audio/SE/Enemy/Common/SpinAttack.wav"),		// 回転攻撃
-	SoundInformation("Assets/Audio/SE/Enemy/Common/SlowAttack.wav"),		// 岩投げる
+	SoundInformation("Assets/Audio/SE/Enemy/Common/ThrowRock.wav"),		// 岩投げる
 	SoundInformation("Assets/Audio/SE/Enemy/Common/Thunder_Weak.wav"),		// 弱い雷
 	SoundInformation("Assets/Audio/SE/Enemy/Common/Thunder_Strong.wav"),	// 強い雷
 	SoundInformation("Assets/Audio/SE/Enemy/Gorilla/uiTextImpactSingle.wav"),		// 登場シーンで使用するドンの音

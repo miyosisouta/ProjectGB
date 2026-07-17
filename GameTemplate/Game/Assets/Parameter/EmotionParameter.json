@@ -20,7 +20,7 @@
             "debuffEffectOffsetY": 30.0,
 
             "buffSeVolumeBoost":   1.0,
-            "debuffSeVolumeBoost": 10.0
+            "debuffSeVolumeBoost": 4.0
         }
     ]
 }
