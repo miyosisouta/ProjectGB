@@ -64,6 +64,8 @@ enum BossAnimID {
     enAnimSpin,
     enAnimClicked,
     enAnimAntic,
+    enAnimClickedWindUp, //!< 岩投げのワインドアップ（予備動作）
+    enAnimJumpImpact,    //!< ヒットスタンプ着地インパクト
     enAnimNum  //!<アニメーションの最大数
 };
 

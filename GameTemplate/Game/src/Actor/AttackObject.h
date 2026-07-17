@@ -51,16 +51,33 @@ private:
     float launchAngle_ = 0.0f; // 投射初速度の仰角
     float traveledDist_ = 0.0f; // 飛んだ距離の累計
 
+    /** ワインドアップ中にスケール・座標を変化させながら見せる演出用パラメータ */
+    bool isLaunched_ = false; // Launch()が呼ばれた（投げられた）か
+    Vector3 startScale_ = Vector3(0.1f, 0.1f, 0.1f); // 出現直後のスケール
+    Vector3 targetScale_ = Vector3::One; // 投げられる瞬間に到達させる最終スケール（Launch()時のサイズと必ず一致する）
+    Vector3 growStartPos_ = Vector3::Zero; // 出現直後の座標（Setup()で渡されたstartPosのYだけ低くしたもの）
+    Vector3 growTargetPos_ = Vector3::Zero; // 投げる瞬間の座標（Setup()で渡されたstartPosそのもの）
+
 public:
-    /** 投げる際のセットアップ */
+    /** 投げる際のセットアップ（この時点ではまだ飛ばない。Launch()を呼ぶまでスケール・座標はSetGrowProgress()で外部から制御する） */
     void Setup(const Vector3& startPos,
         const Vector3& direction,
         float collisionSize,
         float speed,
         float launchAngle,
-        float gravity);
+        float gravity,
+        float spawnHeight);
 
     void SetBossData(BossCharacter* boss) { boss_ = boss; }
+    /**
+     * 出現(Setup)からLaunch()までのスケール・座標の変化具合を呼び出し側(ThrowRockState)から毎フレーム設定する。
+     * t=0で出現直後のサイズ・座標、t=1で投げる瞬間のサイズ(targetScale_)・座標(growTargetPos_)になる。
+     * 予測ラインの表示進捗と同じ進捗値を渡すことで、投げる瞬間の見た目と必ず一致するようにする。
+     * Launch()後は呼んでも無視される（最終状態で固定済みのため）。
+     */
+    void SetGrowProgress(float t);
+    /** 育てていた岩を実際に投げる（ここで初めて移動・当たり判定が有効になる。まだ成長しきっていなくても最終スケール・座標に揃える） */
+    void Launch();
 private:
     /** 岩の移動計算 */
     void Culculate();

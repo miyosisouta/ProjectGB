@@ -1,8 +1,10 @@
 ﻿#pragma once
 #include "IState.h"
 #include "src/Actor/Character.h"
+#include "src/Util/Curve.h"
 class BossCharacter;
 class AttackRange;
+class ThrowRockObject;
 /*
  * Stateの基底クラス
  */
@@ -19,6 +21,28 @@ protected:
 	Vector3 CalcVelocityTowards(Vector3 targetPos, float speed);
 	/** ターゲットに向かう回転の共通処理 */
 	Quaternion RotateToTarget(float rotateSpeed);
+
+	/**
+	 * 攻撃前に「プレイヤーの方向へduration秒かけて振り向く」共通処理を開始する。
+	 * 振り向きが完了すると onFinished を呼ぶ（攻撃本体の開始処理はonFinished側に書く）。
+	 * HitStamp攻撃以外の攻撃ステートのEnter()から呼ぶ想定。
+	 */
+	void BeginTurnToPlayer(float duration, std::function<void()> onFinished);
+	/**
+	 * 振り向き処理の毎フレーム更新。
+	 * 振り向き中はtrueを返すので、呼び出し元(各ステートのUpdate())はその場合攻撃側の更新処理をスキップする。
+	 */
+	bool UpdateTurnToPlayer();
+
+private:
+	bool isTurningToPlayer_ = false;			//!< プレイヤー方向へ振り向き中か
+	float turnElapsed_ = 0.0f;					//!< 振り向き開始からの経過時間
+	float turnDuration_ = 1.0f;					//!< 振り向きにかける時間
+	Quaternion turnStartRot_ = Quaternion::Identity;	//!< 振り向き開始時の回転
+	Quaternion turnEndRot_ = Quaternion::Identity;		//!< 振り向き終了時（プレイヤー方向）の回転
+	std::function<void()> onTurnFinished_;		//!< 振り向き完了時に呼ぶコールバック（攻撃開始処理）
+
+protected:
 	/**
 	 * ボスの現在の攻撃速度倍率を取得する（EmotionSystem由来。1.0fが等倍）
 	 * 攻撃系ステート（通常攻撃・ヒットスタンプ・回転・岩投げ・レーザー）が
@@ -101,6 +125,10 @@ public:
 /*==========================================*/
 class BossAttackState : public BossStateBase
 {
+private:
+	/* 振り向き終了後に呼ばれる、攻撃本体の開始処理 */
+	void StartAttack();
+
 public:
 	/* 処理が終わったか */
 	bool IsFinished() const override { return isFinished_; }
@@ -139,8 +167,9 @@ private:
 	float verticalVelocity_ = 0.0f;  //!< 垂直速度
 	float gravity_ = 0.0f;        //!< 重力
 	bool createAttackCollision_ = false; //!< 攻撃用コリジョンを作成したかのフラグ
+	bool impactAnimPlayed_ = false; //!< 着地インパクトアニメーション(enAnimJumpImpact)を再生済みか
 	AttackRange* attackRange_ = nullptr; //!< 攻撃予測インジケーター
-	
+
 public:
 	/* 処理が終わりか */
 	bool IsFinished() const override { return isFinished_; }
@@ -165,6 +194,11 @@ private:
 	EffectHandle spinEffectHandle_       = INVALID_EFFECT_HANDLE; //!< 回転エフェクトのハンドル
 	AttackRange* attackRangeIndicator_   = nullptr;             //!< 攻撃予測ラインインジケーター
 	float        predictionElapsed_      = 0.0f;                //!< 予測表示の経過時間 (drawProgress 計算用)
+	FloatCurve   jumpCurve_;                                    //!< 突進開始直前のジャンプ演出（Y座標の上下）を管理するカーブ
+
+private:
+	/* 振り向き終了後に呼ばれる、攻撃本体の開始処理 */
+	void StartAttack();
 
 public:
 	/* 処理が終わりか */
@@ -199,6 +233,13 @@ private:
 	EffectHandle predictionEffectHandle_ = INVALID_EFFECT_HANDLE; // 予測エフェクトのハンドル
 	AttackRange* attackRangeIndicator_ = nullptr; //!< 攻撃予測ラインインジケーター
 	float predictionElapsed_ = 0.0f; //!< 予測表示の経過時間
+	FloatCurve windUpSwayCurve_; //!< ワインドアップ中に左右へ揺さぶる角度(度)のイージング（PingPongで往復し続ける）
+	Quaternion windUpSwayBaseRot_ = Quaternion::Identity; //!< 揺さぶりの基準になる向き（プレイヤー方向を向いた状態）
+	ThrowRockObject* pendingRock_ = nullptr; //!< ワインドアップ中に出現させ、Launch()前まで成長させ続けている岩（予測ラインと同じ進捗値で駆動する）
+
+private:
+	/* 振り向き終了後に呼ばれる、攻撃本体の開始処理 */
+	void StartAttack();
 
 public:
 	/* 処理が終わりか */
@@ -244,7 +285,7 @@ private:
 private:
 	Phase phase_ = Phase::enReady; //!< 処理段階
 	Mode mode_ = Mode::enMax; //!< 攻撃パターン
-	uint8_t weights_[enMax] = { 4,3,3 }; //!< 攻撃の重み
+	uint8_t weights_[enMax] = { 0,5,5 }; //!< 攻撃の重み
 	Vector3 targetPos_ = Vector3::Zero; //!< 攻撃対象の座標
 	EffectHandle laserEffectHandle_ = INVALID_EFFECT_HANDLE; //!< レーザーエフェクトのハンドル
 	AttackRange* attackRangeIndicator_ = nullptr; //!< 攻撃予測サークルインジケーター
@@ -256,10 +297,20 @@ private:
 	uint8_t shotCount_ = 0; //!< 攻撃回数
 	float attackSpeedMul_ = 1.0f; //!< Enter()冒頭で取得する攻撃速度倍率。Setup()内の[timing]計算で使う
 
-	
+	FloatCurve   multiJumpCurve_;      //!< 連発攻撃前の予備動作（上下ジャンプ）のY座標を管理するカーブ
+	float        multiJumpElapsed_ = 0.0f; //!< 予備ジャンプ開始からの経過時間（既定回数繰り返したか判定するため）
+	Vector3Curve chargeScaleCurve_;    //!< チャージ攻撃前後のScale変化（通常Scale→拡大→攻撃→通常Scaleへ復帰）を管理するカーブ
+	Vector3      normalScale_ = Vector3::One; //!< Enter()時点のボスの通常Scale（CharacterStatusData.json由来）。チャージ演出の拡大前/復帰先として使う
+	bool         isChargeScaleReturning_ = false; //!< chargeScaleCurve_が「攻撃前の拡大」ではなく「攻撃後に通常Scaleへ戻す」動作を再生中か（phase_は前回の攻撃で使い回され既にenDoneになっているため、これで判定する）
+
+
 private:
 	/* セットアップ */
 	void Setup();
+	/* 振り向き終了後に呼ばれる、攻撃タイプに応じた予備動作の開始処理（連発は上下ジャンプ後にStartAttack()を呼ぶ。通常/チャージはそのままStartAttack()を呼ぶ。チャージのScale演出はEnter()側で振り向きと並行して開始済み） */
+	void BeginPreMotion();
+	/* 予備動作終了後に呼ばれる、攻撃本体の開始処理 */
+	void StartAttack();
 
 
 public:

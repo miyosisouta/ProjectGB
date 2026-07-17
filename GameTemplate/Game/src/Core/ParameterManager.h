@@ -453,6 +453,8 @@ struct MasterBossStateParameter : public IMasterParameter
 		float   effectScaleBasis   = 350.0f;   //!< [effect]    着地エフェクトのスケール算出に使う基準サイズ（実際の攻撃判定半径はBossState.cpp内の固定値を使用しており本値の対象外）
 		float   smokeEffectScale    = 0.2f;    //!< [effect]    着地時の煙エフェクトのスケール係数（effectScaleBasisに掛ける）
 		float   shockWaveEffectScale = 0.5f;   //!< [effect]    着地時の衝撃波エフェクトのスケール係数（effectScaleBasisに掛ける）
+		float   impactAnimLeadTime  = 0.15f;   //!< [timing]    着地インパクトアニメーション(enAnimJumpImpact)を、落下速度から概算した残り落下時間がこの秒数を下回った時点（＝着地直前）で再生する
+		float   stateExitDelay      = 1.0f;    //!< [timing]    着地してからステートを終えるまでの秒数（インパクトアニメーションを最後まで見せるための猶予）
 	} hitStamp;
 
 	// 回転攻撃 (SpinState) ※攻撃速度で秒数が変化する
@@ -468,6 +470,8 @@ struct MasterBossStateParameter : public IMasterParameter
 		float indicatorRangeSize = 50.0f;  //!< [collision] 攻撃予測ラインの太さ
 		float indicatorLength    = 250.0f; //!< [collision] 攻撃予測ラインの長さ（見た目のみ、攻撃距離とは無関係）
 		float indicatorForward   = 500.0f; //!< [collision] 攻撃予測ライン中心の前方オフセット
+		float jumpLeadTime       = 1.5f;   //!< [timing]    突進開始(attackStartTime)の何秒前からジャンプ演出を始めるか
+		float jumpHeight         = 150.0f; //!< [movement]  ジャンプ演出で上昇するY座標の高さ
 	} spin;
 
 	// 岩を投げる攻撃 (ThrowRockState) ※攻撃速度で秒数が変化する
@@ -481,6 +485,11 @@ struct MasterBossStateParameter : public IMasterParameter
 		float indicatorForward  = 600.0f; //!< [collision] 攻撃予測ライン中心の前方オフセット
 		float indicatorRangeSize = 33.0f; //!< [collision] 攻撃予測ラインの太さ
 		float rockCollisionSize = 100.0f; //!< [collision] 投げた岩の攻撃判定サイズ
+		float clickedBlendTime  = 0.15f;  //!< [effect]    ワインドアップ→投擲アニメーションへ滑らかに繋げるためのブレンド秒数
+		float windUpSwayAmplitudeDeg   = 15.0f; //!< [effect] ワインドアップ中に左右へ揺さぶる角度(度)
+		float windUpSwaySegmentDuration = 0.3f; //!< [timing] ワインドアップの揺さぶりが片側(中央→端)へ動くのにかける秒数
+		float windUpSpawnHeight = 10.0f; //!< [effect] ワインドアップ開始時に岩が出現するY座標（投げる瞬間までに本来の高さへ近づく）
+		float dustEffectScale = 10.0f; //!< [effect] 岩を準備している間に足元(Y=0)で再生する土ぼこりエフェクトのスケール（一様）
 	} throwRock;
 
 	// レーザー攻撃 (LaserState) ※攻撃速度で秒数が変化する
@@ -497,6 +506,12 @@ struct MasterBossStateParameter : public IMasterParameter
 		float   indicatorRadiusNormal = 45.0f;  //!< [collision] 予測サークルの半径（通常/連発モード）
 		float   indicatorRadiusCharge = 75.0f;  //!< [collision] 予測サークルの半径（チャージモード）
 		float   effectScaleFactor     = 0.5f;   //!< [effect]    レーザーエフェクトのサイズ調整係数（現状コード内では未使用）
+		float   multiJumpHeight         = 100.0f; //!< [movement] 連発攻撃前の予備動作で上下するY座標の高さ
+		float   multiJumpDuration       = 1.0f;   //!< [timing]   予備ジャンプ1回（上昇→着地）にかける秒数
+		uint8_t multiJumpCount          = 3;      //!< [count]    予備ジャンプを繰り返す回数
+		Vector3 chargeBodyScale         = Vector3(3.8f, 3.8f, 3.8f); //!< [effect] チャージ攻撃前の予備動作で拡大するボス本体のScale（絶対値。通常時のScaleはCharacterStatusData.json側で管理）
+		float   chargeIndicatorDelay    = 1.0f;   //!< [timing]   チャージ攻撃：振り向き終了後、予測線が表示されるまでの「溜め」の秒数（他モードのinitialShotTimeに相当する値をチャージ専用に長く取ったもの）
+		float   chargeScaleDownDuration = 2.0f;   //!< [timing]   チャージ攻撃後、Scaleを通常Scaleへ戻すのにかける秒数
 	} laser;
 
 	// 死亡 (BossDeathState)

@@ -47,7 +47,7 @@
             "key" : "Turtle",
             "position":[-300.0,0.0,0.0],
             "rotation":[0.0,0.0,0.0,1.0],
-            "scale":[2.5,2.5,2.5],
+            "scale":[3.0,3.0,3.0],
             "collisionPosUp":[0.0,120.0,0.0],
             "collisionSizeRadius": 110.0,
             "collisionSizeHeight": 20.0,

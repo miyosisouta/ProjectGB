@@ -59,18 +59,22 @@ void AttackObjectManager::Render(RenderContext& rc)
     }
 }
 
-void AttackObjectManager::CreateRock(BossCharacter* boss, const Vector3& startPos, const Vector3& direction,float collisionSize, float speed, float launchAngle, float gravity)
+ThrowRockObject* AttackObjectManager::CreateRock(BossCharacter* boss, const Vector3& startPos, const Vector3& direction,float collisionSize, float spawnHeight, float speed, float launchAngle, float gravity)
 {
     // オブジェクトを作成
     auto rock = std::make_unique<ThrowRockObject>();
 
     // 必要なパラメータを設定
     rock->SetBossData(boss);
-    rock->Setup(startPos, direction,collisionSize, speed, launchAngle, gravity);
+    rock->Setup(startPos, direction,collisionSize, speed, launchAngle, gravity, spawnHeight);
     rock->Start();
+
+    ThrowRockObject* rockPtr = rock.get();
 
     // 所有権を移動
     objects_.push_back(std::move(rock));
+
+    return rockPtr;
 }
 
 void AttackObjectManager::CreateLandmine(Character* owner, const Vector3& startPos, float motionValue)

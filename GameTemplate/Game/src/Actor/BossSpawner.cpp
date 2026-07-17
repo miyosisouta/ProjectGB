@@ -72,6 +72,8 @@ BossParam BossSpawner::CreateBossData(BossType type, GameModeType mode)
 		AddAnim(enAnimDeath,"Death.tka",false);
 		AddAnim(enAnimSpin, "Spin.tka", true);
 		AddAnim(enAnimClicked, "Clicked.tka", false);
+		AddAnim(enAnimClickedWindUp, "Clicked_wideUp.tka", true);
+		AddAnim(enAnimJumpImpact, "Jump_Impact.tka", false);
 		break;
 	}
 	case BossType::enTurtle:/**************** カメ *************************/
@@ -80,7 +82,7 @@ BossParam BossSpawner::CreateBossData(BossType type, GameModeType mode)
 		std::string path = modelpath + "Turtle/Model/Turtle.tkm";
 		param.characterKey_ = "Turtle";
 		param.modelPath_ = path;
-		param.modelAxis_ = EnModelUpAxis::enModelUpAxisY;
+		param.modelAxis_ = EnModelUpAxis::enModelUpAxisZ;
 
 		// アニメ登録を自動化
 		auto AddAnim = [&](BossAnimID id, const std::string& fileName, bool loop)
@@ -100,6 +102,7 @@ BossParam BossSpawner::CreateBossData(BossType type, GameModeType mode)
 		AddAnim(enAnimSpin, "Spin.tka", true);
 		AddAnim(enAnimClicked, "Clicked.tka", false);
 		AddAnim(enAnimAntic, "Antic.tka", true);
+		AddAnim(enAnimJumpImpact, "Jump_Impact.tka", false);
 		break;
 	}
 	default:

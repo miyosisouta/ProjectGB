@@ -43,9 +43,15 @@ void AttackObjectBase::Render(RenderContext& rc)
 /*=======================================*/
 
 
-void ThrowRockObject::Setup(const Vector3& startPos, const Vector3& direction, float collisionSize, float speed, float launchAngle, float gravity)
+void ThrowRockObject::Setup(const Vector3& startPos, const Vector3& direction, float collisionSize, float speed, float launchAngle, float gravity, float spawnHeight)
 {
-    transform_.localPosition = startPos;
+    // 投げる瞬間の座標(=今までのstartPos)と、出現直後の座標(Yだけ低い位置)を覚えておく
+    growTargetPos_ = startPos;
+    growStartPos_ = startPos;
+    growStartPos_.y = spawnHeight;
+
+    transform_.localPosition = growStartPos_; // 出現直後は低い位置から始める（Launch()までに本来の高さへ近づけていく）
+    transform_.localScale = startScale_; // 出現直後は小さいスケールから始める（Launch()までに大きくしていく）
     collisionSize_ = collisionSize;
     flySpeed_ = speed;
     launchAngle_ = launchAngle;
@@ -99,8 +105,45 @@ bool ThrowRockObject::Start()
     // モデルの読み込み
     model_.Init("Assets/Objects/Skill/ThrowRock/throwRock.tkm");
     model_.SetPosition(transform_.position);
+    model_.SetScale(transform_.scale); // 出現直後は小さいスケールで表示する
 
-    // コリジョンの作成
+    model_.Update();
+	return true;
+}
+
+void ThrowRockObject::SetGrowProgress(float t)
+{
+    if (isLaunched_) return; // 投げた後は呼ばれても無視する（Launch()で最終状態に固定済み）
+
+    const float clampedT = max(0.0f, min(t, 1.0f));
+
+    Vector3 curScale;
+    curScale.Lerp(clampedT, startScale_, targetScale_);
+    transform_.localScale = curScale;
+
+    Vector3 curPos;
+    curPos.Lerp(clampedT, growStartPos_, growTargetPos_);
+    transform_.localPosition = curPos;
+
+    transform_.UpdateTransform();
+    model_.SetPosition(transform_.position);
+    model_.SetScale(transform_.scale);
+    model_.Update();
+}
+
+void ThrowRockObject::Launch()
+{
+    if (isLaunched_) return;
+    isLaunched_ = true;
+
+    // 呼び出し側の進捗計算がわずかにずれていても、投げる瞬間は必ず最終スケール・座標に揃える
+    transform_.localScale = targetScale_;
+    transform_.localPosition = growTargetPos_;
+    transform_.UpdateTransform();
+    model_.SetPosition(transform_.position);
+    model_.SetScale(transform_.scale);
+
+    // コリジョンの作成（投げるまでは当たり判定を発生させない）
     attackHitBox_ = std::make_unique<GhostBody>();
     attackHitBox_->CreateSphere(
         boss_,
@@ -111,7 +154,7 @@ bool ThrowRockObject::Start()
     );
     attackHitBox_->SetPosition(transform_.position);
 
-    // 草を曲げる
+    // 草を曲げる（投げた瞬間に発生させる）
     if (GrassBendManager::IsInitialized())
     {
         if (const auto* gp = ParameterManager::Get().GetGrassBendParam("ThrowRock"))
@@ -120,13 +163,18 @@ bool ThrowRockObject::Start()
             GrassBendManager::Get().AddSource(transform_.position, params);
         }
     }
-
-    model_.Update();
-	return true;
 }
 
 void ThrowRockObject::Update()
 {
+    if (!isLaunched_)
+    {
+        // 投げられるまでの間は移動・当たり判定を発生させない。
+        // スケールはThrowRockState側からSetGrowProgress()で毎フレーム設定される（ここでは何もしない）
+        model_.Update();
+        return;
+    }
+
     Culculate();
 
     transform_.UpdateTransform();

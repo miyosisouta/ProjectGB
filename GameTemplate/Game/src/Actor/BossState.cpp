@@ -4,17 +4,11 @@
 #include "AttackRange.h"
 #include "src/Actor/ActorStatus.h"
 #include "src/Actor/AttackObjectManager.h"
+#include "src/Actor/AttackObject.h"
 #include "src/Stage/GrassBendManager.h"
 #include <time.h>
 
-// ============================================================================
-// 調整値について
-// ----------------------------------------------------------------------------
-// 距離・秒数・コリジョンサイズ・エフェクトスケールなどのバランス調整値は
-// Assets/Parameter/BossStateParameter.json (MasterBossStateParameter) に外出しした。
-// 各ステートの Enter()/Update() 内で ParameterManager::Get().GetBossStateParam() から
-// 都度読み出して使う（"p->通常攻撃.collisionSize" のように attack 名 + 分類でまとめてある）。
-// ============================================================================
+
 namespace
 {
 	// 以下は「バランス調整値」ではなく、コード上の意味を分かりやすくするための
@@ -25,6 +19,7 @@ namespace
 	constexpr float MOVE_EPSILON = 0.001f;		// 少しでも動いているか
 	constexpr float DIST_HALF = 0.5f;			// 距離の半分
 	constexpr float FIXED_EFFECT_SCALE_Y = 1.0f;// エフェクトのｙスケールの初期化
+	constexpr float TURN_TO_PLAYER_DURATION = 0.5f; // 攻撃前にプレイヤー方向へ振り向く時間（秒）
 }
 
 
@@ -157,12 +152,16 @@ void BossRunState::Exit()
 
 void BossAttackState::Enter()
 {
+	isFinished_ = false; // 初期化
+
+	// 攻撃の前にプレイヤーがいる方向へ1秒かけて振り向く。振り向き終了後に攻撃本体を開始する
+	BeginTurnToPlayer(TURN_TO_PLAYER_DURATION, [this]() { StartAttack(); });
+}
+
+void BossAttackState::StartAttack()
+{
 	const auto* p = ParameterManager::Get().GetBossStateParam();
 	const float speedMul = GetAttackSpeedMul(); // 攻撃速度倍率（[timing]の秒数はこれで割る）
-
-	isFinished_ = false; // 初期化
-	Quaternion targetRot = RotateToTarget(p->common.rotateSpeed);// 攻撃の前にプレイヤーがいる方向へ向く
-	boss_->SetTargetRot(targetRot);
 
 	// タスクシステムを作成
 	taskScheduler_ = std::make_unique<TaskSchedulerSystem>();
@@ -232,6 +231,8 @@ void BossAttackState::Enter()
 
 void BossAttackState::Update()
 {
+	if (UpdateTurnToPlayer()) return; // 振り向き中は攻撃側の更新をしない
+
 	boss_->SetMoveVelocity(Vector3::Zero); // 移動速度を0に
 
 	if (taskScheduler_) { taskScheduler_->Update(g_gameTime->GetFrameDeltaTime()); }
@@ -254,6 +255,7 @@ void HitStampState::Enter()
 
 	isFinished_ = false; // 初期化
 	createAttackCollision_ = false; // コリジョンの生成を可能にする
+	impactAnimPlayed_ = false; // 着地インパクトアニメーションの再生済みフラグをリセット
 	gravity_ = p->hitStamp.gravityPower;
 	phase_ = Phase::Ready; // 準備をする
 
@@ -383,10 +385,28 @@ void HitStampState::Update()
 		verticalVelocity_ += gravity_ * g_gameTime->GetFrameDeltaTime();
 		boss_->transform_.localPosition.y += verticalVelocity_ * g_gameTime->GetFrameDeltaTime();
 
+		// 着地直前（現在の落下速度から概算した残り落下時間がimpactAnimLeadTimeを下回った時点）でインパクトアニメーションを再生
+		if (!impactAnimPlayed_ && verticalVelocity_ < FLOAT_ZERO && boss_->HasAnimation(BossAnimID::enAnimJumpImpact))
+		{
+			const float estimatedTimeToLand = boss_->GetTransformPosition().y / -verticalVelocity_;
+			if (estimatedTimeToLand <= p->hitStamp.impactAnimLeadTime)
+			{
+				boss_->PlayAnimation(BossAnimID::enAnimJumpImpact, GetAnimationSpeedMul());
+				impactAnimPlayed_ = true;
+			}
+		}
+
 		if (boss_->GetTransformPosition().y <= FLOAT_ZERO)
 		{
 			boss_->transform_.localPosition.y = FLOAT_ZERO;
 			verticalVelocity_ = FLOAT_ZERO;
+
+			// 予測タイミングで再生できなかった場合の保険（必ず着地までには再生させる）
+			if (!impactAnimPlayed_ && boss_->HasAnimation(BossAnimID::enAnimJumpImpact))
+			{
+				boss_->PlayAnimation(BossAnimID::enAnimJumpImpact, GetAnimationSpeedMul());
+				impactAnimPlayed_ = true;
+			}
 
 			// ここに着地時の処理をまとめる
 			boss_->SetMoveVelocity(Vector3::Zero); // 移動速度を0に
@@ -397,6 +417,14 @@ void HitStampState::Update()
 			EffectManager::Get().PlayEffect(enEffectKind_HitStamp_Smoke, targetPos, boss_->GetTransformRotation(), targetSmokeScal, effectSpeed); // 煙
 			EffectManager::Get().PlayEffect(enEffectKind_HitStamp_ShockWave, targetPos, boss_->GetTransformRotation(), targetShokeWaveScal, effectSpeed); // 衝撃波
 			SoundManager::Get().PlaySE(enSoundKind_Boss_HitStamp);
+
+			// 着地してからstateExitDelay秒後にステートを終える（インパクトアニメーションを最後まで見せるための猶予）
+			if (taskScheduler_)
+			{
+				taskScheduler_->AddTimer(p->hitStamp.stateExitDelay / GetAttackSpeedMul(), [&]() {
+					isFinished_ = true;
+					});
+			}
 
 			phase_ = Phase::ShokingStamp;
 		}
@@ -432,8 +460,8 @@ void HitStampState::Update()
 
 	case Phase::Finished:
 	{
+		// isFinished_はFallDown着地時に仕込んだstateExitDelay秒後のタイマーで立てる（ここで即立てない）
 		attackHitbox_.reset();
-		isFinished_ = true;
 		break;
 	}
 	}
@@ -458,15 +486,17 @@ void HitStampState::Exit()
 
 void SpinState::Enter()
 {
-	const auto* p = ParameterManager::Get().GetBossStateParam();
-	const float speedMul = GetAttackSpeedMul(); // 攻撃速度倍率（[timing]の秒数はこれで割る）
-
 	isFinished_ = false; // 初期化
 	isAttackStart_ = false; // 攻撃範囲表示の間は攻撃を開始しない
 
-	// 攻撃の前にプレイヤーがいる方向へ向く
-	Quaternion targetRot = RotateToTarget(p->common.rotateSpeed);
-	boss_->SetTargetRot(targetRot);
+	// 攻撃の前にプレイヤーがいる方向へ1秒かけて振り向く。振り向き終了後に攻撃本体を開始する
+	BeginTurnToPlayer(TURN_TO_PLAYER_DURATION, [this]() { StartAttack(); });
+}
+
+void SpinState::StartAttack()
+{
+	const auto* p = ParameterManager::Get().GetBossStateParam();
+	const float speedMul = GetAttackSpeedMul(); // 攻撃速度倍率（[timing]の秒数はこれで割る）
 
 	// 回転アニメーションを設定
 	boss_->PlayAnimation(BossAnimID::enAnimSpin, GetAnimationSpeedMul());
@@ -538,9 +568,24 @@ void SpinState::Enter()
 
 	// タスクシステムの構築
 	{
+		// 突進開始のjumpLeadTime秒前：進み始めるタイミングが分かるよう、ジャンプしているように見せる予備動作を開始する
+		taskScheduler_->AddTimer(max(FLOAT_ZERO, p->spin.attackStartTime - p->spin.jumpLeadTime) / speedMul, [&]() {
+			const auto* p = ParameterManager::Get().GetBossStateParam(); // タイマー発火時点で取り直す
+			const float speedMul = GetAttackSpeedMul();
+
+			// 0→jumpHeight→0 を着地(attackStartTime)にちょうど間に合うように往復させる（PingPongの片道がjumpLeadTimeの半分）
+			float halfDuration = max(0.0001f, (p->spin.jumpLeadTime / speedMul) * 0.5f);
+			jumpCurve_.Initialize(FLOAT_ZERO, p->spin.jumpHeight, halfDuration, EasingType::EaseInOut, LoopMode::PingPong);
+			jumpCurve_.Play();
+			});
+
 		// 移動開始（予測インジケーターを非表示にしてから攻撃）
 		taskScheduler_->AddTimer(p->spin.attackStartTime / speedMul, [&]() {
 			const auto* p = ParameterManager::Get().GetBossStateParam(); // タイマー発火時点で取り直す
+
+			// ジャンプ演出を終了し、着地位置(Y=0)へ確定させる
+			jumpCurve_.Stop();
+			boss_->transform_.localPosition.y = FLOAT_ZERO;
 
 			// 予測インジケーターを非表示・破棄
 			if (attackRangeIndicator_)
@@ -576,6 +621,8 @@ void SpinState::Enter()
 
 void SpinState::Update()
 {
+	if (UpdateTurnToPlayer()) return; // 振り向き中は攻撃側の更新をしない
+
 	const auto* p = ParameterManager::Get().GetBossStateParam();
 	const float speedMul = GetAttackSpeedMul();
 
@@ -587,6 +634,13 @@ void SpinState::Update()
 		predictionElapsed_ += g_gameTime->GetFrameDeltaTime();
 		float progress = min(predictionElapsed_ / (p->spin.attackStartTime / speedMul), 1.0f);
 		attackRangeIndicator_->SetLineDrawProgress(progress);
+	}
+
+	// 突進開始直前のジャンプ演出（進み始めるタイミングが分かるよう、着地と同時に突進が始まる）
+	if (jumpCurve_.IsPlaying())
+	{
+		jumpCurve_.Update(g_gameTime->GetFrameDeltaTime());
+		boss_->transform_.localPosition.y = jumpCurve_.GetCurrentValue();
 	}
 
 	// エフェクトをボスの足元に追従させる
@@ -639,6 +693,10 @@ void SpinState::Exit()
 		attackRangeIndicator_ = nullptr;
 	}
 
+	// ジャンプ演出中に強制終了した場合、浮いたまま残らないよう地面に戻す
+	jumpCurve_.Stop();
+	boss_->transform_.localPosition.y = FLOAT_ZERO;
+
 	taskScheduler_.reset(nullptr);
 }
 
@@ -649,16 +707,17 @@ void SpinState::Exit()
 
 void ThrowRockState::Enter()
 {
-	const auto* p = ParameterManager::Get().GetBossStateParam();
-	const float speedMul = GetAttackSpeedMul(); // 攻撃速度倍率（[timing]の秒数はこれで割る）
-
 	isFinished_ = false; // 初期化
 	boss_->SetMoveVelocity(Vector3::Zero);
 
-	// 攻撃の前にプレイヤーがいる方向へ向く
-	Quaternion targetRot = RotateToTarget(p->common.rotateSpeed);
-	boss_->SetTargetRot(targetRot);
+	// 攻撃の前にプレイヤーがいる方向へ1秒かけて振り向く。振り向き終了後に攻撃本体を開始する
+	BeginTurnToPlayer(TURN_TO_PLAYER_DURATION, [this]() { StartAttack(); });
+}
 
+void ThrowRockState::StartAttack()
+{
+	const auto* p = ParameterManager::Get().GetBossStateParam();
+	const float speedMul = GetAttackSpeedMul(); // 攻撃速度倍率（[timing]の秒数はこれで割る）
 
 	// プレイヤーとボスの現在の座標を取得
 	boss_->transform_.UpdateWorldMatrix();
@@ -676,6 +735,16 @@ void ThrowRockState::Enter()
 	else {
 		targetPos_ = playerPos;
 	}
+
+	// ワインドアップ演出を予測ライン表示より前（攻撃開始と同時）から再生する
+	boss_->PlayAnimation(BossAnimID::enAnimClickedWindUp, GetAnimationSpeedMul());
+
+	// ワインドアップ中、プレイヤー方向を基準に左右へ揺さぶる（PingPongで往復し続ける）
+	// isMoveStop_中はCharacter::Update()側の自動回転同期(targetPlayerRot_の反映)が止まるため、SetCutsceneTiltOffsetで直接反映する
+	windUpSwayBaseRot_ = boss_->GetTargetRot();
+	windUpSwayCurve_.Initialize(-p->throwRock.windUpSwayAmplitudeDeg, p->throwRock.windUpSwayAmplitudeDeg, p->throwRock.windUpSwaySegmentDuration, EasingType::EaseInOut, LoopMode::PingPong);
+	windUpSwayCurve_.Play();
+	boss_->SetMoveStop(true);
 
 	// 攻撃予測ラインインジケーターの設定 (SpinState と同じパターン)
 	predictionElapsed_ = 0.0f;
@@ -707,10 +776,36 @@ void ThrowRockState::Enter()
 		attackRangeIndicator_->SetDraw(true);
 	}
 
+	// 岩の初期位置の計算（揺さぶりで体が傾く前の、プレイヤー方向を向いた状態の前方ベクトルを使う）
+	const Matrix& mat = boss_->transform_.GetWorldMatrix(); // ボスのワールド座標を取得
+	Vector3 forward(mat.m[2][0], mat.m[2][1], mat.m[2][2]); // Z軸
+	forward.Normalize(); // ベクトルの長さを1にしておく
+
+	// ※通常攻撃(normalAttack)と同じ前方/高さオフセット値を使い回している（元コードの仕様を踏襲）
+	Vector3 rockStartPos = bossPos + (forward * p->normalAttack.collisionForward);
+	rockStartPos.y = p->normalAttack.collisionHeight;
+
+	// ワインドアップ開始と同時に岩を出現させる。投げる(beginTime)までスケールを0.1→通常サイズへ、
+	// Y座標をwindUpSpawnHeight→本来の高さへ徐々に変化させ、移動・当たり判定はLaunch()が呼ばれるまで発生しない。
+	// スケール・座標はUpdate()側で予測ラインと同じ進捗値(progress)から設定する
+	pendingRock_ = AttackObjectManager::Get().CreateRock(
+		boss_,
+		rockStartPos,
+		targetDir,
+		p->throwRock.rockCollisionSize,
+		p->throwRock.windUpSpawnHeight
+	);
+
+	// 岩を準備している間、HitStamp着地と同じ土ぼこりを岩の足元(Y=0)で再生する
+	Vector3 dustEffectPos = rockStartPos;
+	dustEffectPos.y = 0.0f;
+	Vector3 dustEffectScale = Vector3(p->throwRock.dustEffectScale, p->throwRock.dustEffectScale, p->throwRock.dustEffectScale);
+	EffectManager::Get().PlayEffect(enEffectKind_HitStamp_Smoke, dustEffectPos, boss_->GetTransformRotation(), dustEffectScale, GetEffectSpeedMul());
+
 	// タスクシステムを作成
 	taskScheduler_ = std::make_unique<TaskSchedulerSystem>();
 
-	taskScheduler_->AddTimer(p->throwRock.beginTime / speedMul, [this,bossPos,targetDir]()
+	taskScheduler_->AddTimer(p->throwRock.beginTime / speedMul, [this]()
 		{
 			// タイマー発火時点で取り直す（Enter()のローカル変数pは寿命が切れているため使えない）
 			const auto* p = ParameterManager::Get().GetBossStateParam();
@@ -723,26 +818,20 @@ void ThrowRockState::Enter()
 				attackRangeIndicator_ = nullptr;
 			}
 
-			// 岩の初期位置の計算
-			const Matrix& mat = boss_->transform_.GetWorldMatrix(); // ボスのワールド座標を取得
-			Vector3 forward(mat.m[2][0], mat.m[2][1], mat.m[2][2]); // Z軸
-			forward.Normalize(); // ベクトルの長さを1にしておく
+			// 揺さぶり演出を終了し、通常の（プレイヤー方向を向く）回転同期に戻す
+			// NOTE: 揺さぶりが元の向きへ戻ってから止まるような滑らかな終了処理は別途調整予定
+			windUpSwayCurve_.Stop();
+			boss_->SetMoveStop(false);
 
-			// ※通常攻撃(normalAttack)と同じ前方/高さオフセット値を使い回している（元コードの仕様を踏襲）
-			float attackForward = p->normalAttack.collisionForward;
-			float attackHeight = p->normalAttack.collisionHeight;
-			Vector3 startPos = bossPos + (forward * attackForward);
-			startPos.y = attackHeight;
+			// 育てていた岩を実際に投げる（成長が進捗1.0に届いていなくても、ここで必ず最終スケールに揃う）
+			if (pendingRock_)
+			{
+				pendingRock_->Launch();
+				pendingRock_ = nullptr;
+			}
 
-			// 岩の生成
-			AttackObjectManager::Get().CreateRock(
-				boss_,
-				startPos,
-				targetDir,
-				p->throwRock.rockCollisionSize
-			);
-			// アニメーションを再生
-			boss_->PlayAnimation(BossAnimID::enAnimClicked, GetAnimationSpeedMul());
+			// アニメーションを再生（ワインドアップからclickedBlendTime秒かけて滑らかにブレンド）
+			boss_->PlayAnimation(BossAnimID::enAnimClicked, GetAnimationSpeedMul(), p->throwRock.clickedBlendTime);
 		});
 
 	taskScheduler_->AddTimer(p->throwRock.endTime / speedMul, [&]()
@@ -753,16 +842,34 @@ void ThrowRockState::Enter()
 
 void ThrowRockState::Update()
 {
+	if (UpdateTurnToPlayer()) return; // 振り向き中は攻撃側の更新をしない
+
 	const auto* p = ParameterManager::Get().GetBossStateParam();
 	const float speedMul = GetAttackSpeedMul();
 
 	if (taskScheduler_) { taskScheduler_->Update(g_gameTime->GetFrameDeltaTime()); }
 
+	// 予測ラインの表示進捗と岩の成長進捗を、同じ経過時間・同じ進捗値から計算する
+	// （別々のタイマーで管理すると、投げる瞬間のスケールが成長し切った状態とずれる可能性があるため、一本化している）
+	predictionElapsed_ += g_gameTime->GetFrameDeltaTime();
+	float progress = min(predictionElapsed_ / (p->throwRock.beginTime / speedMul), 1.0f);
+
 	if (attackRangeIndicator_)
 	{
-		predictionElapsed_ += g_gameTime->GetFrameDeltaTime();
-		float progress = min(predictionElapsed_ / (p->throwRock.beginTime / speedMul), 1.0f);
 		attackRangeIndicator_->SetLineDrawProgress(progress);
+	}
+
+	if (pendingRock_)
+	{
+		pendingRock_->SetGrowProgress(progress);
+	}
+
+	if (windUpSwayCurve_.IsPlaying())
+	{
+		// ワインドアップ演出(enAnimClickedWindUp)の再生速度に合わせて揺さぶりの速さも変える
+		windUpSwayCurve_.Update(g_gameTime->GetFrameDeltaTime() * GetAnimationSpeedMul());
+		float swayDeg = windUpSwayCurve_.GetCurrentValue();
+		boss_->SetCutsceneTiltOffset(windUpSwayBaseRot_, 0.0f, Math::DegToRad(swayDeg));
 	}
 }
 
@@ -772,6 +879,17 @@ void ThrowRockState::Exit()
 	{
 		DeleteGO(attackRangeIndicator_);
 		attackRangeIndicator_ = nullptr;
+	}
+
+	// 揺さぶり演出中にステートが中断された場合に備え、通常の回転同期に戻しておく
+	windUpSwayCurve_.Stop();
+	boss_->SetMoveStop(false);
+
+	// 投げる前にステートが中断された場合、育てていた岩が投げられないまま残り続けないよう、その場で投げてしまう
+	if (pendingRock_)
+	{
+		pendingRock_->Launch();
+		pendingRock_ = nullptr;
 	}
 
 	taskScheduler_.reset();
@@ -809,6 +927,8 @@ void LaserState::Setup()
 	case Mode::enCharge:
 	{
 		scale_ = p->laser.chargeScale;
+		// チャージは「溜め」を長めに取るため、予測線が出るまでの時間は専用の値を使う（Enter()側のScale拡大時間の計算とも対応させている）
+		shotTime_ = p->laser.chargeIndicatorDelay / attackSpeedMul_;
 		attackDeleyTime = p->laser.shotIntervalCharge / attackSpeedMul_;
 		shotCount_ = p->laser.shotCountNormal;
 		break;
@@ -847,13 +967,55 @@ void LaserState::Enter()
 	{
 		isFinished_ = false;
 		boss_->SetMoveVelocity(Vector3::Zero);
+		// チャージ演出の拡大前/復帰先として、Enter()時点（＝通常時）のScaleを控えておく
+		normalScale_ = boss_->transform_.localScale;
+		isChargeScaleReturning_ = false;
 	}
 
+	// チャージ攻撃の場合、「溜めている感じ」を出すため振り向き～予測線表示中もずっと拡大を続け、
+	// 発射の瞬間にちょうどchargeBodyScaleへ到達するよう、振り向き開始と同時に拡大を始める
+	// （拡大にかける時間は、実際に発射されるまでの時間＝振り向き＋予測線が出るまでの溜め＋予測線の表示時間、と一致させている）
+	if (mode_ == Mode::enCharge)
+	{
+		const auto* p = ParameterManager::Get().GetBossStateParam();
+		const float growDuration =
+			  TURN_TO_PLAYER_DURATION
+			+ (p->laser.chargeIndicatorDelay / attackSpeedMul_)
+			+ (p->laser.shotIntervalCharge / attackSpeedMul_);
+		chargeScaleCurve_.Initialize(normalScale_, p->laser.chargeBodyScale, growDuration, EasingType::EaseInOut, LoopMode::Once);
+		chargeScaleCurve_.Play();
+	}
+
+	// 攻撃の前にプレイヤーがいる方向へ1秒かけて振り向く。振り向き終了後、攻撃タイプに応じた予備動作を開始する
+	BeginTurnToPlayer(TURN_TO_PLAYER_DURATION, [this]() { BeginPreMotion(); });
+}
+
+void LaserState::BeginPreMotion()
+{
 	const auto* p = ParameterManager::Get().GetBossStateParam();
 
-	// 攻撃の前にプレイヤーがいる方向へ向く
-	Quaternion targetRot = RotateToTarget(p->common.rotateSpeed);
-	boss_->SetTargetRot(targetRot);
+	switch (mode_)
+	{
+	case Mode::enMult:
+	{
+		// 素早い上下ジャンプをmultiJumpCount回繰り返してから攻撃本体を開始する
+		multiJumpElapsed_ = FLOAT_ZERO;
+		const float halfDuration = max(0.0001f, (p->laser.multiJumpDuration / attackSpeedMul_) * 0.5f);
+		multiJumpCurve_.Initialize(FLOAT_ZERO, p->laser.multiJumpHeight, halfDuration, EasingType::EaseInOut, LoopMode::PingPong);
+		multiJumpCurve_.Play();
+		break;
+	}
+	case Mode::enNormal:
+	case Mode::enCharge:
+	default:
+		StartAttack();
+		break;
+	}
+}
+
+void LaserState::StartAttack()
+{
+	const auto* p = ParameterManager::Get().GetBossStateParam();
 
 	// 発射タイミングや攻撃範囲を設定
 	Setup();
@@ -918,6 +1080,11 @@ void LaserState::Enter()
 				if (mode_ == Mode::enCharge) {
 					collisionId = CharacterID::BossLaserStrongAtkID();
 					SoundManager::Get().PlaySE(enSoundKind_Boss_Thunder_Strong);
+
+					// 攻撃を放った瞬間から、拡大していたScaleを2秒かけて通常Scaleへ戻し始める
+					isChargeScaleReturning_ = true;
+					chargeScaleCurve_.Initialize(boss_->transform_.localScale, normalScale_, p->laser.chargeScaleDownDuration / attackSpeedMul_, EasingType::EaseInOut, LoopMode::Once);
+					chargeScaleCurve_.Play();
 				}
 				else {
 					collisionId = CharacterID::BossLaserWeakAtkID();
@@ -979,13 +1146,55 @@ void LaserState::Enter()
 	taskScheduler_->AddTimer(shotTime_, [&]()
 		{
 			phase_ = Phase::enDone;
-			isFinished_ = true;
+
+			// チャージ攻撃のScale復帰（発射時に開始済み）は継続中の場合があるため、
+			// ここでは終了させず、Update()側でchargeScaleCurve_の完了を見てisFinished_を立てる
+			if (mode_ != Mode::enCharge)
+			{
+				isFinished_ = true;
+			}
 		});
 }
 
 void LaserState::Update()
 {
-	if (taskScheduler_) { taskScheduler_->Update(g_gameTime->GetFrameDeltaTime()); }
+	const float deltaTime = g_gameTime->GetFrameDeltaTime();
+
+	// チャージ攻撃のScale変化（拡大→攻撃→縮小）は、振り向き中も含めて常に更新する
+	// （拡大は振り向き開始と同時に始まり、発射の瞬間から縮小に切り替わる。既存の攻撃更新とは独立して動く）
+	if (chargeScaleCurve_.IsPlaying())
+	{
+		chargeScaleCurve_.Update(deltaTime);
+		boss_->transform_.localScale = chargeScaleCurve_.GetCurrentValue();
+
+		if (!chargeScaleCurve_.IsPlaying() && isChargeScaleReturning_)
+		{
+			isFinished_ = true; // 攻撃後の縮小が完了、ステート終了
+		}
+	}
+
+	if (UpdateTurnToPlayer()) return; // 振り向き中は攻撃側の更新をしない（Scaleは上で更新済み）
+
+	// 連発攻撃前：上下ジャンプの予備動作中は既存の攻撃更新をしない
+	if (multiJumpCurve_.IsPlaying())
+	{
+		const auto* p = ParameterManager::Get().GetBossStateParam();
+
+		multiJumpCurve_.Update(deltaTime);
+		boss_->transform_.localPosition.y = multiJumpCurve_.GetCurrentValue();
+
+		multiJumpElapsed_ += deltaTime;
+		const float totalDuration = (p->laser.multiJumpDuration / attackSpeedMul_) * p->laser.multiJumpCount;
+		if (multiJumpElapsed_ >= totalDuration)
+		{
+			multiJumpCurve_.Stop();
+			boss_->transform_.localPosition.y = FLOAT_ZERO; // 着地位置を確定させる
+			StartAttack(); // 予備動作終了、攻撃本体を開始
+		}
+		return;
+	}
+
+	if (taskScheduler_) { taskScheduler_->Update(deltaTime); }
 }
 
 void LaserState::Exit()
@@ -1000,6 +1209,13 @@ void LaserState::Exit()
 		DeleteGO(attackRangeIndicator_);
 		attackRangeIndicator_ = nullptr;
 	}
+
+	// 予備動作が中断された場合に備え、Y座標・Scaleを元に戻しておく
+	multiJumpCurve_.Stop();
+	boss_->transform_.localPosition.y = FLOAT_ZERO;
+	chargeScaleCurve_.Stop();
+	boss_->transform_.localScale = normalScale_;
+	isChargeScaleReturning_ = false;
 }
 
 
@@ -1106,6 +1322,57 @@ Quaternion BossStateBase::RotateToTarget(float rotateSpeed)
 	}
 
 	return currentRot;
+}
+
+void BossStateBase::BeginTurnToPlayer(float duration, std::function<void()> onFinished)
+{
+	// 振り向き開始時の向きを記録
+	turnStartRot_ = boss_->GetTargetRot();
+
+	// プレイヤー方向を終了時の向きとして計算
+	Vector3 diff = boss_->GetTargetPos() - boss_->GetTransformPosition();
+	diff.y = FLOAT_ZERO;
+	if (diff.LengthSq() > MOVE_EPSILON)
+	{
+		diff.Normalize();
+		float angle = atan2(diff.x, diff.z);
+		turnEndRot_.SetRotationY(angle);
+	}
+	else
+	{
+		turnEndRot_ = turnStartRot_; // プレイヤーと同じ座標なら向きはそのまま
+	}
+
+	turnElapsed_ = FLOAT_ZERO;
+	turnDuration_ = duration;
+	isTurningToPlayer_ = true;
+	onTurnFinished_ = std::move(onFinished);
+}
+
+bool BossStateBase::UpdateTurnToPlayer()
+{
+	if (!isTurningToPlayer_) return false;
+
+	boss_->SetMoveVelocity(Vector3::Zero); // 振り向き中は移動しない
+
+	turnElapsed_ += g_gameTime->GetFrameDeltaTime();
+	float t = min(turnElapsed_ / turnDuration_, 1.0f);
+
+	Quaternion rot;
+	rot.Slerp(t, turnStartRot_, turnEndRot_);
+	boss_->SetTargetRot(rot);
+
+	if (t >= 1.0f)
+	{
+		isTurningToPlayer_ = false;
+
+		// コールバック呼び出し前にメンバをクリアしておく（コールバック内で再度BeginTurnToPlayerされても安全なように）
+		std::function<void()> onFinished = std::move(onTurnFinished_);
+		onTurnFinished_ = nullptr;
+		if (onFinished) { onFinished(); }
+	}
+
+	return true;
 }
 
 float BossStateBase::GetAttackSpeedMul() const
