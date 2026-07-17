@@ -1,4 +1,4 @@
-#include "stdafx.h"
+﻿#include "stdafx.h"
 #include "system/system.h"
 
 #include<InitGUID.h>
@@ -31,24 +31,24 @@ void ReportLiveObjects()
 
 	DXGIGetDebugInterface(__uuidof(IDXGIDebug), (void**)&pDxgiDebug);
 
-	// �o�́B
+	// 出力。
 	pDxgiDebug->ReportLiveObjects(DXGI_DEBUG_D3D12, DXGI_DEBUG_RLO_DETAIL);
 }
 
 ///////////////////////////////////////////////////////////////////
-// �E�B���h�E�v���O�����̃��C���֐��B
+// ウィンドウプログラムのメイン関数。
 ///////////////////////////////////////////////////////////////////
 int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLine, int nCmdShow)
 {
-	//�Q�[���̏������B
-	InitGame(hInstance, hPrevInstance, lpCmdLine, nCmdShow, TEXT("Game"));
+	//ゲームの初期化。
+	InitGame(hInstance, hPrevInstance, lpCmdLine, nCmdShow, L"がぶっとバスター");
 	//////////////////////////////////////
-	// �������珉�������s���R�[�h���L�q����B
+	// ここから初期化を行うコードを記述する。
 	//////////////////////////////////////
 
 	g_renderingEngine->DisableRaytracing();
 
-	// �R���W����
+	// コリジョン
 	CollisionHitManager::Initialize();
 	GhostBodyManager::Initialize();
 	GhostBodyManager::Get().RegisterCallback([](GhostBody* a, GhostBody* b)
@@ -56,10 +56,10 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 			CollisionHitManager::Get().RegisterHitPair(a, b);
 		});
 
-	// �L�����N�^�[�f�[�^
+	// キャラクターデータ
 	CharacterDataBase::CreateInstance();
 
-	// �p�����[�^
+	// パラメータ
 	ParameterManager::CreateInstance();
 	ParameterManager::Get().LoadCharacterStatusData("Assets/Objects/CharacterData/CharacterStatusData.json");
 	ParameterManager::Get().LoadPlayerSkillStatusData("Assets/Objects/CharacterData/PlayerSkillStatus.json");
@@ -82,30 +82,30 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 	CameraConfig::CreateInstance();
 	CameraConfig::Get().Initialize();
 
-	// �L�[�R���t�B�O
+	// キーコンフィグ
 	KeyConfig::CreateInstance();
 	KeyConfig::Get().ResetToDefault();
 
-	// �J����
+	// カメラ
 	CameraManager::Initialize();
 	CameraManager::Get().Setup(g_camera3D);
 
-	// UIAnimation�N���X�̐���
+	// UIAnimationクラスの生成
 	UIAnimationParameter::Get().Load("Assets/ui/uiAnimation/UIAnimation.json");
-	//Game�N���X�̃I�u�W�F�N�g���쐬�B
-	NewGO<Game>(0, "game");	
-	// EffectManager�N���X�̃I�u�W�F�N�g�𐶐�
+	//Gameクラスのオブジェクトを作成。
+	NewGO<Game>(0, "game");
+	// EffectManagerクラスのオブジェクトを生成
 	NewGO<EffectManagerObject>(20, "effect");
-	//SoundManager�N���X�̃I�u�W�F�N�g�𐶐�
+	//SoundManagerクラスのオブジェクトを生成
 	NewGO<SoundManagerObject>(30, "sound");
-	// SceneManager�N���X�̃I�u�W�F�N�g�𐶐�
+	// SceneManagerクラスのオブジェクトを生成
 	NewGO<SceneMangerObject>(0, "sceneManager");
 
 	//////////////////////////////////////
-	// ���������s���R�[�h�������̂͂����܂ŁI�I�I
+	// 初期化を行うコードを書くのはここまで!!!
 	//////////////////////////////////////
-	
-	// ��������Q�[�����[�v�B
+
+	// ここからゲームループ。
 	while (DispatchWindowMessage())
 	{
 		K2Engine::GetInstance()->Execute();
@@ -113,7 +113,7 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 		CameraManager::Get().Update(g_gameTime->GetFrameDeltaTime());
 
 
-		// �f�o�b�O�p�J�����̐؂�ւ�
+		// デバッグ用カメラの切り替え
 #if defined(_DEBUG)
 		static bool isTriggerDebugCameraKey = false;
 		if (GetAsyncKeyState(VK_F2)) {
@@ -150,4 +150,3 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 #endif // _DEBUG
 	return 0;
 }
-
