@@ -23,7 +23,9 @@ enum class GhostShapeType : int
 class IGhostShape : public Noncopyable
 {
 public:
+	/** デストラクタ */
 	virtual ~IGhostShape() {}
+	/** 形状タイプ取得 */
 	virtual GhostShapeType GetType() const = 0;
 
 	/** AABB取得 (Bullet Transformを使用) */
@@ -43,17 +45,18 @@ public:
 class GhostSphere : public IGhostShape
 {
 public:
-	float radius;
+	float radius; //!< 半径
 
 
 public:
+	/** コンストラクタ */
 	GhostSphere(float r) : radius(r) {}
 
 	/** 形状タイプ取得 */
-	GhostShapeType GetType() const override { return GhostShapeType::Sphere; }
-	
+	inline GhostShapeType GetType() const override { return GhostShapeType::Sphere; }
+
 	/** 外接球半径はそのまま半径 */
-	float GetBoundingRadius() const override { return radius; }
+	inline float GetBoundingRadius() const override { return radius; }
 
 	/** AABB取得 */
 	void GetAabb(const btTransform& t, btVector3& min, btVector3& max) const override
@@ -63,7 +66,7 @@ public:
 	}
 
 	/** Bulletの形状作成 */
-	btCollisionShape* CreateBulletShape() const override
+	inline btCollisionShape* CreateBulletShape() const override
 	{
 		return new btSphereShape(radius);
 	}
@@ -76,19 +79,18 @@ public:
 struct GhostCapsule : public IGhostShape
 {
 public:
-	/** 半径 */
-	float radius;
-	/** 高さ */
-	float height;
+	float radius; //!< 半径
+	float height; //!< 高さ
 
 
 public:
+	/** コンストラクタ */
 	GhostCapsule(float r, float h) : radius(r), height(h) {}
-	
+
 	/** 形状タイプ取得 */
-	GhostShapeType GetType() const override { return GhostShapeType::Capsule; }
+	inline GhostShapeType GetType() const override { return GhostShapeType::Capsule; }
 	/** 簡易計算：高さの半分＋半径 */
-	float GetBoundingRadius() const override { return (height * 0.5f) + radius; }
+	inline float GetBoundingRadius() const override { return (height * 0.5f) + radius; }
 
 	/** AABB取得 */
 	void GetAabb(const btTransform& t, btVector3& min, btVector3& max) const override
@@ -117,16 +119,17 @@ public:
 struct GhostBox : public IGhostShape
 {
 public:
-	Vector3 halfExtents;
+	Vector3 halfExtents; //!< 各軸の半サイズ
 
 
 public:
+	/** コンストラクタ */
 	GhostBox(const Vector3& h) : halfExtents(h) {}
-	
+
 	/** 形状タイプ取得 */
-	GhostShapeType GetType() const override { return GhostShapeType::Box; }
+	inline GhostShapeType GetType() const override { return GhostShapeType::Box; }
 	/** 外接球半径 */
-	float GetBoundingRadius() const override { return halfExtents.Length(); }
+	inline float GetBoundingRadius() const override { return halfExtents.Length(); }
 
 	/** AABB取得 */
 	void GetAabb(const btTransform& t, btVector3& min, btVector3& max) const override
@@ -138,7 +141,7 @@ public:
 	}
 
 	/** Bulletの形状作成 */
-	btCollisionShape* CreateBulletShape() const override
+	inline btCollisionShape* CreateBulletShape() const override
 	{
 		return new btBoxShape(btVector3(halfExtents.x, halfExtents.y, halfExtents.z));
 	}

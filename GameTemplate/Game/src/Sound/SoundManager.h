@@ -16,11 +16,12 @@ using SoundHandle = uint32_t;
 static constexpr SoundHandle INVALID_SOUND_HANDLE = 0xffffffff;
 
 
+/** 音量の種別 */
 enum class SoundVolumeType : uint8_t
 {
-    Master,
-    BGM,
-    SE,
+    Master, //!< マスター音量
+    BGM,    //!< BGM音量
+    SE,     //!< SE音量
     Max,
 };
 
@@ -48,13 +49,15 @@ private:
      */
     SoundHandle soundHandleCount_ = 0;
 
-	uint8_t volumes_[static_cast<size_t>(SoundVolumeType::Max)] = { DEFAULT_VOLUME, DEFAULT_VOLUME, DEFAULT_VOLUME };
-	bool isChangeVolume_ = false;
+	uint8_t volumes_[static_cast<size_t>(SoundVolumeType::Max)] = { DEFAULT_VOLUME, DEFAULT_VOLUME, DEFAULT_VOLUME }; //!< 種別ごとの音量(0～10)
+	bool isChangeVolume_ = false; //!< 音量変更があったか（再生中の音に反映するため）
 
 
 
 private:
+    /** コンストラクタ */
     SoundManager();
+    /** デストラクタ */
     ~SoundManager();
 
 
@@ -104,6 +107,7 @@ public:
 #endif
 
 
+    /** ハンドルからSEのサウンドソースを探す */
     SoundSource* FindSE(const SoundHandle handle)
     {
         auto it = seList_.find(handle);
@@ -115,6 +119,7 @@ public:
     }
 
 
+    /** 種別ごとの音量を設定(0～10) */
     void SetVolume(const SoundVolumeType type, const uint8_t volume)
     {
         if (volume > MAX_VOLUME) {
@@ -127,12 +132,14 @@ public:
 	}
 
 
-    uint8_t GetVolume(const SoundVolumeType type) const
+    /** 種別ごとの音量を取得 */
+    inline uint8_t GetVolume(const SoundVolumeType type) const
     {
         return volumes_[static_cast<size_t>(type)];
 	}
 
 
+    /** マスター×指定種別の実際の音量係数(0.0～1.0)を計算する */
     float ComputeVolume(const SoundVolumeType type) const
     {
         // マスターボリュームを基準に、BGMとSEのボリュームを掛け合わせる
@@ -188,19 +195,25 @@ public:
 class SoundManagerObject :public IGameObject
 {
 public:
+    /** コンストラクタ */
     SoundManagerObject();
+    /** デストラクタ */
     ~SoundManagerObject();
 
 
 public:
+    /** スタート処理 */
     bool Start()override;
+    /** 更新処理 */
     void Update()override;
 
 #ifdef K2_DEBUG
 private:
-    static bool s_isUpdatePaused;
+    static bool s_isUpdatePaused; //!< 更新の一時停止フラグ
 public:
-    static void SetUpdatePaused(bool isPaused) { s_isUpdatePaused = isPaused; }
-    static bool IsUpdatePaused() { return s_isUpdatePaused; }
+    /** デバッグ用: 更新の一時停止を設定 */
+    static inline void SetUpdatePaused(bool isPaused) { s_isUpdatePaused = isPaused; }
+    /** デバッグ用: 一時停止中か */
+    static inline bool IsUpdatePaused() { return s_isUpdatePaused; }
 #endif
 };

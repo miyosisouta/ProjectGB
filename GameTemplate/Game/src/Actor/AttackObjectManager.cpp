@@ -29,7 +29,7 @@ void AttackObjectManager::Update()
 {
     std::vector<AttackObjectBase*> deleteList;
 
-    // 全オブジェクトを更新
+    // 現存するオブジェクトの更新
     for (auto& obj : objects_)
     {
         obj->Update();
@@ -40,6 +40,7 @@ void AttackObjectManager::Update()
         }
     }
 
+    // 削除予定のオブジェクトオブジェクトを削除
     for (auto* deleteObject : deleteList)
     {
         auto it = std::find_if(objects_.begin(), objects_.end(), [deleteObject](auto& obj)

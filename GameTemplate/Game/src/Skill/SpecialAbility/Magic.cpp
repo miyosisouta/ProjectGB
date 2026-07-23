@@ -52,18 +52,21 @@ void FireMagic::Enter(Character* p)
 	// 多段ヒットは CollisionHitManager::OnCollisionStay 側で管理する
 	taskScheduler_->AddTimer(sp->fireMagicAttackStartTime, [this, p, sp]()
 		{
+			// プレイヤーの値の取得
 			p->transform_.UpdateTransform();
-			Vector3    playerPos     = p->transform_.position;
-			Quaternion playerRot     = p->GetStateMachine()->GetRotation();
-			Vector3    forwardDir    = p->GetStateMachine()->GetDirection();
-			Vector3    collisionSize = Vector3(sp->fireMagicCollisionSize, sp->fireMagicCollisionSize, sp->fireMagicCollisionDepth);
-			float      forwardOffset = sp->fireMagicCollisionForward + sp->fireMagicCollisionDepth;
-			float      heightOffset  = sp->fireMagicCollisionHeight;
-			Vector3    targetPos     = playerPos + (forwardDir * forwardOffset);
-			targetPos.y             += heightOffset;
-			Vector3    effectPos     = playerPos + (forwardDir * sp->fireMagicCollisionForward);
-			effectPos.y              = sp->fireMagicCollisionHeight;
-			Vector3    effectScal    = collisionSize * sp->effectScaleFactor;
+			Vector3    playerPos     = p->transform_.position;				 // プレイヤーの現在の座標を取得
+			Quaternion playerRot     = p->GetStateMachine()->GetRotation();	 // プレイヤーの回転を取得
+			Vector3    forwardDir    = p->GetStateMachine()->GetDirection(); // プレイヤーが向いている方向を取得
+
+			// コリジョン・エフェクトのPRSを算出する（サイズ・座標・スケール）
+			Vector3    collisionSize = Vector3(sp->fireMagicCollisionSize, sp->fireMagicCollisionSize, sp->fireMagicCollisionDepth); // コリジョンのサイズ
+			float      forwardOffset = sp->fireMagicCollisionForward + sp->fireMagicCollisionDepth; // コリジョンを前方にズラす距離
+			float      heightOffset  = sp->fireMagicCollisionHeight; // コリジョンの高さ調整
+			Vector3    targetPos     = playerPos + (forwardDir * forwardOffset); // コリジョンの座標
+			targetPos.y             += heightOffset; // 高さを調整
+			Vector3    effectPos     = playerPos + (forwardDir * sp->fireMagicCollisionForward); // エフェクトの座標
+			effectPos.y              = sp->fireMagicCollisionHeight; // エフェクトの高さ
+			Vector3    effectScal    = collisionSize * sp->effectScaleFactor; // エフェクトのスケール（コリジョンサイズに倍率を掛ける）
 
 			attackHitbox_ = std::make_unique<GhostBody>();
 			attackHitbox_->CreateBox(

@@ -16,9 +16,9 @@ struct SPSIn
 // ピクセルシェーダーからの出力
 struct SPSOut
 {
-    float4 albedo : SV_Target0;
-    float4 normal : SV_Target1;
-    float4 metaricShadowSmooth : SV_Target2;
+    float4 albedo : SV_Target0;              // アルベドカラー(rgb) + 深度(w)
+    float4 normal : SV_Target1;              // ワールド法線(xyz)
+    float4 metaricShadowSmooth : SV_Target2; // メタリック(r)・シャドウレシーバー(g)・スムース(b)
 };
 
 ///////////////////////////////////////
@@ -57,6 +57,7 @@ sampler g_sampler : register(s0);
 // 関数
 ///////////////////////////////////////
 
+// 法線マップからワールド空間の法線を求める
 float3 GetNormalFromNormalMap(float3 normal, float3 tangent, float3 biNormal, float2 uv)
 {
     float3 binSpaceNormal = g_normal.SampleLevel(g_sampler, uv, 0.0f).xyz;
@@ -89,6 +90,7 @@ SPSIn VSMainCore(SVSIn vsIn, float4x4 mWorldLocal, uniform bool isUsePreComputed
     return psIn;
 }
 
+// ピクセルシェーダーの共通処理。isShadowRecieverでシャドウレシーバー用出力を切り替える
 SPSOut PSMainCore(SPSIn psIn, int isShadowReciever)
 {
     static const float BayerMatrix[16] =
@@ -142,10 +144,12 @@ SPSOut PSMainCore(SPSIn psIn, int isShadowReciever)
     return psOut;
 }
 
+// 通常のピクセルシェーダーエントリーポイント
 SPSOut PSMain(SPSIn psIn)
 {
     return PSMainCore(psIn, 0);
 }
+// シャドウを受けるオブジェクト用のピクセルシェーダーエントリーポイント
 SPSOut PSMainShadowReciever(SPSIn psIn)
 {
     return PSMainCore(psIn, 1);

@@ -39,21 +39,23 @@ private:
 
 
     /** ブレンド用 */
-    bool isBlending_ = false;
-    float blendDuration_ = 0.0f;
-    float blendTimer_ = 0.0f;
-    CameraData blendStartData_;
+    bool       isBlending_    = false; //!< ブレンド中か
+    float      blendDuration_ = 0.0f;  //!< ブレンドにかける時間
+    float      blendTimer_    = 0.0f;  //!< ブレンド経過時間
+    CameraData blendStartData_;        //!< ブレンド開始時点のカメラデータ
 
     /** 描画で使用されるカメラ */
-    nsK2EngineLow::Camera* engineCamera_ = nullptr;
+    nsK2EngineLow::Camera* engineCamera_ = nullptr; //!< エンジン側の実体カメラ
 
     /** カメラオプション設定値 */
-    int sensitivityStage_ = SENSITIVITY_DEFAULT_STAGE; // 感度の段階(1~11)
-    float distance_ = DISTANCE_NORMAL; // 距離(ちかい・ふつう・とおい)
-    bool invert_ = INVERT_OFF; // 反転on/off
+    int   sensitivityStage_ = SENSITIVITY_DEFAULT_STAGE; //!< 感度の段階(1~11)
+    float distance_         = DISTANCE_NORMAL;           //!< 距離(ちかい・ふつう・とおい)
+    bool  invert_           = INVERT_OFF;                //!< 反転on/off
 
 private:
+    /** コンストラクタ */
     CameraManager();
+    /** デストラクタ */
     ~CameraManager();
 
 
@@ -115,16 +117,16 @@ public:
         if (stage < SENSITIVITY_MIN_STAGE || stage > SENSITIVITY_MAX_STAGE) { return; }
         sensitivityStage_ = stage;
     }
-    int GetSensitivityStage() const { return sensitivityStage_; }
-    float GetSensitivityValue() const { return SENSITIVITY_BASE + (sensitivityStage_ * SENSITIVITY_STEP); }
+    inline int GetSensitivityStage() const { return sensitivityStage_; }
+    inline float GetSensitivityValue() const { return SENSITIVITY_BASE + (sensitivityStage_ * SENSITIVITY_STEP); }
 
     /** カメラ距離 */
-    void SetDistance(const float distance) { distance_ = distance; }
-    float GetDistance() const { return distance_; }
+    inline void SetDistance(const float distance) { distance_ = distance; }
+    inline float GetDistance() const { return distance_; }
 
     /** カメラ反転 */
-    void SetInvert(const bool flg) { invert_ = flg; }
-    bool GetInvert() const { return invert_; }
+    inline void SetInvert(const bool flg) { invert_ = flg; }
+    inline bool GetInvert() const { return invert_; }
 
 
     /**

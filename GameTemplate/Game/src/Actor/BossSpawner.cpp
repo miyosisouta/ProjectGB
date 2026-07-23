@@ -151,6 +151,7 @@ void BossSpawner::SpawnBoss(bool isPlayerControl)
 	// ボスキャラクターがある場合
 	if (boss_) 
 	{
+		// TODO : ボスの挙動確認ができるように、自分で操作可能にしたい
 		// コントローラーの設定
 		{
 			// プレイヤー
@@ -180,8 +181,7 @@ void BossSpawner::SetUpdate(const bool flg)
 void BossSpawner::SetControlEnabled(const bool flg)
 {
 	if (bossController_) {
-		if (flg) {
-			bossController_->Activate(); // コントローラが動くようにする
+		if (flg) {			bossController_->Activate(); // コントローラが動くようにする
 		} else {
 			bossController_->Deactivate(); // コントローラが動かないようにする
 		}

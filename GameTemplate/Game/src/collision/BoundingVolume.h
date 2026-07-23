@@ -5,11 +5,13 @@
 #pragma once
 
 
+/** モデルのAABB(軸並行境界ボックス) */
 struct Bounds
 {
-	Vector3 minPoint = Vector3(FLT_MAX, FLT_MAX, FLT_MAX);
-	Vector3 maxPoint = Vector3(-FLT_MAX, -FLT_MAX, -FLT_MAX);
-	//
+	Vector3 minPoint = Vector3(FLT_MAX, FLT_MAX, FLT_MAX); //!< 最小座標
+	Vector3 maxPoint = Vector3(-FLT_MAX, -FLT_MAX, -FLT_MAX); //!< 最大座標
+
+	/** モデルの全頂点からAABBを計算する */
 	void Compute(Model& model)
 	{
 		const auto& tkmFile = model.GetTkmFile();
@@ -42,22 +44,24 @@ struct Frustum
 {
     /** 平面 */
     struct Plane {
-        float a, b, c, d;
+        float a, b, c, d; //!< 平面の方程式 ax+by+cz+d=0 の係数
 
+        /** 法線ベクトル(a,b,c)の長さが1になるよう正規化する */
         void Normalize() {
             float len = std::sqrt(a * a + b * b + c * c);
             if (len > 1e-6f) { a /= len; b /= len; c /= len; d /= len; }
         }
-        // 正 = 法線側（フラスタム内側）
-        float SignedDistance(const Vector3& p) const {
+        /** 平面からの符号付き距離を取得（正 = 法線側 = フラスタム内側） */
+        inline float SignedDistance(const Vector3& p) const {
             return a * p.x + b * p.y + c * p.z + d;
         }
     };
 
-    enum { LEFT = 0, RIGHT, BOTTOM, TOP, NEAR_P, FAR_P };
-    Plane planes[6];
+    enum { LEFT = 0, RIGHT, BOTTOM, TOP, NEAR_P, FAR_P }; //!< planes のインデックス
+    Plane planes[6]; //!< フラスタムを構成する6平面
 
 
+    /** ビュープロジェクション行列から6平面を構築する */
     void BuildFromViewProjectionMatrix(const Matrix& vp)
     {
         // Gribb-Hartmann 法: VP 行列の行を足し引きして 6 平面を取り出す

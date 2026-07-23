@@ -1,17 +1,17 @@
 ﻿#pragma once
 
-/* ボスの攻撃ID */
+/** ボスの攻撃ID */
 enum class BossStateID
 {
-	Idle,
-	Run,
-	Jump,
-	Attack,
-	Hit,
-	Spin,
-	Clicked_Gollira,
-	Clicked_Turtle,
-	Death
+	Idle,			//!< 待機
+	Run,			//!< 走る
+	Jump,			//!< ヒットスタンプ
+	Attack,			//!< 通常攻撃
+	Hit,			//!< ダメージリアクション
+	Spin,			//!< 回転攻撃
+	Clicked_Gollira,	//!< ゴリラ専用：岩投げ攻撃
+	Clicked_Turtle,		//!< カメ専用：レーザー攻撃
+	Death			//!< 死亡
 };
 
 
@@ -49,13 +49,13 @@ class NPCController : public IGameObject
 {
 private:
 	BossType bossType_ = BossType::enNone; //!< 自分がどのボスか
-	std::array<DistanceRule, static_cast<int>(DistancePhase::enMax)> currentRules_;
+	std::array<DistanceRule, static_cast<int>(DistancePhase::enMax)> currentRules_; //!< 現在のボス種類に対応する距離別攻撃ルール
 
 	BossCharacter* boss_ = nullptr; //!< 操作するボス
 	Player* targerPlayer_ = nullptr; //!< 攻撃対象になるプレイヤー
 
 private:
-	/* 行動ノードを取得 */
+	/** 行動ノードを取得 */
 	void SelectActionNode();
 
 	/** 距離チェックを行う。距離によって検索するルールを決める */
@@ -63,11 +63,11 @@ private:
 
 
 public:
-	/* 選ばれているボスを設定 */
-	void SetBossType(BossType type) { bossType_ = type; }
+	/** 選ばれているボスを設定 */
+	inline void SetBossType(BossType type) { bossType_ = type; }
 
 	/** 攻撃対象の設定 */
-	void SetAttackTarget(Player* target) { targerPlayer_ = target; }
+	inline void SetAttackTarget(Player* target) { targerPlayer_ = target; }
 
 	/** 操作するボスを設定 */
 	inline void SetBossCharacter(BossCharacter* boss) { boss_ = boss; }
@@ -75,10 +75,15 @@ public:
 
 
 public:
+	/** コンストラクタ */
 	NPCController();
+	/** デストラクタ */
 	~NPCController();
 
+	/** スタート処理 */
 	bool Start() override;
+	/** 更新処理 */
 	void Update() override;
+	/** 描画処理 */
 	void Render(RenderContext& rc)override {} /* 描画するものがないので必要なし */
 };

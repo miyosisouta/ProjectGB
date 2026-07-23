@@ -183,17 +183,17 @@ void BossAttackState::StartAttack()
 			attackHitbox_->CreateSphere(boss_, CharacterID::BossNormalAtkID(), p->normalAttack.collisionSize, ghost::CollisionAttribute::BossAtk, ghost::CollisionAttributeMask::BossAtk);
 
 			// 座標計算
-			Vector3 bossPos = boss_->transform_.position;				// プレイヤーの現在の座標を取得
+			Vector3 bossPos = boss_->transform_.position;
 
 			const Matrix& mat = boss_->transform_.GetWorldMatrix(); // ボスのワールド座標を取得
 			Vector3 forward(mat.m[2][0], mat.m[2][1], mat.m[2][2]); // Z軸
 			forward.Normalize(); // ベクトルの長さを1にしておく
 
 			Quaternion bossRot = boss_->GetTargetRot();
-			float forwardOffset = p->normalAttack.collisionForward;									// 目の前にどれくらいズラすか
-			float heightOffset = p->normalAttack.collisionHeight;										// 高さの調整
+			float forwardOffset = p->normalAttack.collisionForward;				// 目の前にどれくらいズラすか
+			float heightOffset = p->normalAttack.collisionHeight;				// 高さを取得
 			Vector3 collisionTargetPos = bossPos + (forward * forwardOffset);	// 前方向の座標を決定
-			collisionTargetPos.y += heightOffset;									// 高さを決定
+			collisionTargetPos.y += heightOffset;								// 高さを設定
 
 			// コリジョンの座標を設定
 			attackHitbox_->SetPosition(collisionTargetPos);
@@ -259,12 +259,12 @@ void HitStampState::Enter()
 	gravity_ = p->hitStamp.gravityPower;
 	phase_ = Phase::Ready; // 準備をする
 
-	Quaternion targetRot = RotateToTarget(p->common.rotateSpeed);// 攻撃の前にプレイヤーがいる方向へ向く
+	Quaternion targetRot = RotateToTarget(p->common.rotateSpeed); // 攻撃の前にプレイヤーがいる方向へ向く
 	boss_->SetTargetRot(targetRot);
 
 	boss_->PlayAnimation(BossAnimID::enAnimJump, GetAnimationSpeedMul()); // ジャンプアニメーションを設定
 
-	// 攻撃範囲インジケーターを生成 (表示は Hover フェーズまで待つ)
+	// 攻撃範囲インジケーターを生成
 	{
 		attackRange_ = NewGO<AttackRange>(0, "hitStampRange");
 		AttackRange::InitParam param;
@@ -341,6 +341,7 @@ void HitStampState::Update()
 	{
 	case Phase::Ready:
 	{
+		// 移動速度を0
 		boss_->SetMoveVelocity(Vector3::Zero);
 		break;
 	}
@@ -382,6 +383,7 @@ void HitStampState::Update()
 		move.y = FLOAT_ZERO;
 		boss_->SetMoveVelocity(move);
 
+		// 重力に従って下に落ちる
 		verticalVelocity_ += gravity_ * g_gameTime->GetFrameDeltaTime();
 		boss_->transform_.localPosition.y += verticalVelocity_ * g_gameTime->GetFrameDeltaTime();
 

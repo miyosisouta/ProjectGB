@@ -34,6 +34,7 @@ void GameTimer::Update()
 
 void GameTimer::Reset()
 {
+    // 全ての状態を初期値に戻す（再度Init()から使い直せる状態にする）
     limitTime_ = 0.0f;
     elapsedTime_ = 0.0f;
     remainWarningTime_ = 0.0f;

@@ -66,10 +66,10 @@ struct MasterPlayerSkillParameter : public IMasterParameter
 	std::string category;			//!< スキルカテゴリ (例: "NormalAttack", "SpecialAttack", "Utility")
 	std::string key;				//!< スキル識別キー  (例: "Bite", "Bomb", "Dodge")
 	float       motionValues;		//!< 攻撃力
-	float       cooldown;			//!< クールダウン (秒)
+	float       cooldown;			//!< クールダウン
 	float		decreaseStamina;	//!< スタミナ消費量
-	float		vibrationTime;	//!< バイブレーション時間
-	float		vibrationForce; //!< バイブレーション力
+	float		vibrationTime;		//!< バイブレーション時間
+	float		vibrationForce;		//!< バイブレーション力
 };
 
 /**
@@ -83,7 +83,7 @@ struct MasterBossSkillParameter : public IMasterParameter
 	std::string category;		//!< ボス名カテゴリ
 	std::string key;			//!< スキル識別キー
 	float       motionValues;   //!< 攻撃力
-	float       cooldown;		//!< クールダウン (秒)
+	float       cooldown;		//!< クールダウン
 	float		vibrationTime;	//!< バイブレーション時間
 	float		vibrationForce; //!< バイブレーション力
 };
@@ -156,11 +156,11 @@ struct MasterPlayerStateParameter : public IMasterParameter
 {
 	appParameter(MasterPlayerStateParameter);
 
-	float walkSeInterval;     //!< 歩きSEの再生間隔 (秒)
-	float walkLoopTime;       //!< ループシーケンスの基準時間 (秒)
-	float walkEffectScale;    //!< 歩きエフェクトスケール (一様)
-	float runSeInterval;      //!< 走りSEの再生間隔 (秒)
-	float deathAnimationTime; //!< 死亡アニメーション終了までの時間 (秒)
+	float walkSeInterval;     //!< 歩きSEの再生間隔
+	float walkLoopTime;       //!< ループシーケンスの基準時間
+	float walkEffectScale;    //!< 歩きエフェクトスケール
+	float runSeInterval;      //!< 走りSEの再生間隔
+	float deathAnimationTime; //!< 死亡アニメーション終了までの時間
 	float moveThreshold;      //!< 移動入力の最小閾値
 };
 
@@ -209,13 +209,13 @@ struct MasterSkillParameter : public IMasterParameter
 	// Avoid (回避)
 	float targetPosForward;          //!< 回避の目標位置 (前方距離)
 	float avoidMoveSpeed;            //!< 回避の移動速度
-	float avoidEffectRotation;       //!< 回避エフェクトの回転角度 (度)
-	float avoidEffectScale;          //!< 回避エフェクトスケール (一様)
-	float avoidStartTime;            //!< 回避処理の開始タイミング (秒)
-	float avoidInvincibleStartTime;  //!< 無敵フラグONのタイミング (秒)
-	float avoidJustStartTime;        //!< ジャスト回避ウィンドウ開始 (秒)
-	float avoidJustEndTime;          //!< ジャスト回避ウィンドウ終了 (秒)
-	float avoidEndTime;              //!< 回避処理の終了タイミング (秒)
+	float avoidEffectRotation;       //!< 回避エフェクトの回転角度
+	float avoidEffectScale;          //!< 回避エフェクトスケール 
+	float avoidStartTime;            //!< 回避処理の開始タイミング
+	float avoidInvincibleStartTime;  //!< 無敵フラグONのタイミング
+	float avoidJustStartTime;        //!< ジャスト回避ウィンドウ開始
+	float avoidJustEndTime;          //!< ジャスト回避ウィンドウ終了
+	float avoidEndTime;              //!< 回避処理の終了タイミング
 
 	// FireMagic (炎魔法)
 	float effectScaleFactor;         //!< エフェクトスケール倍率
@@ -224,9 +224,9 @@ struct MasterSkillParameter : public IMasterParameter
 	float fireMagicCollisionForward; //!< 炎魔法コリジョンの前方オフセット
 	float fireMagicCollisionHeight;  //!< 炎魔法コリジョンの高さオフセット
 	int   fireMagicHitCount;         //!< 炎魔法の多段攻撃回数
-	float fireMagicHitInterval;      //!< 炎魔法の攻撃間隔 (秒)
-	float fireMagicAttackStartTime;  //!< 炎魔法の攻撃判定開始時間 (秒)
-	float fireMagicAttackEndTime;    //!< 炎魔法の攻撃判定終了時間 (秒)
+	float fireMagicHitInterval;      //!< 炎魔法の攻撃間隔
+	float fireMagicAttackStartTime;  //!< 炎魔法の攻撃判定開始時間
+	float fireMagicAttackEndTime;    //!< 炎魔法の攻撃判定終了時間
 };
 
 /**
@@ -237,8 +237,8 @@ struct MasterAttackObjectParameter : public IMasterParameter
 {
 	appParameter(MasterAttackObjectParameter);
 
-	float landmineModelScale;          //!< 地雷モデルスケール (一様)
-	float landmineCollisionSize;       //!< 地雷コリジョンサイズ (爆発半径)
+	float landmineModelScale;          //!< 地雷モデルスケール
+	float landmineCollisionSize;       //!< 地雷コリジョンサイズ
 	float landmineIndicatorRadius;     //!< 地雷インジケーター半径
 	float effectScaleFactorDamageLing; //!< ダメージエフェクトスケール倍率
 	float effectScaleFactorExplode;    //!< 爆発エフェクトスケール倍率
@@ -298,7 +298,7 @@ struct MasterMissionParameter : public IMasterParameter
 	uint8_t     abilityTargetCount;     //!< 特殊スキル目標使用回数
 	uint8_t     utilityTargetCount;     //!< 汎用スキル目標使用回数
 	uint8_t     normalAttackTargetCount;//!< 通常攻撃目標使用回数
-	float       goalHpRate;             //!< 目標HP残存率 (0.0〜1.0)
+	float       goalHpRate;             //!< 目標HP残存率
 };
 
 /**
@@ -309,48 +309,48 @@ struct MasterTitleBGParameter : public IMasterParameter
 {
 	appParameter(MasterTitleBGParameter);
 
-	float treeSpeed          = 100.0f;
-	float grassSpeed         = 130.0f;
-	float fenceSpeed         = 150.0f;
-	float treeSpacing        = 300.0f;
-	float treeZ              = -300.0f;
-	float treeZ2             = -1100.0f;
-	float grassSpacing       = 240.0f;
-	float grassZ             = -100.0f;
-	float fenceSpacing       = 250.0f;
-	float fenceZ             = -180.0f;
-	float groundY            = -30.0f;
-	float groundScale        = 5000.0f;
-	float cullingMargin      = 100.0f;
-	float spawnX             = 1000.0f;
-	float treeSpawnX         = 0.0f;
-	float playerX            = -250.0f;
-	float playerY            = 0.0f;
-	float playerZ            = 0.0f;
-	float playerRotYDeg      = 90.0f;
-	float camPosX            = 0.0f;
-	float camPosY            = 150.0f;
-	float camPosZ            = 800.0f;
-	float camTargetX         = 0.0f;
-	float camTargetY         = 0.0f;
-	float camTargetZ         = 0.0f;
-	float camFovDeg          = 60.0f;
-	float camNear            = 1.0f;
-	float camFar             = 5000.0f;
-	float skyCubeScale       = 1000.0f;
-	float playerRunSpeed     = 300.0f;
-	int   treeMaxConsecutive  = 8;
-	float treeMinGap          = 150.0f;
-	float treeBaseGap         = 300.0f;
-	float treeMaxGap          = 3.0f;
-	int   grassMaxConsecutive = 4;
-	float grassMinGap         = 50.0f;
-	float grassBaseGap        = 240.0f;
-	float grassMaxGap         = 2.0f;
-	int   fenceMaxConsecutive = 3;
-	float fenceMinGap         = 150.0f;
-	float fenceBaseGap        = 250.0f;
-	float fenceMaxGap         = 3.0f;
+	float treeSpeed          = 100.0f;	 //!< 木のスクロール速度
+	float grassSpeed         = 130.0f;	 //!< 草のスクロール速度
+	float fenceSpeed         = 150.0f;	 //!< 柵のスクロール速度
+	float treeSpacing        = 300.0f;	 //!< 木の基本間隔
+	float treeZ              = -300.0f;  //!< 手前側の木のZ座標
+	float treeZ2             = -1100.0f; //!< 奥側の木のZ座標
+	float grassSpacing       = 240.0f;	 //!< 草の基本間隔
+	float grassZ             = -100.0f;  //!< 草のZ座標
+	float fenceSpacing       = 250.0f;	 //!< 柵の基本間隔
+	float fenceZ             = -180.0f;  //!< 柵のZ座標
+	float groundY            = -30.0f;	 //!< 地面のY座標
+	float groundScale        = 5000.0f;  //!< 地面のスケール
+	float cullingMargin      = 100.0f;	 //!< 画面外判定のマージン
+	float spawnX             = 1000.0f;  //!< 木・草・柵の出現X座標
+	float treeSpawnX         = 0.0f;	 //!< 木の出現X座標
+	float playerX            = -250.0f;  //!< プレイヤーのX座標
+	float playerY            = 0.0f;	 //!< プレイヤーのY座標
+	float playerZ            = 0.0f;	 //!< プレイヤーのZ座標
+	float playerRotYDeg      = 90.0f;	 //!< プレイヤーのY軸回転角度
+	float camPosX            = 0.0f;	 //!< カメラ座標X
+	float camPosY            = 150.0f;	 //!< カメラ座標Y
+	float camPosZ            = 800.0f;	 //!< カメラ座標Z
+	float camTargetX         = 0.0f;	 //!< カメラ注視点X
+	float camTargetY         = 0.0f;	 //!< カメラ注視点Y
+	float camTargetZ         = 0.0f;	 //!< カメラ注視点Z
+	float camFovDeg          = 60.0f;	 //!< カメラ視野角(度)
+	float camNear            = 1.0f;	 //!< ニアクリップ
+	float camFar             = 5000.0f;  //!< ファークリップ
+	float skyCubeScale       = 1000.0f;  //!< スカイキューブのスケール
+	float playerRunSpeed     = 300.0f;	 //!< プレイヤーの走行アニメーション速度
+	int   treeMaxConsecutive  = 8;		 //!< 木の最大連続出現数
+	float treeMinGap          = 150.0f;  //!< 木の最小間隔
+	float treeBaseGap         = 300.0f;  //!< 木の基本間隔
+	float treeMaxGap          = 3.0f;    //!< 木の最大間隔倍率
+	int   grassMaxConsecutive = 4;		 //!< 草の最大連続出現数
+	float grassMinGap         = 50.0f;	 //!< 草の最小間隔
+	float grassBaseGap        = 240.0f;  //!< 草の基本間隔
+	float grassMaxGap         = 2.0f;	 //!< 草の最大間隔倍率
+	int   fenceMaxConsecutive = 3;		 //!< 柵の最大連続出現数
+	float fenceMinGap         = 150.0f;  //!< 柵の最小間隔
+	float fenceBaseGap        = 250.0f;  //!< 柵の基本間隔
+	float fenceMaxGap         = 3.0f;	 //!< 柵の最大間隔倍率
 };
 
 /**
@@ -374,12 +374,12 @@ struct MasterEmotionParameter : public IMasterParameter
 	};
 
 	ModifierEntry modifiers[7];              //!< 7段階分の倍率テーブル
-	float         buffEffectScale   = 1.0f;  //!< 強気化エフェクトのスケール（一様）
-	float         debuffEffectScale = 1.0f;  //!< 動揺エフェクトのスケール（一様）
-	float         buffEffectOffsetY   = 0.0f;  //!< 強気化エフェクトのボス位置からのYオフセット（XZはボス座標のまま）
-	float         debuffEffectOffsetY = 0.0f;  //!< 動揺エフェクトのボス位置からのYオフセット（XZはボス座標のまま）
-	float         buffSeVolumeBoost   = 1.0f;  //!< 強気化SEの追加音量倍率（通常のマスター×SE計算値に掛ける。素材音源の収録音量差を補うためのもの）
-	float         debuffSeVolumeBoost = 1.0f;  //!< 動揺SEの追加音量倍率（同上）
+	float         buffEffectScale   = 1.0f;  //!< Buffエフェクトのスケール（一様）
+	float         debuffEffectScale = 1.0f;  //!< Debuffエフェクトのスケール（一様）
+	float         buffEffectOffsetY   = 0.0f;  //!< Buffエフェクトのボス位置からのYオフセット（XZはボス座標のまま）
+	float         debuffEffectOffsetY = 0.0f;  //!< Debuffエフェクトのボス位置からのYオフセット（XZはボス座標のまま）
+	float         buffSeVolumeBoost   = 1.0f;  //!< BuffSEの追加音量倍率（通常のマスター×SE計算値に掛ける。素材音源の収録音量差を補うためのもの）
+	float         debuffSeVolumeBoost = 1.0f;  //!< DebuffSEの追加音量倍率（同上）
 };
 
 /**
@@ -557,8 +557,8 @@ struct MasterBossPhaseCutSceneParameter : public IMasterParameter
 	float tiredStaggerInterval     = 0.6f;	//!< tired1→2→3を開始する間隔（秒）
 
 	// カットシーン専用のバフ/デバフエフェクト位置オフセット（通常のインゲーム中のオフセットはEmotionParameter.json側）
-	float debuffEffectOffsetYOverride = 10.0f;	//!< HP25%演出中の動揺エフェクトのYオフセット上書き値
-	float buffEffectOffsetYOverride   = 10.0f;	//!< HP50%演出中の強気化エフェクトのYオフセット上書き値
+	float debuffEffectOffsetYOverride = 10.0f;	//!< HP25%演出中のDebuffエフェクトのYオフセット上書き値
+	float buffEffectOffsetYOverride   = 10.0f;	//!< HP50%演出中のBuffエフェクトのYオフセット上書き値
 
 	// HP50%演出：ボスのジャンプ演出・怒りマークのスケールパルス
 	int   bossJumpCount          = 2;		//!< ジャンプ→着地を繰り返す回数
@@ -579,21 +579,22 @@ struct MasterBossPhaseCutSceneParameter : public IMasterParameter
 class ParameterManager
 {
 private:
-	/* 複数パラメーターがあっても良いように */
+	/** 複数パラメーターがあっても良いように */
 	using ParameterVector = std::vector<IMasterParameter*>;
-	/* 各パラメーターごとに保持する */
+	/** 各パラメーターごとに保持する */
 	using ParameterMap = std::map<uint32_t, ParameterVector>;
 
 private:
 	ParameterMap parameterMap_;  //!< パラメーターを保持
 
 private:
-	/* コンストラクタ */
+	/** コンストラクタ */
 	ParameterManager();
-	/* デストラクタ */
+	/** デストラクタ */
 	~ParameterManager();
 
 public:
+	/* 各種パラメーターJSONの読み込み（呼び出し元は main.cpp のロード処理） */
 	void LoadCharacterStatusData(const char* path);
 	void LoadPlayerSkillStatusData(const char* path);
 	void LoadBossSkillStatusData(const char* path);
@@ -676,7 +677,7 @@ public:
 	}
 
 
-	/*
+	/**
 	 * 2段階ネストされた配列からパラメーター読み込み
 	 */
 	template <typename T>
@@ -715,6 +716,7 @@ public:
 
 
 
+	/** 読み込んだパラメーターを解放する */
 	template <typename T>
 	void UnloadParameter()
 	{
@@ -779,7 +781,7 @@ public:
 	}
 
 	/** キーでキャラクターのステータスを取得するショートカット */
-	const MasterCharacterStatusParameter* GetCharacterStatus(const std::string& key)
+	inline const MasterCharacterStatusParameter* GetCharacterStatus(const std::string& key)
 	{
 		return FindParameter<MasterCharacterStatusParameter>(
 			[&key](const MasterCharacterStatusParameter& p) {
@@ -790,7 +792,7 @@ public:
 
 
 	/** カテゴリ＋keyでプレイヤースキルを取得するショートカット */
-	const MasterPlayerSkillParameter* GetPlayerSkill(const std::string& category, const std::string& key)
+	inline const MasterPlayerSkillParameter* GetPlayerSkill(const std::string& category, const std::string& key)
 	{
 		return FindParameter<MasterPlayerSkillParameter>(
 			[&](const MasterPlayerSkillParameter& p) {
@@ -800,7 +802,7 @@ public:
 	}
 
 	/** カテゴリ(ボス名)＋keyでボススキルを取得するショートカット */
-	const MasterBossSkillParameter* GetBossSkill(const std::string& category, const std::string& key)
+	inline const MasterBossSkillParameter* GetBossSkill(const std::string& category, const std::string& key)
 	{
 		return FindParameter<MasterBossSkillParameter>(
 			[&](const MasterBossSkillParameter& p) {
@@ -810,7 +812,7 @@ public:
 	}
 
 	/** キーでキャラクターのステータスを取得するショートカット */
-	const MasterBattleCommonParameter* GetBattleCommonParam(const std::string& key)
+	inline const MasterBattleCommonParameter* GetBattleCommonParam(const std::string& key)
 	{
 		return FindParameter<MasterBattleCommonParameter>(
 			[&key](const MasterBattleCommonParameter& p) {
@@ -820,7 +822,7 @@ public:
 	}
 
 	/** keyで草曲げパラメーターを取得するショートカット */
-	const MasterGrassBendParameter* GetGrassBendParam(const std::string& key)
+	inline const MasterGrassBendParameter* GetGrassBendParam(const std::string& key)
 	{
 		return FindParameter<MasterGrassBendParameter>(
 			[&key](const MasterGrassBendParameter& p) {
@@ -830,7 +832,7 @@ public:
 	}
 
 	/** keyでミッションパラメーターを取得するショートカット */
-	const MasterMissionParameter* GetMissionParam(const std::string& key)
+	inline const MasterMissionParameter* GetMissionParam(const std::string& key)
 	{
 		return FindParameter<MasterMissionParameter>(
 			[&key](const MasterMissionParameter& p) {
@@ -840,31 +842,31 @@ public:
 	}
 
 	/** コリジョンヒットパラメーターを取得するショートカット */
-	const MasterCollisionHitParameter* GetCollisionHitParam()
+	inline const MasterCollisionHitParameter* GetCollisionHitParam()
 	{
 		return GetParameter<MasterCollisionHitParameter>(0);
 	}
 
 	/** プレイヤーステートパラメーターを取得するショートカット */
-	const MasterPlayerStateParameter* GetPlayerStateParam()
+	inline const MasterPlayerStateParameter* GetPlayerStateParam()
 	{
 		return GetParameter<MasterPlayerStateParameter>(0);
 	}
 
 	/** NPCコントローラーパラメーターを取得するショートカット */
-	const MasterNPCControllerParameter* GetNPCControllerParam()
+	inline const MasterNPCControllerParameter* GetNPCControllerParam()
 	{
 		return GetParameter<MasterNPCControllerParameter>(0);
 	}
 
 	/** ボススポーナーパラメーターを取得するショートカット */
-	const MasterBossSpawnerParameter* GetBossSpawnerParam()
+	inline const MasterBossSpawnerParameter* GetBossSpawnerParam()
 	{
 		return GetParameter<MasterBossSpawnerParameter>(0);
 	}
 
 	/** keyでスキルパラメーターを取得するショートカット */
-	const MasterSkillParameter* GetSkillParam(const std::string& key)
+	inline const MasterSkillParameter* GetSkillParam(const std::string& key)
 	{
 		return FindParameter<MasterSkillParameter>(
 			[&key](const MasterSkillParameter& p) {
@@ -874,37 +876,37 @@ public:
 	}
 
 	/** 攻撃オブジェクトパラメーターを取得するショートカット */
-	const MasterAttackObjectParameter* GetAttackObjectParam()
+	inline const MasterAttackObjectParameter* GetAttackObjectParam()
 	{
 		return GetParameter<MasterAttackObjectParameter>(0);
 	}
 
 	/** ステージマネージャーパラメーターを取得するショートカット */
-	const MasterStageManagerParameter* GetStageManagerParam()
+	inline const MasterStageManagerParameter* GetStageManagerParam()
 	{
 		return GetParameter<MasterStageManagerParameter>(0);
 	}
 
 	/** タイトル背景パラメーターを取得するショートカット */
-	const MasterTitleBGParameter* GetTitleBGParam()
+	inline const MasterTitleBGParameter* GetTitleBGParam()
 	{
 		return GetParameter<MasterTitleBGParameter>(0);
 	}
 
 	/** 感情システムパラメーターを取得するショートカット */
-	const MasterEmotionParameter* GetEmotionParam() const
+	inline const MasterEmotionParameter* GetEmotionParam() const
 	{
 		return GetParameter<MasterEmotionParameter>(0);
 	}
 
 	/** ボスの行動パラメーターを取得するショートカット */
-	const MasterBossStateParameter* GetBossStateParam() const
+	inline const MasterBossStateParameter* GetBossStateParam() const
 	{
 		return GetParameter<MasterBossStateParameter>(0);
 	}
 
 	/** キー(ボス名)でボスHP閾値カットシーンパラメーターを取得するショートカット */
-	const MasterBossPhaseCutSceneParameter* GetBossPhaseCutSceneParam(const std::string& key)
+	inline const MasterBossPhaseCutSceneParameter* GetBossPhaseCutSceneParam(const std::string& key)
 	{
 		return FindParameter<MasterBossPhaseCutSceneParameter>(
 			[&key](const MasterBossPhaseCutSceneParameter& p) {

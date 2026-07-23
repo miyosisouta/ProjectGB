@@ -17,7 +17,9 @@ private:
 	/** btDbvt用の衝突コールバック */
 	struct DbvtCollideCallback : btDbvt::ICollide
 	{
-		PairCallback userCallback;
+		PairCallback userCallback; //!< 衝突ペアを通知する呼び出し元のコールバック
+
+		/** btDbvtからペアが見つかるたびに呼ばれる */
 		void Process(const btDbvtNode* n1, const btDbvtNode* n2)
 		{
 			GhostBody* b1 = static_cast<GhostBody*>(n1->data);
@@ -34,15 +36,18 @@ private:
 
 	
 public:
+	/** コンストラクタ */
 	BulletDbvtBroadphase()
 	{
 		tree_ = new btDbvt();
 	}
+	/** デストラクタ */
 	~BulletDbvtBroadphase()
 	{
 		delete tree_;
 	}
 
+	/** 判定対象に追加する */
 	void Add(GhostBody* body) override
 	{
 		btVector3 minAabb, maxAabb;
@@ -53,6 +58,7 @@ public:
 		body->SetBroadphaseHandle(static_cast<void*>(node));
 	}
 
+	/** 判定対象から除外する */
 	void Remove(GhostBody* body) override
 	{
 		btDbvtNode* node = static_cast<btDbvtNode*>(body->GetBroadphaseHandle());
@@ -62,6 +68,7 @@ public:
 		}
 	}
 
+	/** AABBの変化を反映する */
 	void Update(GhostBody* body) override
 	{
 		btDbvtNode* node = static_cast<btDbvtNode*>(body->GetBroadphaseHandle());
@@ -73,6 +80,7 @@ public:
 		}
 	}
 
+	/** 全ペアの当たり判定を行い、衝突しているペアをコールバックで通知する */
 	void Perform(PairCallback callback) override
 	{
 		if (tree_) {

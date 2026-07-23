@@ -34,7 +34,7 @@ void DefaultAttack::Enter(Character* p)
 					// 座標計算
 					p->transform_.UpdateTransform();
 					Vector3 playerPos = p->transform_.position;				// プレイヤーの現在の座標を取得
-					Quaternion playerRot = p->GetStateMachine()->GetRotation();
+					Quaternion playerRot = p->GetStateMachine()->GetRotation();// プレイヤーの回転を取得
 					Vector3 forwardDir = p->GetStateMachine()->GetDirection();// プレイヤーが最後に向いていた方向を取得
 					float forwardOffset = 100.0f;									// 目の前にどれくらいズラすか
 					float heightOffset = 50.0f;										// 高さの調整
@@ -44,7 +44,6 @@ void DefaultAttack::Enter(Character* p)
 					// コリジョンの座標を設定
 					attackHitbox_->SetPosition(targetPos);
 					// エフェクトのPRSを決める
-					Quaternion hoge = playerRot;
 					playerRot.AddRotationDegY(360.0f);
 					EffectManager::Get().PlayEffect(enEffectKind_Wind_Blast_Strong, targetPos, playerRot, Vector3(9.0f, 9.0f, 9.0f));
 					// 通常攻撃のSEを再生

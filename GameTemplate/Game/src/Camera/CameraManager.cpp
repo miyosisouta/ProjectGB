@@ -22,9 +22,10 @@ void CameraManager::Setup(nsK2EngineLow::Camera* engineCamera)
 
 void CameraManager::ResetToDefault()
 {
-    sensitivityStage_ = SENSITIVITY_DEFAULT_STAGE;
-    distance_ = DISTANCE_NORMAL;
-    invert_ = INVERT_OFF;
+    // カメラオプション設定値を初期値に戻す（感度・距離・反転）
+    sensitivityStage_ = SENSITIVITY_DEFAULT_STAGE; // 感度の段階
+    distance_ = DISTANCE_NORMAL;                   // 距離
+    invert_ = INVERT_OFF;                          // 反転設定
 }
 
 
@@ -74,11 +75,11 @@ void CameraManager::SwitchCamera(RefCameraController controller, const float ble
             next_ = controller;
             next_->OnEnter();
 
-            // 現在のエンジンカメラの状態をブレンド開始地点として保存
-            blendStartData_.position = engineCamera_->GetPosition();
-            blendStartData_.target = engineCamera_->GetTarget();
-            blendStartData_.up = engineCamera_->GetUp();
-            blendStartData_.fov = engineCamera_->GetViewAngle();
+            // 現在のエンジンカメラの状態をブレンド開始地点として保存（座標・注視点・上方向・視野角）
+            blendStartData_.position = engineCamera_->GetPosition();  // 座標
+            blendStartData_.target = engineCamera_->GetTarget();      // 注視点
+            blendStartData_.up = engineCamera_->GetUp();              // 上方向ベクトル
+            blendStartData_.fov = engineCamera_->GetViewAngle();      // 視野角
 
             blendDuration_ = blendTime;
             blendTimer_ = 0.0f;
@@ -123,7 +124,7 @@ void CameraManager::Update(const float deltaTime)
         applyData = current_->GetCameraData();
     }
 
-    // 3. エンジンカメラへの反映
-    engineCamera_->SetPosition(applyData.position);
-    engineCamera_->SetTarget(applyData.target);
+    // エンジンカメラへの反映（座標・注視点）
+    engineCamera_->SetPosition(applyData.position); // 座標
+    engineCamera_->SetTarget(applyData.target);     // 注視点
 }

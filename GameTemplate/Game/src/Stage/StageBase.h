@@ -13,10 +13,15 @@ protected:
 	virtual void Init() = 0;
 
 public:
+	/** コンストラクタ */
 	StageBase();
+	/** デストラクタ */
 	virtual ~StageBase() {};
 
+	/** スタート処理 */
 	virtual bool Start() { return true; }
+	/** 更新処理 */
 	virtual void Update() {}
+	/** 描画処理 */
 	virtual void Render(RenderContext& rc) {}
 };

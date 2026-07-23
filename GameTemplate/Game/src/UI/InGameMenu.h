@@ -19,12 +19,12 @@ private:
 	static constexpr float damageNotifyCoolDownTime = 0.2f;
 
 private:
-	std::unique_ptr<UIAnimationSequence> abilitySkillIconScaleSequence_ = nullptr;
-	std::unique_ptr<UIAnimationSequence> abilitySkillButtonIconScaleSequence_ = nullptr;
-	std::unique_ptr<UIAnimationSequence> bossHitHPPositionSequence_ = nullptr;
-	std::unique_ptr<TaskSchedulerSystem> bossHitDamageScheduler_[DAMAGE_POOL_SIZE];
-	std::unique_ptr<TaskSchedulerSystem> playerDamageScheduler_ = nullptr;
-	std::unique_ptr<TaskSchedulerSystem> bossCriticalHitDamageScheduler_[DAMAGE_POOL_SIZE];
+	std::unique_ptr<UIAnimationSequence> abilitySkillIconScaleSequence_ = nullptr; //!< 特殊スキルアイコンの拡縮アニメーションシーケンス
+	std::unique_ptr<UIAnimationSequence> abilitySkillButtonIconScaleSequence_ = nullptr; //!< 特殊スキルボタンアイコンの拡縮アニメーションシーケンス
+	std::unique_ptr<UIAnimationSequence> bossHitHPPositionSequence_ = nullptr; //!< ボスHPバーのヒット時位置アニメーションシーケンス
+	std::unique_ptr<TaskSchedulerSystem> bossHitDamageScheduler_[DAMAGE_POOL_SIZE]; //!< ボス被ダメージ表示のプールごとのタイマー
+	std::unique_ptr<TaskSchedulerSystem> playerDamageScheduler_ = nullptr; //!< プレイヤー被ダメージ表示のタイマー
+	std::unique_ptr<TaskSchedulerSystem> bossCriticalHitDamageScheduler_[DAMAGE_POOL_SIZE]; //!< ボスクリティカル被ダメージ表示のプールごとのタイマー
 
 	/**
 	 * ボスの感情バフ/デバフアイコン
@@ -32,9 +32,9 @@ private:
 	 */
 	enum class EmotionBuffKind : int
 	{
-		DamageTakenMul = 0,
-		AttackSpeed    = 1,
-		AttackPower    = 2,
+		DamageTakenMul = 0, //!< 被ダメージ倍率アイコン
+		AttackSpeed    = 1, //!< 攻撃速度アイコン
+		AttackPower    = 2, //!< 攻撃力アイコン
 	};
 	static const int EmotionBuffKindCount = 3;
 
@@ -47,18 +47,12 @@ private:
 	/** 非表示時のフェードアウト演出 */
 	std::unique_ptr<UIAnimationSequence> emotionIconFadeOutSequence_[EmotionBuffKindCount];
 
-	// スタミナの情報を取得するためにいるプレイヤーステートとゲージレンダー
-	GaugeRender staminaGauge_;
-	// 枯渇状態キャッシュ（Render側でも参照するため保持）
-	bool isExhausted_ = false;
-
-public:
-	void Update() override;
-	void Render(RenderContext& rc) override;
-	void InitializeLogic() override;
+	GaugeRender staminaGauge_; //!< スタミナゲージのレンダー
+	bool isExhausted_ = false; //!< 枯渇状態キャッシュ（Render側でも参照するため保持）
 
 
 private:
+	/** プレイヤー被ダメージ表示用タスクスケジューラーを生成する */
 	void CreatePlayerDamageScheduler();
 
 	/** ボスが被ダメを受けた時のアニメーション */
@@ -75,4 +69,13 @@ private:
 
 	/** ボスの感情バフ/デバフアイコンの表示・アニメーションを更新する */
 	void UpdateEmotionBuffIcon(const int currentLevel);
+
+
+public:
+	/** 更新処理 */
+	void Update() override;
+	/** 描画処理 */
+	void Render(RenderContext& rc) override;
+	/** UIロジックの初期化 */
+	void InitializeLogic() override;
 };

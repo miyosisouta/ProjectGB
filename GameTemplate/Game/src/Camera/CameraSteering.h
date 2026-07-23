@@ -10,21 +10,6 @@ class Character;
 
 class CameraSteering : public Noncopyable
 {
-private:
-	/** 値の制限 */
-	template <typename T>
-	inline T Clamp(const T value, const T minVal, const T maxVal)
-	{
-		if (value < minVal) { return minVal; }
-		if (value > maxVal) { return maxVal; }
-		return value;
-	}
-
-
-public:
-	/** 更新のグループを取得 */
-	inline const uint32_t GetUpdateGroup() const { return UpdateGroup::Camera; }
-
 public:
 	/** カメラの動作パラメータをまとめた構造体 */
 	struct Config
@@ -41,7 +26,7 @@ public:
 
 
 private:
-	Config config_; //!< カメラの動作パラメータヲまとめた構造体
+	Config config_; //!< カメラの動作パラメータをまとめた構造体
 	Character* targetCharacter_ = nullptr; //!< カメラのターゲット
 	Vector3 toVector_ = Vector3::Zero; //!< プレイヤーからカメラへの方向
 	float   currentPitch_ = 0.0f; //!< 仰角
@@ -49,9 +34,39 @@ private:
 	bool invert_ = false; //!< 操作の反転するか
 	bool isUpdate_ = true; //!< 更新をするか否か
 
+
+private:
+	/** 値の制限 */
+	template <typename T>
+	inline T Clamp(const T value, const T minVal, const T maxVal)
+	{
+		if (value < minVal) { return minVal; }
+		if (value > maxVal) { return maxVal; }
+		return value;
+	}
+
+
 public:
+	/** 更新のグループを取得 */
+	inline const uint32_t GetUpdateGroup() const { return UpdateGroup::Camera; }
+
 	/** 更新の可否状態を設定 */
 	inline void SetUpdate(const bool flg) { isUpdate_ = flg; }
+
+	/** カメラの操作を反転させるかの設定 */
+	inline void SetInvert(const bool invert) { invert_ = invert; }
+	/** カメラの操作を反転させるかの取得 */
+	inline bool GetInvert() const { return invert_; }
+
+	/** カメラの操作感度の設定 */
+	inline void SetSensitivity(const float value) { sensitivity_ = value; }
+	/** カメラの操作感度の取得 */
+	inline float GetSensitivity() const { return sensitivity_; }
+
+	/** カメラとターゲットとの距離の設定 */
+	inline void SetDistance(const float value) { config_.distance = value; }
+	/** カメラとターゲットとの距離の取得 */
+	inline float GetDistance() const { return config_.distance; }
 
 
 public:
@@ -63,13 +78,13 @@ public:
 	{
 		config_ = config;
 
-		toVector_.z = config_.distance;
-		toVector_.y = config_.height;
+		// 現在の距離・高さを反映してカメラ方向ベクトルを更新
+		toVector_.z = config_.distance; // 距離
+		toVector_.y = config_.height;   // 高さ
 	}
 
 	/** カメラのターゲットを設定 */
-	void SetTargetCharacter(Character* character) { targetCharacter_ = character; }
-
+	inline void SetTargetCharacter(Character* character) { targetCharacter_ = character; }
 
 	/** カメラの上下回転制限設定 */
 	void SetLimitDeg(const float minDeg, const float maxDeg)
@@ -78,18 +93,4 @@ public:
 		config_.pitchMax = Math::DegToRad(maxDeg);
 		currentPitch_ =  Clamp(currentPitch_, config_.pitchMin, config_.pitchMax);
 	}
-
-	/** カメラの操作を反転させるかの設定 */
-	void SetInvert(const bool invert) { invert_ = invert; }
-	/** カメラの操作感度の設定 */
-	void SetSensitivity(const float value) { sensitivity_ = value; }
-	/** カメラとターゲットとの距離の設定 */
-	void SetDistance(const float value) { config_.distance = value; }
-
-	/** カメラの操作を反転させるかの取得 */
-	bool GetInvert() const { return invert_; }
-	/** カメラの操作感度の取得 */
-	float GetSensitivity() const { return sensitivity_; }
-	/** カメラとターゲットとの距離の取得 */
-	float GetDistance() const { return config_.distance; }
 };

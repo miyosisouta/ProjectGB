@@ -38,10 +38,10 @@ void CameraSteering::Update(CameraData& data, const float deltaTime)
     toVector_ = horizontal;
     toVector_.y = verticalOffset + config_.height;
 
-    // カメラ座標を決定してCameraDataに書き込む
+    // カメラ座標を決定してCameraDataに書き込む（座標・注視点）
     const Vector3 targetPos = targetCharacter_->transform_.position;
-    data.position = targetPos + toVector_;
-    data.target = targetPos + Vector3(0.0f, config_.lookAtOffsetY, 0.0f);
+    data.position = targetPos + toVector_;                                    // 座標
+    data.target = targetPos + Vector3(0.0f, config_.lookAtOffsetY, 0.0f);     // 注視点
 }
 
 

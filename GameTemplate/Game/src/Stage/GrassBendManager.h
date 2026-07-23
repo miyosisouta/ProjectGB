@@ -17,43 +17,44 @@ public:
     // 回転攻撃など「移動しながら連続曲げ」用の専用スロット番号
     static constexpr int SPIN_ATTACK_SLOT = MAX_BEND_SOURCES - 1;
 
-    // 攻撃種別ごとのパラメータ (grass_attack_params.json のエントリーに対応)
+    /** 攻撃種別ごとのパラメータ (grass_attack_params.json のエントリーに対応) */
     struct AttackParams
     {
-        float force;         // 最大曲げ量 (ワールド単位)
-        float radius;        // 影響半径 (ワールド単位)
-        float duration;      // 曲げ持続時間 (秒)
-        float recoverySpeed; // 将来の回復速度拡張用 (現在未使用)
+        float force;         //!< 最大曲げ量 (ワールド単位)
+        float radius;        //!< 影響半径 (ワールド単位)
+        float duration;      //!< 曲げ持続時間 (秒)
+        float recoverySpeed; //!< 将来の回復速度拡張用 (現在未使用)
     };
 
 private:
-    // GPU に送る構造体 (grass.fx の GrassBendSource と同じレイアウト)
+    /** GPU に送る構造体 (grass.fx の GrassBendSource と同じレイアウト) */
     struct GrassBendSourceGPU
     {
-        float position[3];
-        float force;
-        float radius;
-        float elapsed;
-        float duration;
-        float recoverySpeed;
+        float position[3]; //!< 中心座標
+        float force; //!< 最大曲げ量
+        float radius; //!< 影響半径
+        float elapsed; //!< 経過時間
+        float duration; //!< 持続時間
+        float recoverySpeed; //!< 回復速度
     };
 
-    // CPU 側の管理用
+    /** CPU 側の管理用 */
     struct BendSource
     {
-        Vector3 position      = Vector3::Zero;
-        float   force         = 0.0f;
-        float   radius        = 0.0f;
-        float   elapsed       = 0.0f;
-        float   duration      = 0.0f;
-        float   recoverySpeed = 1.0f;
-        bool    active        = false;
+        Vector3 position      = Vector3::Zero; //!< 中心座標
+        float   force         = 0.0f; //!< 最大曲げ量
+        float   radius        = 0.0f; //!< 影響半径
+        float   elapsed       = 0.0f; //!< 経過時間
+        float   duration      = 0.0f; //!< 持続時間
+        float   recoverySpeed = 1.0f; //!< 回復速度
+        bool    active        = false; //!< 有効か
     };
 
-    BendSource         sources_[MAX_BEND_SOURCES];
-    StructuredBuffer   bendSourceSB_;
-    GrassBendSourceGPU gpuData_[MAX_BEND_SOURCES] = {};
+    BendSource         sources_[MAX_BEND_SOURCES]; //!< CPU側のベンドソース一覧
+    StructuredBuffer   bendSourceSB_; //!< GPUへ送るStructuredBuffer
+    GrassBendSourceGPU gpuData_[MAX_BEND_SOURCES] = {}; //!< GPUへ送るデータ本体
 
+    /** シェーダー用バッファを初期化する */
     void Init();
 
 public:
@@ -79,15 +80,16 @@ public:
     void SetSource(int slot, const Vector3& pos, const AttackParams& params);
 
     /** GPU StructuredBuffer への参照 (ModelRender::SetExtraGBufferSRV へ渡す) */
-    StructuredBuffer& GetStructuredBuffer() { return bendSourceSB_; }
+    inline StructuredBuffer& GetStructuredBuffer() { return bendSourceSB_; }
 
     ///////////////////////////////////////////////////////////////////////////
     // シングルトン
     ///////////////////////////////////////////////////////////////////////////
 private:
-    static GrassBendManager* instance_;
+    static GrassBendManager* instance_; //!< インスタンス
 
 public:
+    /** インスタンスを生成 */
     static void Initialize()
     {
         if (instance_ == nullptr) {
@@ -95,8 +97,11 @@ public:
             instance_->Init();
         }
     }
+    /** インスタンスを取得 */
     static GrassBendManager& Get() { return *instance_; }
+    /** インスタンスが初期化済みか */
     static bool IsInitialized() { return instance_ != nullptr; }
+    /** インスタンスを破棄 */
     static void Finalize()
     {
         delete instance_;

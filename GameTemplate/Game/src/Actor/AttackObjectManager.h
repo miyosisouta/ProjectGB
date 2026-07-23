@@ -9,16 +9,20 @@ class BossCharacter;
 class AttackObjectManager
 {
 private:
-    std::vector<std::unique_ptr<AttackObjectBase>> objects_;
+    std::vector<std::unique_ptr<AttackObjectBase>> objects_; //!< 生成した攻撃オブジェクトのリスト
 
 
 private:
+    /** コンストラクタ */
     AttackObjectManager();
+    /** デストラクタ */
     ~AttackObjectManager();
 
 
 public:
+    /** 更新処理。終了した攻撃オブジェクトをここで破棄する */
     void Update();
+    /** 描画処理 */
     void Render(RenderContext& rc);
 
 public:
@@ -34,11 +38,14 @@ public:
         float gravity = 980.0f
     );
 
+    /** 地雷オブジェクトを生成する */
     void CreateLandmine(
         Character* owner,
         const Vector3& startPos,
         float motionValue
     );
+
+
 
 /*=========================================*/
 /* ここから先シングルトン */

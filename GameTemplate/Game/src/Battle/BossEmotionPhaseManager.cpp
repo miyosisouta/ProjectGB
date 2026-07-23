@@ -6,29 +6,31 @@
 
 void BossEmotionPhaseManager::Init(BossCharacter* boss, EmotionSystem* emotionSystem)
 {
+    // HP監視対象のボスを保持
     boss_          = boss;
+    // 強制変更先の感情システムを保持
     emotionSystem_ = emotionSystem;
 }
 
 void BossEmotionPhaseManager::Update()
 {
-    // HP50%/25%閾値のBuff/Debuff適用はここでは行わない。
-    // BattleManager側のボスHP閾値カットシーンの演出タイミングに合わせて
-    // ForceApplyPhase50Buff() / ForceApplyPhase25Debuff() を呼ぶ
+
 }
 
 void BossEmotionPhaseManager::ForceApplyPhase50Buff()
 {
+    // 感情システムが未初期化なら何もしない
     if (!emotionSystem_) { return; }
 
-    // 後がないという焦りから全力を出す（興奮状態）
+    // 感情レベルを最大のBuff3に強制変更
     emotionSystem_->ForceSetLevel(EmotionLevel::Buff3);
 }
 
 void BossEmotionPhaseManager::ForceApplyPhase25Debuff()
 {
+    // 感情システムが未初期化なら何もしない
     if (!emotionSystem_) { return; }
 
-    // 追い詰められていることへの動揺。冷静さを欠いて隙ができる
+    // 感情レベルを最大のDebuff3に強制変更
     emotionSystem_->ForceSetLevel(EmotionLevel::Debuff3);
 }

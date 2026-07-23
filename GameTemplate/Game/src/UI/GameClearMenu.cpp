@@ -157,7 +157,7 @@ void GameClearMenu::InitializeLogic()
 	{
 		effectRenderList_.push_back(std::make_unique<ParticleEffectRender>());
 		char jsonPath[] = "Assets/ui/vfx/effect_mission_maru/effect_mission_maru_1.json";
-		jsonPath[54] = '1' + static_cast<char>(i);
+		jsonPath[54] = '1' + static_cast<char>(i); // ファイル名末尾の"1"をi番目の連番(1～4)に書き換える
 		effectRenderList_[i]->Init(jsonPath, "Assets/ui/inGameUI/mission/maru.dds", 150.0f, 150.0f);
 		effectRenderList_[i]->EnableHotReload();
 	}

@@ -11,7 +11,6 @@ void GameOverMenu::Update()
 {
 	const float deltaTime = g_gameTime->GetFrameDeltaTime();
 	taskSchedulerSystem_->Update(deltaTime);
-	//stampSequence_->Update(deltaTime);
 	gameOverSequence_->Update(deltaTime);
 
 	MenuBase::Update();
@@ -29,7 +28,6 @@ void GameOverMenu::InitializeLogic()
 	// ゲームオーバーの背景
 	auto* gameOverFade = GetUI<UIIcon>(Hash32("gameOverFade"));
 	UIAnimationFactory::Attach<UIColorAnimation>(gameOverFade, Hash32("GameOverFade"));
-	//gameOverStampSequence_ = std::make_unique<UIAnimationSequence>();
 
 	// ゲームオーバーの文字移動(上から下)
 	auto* gameOverDown= GetUI<UIIcon>(Hash32("gameOver"));

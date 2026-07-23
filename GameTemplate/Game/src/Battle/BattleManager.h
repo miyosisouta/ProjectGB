@@ -51,14 +51,15 @@ class BossPhaseCutSceneMenu;
 class BattleManager
 {
 private:
+	/** ゲームの進行状態 */
 	enum class GameState
 	{
-		Entry,          // 開始前の演出
-		GameStart,      // ゲームスタート演出
-		Playing,        // メインのゲームプレイ中
-		ResultClear,    // スコア表示・リザルト演出
-		ResultOver,     // スコア表示・リザルト演出
-		Shutdown        // 終了処理
+		Entry,          //!< 開始前の演出
+		GameStart,      //!< ゲームスタート演出
+		Playing,        //!< メインのゲームプレイ中
+		ResultClear,    //!< スコア表示・リザルト演出
+		ResultOver,     //!< スコア表示・リザルト演出
+		Shutdown        //!< 終了処理
 	};
 
 	/** カメラオプション */
@@ -73,21 +74,21 @@ private:
 
 private:
 	// --- 各ゲームオブジェクト ---
-	Player*             player_           = nullptr;
-	PlayerController*   playerController_ = nullptr;
-	BossSpawner*        boss_             = nullptr;
-	StageManagerObject* stage_            = nullptr;
-	GameTimer           gameTimer_;
-	SkyCube*            skyCube_          = nullptr;
+	Player*             player_           = nullptr; //!< プレイヤー本体
+	PlayerController*   playerController_ = nullptr; //!< プレイヤーの操作コントローラー
+	BossSpawner*        boss_             = nullptr; //!< ボス生成・管理
+	StageManagerObject* stage_            = nullptr; //!< ステージ管理
+	GameTimer           gameTimer_; //!< ゲーム内タイマー
+	SkyCube*            skyCube_          = nullptr; //!< 天球オブジェクト
 
 	// --- UI 管理 ---
 	UIManager           uiManager_;
 
 	// --- カメラ ---
-	std::unique_ptr<CameraSteering>    cameraSteering_           = nullptr;
-	std::unique_ptr<TaskSchedulerSystem> cutSceneScheduler_      = nullptr;
-	RefCameraController                gameCameraController_     = nullptr;
-	RefCameraController                bossEntryCameraController_ = nullptr;
+	std::unique_ptr<CameraSteering>    cameraSteering_           = nullptr; //!< カメラの操作入力を管理
+	std::unique_ptr<TaskSchedulerSystem> cutSceneScheduler_      = nullptr; //!< カットシーン演出用タイマー
+	RefCameraController                gameCameraController_     = nullptr; //!< 通常プレイ用カメラ
+	RefCameraController                bossEntryCameraController_ = nullptr; //!< ボス登場演出用カメラ
 
 	// --- ダメージ ---
 	DamageNotifyQueue damageNotifyQueue_; //!< ダメージ通知管理
@@ -168,7 +169,7 @@ public:
 		 * ダメージ通知を積む
 		 * CollisionHitManager のコールバックから呼ばれる
 		 */
-		void PushDamageNotify(int damage, DamageNotifyType type, bool isCritical)
+		inline void PushDamageNotify(int damage, DamageNotifyType type, bool isCritical)
 		{
 			damageNotifyQueue_.Push(damage, type, isCritical);
 		}
@@ -179,7 +180,7 @@ public:
 		 * UI側はこれを呼ぶだけでよい
 		 * @return 通知1件分の構造体（通知がなければ damage が -1）
 		 */
-		DamageNotify PopDamageNotify()
+		inline DamageNotify PopDamageNotify()
 		{
 			return damageNotifyQueue_.Pop();
 		}
@@ -208,10 +209,10 @@ public:
 		else     gameTimer_.Resume();
 	}
 
-	/* ゲームタイマーを取得 */
-	GameTimer* GetGameTimer() { return &gameTimer_; }
+	/** ゲームタイマーを取得 */
+	inline GameTimer* GetGameTimer() { return &gameTimer_; }
 
-	/* プレイヤーのHP割合を取得 */
+	/** プレイヤーのHP割合を取得 */
 	float GetPlayerHPRate()
 	{
 		auto* status = player_->GetStatus()->As<ActorStatus>();
@@ -219,29 +220,31 @@ public:
 	}
 
 	/** UIManager を取得（細かい UI 制御が必要な場合に使用） */
-	UIManager& GetUIManager() { return uiManager_; }
+	inline UIManager& GetUIManager() { return uiManager_; }
+
+	/** カットシーン中（Playing 以外）か */
+	inline bool IsCutScene()     const { return gameState_ != GameState::Playing; }
+	/** プレイ中か */
+	inline bool IsPlayingScene() const { return gameState_ == GameState::Playing; }
+	/** ゲーム演出が完全に終了したか */
+	inline bool IsFinishedGame() const { return gameState_ == GameState::Shutdown; }
+
+	/** ボスHP閾値カットシーン中（プレイヤーが操作可能に戻るまで）か。InGameSceneがインゲームHUDの描画/更新を止めるかどうかの判断に使う */
+	inline bool IsBossPhaseCutsceneActive() const { return isBossPhaseCutsceneActive_; }
 
 
 private:
+	/** コンストラクタ */
 	BattleManager();
+	/** デストラクタ */
 	~BattleManager();
 
 
 public:
+	/** 更新処理 */
 	void Update();
+	/** 描画処理 */
 	void Render(RenderContext& rc);
-
-
-public:
-	/** カットシーン中（Playing 以外）か */
-	bool IsCutScene()     const { return gameState_ != GameState::Playing; }
-	/** プレイ中か */
-	bool IsPlayingScene() const { return gameState_ == GameState::Playing; }
-	/** ゲーム演出が完全に終了したか */
-	bool IsFinishedGame() const { return gameState_ == GameState::Shutdown; }
-
-	/** ボスHP閾値カットシーン中（プレイヤーが操作可能に戻るまで）か。InGameSceneがインゲームHUDの描画/更新を止めるかどうかの判断に使う */
-	bool IsBossPhaseCutsceneActive() const { return isBossPhaseCutsceneActive_; }
 
 
 private:

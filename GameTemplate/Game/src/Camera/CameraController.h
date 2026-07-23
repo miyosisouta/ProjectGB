@@ -24,23 +24,24 @@ public:
      * 外部から状態をセットする
      * NOTE: BattleManagerなどが呼ぶ
      */
-    void SetState(const CameraData& data)
+    inline void SetState(const CameraData& data)
     {
         data_ = data;
     }
 
     /** 視野角の設定 */
-    void SetFovDeg(const float deg)
+    inline void SetFovDeg(const float deg)
     {
         data_.fov = Math::DegToRad(deg);
     }
 
     /** 視野角の取得 */
-    float GetFovDeg() const
+    inline float GetFovDeg() const
     {
         return Math::RadToDeg(data_.fov);
     }
 
+    /** 更新処理 */
     void Update() override
     {
         // 基本何もしない。
@@ -48,7 +49,7 @@ public:
     }
 
     /** カメラデータの取得 */
-    const CameraData& GetCameraData() const override { return data_; }
+    inline const CameraData& GetCameraData() const override { return data_; }
 };
 
 
@@ -64,7 +65,7 @@ class DebugCamera : public ICameraController
 
 
 private:
-    CameraData cameraData_;
+    CameraData cameraData_; //!< カメラのデータ
 
 
 public:
@@ -75,6 +76,6 @@ public:
     void Update() override;
 
     /** カメラデータの取得 */
-    const CameraData& GetCameraData() const override { return cameraData_; }
+    inline const CameraData& GetCameraData() const override { return cameraData_; }
 };
 #endif // _DEBUG

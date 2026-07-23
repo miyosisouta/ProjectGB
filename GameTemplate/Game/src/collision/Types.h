@@ -7,6 +7,7 @@
 #include <cstdint>
 
 
+/** 通常コリジョンの自分の属性 */
 struct CollisionAttribute
 {
 	enum Enum : uint32_t
@@ -18,6 +19,7 @@ struct CollisionAttribute
 };
 
 
+/** 通常コリジョンの相手の属性マスク */
 struct CollisionAttributeMask
 {
 	enum Enum : uint32_t
@@ -32,7 +34,7 @@ struct CollisionAttributeMask
 
 namespace ghost
 {
-	// 自分はだれか
+	/** 自分はだれか */
 	struct CollisionAttribute
 	{
 		enum Enum : uint32_t
@@ -48,7 +50,7 @@ namespace ghost
 		};
 	};
 
-	// 相手は誰なのか
+	/** 相手は誰なのか */
 	struct CollisionAttributeMask
 	{
 		enum Enum : uint32_t

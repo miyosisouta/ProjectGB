@@ -45,23 +45,23 @@ void AttackObjectBase::Render(RenderContext& rc)
 
 void ThrowRockObject::Setup(const Vector3& startPos, const Vector3& direction, float collisionSize, float speed, float launchAngle, float gravity, float spawnHeight)
 {
-    // 投げる瞬間の座標(=今までのstartPos)と、出現直後の座標(Yだけ低い位置)を覚えておく
-    growTargetPos_ = startPos;
-    growStartPos_ = startPos;
+    // 投げる瞬間の座標と、出現直後の座標を覚えておく
+    growTargetPos_ = startPos;      // 投げる瞬間
+    growStartPos_ = startPos;       // 出現直後
     growStartPos_.y = spawnHeight;
 
-    transform_.localPosition = growStartPos_; // 出現直後は低い位置から始める（Launch()までに本来の高さへ近づけていく）
-    transform_.localScale = startScale_; // 出現直後は小さいスケールから始める（Launch()までに大きくしていく）
+    transform_.localPosition = growStartPos_;   // 出現直後は低い位置から始める（本来の高さへ近づけていく）
+    transform_.localScale = startScale_;        // 出現直後は小さいスケールから始める（大きくしていく）
     collisionSize_ = collisionSize;
     flySpeed_ = speed;
     launchAngle_ = launchAngle;
-    gravity_ = -gravity; // 内部では負の値として持つ（下向きに働くため）
+    gravity_ = -gravity;                        // 内部では負の値として持つ（下向きに働くため）
     transform_.UpdateTransform();
 
     // 水平方向の速度ベクトル
-    float rad = Math::DegToRad(launchAngle_); // 角度計算
-    float hSpeed = speed * cos(rad); // 速度を計算
-    flatVelocity_ = direction * hSpeed; // 飛ぶ方向と速度を計算
+    float rad = Math::DegToRad(launchAngle_);   // 角度計算
+    float hSpeed = speed * cos(rad);            // 速度を計算
+    flatVelocity_ = direction * hSpeed;         // 飛ぶ方向と速度を計算
 
     // 垂直方向の初速（仰角から計算）
     verticalVelocity_ = speed * sin(rad);
@@ -69,19 +69,23 @@ void ThrowRockObject::Setup(const Vector3& startPos, const Vector3& direction, f
 
 void ThrowRockObject::Culculate()
 {
-    if (OnGround()) { isFinished_ = true; return; } // 岩が壊れる処理をここに書く
+    // 岩が壊れる処理をここに書く
+    if (OnGround()) { isFinished_ = true; return; } 
 
     float time = g_gameTime->GetFrameDeltaTime();
 
-    verticalVelocity_ += gravity_ * time; // gravity_ は負なので減算になる
+    // 重力を計算
+    verticalVelocity_ += gravity_ * time;
 
+    // 1フレームに飛ぶ量を計算。flatVelocityがすでに方向と速度を持っている
     Vector3 moveThisFrame = flatVelocity_ * time;
     moveThisFrame.y += verticalVelocity_ * time;
 
+    // 座標を更新
     transform_.localPosition += moveThisFrame;
     transform_.UpdateTransform();
 
-    // 飛んだ距離を累計（水平成分のみ）
+    // 飛んだ距離を累計
     traveledDist_ += Vector3(moveThisFrame.x, 0.0f, moveThisFrame.z).Length();
 
     // モデルとコリジョンの座標を同期
@@ -113,18 +117,22 @@ bool ThrowRockObject::Start()
 
 void ThrowRockObject::SetGrowProgress(float t)
 {
-    if (isLaunched_) return; // 投げた後は呼ばれても無視する（Launch()で最終状態に固定済み）
+    if (isLaunched_) return; // 投げた後は呼ばれても無視する
 
+    // 1.0にクランプ
     const float clampedT = max(0.0f, min(t, 1.0f));
 
+    // 大きさの線形補完
     Vector3 curScale;
     curScale.Lerp(clampedT, startScale_, targetScale_);
     transform_.localScale = curScale;
 
+    // 座標の線形補完
     Vector3 curPos;
     curPos.Lerp(clampedT, growStartPos_, growTargetPos_);
     transform_.localPosition = curPos;
 
+    // 値を設定
     transform_.UpdateTransform();
     model_.SetPosition(transform_.position);
     model_.SetScale(transform_.scale);
@@ -136,9 +144,9 @@ void ThrowRockObject::Launch()
     if (isLaunched_) return;
     isLaunched_ = true;
 
-    // 呼び出し側の進捗計算がわずかにずれていても、投げる瞬間は必ず最終スケール・座標に揃える
-    transform_.localScale = targetScale_;
+    // 値を設定(最終の値が必ず合うようにする)
     transform_.localPosition = growTargetPos_;
+    transform_.localScale = targetScale_;
     transform_.UpdateTransform();
     model_.SetPosition(transform_.position);
     model_.SetScale(transform_.scale);
@@ -167,13 +175,7 @@ void ThrowRockObject::Launch()
 
 void ThrowRockObject::Update()
 {
-    if (!isLaunched_)
-    {
-        // 投げられるまでの間は移動・当たり判定を発生させない。
-        // スケールはThrowRockState側からSetGrowProgress()で毎フレーム設定される（ここでは何もしない）
-        model_.Update();
-        return;
-    }
+    if (!isLaunched_) { model_.Update(); return; }
 
     Culculate();
 
@@ -195,13 +197,13 @@ void ThrowRockObject::Render(RenderContext& rc)
 
 void LandmineObject::Setup(Vector3 targetPos, float motionValue)
 {
-    motionValue_ = motionValue;
-    transform_.localPosition = targetPos;
-    const float modelScale = ParameterManager::Get().GetAttackObjectParam()->landmineModelScale;
+    motionValue_ = motionValue;                                                                  // ダメージ倍率
+    transform_.localPosition = targetPos;                                                        // 設置座標
+    const float modelScale = ParameterManager::Get().GetAttackObjectParam()->landmineModelScale; // 大きさ
     transform_.localScale = Vector3(modelScale);
     transform_.UpdateTransform();
 
-    predictionEffectHandle_ = INVALID_EFFECT_HANDLE;
+    predictionEffectHandle_ = INVALID_EFFECT_HANDLE; // エフェクトの無効の値
     phase_ = Phase::enWaiting;
 }
 
@@ -241,7 +243,7 @@ bool LandmineObject::Start()
         AttackRange::InitParam param;
         param.type       = AttackRange::Type::enCircle;
         param.character  = AttackRange::Character::Boss;
-        param.pulseSpeed = 1.0f / 3.0f; // 3s display → ring reaches 0.85 at explosion
+        param.pulseSpeed = 1.0f / 3.0f; 
         attackRangeIndicator_->SetInitParam(param);
         attackRangeIndicator_->SetPosition(transform_.position);
         const float indicatorRadius = ParameterManager::Get().GetAttackObjectParam()->landmineIndicatorRadius;
@@ -268,7 +270,10 @@ bool LandmineObject::Start()
             exploadEffectScale
         );
 
+        // 効果音
         SoundManager::Get().PlaySE(enSoundKind_Player_Landmine);
+
+        // 当たり判定の生成
         attackHitBox_ = std::make_unique<GhostBody>();
         attackHitBox_->CreateSphere(
             owner_,
@@ -282,8 +287,10 @@ bool LandmineObject::Start()
         // 草を曲げる
         if (GrassBendManager::IsInitialized())
         {
+            // jsonファイルからLandmineの草に関する値を取得
             if (const auto* gp = ParameterManager::Get().GetGrassBendParam("Landmine"))
             {
+                // 値を設定、反映
                 GrassBendManager::AttackParams params{ gp->force, gp->radius, gp->duration, gp->recoverySpeed };
                 GrassBendManager::Get().AddSource(transform_.position, params);
             }

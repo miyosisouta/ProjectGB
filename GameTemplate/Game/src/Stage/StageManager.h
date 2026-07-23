@@ -15,10 +15,10 @@
 class StageManager
 {
 private:
-    std::vector<StaticObject*>          staticObjectList_;
-    std::vector<PhysicalBody*>          collisionList_;
-    std::unique_ptr<StageCullingSystem> stageCullingSystem_;
-    std::unique_ptr<GrassObject>        grassObject_;
+    std::vector<StaticObject*>          staticObjectList_; //!< ステージの静的オブジェクトリスト
+    std::vector<PhysicalBody*>          collisionList_; //!< ステージの物理コリジョンリスト
+    std::unique_ptr<StageCullingSystem> stageCullingSystem_; //!< 静的オブジェクトのカリングシステム
+    std::unique_ptr<GrassObject>        grassObject_; //!< 草のLOD付きインスタンスレンダラー
 
     Vector3 grassAreaPos_[2]; //!< 草生成範囲の座標（外部から参照される）
 
@@ -35,14 +35,15 @@ private:
     Texture fuyoudoTex_;  //!< 腐葉土テクスチャ
 
 #if defined(_DEBUG)
-    bool isDisableGlass = false;
+    bool isDisableGlass = false; //!< デバッグ用: 草の生成を無効化するか
 #endif
 
+    /** TKLファイルからステージの静的オブジェクト・コリジョンを読み込む */
     void StageTKLLoader(const char* path);
 
 public:
     /** 草生成範囲の座標を取得 */
-    Vector3 GetGrassAreaPos(int index) const { return grassAreaPos_[index]; }
+    inline Vector3 GetGrassAreaPos(int index) const { return grassAreaPos_[index]; }
 
     /** 草のLOD切り替えの有効/無効 */
     void SetGrassLodEnabled(bool v)    { if (grassObject_) grassObject_->SetLodEnabled(v);    }
@@ -50,33 +51,43 @@ public:
     void SetGrassDitherEnabled(bool v) { if (grassObject_) grassObject_->SetDitherEnabled(v); }
 
 public:
+    /** コンストラクタ */
     StageManager();
+    /** デストラクタ */
     ~StageManager();
 
+    /** スタート処理 */
     bool Start();
+    /** 更新処理 */
     void Update();
+    /** 描画処理 */
     void Render(RenderContext& rc);
 
 #if defined(_DEBUG)
-    void DisableGlass() { isDisableGlass = true; }
+    /** デバッグ用: 草の生成を無効化する */
+    inline void DisableGlass() { isDisableGlass = true; }
 #endif
 
 /**
  * シングルトン
  */
 private:
-    static StageManager* instance_;
-    static bool          s_disableGrassLoad_;
+    static StageManager* instance_; //!< インスタンス
+    static bool          s_disableGrassLoad_; //!< 草JSONの読み込みを無効化するか
 
 public:
-    static void SetDisableGrassLoad(bool v) { s_disableGrassLoad_ = v; }
+    /** 草JSONの読み込み無効化フラグを設定 */
+    static inline void SetDisableGrassLoad(bool v) { s_disableGrassLoad_ = v; }
 
+    /** インスタンスを生成 */
     static void Initialize()
     {
         if (instance_ == nullptr)
             instance_ = new StageManager();
     }
+    /** インスタンスを取得 */
     static StageManager& Get() { return *instance_; }
+    /** インスタンスを破棄 */
     static void Finalize()
     {
         if (instance_ != nullptr) {
@@ -90,15 +101,21 @@ public:
 class StageManagerObject : public IGameObject
 {
 private:
-    bool isUpdate_ = true;
+    bool isUpdate_ = true; //!< 更新するかどうかのフラグ
 
 public:
+    /** コンストラクタ */
     StageManagerObject();
+    /** デストラクタ */
     ~StageManagerObject();
 
+    /** スタート処理 */
     bool Start();
+    /** 更新処理 */
     void Update();
+    /** 描画処理 */
     void Render(RenderContext& rc);
 
-    void SetUpdate(const bool flg) { isUpdate_ = flg; }
+    /** 更新の可否状態を設定 */
+    inline void SetUpdate(const bool flg) { isUpdate_ = flg; }
 };

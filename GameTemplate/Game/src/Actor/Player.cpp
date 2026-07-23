@@ -350,14 +350,16 @@ bool Player::Start()
 		// モデルの座標を更新・初期化
 		{
 			// TODO::Boss都の初期の距離を離すため
-			transform_.localPosition = initParam.pos_;
-			transform_.localRotation = initParam.rot_;
-			transform_.localScale = initParam.scal_;
+			// トランスフォームの初期値をパラメータから設定（座標・回転・拡縮）
+			transform_.localPosition = initParam.pos_;  // 座標
+			transform_.localRotation = initParam.rot_;  // 回転
+			transform_.localScale = initParam.scal_;    // 拡縮
 			transform_.UpdateTransform();
 
-			modelRender_.SetPosition(transform_.position);
-			modelRender_.SetRotation(transform_.rotation);
-			modelRender_.SetScale(transform_.scale);
+			// 更新したトランスフォームをモデルに反映（座標・回転・拡縮）
+			modelRender_.SetPosition(transform_.position); // 座標
+			modelRender_.SetRotation(transform_.rotation); // 回転
+			modelRender_.SetScale(transform_.scale);       // 拡縮
 			modelRender_.Update();
 		}
 	}
@@ -415,9 +417,9 @@ void Player::Update()
 		}
 		transform_.UpdateTransform();
 
-		// モデルへ反映
-		modelRender_.SetPosition(transform_.position);
-		modelRender_.SetRotation(transform_.rotation);
+		// モデルへ反映（座標・回転）
+		modelRender_.SetPosition(transform_.position); // 座標
+		modelRender_.SetRotation(transform_.rotation); // 回転
 		modelRender_.Update();
 	}
 

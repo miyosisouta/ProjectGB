@@ -31,7 +31,7 @@ void BossCharacter::SetupAnimation()
 void BossCharacter::PlayAnimation(const int id,const float animSpeed, const float interpolateTime)
 {
 	modelRender_.PlayAnimation(id, interpolateTime); // Idをもとにそのアニメーションの再生（interpolateTimeで前のアニメーションからブレンド）
-	modelRender_.SetAnimationSpeed(animSpeed); // 小数(0.5倍速など)も正しく反映されるようfloatで受け取る
+	modelRender_.SetAnimationSpeed(animSpeed); // 0.5倍速などでも正しく反映されるようfloatで受け取る
 }
 
 /** ===================================================== */
@@ -106,7 +106,7 @@ bool BossCharacter::Start()
 		param_.modelAxis_
 	);
 
-	// TODO : プレイヤーとの距離を話すため
+	// プレイヤーとの距離を離すため
 	transform_.localPosition = initParam.pos_;
 	transform_.localRotation = initParam.rot_;
 	transform_.localScale = initParam.scal_;
@@ -142,14 +142,10 @@ void BossCharacter::Update()
 	// ボスの移動処理
 	if(!isMoveStop_)
 	{
-		// 移動処理
-		transform_.localPosition += moveVelocity_;
-
-		// 回転処理
-		transform_.localRotation = targetPlayerRot_;
-
-		// トランスフォームの更新
-		transform_.UpdateTransform();
+		
+		transform_.localPosition += moveVelocity_;		// 移動処理
+		transform_.localRotation = targetPlayerRot_;	// 回転処理
+		transform_.UpdateTransform();					// トランスフォームの更新
 
 		// キャラコン
 		{
@@ -173,6 +169,7 @@ void BossCharacter::Update()
 			}
 		}
 
+		// もう一度トランスフォームを更新
 		transform_.UpdateTransform();
 
 		// モデルへ反映

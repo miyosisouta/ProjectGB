@@ -4,6 +4,11 @@
 #include "src/Emotion/IBossStatusModifier.h"
 #include <vector>
 
+/**
+ * 実体あるもののステータスをまとめたクラス
+ * プレイヤーやボス、スキル等のステータスとクールダウンがまとめられている
+ */
+
 
 /** スキル一つ一つのクールダウン */
 struct CoolDown
@@ -11,6 +16,7 @@ struct CoolDown
     float coolTimer_    = 0.0f;  //!< 残りクールタイム（秒）
     float coolDownTime_ = 0.0f;  //!< クールタイムの設定時間（秒）
     bool  isReadyFrame_ = false; //!< クールダウンが明けた瞬間のフレームだけ true
+
 
     /** 毎フレーム呼ぶ。タイマーを減算し、0 を下回ったら isReadyFrame_ を立てる */
     void Update()
@@ -27,22 +33,22 @@ struct CoolDown
         }
     }
 
-    /** 
-     * スキル使用時に呼ぶ。タイマーを設定時間にセットしてカウント開始
-     * speedMul : 攻撃速度倍率。大きいほどクールタイムが短くなる（ボスの調子システムなどから渡す） 
-     */
-    void Activate(float speedMul = 1.0f) { coolTimer_ = coolDownTime_ / ((speedMul > 0.0f) ? speedMul : 1.0f); }
+    /** スキル使用時に呼ぶ。タイマーを設定時間にセットしてカウント開始 */
+    inline void Activate(float speedMul = 1.0f) { coolTimer_ = coolDownTime_ / ((speedMul > 0.0f) ? speedMul : 1.0f); }
 
-    float GetTimer()    const { return coolTimer_; }            //!< 残り時間取得
-    bool  CanUse()      const { return coolTimer_ <= 0.0f; }    //!< 使用可能か
-    bool  IsReadyFrame() const { return isReadyFrame_; }        //!< 明けた瞬間か
+    /** 残りのクールタイムを取得 */
+    inline float GetTimer() const { return coolTimer_; }
+    /** 使用可能か */
+    inline bool CanUse() const { return coolTimer_ <= 0.0f; }
+    /** 明けた瞬間か */
+    inline bool IsReadyFrame() const { return isReadyFrame_; }
 };
 
 
 /** スキル1つに必要な情報 */
 struct SkillSlot
 {
-    std::string key_          = "";      //!< スキル識別キー（JSON の "key" と対応）
+    std::string key_          = "";      //!<スキル識別キー（JSON の "key" と対応）
     float       motionValues_ = 0.0f;    //!< モーション倍率（本体 attack_ にかける係数）
     CoolDown    coolDown_;               //!< このスキル専用のクールダウン
     float       decreaseStamina_ = 0.0f; //!< スタミナ消費量
@@ -61,31 +67,41 @@ struct SkillSlot
     }
 
     /** 毎フレーム呼ぶ */
-    void Update() { coolDown_.Update(); }
+    inline void Update() { coolDown_.Update(); }
 
     /** スキル使用時に呼ぶ。クールダウンを開始させる */
-    void Activate(float speedMul = 1.0f) { coolDown_.Activate(speedMul); }
+    inline void Activate(float speedMul = 1.0f) { coolDown_.Activate(speedMul); }
 
-    float GetMotionValues()     const { return motionValues_; }
-    float GetCoolTimer()        const { return coolDown_.GetTimer(); }
-    float GetDecreaseStamina()  const { return decreaseStamina_; }
-    float GetVibrationTime()  const { return vibrationTime_; }
-    float GetVibrationForce()  const { return vibrationForce_; }
-    bool  CanUse()              const { return coolDown_.CanUse(); }
-    bool  IsReadyFrame()        const { return coolDown_.IsReadyFrame(); }
+    /** モーション倍率の取得 */
+    inline float GetMotionValues()     const { return motionValues_; }
+    /** 現在のクールダウンの取得 */
+    inline float GetCoolTimer()        const { return coolDown_.GetTimer(); }
+    /** 消費するスタミナの量を取得 */
+    inline float GetDecreaseStamina()  const { return decreaseStamina_; }
+    /** バイブレーションの時間を取得 */
+    inline float GetVibrationTime()  const { return vibrationTime_; }
+    /** バイブレーションの強さを取得 */
+    inline float GetVibrationForce()  const { return vibrationForce_; }
+    /** 使用可能か */
+    inline bool  CanUse()              const { return coolDown_.CanUse(); }
+    /** 使用可能か(スキルが使用可能になった1フレームのみ取得) */
+    inline bool  IsReadyFrame()        const { return coolDown_.IsReadyFrame(); }
 };
 
+/** 実体あるものが初期に設定するパラメータの構造体 */
 struct ActorInitParam
 {
-    Vector3 pos_ = Vector3::Zero; //!< 座標
-    Quaternion rot_ = Quaternion::Identity; //!< 回転
-    Vector3 scal_ = Vector3::Zero; //!< 大きさ
-    Vector3 collisionHeightUpValue_ = Vector3::Zero; //!< コリジョンの高さを上げる量
-    float collisionRadius_ = 0.0f;  //!< コリジョンの半径
-    float collisionHeight_ = 0.0f;  //!< コリジョンの高さ
-    float charaConRadius_ = 0.0f;  //!< キャラコンの半径
-    float charaConHeight_ = 0.0f;  //!< キャラコンの高さ
+    Vector3 pos_ = Vector3::Zero;                       //!< 座標
+    Quaternion rot_ = Quaternion::Identity;             //!< 回転
+    Vector3 scal_ = Vector3::Zero;                      //!< 大きさ
+    Vector3 collisionHeightUpValue_ = Vector3::Zero;    //!< コリジョンの高さを上げる量
+    float collisionRadius_ = 0.0f;                      //!< コリジョンの半径
+    float collisionHeight_ = 0.0f;                      //!< コリジョンの高さ
+    float charaConRadius_ = 0.0f;                       //!< キャラコンの半径
+    float charaConHeight_ = 0.0f;                       //!< キャラコンの高さ
 };
+
+
 
 /** 実体あるもののステータス */
 class ActorStatus
@@ -103,7 +119,9 @@ protected:
 
 
 public:
-    ActorStatus()          {}
+    /** コンストラクタ */
+    ActorStatus() {}
+    /** デストラクタ */
     virtual ~ActorStatus() {}
 
     /** 毎フレーム呼ぶ。フレームフラグをリセットする */
@@ -111,21 +129,30 @@ public:
 
 
 public:
-    ActorInitParam GetInitParam()              const { return initParam_; }
-    int   GetHP()                              const { return hp_; }
-    int   GetMaxHP()                           const { return maxHp_; }
-    // virtual：PlayerStatus/BossStatus でそれぞれオーバーライドする
-    virtual int   GetAttack()                  const { return attack_; }
-    int   GetCritical()                        const { return critical_; }
-    float GetCriticalDamageMultiplier()        const { return criticalDamageMultiplier_; }
-    virtual float GetMoveSpeedBase()           const { return moveSpeedBase_; }
-    bool  IsHpDepleted()                const { return hp_ <= 0; } /* HPが0になったかを確認 : ルール設定時に使用 */
-    bool  IsDead()                      const { return isDead_; } /* 死亡しているかを確認 : BattleManagerにてクリアかオーバーか確認するために使用 */
-    bool  IsTakeDamage()                const { return isTakeDamage_; }
+    /** 実体あるものの初期パラメータを取得 */
+    inline ActorInitParam GetInitParam() const { return initParam_; }
+    /** 現在のHPを取得 */
+    inline int GetHP() const { return hp_; }
+    /** 最大HPを取得 */
+    inline int GetMaxHP() const { return maxHp_; }
+    /** 基礎攻撃力の取得 */
+    inline virtual int GetAttack() const { return attack_; }
+    /** クリティカル率を取得 */
+    inline int GetCritical() const { return critical_; }
+    /** クリティカル時のダメージ倍率の取得 */
+    inline float GetCriticalDamageMultiplier() const { return criticalDamageMultiplier_; }
+    /** 基礎移動速度の取得 */
+    inline virtual float GetMoveSpeedBase() const { return moveSpeedBase_; }
+    /** 体力が0以下か */
+    inline bool IsHpDepleted() const { return hp_ <= 0; } 
+    /** 死亡したか */
+    inline bool IsDead() const { return isDead_; } 
+    /** ダメージを受けたか */
+    inline bool IsTakeDamage() const { return isTakeDamage_; }
 
 
 public:
-    /** ダメージを与える。HP を減算し isTakeDamage_ を立てる */
+    /** ダメージを与える(hpがマイナスにならないようにクランプ) */
     void Damage(int damage)
     {
         hp_ -= damage;
@@ -133,14 +160,15 @@ public:
         isTakeDamage_ = true;
     }
 
-    /** 回復する。maxHp_ を超えないようにクランプ */
+    /** 回復処理(maxHp_ を超えないようにクランプする) */
     void Heal(int value)
     {
         hp_ += value;
         if (hp_ > maxHp_) hp_ = maxHp_;
     }
 
-    void Die() { isDead_ = true; }
+    /** 死亡した */
+    inline void Die() { isDead_ = true; }
 
 public:
     /** 派生型かどうか確認する */
@@ -158,22 +186,25 @@ public:
 class CharacterStatus : public ActorStatus
 {
 public:
-    CharacterStatus()          {}
+    /** コンストラクタ */
+    CharacterStatus() {}
+    /** デストラクタ */
     virtual ~CharacterStatus() {}
-
+    /** 更新 */
     virtual void Update() override { ActorStatus::Update(); }
 };
+
 
 
 /** プレイヤーのスキルステータス */
 class PlayerSkillStatus
 {
 private:
-    std::unordered_map<std::string, SkillSlot> slots_; //!< スロット名 → SkillSlot
+    std::unordered_map<std::string, SkillSlot> slots_; //!< スキルの名前とそのスキルのパラメータを格納
 
 
 public:
-    PlayerSkillStatus()  {}
+    PlayerSkillStatus() {}
     ~PlayerSkillStatus() {}
 
     /** 毎フレーム全スロットのクールダウンを更新する */
@@ -188,13 +219,13 @@ public:
 
 public:
     /** スキルをスロットに装備する */
-    void EquipSkill(const std::string& slotName,
-                    const std::string& category,
-                    const std::string& skillKey)
+    void EquipSkill(const std::string& slotName, const std::string& category, const std::string& skillKey)
     {
+        // プレイヤーのスキルのパラメータを取得
         const auto* param = ParameterManager::Get().GetPlayerSkill(category, skillKey);
         if (!param) { return; }
 
+        // パラメータの設定
         SkillSlot slot;
         slot.Init(skillKey, param->motionValues, param->cooldown, param->decreaseStamina, param->vibrationTime, param->vibrationForce);
         slots_[slotName] = slot;
@@ -205,6 +236,7 @@ public:
     /** スキルを使用する。クールダウンを開始させる */
     void Activate(const std::string& slotName)
     {
+        // 指定した名前でスキルを捜索、そのスキルが使用する
         auto it = slots_.find(slotName);
         if (it != slots_.end()) { it->second.Activate(); }
     }
@@ -212,6 +244,7 @@ public:
     /** スキルが使用可能か */
     bool CanUse(const std::string& slotName) const
     {
+        // 指定した名前でスキルを捜索、そのスキルが使用可能か見る
         auto it = slots_.find(slotName);
         return (it != slots_.end()) && it->second.CanUse();
     }
@@ -219,6 +252,7 @@ public:
     /** 残りクールタイムを取得する */
     float GetCoolTimer(const std::string& slotName) const
     {
+        // 指定した名前でスキルを捜索、そのスキルのクールタイムを取得
         auto it = slots_.find(slotName);
         return (it != slots_.end()) ? it->second.GetCoolTimer() : 0.0f;
     }
@@ -226,6 +260,7 @@ public:
     /** 指定スロットのモーション倍率を取得する */
     float GetMotionValues(const std::string& slotName) const
     {
+        // 指定した名前でスキルを捜索、そのスキルのモーション倍率を取得
         auto it = slots_.find(slotName);
         return (it != slots_.end()) ? it->second.GetMotionValues() : 0.0f;
     }
@@ -233,6 +268,7 @@ public:
     /** 指定スキルのバイブレーション時間を取得する */
     float GetVibrationTimeValues(const std::string& skillKey) const
     {
+        // 指定した名前でスキルを捜索、そのスキルのバイブレーション時間を取得
         auto it = slots_.find(skillKey);
         return (it != slots_.end()) ? it->second.GetVibrationTime() : 0.0f;
     }
@@ -240,6 +276,7 @@ public:
     /** 指定スキルのバイブレーション力を取得する */
     float GetVibrationForceValues(const std::string& skillKey) const
     {
+        // 指定した名前でスキルを捜索、そのスキルのバイブレーションの強さを取得
         auto it = slots_.find(skillKey);
         return (it != slots_.end()) ? it->second.GetVibrationForce() : 0.0f;
     }
@@ -247,30 +284,28 @@ public:
     /** 指定スロットのスタミナ消費量を取得 */
     float GetDecreaseStamina(const std::string& slotName) const
     {
+        // 指定した名前でスキルを捜索、そのスキルのスタミナ消費量を取得
         auto it = slots_.find(slotName);
         return (it != slots_.end()) ? it->second.GetDecreaseStamina() : 0.0f;
     }
 
 public:
-    /** 全スロットを取得する */
-    const std::unordered_map<std::string, SkillSlot>& GetAllSlots() const { return slots_; }
+    /** 全スキルスロットを取得する */
+    inline const std::unordered_map<std::string, SkillSlot>& GetAllSlots() const { return slots_; }
 };
 
 
-/* ============================================================ */
-/*  BossSkillStatus                                              */
-/*  ボスの全スキルスロットを管理する                             */
-/*  JSON のスキルキーをそのままスロットキーとして保持する        */
-/*  Init() で対象ボスの全スキルを一括読み込みする               */
-/*  クールダウンは各 SkillSlot が 1 対 1 で持つ                 */
-/* ============================================================ */
+
+/** ボスのスキルステータス */
 class BossSkillStatus
 {
 private:
-    std::unordered_map<std::string, SkillSlot> slots_; //!< スキルキー
+    std::unordered_map<std::string, SkillSlot> slots_; //!< スキルの名前とそのスキルのパラメータを格納
 
 public:
-    BossSkillStatus()  {}
+    /** コンストラクタ */
+    BossSkillStatus() {}
+    /** デストラクタ */
     ~BossSkillStatus() {}
 
     /** 毎フレーム全スロットのクールダウンを更新する */
@@ -282,13 +317,17 @@ public:
         }
     }
 
+
 public:
-    /** ParameterManager から対象ボスの全スキルを一括で読み込んで初期化する */
+    /** 対象ボスの全スキルを一括で読み込んで初期化する */
     void Init(const std::string& characterKey)
     {
         slots_.clear();
 
+        // キャラクターの名前から使用するスキルのパラメータをそれぞれ取得
         auto skills = ParameterManager::Get().GetBossSkillsByCategory(characterKey);
+
+        // 取得した情報をもとにスキルそれぞれにパラメータを設定
         for (const auto* param : skills)
         {
             SkillSlot slot;
@@ -298,10 +337,7 @@ public:
     }
 
 public:
-    /** 
-     * スキルを使用する。クールダウンを開始させる 
-     * speedMul : 攻撃速度倍率。大きいほどクールタイムが短くなる（ボスの調子システムなどから渡す） 
-     */
+    /** スキルを使用する。クールダウンを開始させる  */
     void Activate(const std::string& skillKey, float speedMul = 1.0f)
     {
         auto it = slots_.find(skillKey);
@@ -315,7 +351,7 @@ public:
         return (it != slots_.end()) && it->second.CanUse();
     }
 
-    /** 残りクールタイムを取得する（UI 表示用） */
+    /** 残りクールタイムを取得する */
     float GetCoolTimer(const std::string& skillKey) const
     {
         auto it = slots_.find(skillKey);
@@ -345,7 +381,7 @@ public:
 
 public:
     /** 全スロットを取得する */
-    const std::unordered_map<std::string, SkillSlot>& GetAllSlots() const { return slots_; }
+    inline const std::unordered_map<std::string, SkillSlot>& GetAllSlots() const { return slots_; }
 };
 
 
@@ -397,26 +433,25 @@ private:
     float exhaustedRecoverPerFrame_  = 0.0f; //!< 1フレームあたりの回復量（枯渇中）
 
     /* スタミナ：実行時の状態 */
-    float           stamina_                = 0.0f; //!< 現在スタミナ
-    StaminaState    staminaState_           = StaminaState::enNone; //!< スタミナ状態
-    bool            isExhausted_            = false; //!< スタミナ枯渇フラグ
+    float           stamina_      = 0.0f;                   //!< 現在スタミナ量
+    StaminaState    staminaState_ = StaminaState::enNone;   //!< 現在のスタミナ状態
+    bool            isExhausted_  = false;                  //!< スタミナ枯渇フラグ
     
-
-    /* 移動速度 */
-    float runSpeedBase_              = 0.0f; //!< 走り時のベース移動速度
-
     /* その他 */
-    uint32_t          invincibleFlag_    = 0;     //!< 無敵フラグ（ビット演算）
-    PlayerSkillStatus skillStatus_;               //!< スキルスロット＋クールダウン管理
+    float             runSpeedBase_     = 0.0f; //!< 走る時のベース移動速度
+    uint32_t          invincibleFlag_   = 0;    //!< 無敵フラグ（ビット演算）
+    PlayerSkillStatus skillStatus_;             //!< スキルスロット＋クールダウン管理
 
 
 public:
+    /** コンストラクタ */
     PlayerStatus() {}
+    /** デストラクタ */
     ~PlayerStatus() {}
 
     /**
      * 毎フレーム呼ぶ。
-     * 回復するのは Idle と Walk のみ。それ以外（攻撃など）は増減なし
+     * 回復するのは Idle と Walk のみ。それ以外は増減なし
      */
     virtual void Update()
     {
@@ -424,14 +459,16 @@ public:
         const float delta = g_gameTime->GetFrameDeltaTime();
 
         // 1フレームあたりの増減量を毎フレーム再計算
-        staminaDrainPerFrame_ = staminaDrainPerSec_ * delta;
-        staminaRecoverPerFrame_ = staminaRecoverPerSec_ * delta;
-        exhaustedRecoverPerFrame_ = exhaustedRecoverPerSec_ * delta;
+        staminaDrainPerFrame_ = staminaDrainPerSec_ * delta;         // 消費量
+        staminaRecoverPerFrame_ = staminaRecoverPerSec_ * delta;     // 通常時の回復量
+        exhaustedRecoverPerFrame_ = exhaustedRecoverPerSec_ * delta; // 枯渇時の回復量
 
+        // スタミナを消費
         if (staminaState_ == StaminaState::enDrain && !isExhausted_)
         {
             DrainStamina(staminaDrainPerFrame_);
         }
+        // スタミナを回復
         else if (staminaState_ == StaminaState::enRecover || staminaState_ == StaminaState::enDepletion)
         {
             RecoverStamina(isExhausted_ ? exhaustedRecoverPerFrame_ : staminaRecoverPerFrame_);
@@ -456,13 +493,14 @@ public:
             }
         }
 
+        // 更新
         skillStatus_.Update();
         CharacterStatus::Update();
     }
 
 
 public:
-    /** ParameterManager からキャラクターステータスを読み込んで初期化する */
+    /** パラメータの初期化 */
     void Init(const std::string& characterKey = "Player")
     {
         // パラメータをjsonファイルから取得
@@ -471,84 +509,89 @@ public:
 
         // パラメータを設定
         {
-            initParam_.pos_ = param->position;
-            initParam_.rot_ = param->rotation;
-            initParam_.scal_ = param->scale;
-            initParam_.collisionHeightUpValue_ = param->collisionPosUp;
-            initParam_.collisionRadius_ = param->collisionSizeRadius;
-            initParam_.collisionHeight_ = param->collisionSizeHeight;
-            initParam_.charaConRadius_ = param->charaConSizeRadius;
-            initParam_.charaConHeight_ = param->charaConSizeHeight;
-            hp_ = param->hp;
-            maxHp_ = param->hp;
-            attack_ = param->attack;
-            critical_ = param->criticalRate;
-            criticalDamageMultiplier_ = param->criticalDamageMultiplier;
+            initParam_.pos_ = param->position;                           // 座標
+            initParam_.rot_ = param->rotation;                           // 回転
+            initParam_.scal_ = param->scale;                             // 拡縮
+            initParam_.collisionHeightUpValue_ = param->collisionPosUp;  // コリジョンを上げる量
+            initParam_.collisionRadius_ = param->collisionSizeRadius;    // コリジョンの半径
+            initParam_.collisionHeight_ = param->collisionSizeHeight;    // コリジョンの高さ
+            initParam_.charaConRadius_ = param->charaConSizeRadius;      // キャラコンの半径
+            initParam_.charaConHeight_ = param->charaConSizeHeight;      // キャラコンの高さ
+            hp_ = param->hp;                                             // 現在の体力量
+            maxHp_ = param->hp;                                          // 最大の体力量
+            attack_ = param->attack;                                     // 基礎攻撃力量
+            critical_ = param->criticalRate;                             // クリティカル率
+            criticalDamageMultiplier_ = param->criticalDamageMultiplier; // クリティカル時のダメージ倍率
 
             // スタミナ設定値
-            maxStamina_ = param->stamina.maxStamina;
-            stamina_ = maxStamina_;
-            staminaDrainPerSec_ = param->stamina.drainPerSec;
-            staminaRecoverPerSec_ = param->stamina.recoverPerSec;
-            exhaustedRecoverPerSec_ = param->stamina.exhaustedRecoverPerSec;
-            exhaustedThreshold_ = param->stamina.exhaustedThreshold;
-            exhaustedSpeedRate_ = param->stamina.exhaustedSpeedRate;
+            maxStamina_ = param->stamina.maxStamina;                         // 最大のスタミナ量
+            stamina_ = maxStamina_;                                          // 現在のスタミナ量
+            staminaDrainPerSec_ = param->stamina.drainPerSec;                // 1秒あたりの消費量
+            staminaRecoverPerSec_ = param->stamina.recoverPerSec;            // 1秒あたりの回復量(通常)
+            exhaustedRecoverPerSec_ = param->stamina.exhaustedRecoverPerSec; // 1秒あたりの回復量(枯渇)
+            exhaustedThreshold_ = param->stamina.exhaustedThreshold;         // 枯渇解除に必要なスタミナ量
+            exhaustedSpeedRate_ = param->stamina.exhaustedSpeedRate;         // 枯渇時の移動速度倍率
 
             // 移動速度
-            moveSpeedBase_ = param->moveSpeedBase;
-            runSpeedBase_ = param->runSpeedBase;
+            moveSpeedBase_ = param->moveSpeedBase; // 通常の移動速度
+            runSpeedBase_ = param->runSpeedBase;   // 走るときの移動速度
         }
     }
 
     /** スキルをスロットに装備する。Init() の後に呼ぶ */
-    void EquipSkill(const std::string& slotName,
-                    const std::string& category,
-                    const std::string& skillKey)
+    inline void EquipSkill(const std::string& slotName, const std::string& category, const std::string& skillKey)
     {
         skillStatus_.EquipSkill(slotName, category, skillKey);
     }
 
 
 public:
-    /* スタミナ取得 */
-    float GetStamina()              const { return stamina_; }
-    float GetMaxStamina()           const { return maxStamina_; }
-    bool  IsExhausted()             const { return isExhausted_; }
-    StaminaState GetStaminaState()  const { return staminaState_; }
-    void SetStaminaState(const StaminaState state) { staminaState_ = state; }
+    /** 現在のスタミナ量を取得 */
+    inline float GetStamina()              const { return stamina_; }
+    /** 最大のスタミナ量の取得 */
+    inline float GetMaxStamina()           const { return maxStamina_; }
+    /** スタミナ枯渇状態か */
+    inline bool  IsExhausted()             const { return isExhausted_; }
+    /** 現在のスタミナの状態を取得 */
+    inline StaminaState GetStaminaState()  const { return staminaState_; }
+    /** スタミナの状態を設定 */
+    inline void SetStaminaState(const StaminaState state) { staminaState_ = state; }
 
-    /* スタミナ設定値取得（UIなどデバッグ用） */
-    float GetStaminaDrainPerSec()       const { return staminaDrainPerSec_; }
-    float GetStaminaRecoverPerSec()     const { return staminaRecoverPerSec_; }
-    float GetExhaustedRecoverPerSec()   const { return exhaustedRecoverPerSec_; }
+    /** 毎秒のスタミナ消費量の取得 */
+    inline float GetStaminaDrainPerSec()       const { return staminaDrainPerSec_; }
+    /** 毎秒のスタミナ回復量の取得(通常) */
+    inline float GetStaminaRecoverPerSec()     const { return staminaRecoverPerSec_; }
+    /** 毎秒のスタミナ回復量の取得(枯渇) */
+    inline float GetExhaustedRecoverPerSec()   const { return exhaustedRecoverPerSec_; }
 
-    /* 1フレームあたりの増減量取得 */
-    float GetStaminaDrainPerFrame()     const { return staminaDrainPerFrame_; }
-    float GetStaminaRecoverPerFrame()   const { return staminaRecoverPerFrame_; }
-    float GetExhaustedRecoverPerFrame() const { return exhaustedRecoverPerFrame_; }
+    /** 1フレームあたりのスタミナの消費量を取得 */
+    inline float GetStaminaDrainPerFrame()     const { return staminaDrainPerFrame_; }
+    /** 1フレームあたりのスタミナの回復量を取得(通常) */
+    inline float GetStaminaRecoverPerFrame()   const { return staminaRecoverPerFrame_; }
+    /** 1フレームあたりのスタミナの回復量を取得(枯渇) */
+    inline float GetExhaustedRecoverPerFrame() const { return exhaustedRecoverPerFrame_; }
 
-    // DamageCalculator は ActorStatus* 経由でこれを呼ぶため virtual override が必須
-    int GetAttack() const override
-    {
-        return attack_;
-    }
+    /**
+     * 基礎攻撃力を取得 
+     * DamageCalculator は ActorStatus* 経由でこれを呼ぶため virtual override が必須
+     */
+    inline int GetAttack() const override { return attack_; }
 
-    float GetMoveSpeedBase() const override
-    {
-        return moveSpeedBase_;
-    }
+    /**
+     * 基礎移動速度を取得
+     * DamageCalculator は ActorStatus* 経由でこれを呼ぶため virtual override が必須
+     */
+    inline float GetMoveSpeedBase() const override { return moveSpeedBase_;}
 
-    /* 移動速度取得 */
-    float GetRunSpeedBase() const
-    {
-        return runSpeedBase_;
-    }
-    float GetExhaustedSpeedRate()   const { return exhaustedSpeedRate_; }
+    /** 走るときの移動速度を取得 */
+    inline float GetRunSpeedBase() const { return runSpeedBase_;}
+    /** 枯渇中の移動速度を取得 */
+    inline float GetExhaustedSpeedRate()   const { return exhaustedSpeedRate_; }
 
 
 public:
     /** スキルを使用する。クールダウンを開始させる */
-    void  ActivateSkill(const std::string& slotName) { skillStatus_.Activate(slotName); }
+    inline void  ActivateSkill(const std::string& slotName) { skillStatus_.Activate(slotName); }
 
     /** クールダウン開始 */
     void ExecuteSpecialAbility()
@@ -607,37 +650,37 @@ public:
     }
 
     /** スキルが使用可能か */
-    bool  CanUseSkill(const std::string& slotName)       const { return skillStatus_.CanUse(slotName); }
+    inline bool  CanUseSkill(const std::string& slotName) const { return skillStatus_.CanUse(slotName); }
 
     /** 残りクールタイムを取得する（UI 表示用） */
-    float GetSkillCoolTimer(const std::string& slotName) const { return skillStatus_.GetCoolTimer(slotName); }
+    inline float GetSkillCoolTimer(const std::string& slotName) const { return skillStatus_.GetCoolTimer(slotName); }
 
     /** スキルのモーション倍率を取得する */
-    float GetSkillMotionValues(const std::string& slotName) const { return skillStatus_.GetMotionValues(slotName); }
+    inline float GetSkillMotionValues(const std::string& slotName) const { return skillStatus_.GetMotionValues(slotName); }
 
     /** スキルのモーション倍率を取得する */
-    float GetVibrationTimeValues(const std::string& skillKey) const { return skillStatus_.GetVibrationTimeValues(skillKey); }
+    inline float GetVibrationTimeValues(const std::string& skillKey) const { return skillStatus_.GetVibrationTimeValues(skillKey); }
 
     /** スキルのモーション倍率を取得する */
-    float GetVibrationForceValues(const std::string& skillKey) const { return skillStatus_.GetVibrationForceValues(skillKey); }
+    inline float GetVibrationForceValues(const std::string& skillKey) const { return skillStatus_.GetVibrationForceValues(skillKey); }
 
     /** スキルステータス全体へのアクセス */
-    const PlayerSkillStatus& GetSkillStatus() const { return skillStatus_; }
-          PlayerSkillStatus& GetSkillStatus()       { return skillStatus_; }
+    inline const PlayerSkillStatus& GetSkillStatus() const { return skillStatus_; }
+    inline       PlayerSkillStatus& GetSkillStatus()       { return skillStatus_; }
 
 
 public:
-    /* 無敵フラグ操作 */
+    /** 無敵フラグ操作 */
     // |= : 指定フラグのビットを 1 にする（他のフラグはそのまま）
-    void AddInvincible(InvincibleFlags flag)    { invincibleFlag_ |=  static_cast<uint32_t>(flag); }
+    inline void AddInvincible(InvincibleFlags flag)    { invincibleFlag_ |=  static_cast<uint32_t>(flag); }
     // &= ~ : 指定フラグのビットを 0 にする（~ で対象ビットだけ反転させてから AND で消す）
-    void RemoveInvincible(InvincibleFlags flag) { invincibleFlag_ &= ~static_cast<uint32_t>(flag); }
+    inline void RemoveInvincible(InvincibleFlags flag) { invincibleFlag_ &= ~static_cast<uint32_t>(flag); }
     // != 0 : どれか1つでもフラグが立っていれば true
-    bool IsInvincible()      const { return invincibleFlag_ != 0; }
+    inline bool IsInvincible()      const { return invincibleFlag_ != 0; }
     // & : enJustAvoid のビットだけ取り出して 0 以外なら true（ジャスト回避ウィンドウ中）
-    bool IsJustAvoiding()    const { return (invincibleFlag_ & static_cast<uint32_t>(InvincibleFlags::enJustAvoid)) != 0; }
+    inline bool IsJustAvoiding()    const { return (invincibleFlag_ & static_cast<uint32_t>(InvincibleFlags::enJustAvoid)) != 0; }
     // & : enAvoid のビットだけ取り出して 0 以外なら true（回避ロール中）
-    bool IsNormalDodging()   const { return (invincibleFlag_ & static_cast<uint32_t>(InvincibleFlags::enAvoid)) != 0; }
+    inline bool IsNormalDodging()   const { return (invincibleFlag_ & static_cast<uint32_t>(InvincibleFlags::enAvoid)) != 0; }
 
 
     /*************** スタミナの増減に関する関数 ***************/
@@ -704,24 +747,18 @@ class BossStatus : public CharacterStatus
 {
 private:
     BossSkillStatus skillStatus_; //!< スキルスロット＋クールダウン管理
-
-    // ボスの感情システム（このBossStatusが所有する）
-    // プレイヤーの特定攻撃Hit/ジャスト回避/HP閾値の3ルートで強気⇔動揺の段階が変化する
-    EmotionSystem emotionSystem_;
-
-    // ステータス修正子リスト（IBossStatusModifier* の非所有ポインタ）
-    // 現在は emotionSystem_ のみ登録されている
-    // 将来、他の修正要因を追加する際もこのリストに push_back するだけでよい
-    std::vector<IBossStatusModifier*> modifiers_;
+    EmotionSystem emotionSystem_; //!< 感情システム
+    std::vector<IBossStatusModifier*> modifiers_; //!< ボスのステータスへの倍率を修正する際の要因を設定する
 
 
 public:
+    /** コンストラクタ */
     BossStatus()
     {
-        // EmotionSystem を修正子リストに登録する
-        // modifiers_ はポインタのリストなので emotionSystem_ のアドレスを持つだけ（所有しない）
+        // ステータスへの倍率修正の要因をここで設定
         modifiers_.push_back(&emotionSystem_);
     }
+    /** デストラクタ */
     ~BossStatus() {}
 
     /** 毎フレーム呼ぶ。スキルのクールダウン更新と基底フラグリセットを行う */
@@ -739,22 +776,23 @@ public:
         const auto* param = ParameterManager::Get().GetCharacterStatus(characterKey);
         if (param)
         {
-            initParam_.pos_ = param->position;
-            initParam_.rot_ = param->rotation;
-            initParam_.scal_ = param->scale;
-            initParam_.collisionHeightUpValue_ = param->collisionPosUp;
-            initParam_.collisionRadius_ = param->collisionSizeRadius;
-            initParam_.collisionHeight_ = param->collisionSizeHeight;
-            initParam_.charaConRadius_ = param->charaConSizeRadius;
-            initParam_.charaConHeight_ = param->charaConSizeHeight;
-            hp_                       = param->hp;
-            maxHp_                    = param->hp;
-            attack_                   = param->attack;
-            critical_                 = param->criticalRate;
-            criticalDamageMultiplier_ = param->criticalDamageMultiplier;
-            moveSpeedBase_            = param->moveSpeedBase; //!< ボスの移動速度
+            initParam_.pos_ = param->position;                           //!< 座標
+            initParam_.rot_ = param->rotation;                           //!< 回転
+            initParam_.scal_ = param->scale;                             //!< 拡縮
+            initParam_.collisionHeightUpValue_ = param->collisionPosUp;  //!< コリジョンを上にあげる
+            initParam_.collisionRadius_ = param->collisionSizeRadius;    //!< コリジョンの半径
+            initParam_.collisionHeight_ = param->collisionSizeHeight;    //!< コリジョンの高さ
+            initParam_.charaConRadius_ = param->charaConSizeRadius;      //!< キャラコンの半径
+            initParam_.charaConHeight_ = param->charaConSizeHeight;      //!< キャラコンの高さ
+            hp_                       = param->hp;                       //!< 現在の体力量
+            maxHp_                    = param->hp;                       //!< 最大の体力量
+            attack_                   = param->attack;                   //!< 基礎攻撃力
+            critical_                 = param->criticalRate;             //!< クリティカル率
+            criticalDamageMultiplier_ = param->criticalDamageMultiplier; //!< クリティカル時のダメージ倍率
+            moveSpeedBase_            = param->moveSpeedBase;            //!< ボスの移動速度
         }
 
+        // 攻撃のステータス設定
         skillStatus_.Init(characterKey);
 
         // JSONから倍率テーブルを上書きロードする（コンストラクタ時点ではParameterManager未初期化のためここで呼ぶ）
@@ -762,44 +800,46 @@ public:
     }
 
 public:
-    // 攻撃力を返す。modifiers_ の全倍率を掛け合わせて返す
-    // DamageCalculator は ActorStatus* 経由でこれを呼ぶため virtual override が必須
-    int GetAttack() const override
+    /**
+     * 基礎攻撃力を取得
+     * DamageCalculator は ActorStatus* 経由でこれを呼ぶため virtual override が必須
+     */
+    inline int GetAttack() const override
     {
         float mul = 1.0f;
         for (auto* m : modifiers_) { mul *= m->GetAttackMul(); }
         return static_cast<int>(attack_ * mul);
     }
 
-    // 攻撃速度倍率を返す。modifiers_ の倍率を掛け合わせて返す（スキルのクールダウンに反映する）
-    float GetAttackSpeedMul() const
+    /**
+     * 攻撃速度倍率を取得
+     * DamageCalculator は ActorStatus* 経由でこれを呼ぶため virtual override が必須
+     */
+    inline float GetAttackSpeedMul() const
     {
         float mul = 1.0f;
         for (auto* m : modifiers_) { mul *= m->GetAttackSpeedMul(); }
         return mul;
     }
 
-    // 被ダメージ倍率を返す。modifiers_ の倍率を掛け合わせて返す
-    // CollisionHitManager が最終ダメージに掛けて使う
-    float GetDamageTakenMul() const
+    /** 被ダメージ倍率を取得 */
+    inline float GetDamageTakenMul() const
     {
         float mul = 1.0f;
         for (auto* m : modifiers_) { mul *= m->GetDamageTakenMul(); }
         return mul;
     }
 
-    // アニメーション再生速度倍率を返す。modifiers_ の倍率を掛け合わせて返す
-    // 攻撃速度（GetAttackSpeedMul）とは独立に調整できる演出用の値。BossState.cpp が PlayAnimation に渡す
-    float GetAnimationSpeedMul() const
+    /** アニメーション再生速度倍率を取得 */
+    inline float GetAnimationSpeedMul() const
     {
         float mul = 1.0f;
         for (auto* m : modifiers_) { mul *= m->GetAnimationSpeedMul(); }
         return mul;
     }
 
-    // エフェクト再生速度倍率を返す。modifiers_ の倍率を掛け合わせて返す
-    // 攻撃速度（GetAttackSpeedMul）とは独立に調整できる演出用の値。BossState.cpp が PlayEffect に渡す
-    float GetEffectSpeedMul() const
+    /** エフェクト再生速度倍率を取得 */
+    inline float GetEffectSpeedMul() const
     {
         float mul = 1.0f;
         for (auto* m : modifiers_) { mul *= m->GetEffectSpeedMul(); }
@@ -807,28 +847,28 @@ public:
     }
 
     // 感情システムへのアクセス（CollisionHitManager や BossEmotionPhaseManager から使う）
-    EmotionSystem& GetEmotionSystem() { return emotionSystem_; }
+    inline EmotionSystem& GetEmotionSystem() { return emotionSystem_; }
 
 public:
     /** スキルを使用する。クールダウンを開始させる（現在の攻撃速度倍率をクールダウンに反映する） */
-    void  ActivateSkill(const std::string& skillKey) { skillStatus_.Activate(skillKey, GetAttackSpeedMul()); }
+    inline void  ActivateSkill(const std::string& skillKey) { skillStatus_.Activate(skillKey, GetAttackSpeedMul()); }
 
     /** スキルが使用可能か */
-    bool  CanUseSkill(const std::string& skillKey)       const { return skillStatus_.CanUse(skillKey); }
+    inline bool  CanUseSkill(const std::string& skillKey)       const { return skillStatus_.CanUse(skillKey); }
 
     /** 残りクールタイムを取得する（UI 表示用） */
-    float GetSkillCoolTimer(const std::string& skillKey) const { return skillStatus_.GetCoolTimer(skillKey); }
+    inline float GetSkillCoolTimer(const std::string& skillKey) const { return skillStatus_.GetCoolTimer(skillKey); }
 
     /** スキルのモーション倍率を取得する */
-    float GetSkillMotionValues(const std::string& skillKey) const { return skillStatus_.GetMotionValues(skillKey); }
+    inline float GetSkillMotionValues(const std::string& skillKey) const { return skillStatus_.GetMotionValues(skillKey); }
     
     /** スキルのモーション倍率を取得する */
-    float GetVibrationTimeValues(const std::string& skillKey) const { return skillStatus_.GetVibrationTimeValues(skillKey); }
+    inline float GetVibrationTimeValues(const std::string& skillKey) const { return skillStatus_.GetVibrationTimeValues(skillKey); }
 
     /** スキルのモーション倍率を取得する */
-    float GetVibrationForceValues(const std::string& skillKey) const { return skillStatus_.GetVibrationForceValues(skillKey); }
+    inline float GetVibrationForceValues(const std::string& skillKey) const { return skillStatus_.GetVibrationForceValues(skillKey); }
 
     /** スキルステータス全体へのアクセス */
-    const BossSkillStatus& GetSkillStatus() const { return skillStatus_; }
-          BossSkillStatus& GetSkillStatus()       { return skillStatus_; }
+    inline const BossSkillStatus& GetSkillStatus() const { return skillStatus_; }
+    inline       BossSkillStatus& GetSkillStatus()       { return skillStatus_; }
 };

@@ -1,5 +1,5 @@
 ﻿/**
- * Stage.cpp
+ * StaticObject.cpp
  *
  * ステージの描画を行う
  */
@@ -11,10 +11,11 @@
 
 void StaticObject::SetupSplatShader(Texture* splatMap, Texture* kusaTex, Texture* tuthiTex, Texture* fuyoudoTex)
 {
-	splatConfig_.splatMap   = splatMap;
-	splatConfig_.kusaTex    = kusaTex;
-	splatConfig_.tuthiTex   = tuthiTex;
-	splatConfig_.fuyoudoTex = fuyoudoTex;
+	// スプラットシェーダー用テクスチャを保持する（Init()内で参照する）
+	splatConfig_.splatMap   = splatMap;    // RGBスプラットマップ
+	splatConfig_.kusaTex    = kusaTex;     // 草テクスチャ
+	splatConfig_.tuthiTex   = tuthiTex;    // 岩土テクスチャ
+	splatConfig_.fuyoudoTex = fuyoudoTex;  // 腐葉土テクスチャ
 }
 
 void StaticObject::Init(const char* path, const Vector3& pos, const Quaternion& rot, const Vector3& scal)
@@ -29,15 +30,18 @@ void StaticObject::Init(const char* path, const Vector3& pos, const Quaternion& 
 		model_.SetExtraGBufferTextureSRV(3, splatConfig_.fuyoudoTex);
 	}
 	model_.Init(path);
-	transform_.localPosition = pos;
-	transform_.localRotation = rot;
-	transform_.localScale = scal;
+
+	// トランスフォームの初期値を設定（座標・回転・拡縮）
+	transform_.localPosition = pos;  // 座標
+	transform_.localRotation = rot;  // 回転
+	transform_.localScale = scal;    // 拡縮
 	transform_.UpdateTransform();
 
+	// 計算済みのワールド座標・回転・拡縮をモデルへ反映
 	model_.SetTRS(
-		transform_.position,
-		transform_.rotation,
-		transform_.scale
+		transform_.position,  // 座標
+		transform_.rotation,  // 回転
+		transform_.scale      // 拡縮
 	);
 	model_.Update();
 }

@@ -111,9 +111,13 @@ void RunState::Enter()
 	auto* status = player_->GetStatus()->As<PlayerStatus>();
 	status->SetStaminaState(PlayerStatus::StaminaState::enDrain);
 
+	// パラメータを取得
 	const auto* p = ParameterManager::Get().GetPlayerStateParam();
+
+	// タスクスケジューラを作成
 	taskScheduler_ = std::make_unique<TaskSchedulerSystem>();
-	// SEの再生
+
+	// SEの再生 
 	{
 		const int id = taskScheduler_->CreateLoopSequence(p->runSeInterval);
 		taskScheduler_->AddLoopTimer(id, p->walkLoopTime, [&](void) {

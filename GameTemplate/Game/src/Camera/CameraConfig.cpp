@@ -14,10 +14,12 @@ void CameraConfig::Initialize()
 {
     const auto* param = ParameterManager::Get().GetParameter<MasterBattleCommonParameter>(0);
 
-    defaultSensitivity_ = param->cameraParam.sensitivity;
-    defaultDistance_    = param->cameraParam.distance;
+    // JSONの値をリセット先の初期値として保持（感度・距離）
+    defaultSensitivity_ = param->cameraParam.sensitivity; // 感度の初期値
+    defaultDistance_    = param->cameraParam.distance;    // 距離の初期値
 
-    sensitivity_ = defaultSensitivity_;
-    distance_    = defaultDistance_;
-    invert_      = param->cameraParam.invert;
+    // 現在値も初期値で埋める（感度・距離・反転）
+    sensitivity_ = defaultSensitivity_;             // 感度
+    distance_    = defaultDistance_;                // 距離
+    invert_      = param->cameraParam.invert;       // 反転設定
 }
