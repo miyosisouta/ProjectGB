@@ -1,6 +1,6 @@
 ﻿/**
- * 
- * 
+ * Array.h
+ * 実行時にサイズを決定できる固定長配列クラス
  */
 #pragma once
 #include <iostream>
@@ -8,18 +8,18 @@
 #include <stdexcept>
 #include <algorithm>
 
-/* 
+/**
  * 実行時にサイズを決定できる固定長配列クラス
  */
 template <typename T>
 class AllocatedArray
 {
 private:
-    std::unique_ptr<T[]> data_;
+    std::unique_ptr<T[]> data_; //!< 確保した配列の実体
     std::size_t size_; //!< アニメーションリストの配列のサイズを決めるため
 
 public:
-    /* 型エイリアス（std::vector等との互換性のため）*/
+    /** 型エイリアス（std::vector等との互換性のため）*/
     using value_type = T;
     using size_type = std::size_t;
     using reference = T&;
@@ -29,31 +29,32 @@ public:
     using iterator = T*;
     using const_iterator = const T*;
 
-    /* 
+    /**
      * デフォルトコンストラクタ : 空の配列を作成
      * 実行前にCreate()を呼ぶ必要がある
-     */ 
+     */
     AllocatedArray()
         : data_(nullptr)
         , size_(0)
     {
     }
 
-    // 初期サイズ指定のコンストラクタ
+    /** 初期サイズ指定のコンストラクタ */
     explicit AllocatedArray(std::size_t size) : size_(0) {
         Create(size);
     }
 
-    /* コピーは禁止（固定配列の意図しないディープコピーを防ぐため）*/
+    /** コピーは禁止（固定配列の意図しないディープコピーを防ぐため）*/
     AllocatedArray(const AllocatedArray&) = delete;
+    /** コピー代入も禁止 */
     AllocatedArray& operator=(const AllocatedArray&) = delete;
 
-    /* 所有権の移動 (メモリコピーなしで受け渡せる) */
+    /** 所有権の移動 (メモリコピーなしで受け渡せる) */
     AllocatedArray(AllocatedArray&& other) noexcept
         : data_(std::move(other.data_)), size_(other.size_) {
         other.size_ = 0;
     }
-    /* 所有権の移動(ムーブ代入演算子) */
+    /** 所有権の移動(ムーブ代入演算子) */
     AllocatedArray& operator=(AllocatedArray&& other) noexcept {
         if (this != &other) {
             data_ = std::move(other.data_);
@@ -63,9 +64,9 @@ public:
         return *this;
     }
 
-    /* 
-     * 実行時に配列の要素数を指定してメモリを確保する 
-     * すでにメモリが確保されている場合は再確保 
+    /**
+     * 実行時に配列の要素数を指定してメモリを確保する
+     * すでにメモリが確保されている場合は再確保
      */
     void Create(std::size_t size) {
         if (size > 0) {
@@ -81,33 +82,42 @@ public:
 
     // --- ここからはstd::vector のようなアクセス機能 ---
 
-    /* イテレータの取得 */
-    iterator begin() { return data_.get(); }
-    iterator end() { return data_.get() + size_; }
-    const_iterator begin() const { return data_.get(); }
-    const_iterator end() const { return data_.get() + size_; }
-    const_iterator cbegin() const { return data_.get(); }
-    const_iterator cend() const { return data_.get() + size_; }
+    /** イテレータの取得 */
+    inline iterator begin() { return data_.get(); }
+    /** 終端イテレータの取得 */
+    inline iterator end() { return data_.get() + size_; }
+    /** イテレータの取得(const) */
+    inline const_iterator begin() const { return data_.get(); }
+    /** 終端イテレータの取得(const) */
+    inline const_iterator end() const { return data_.get() + size_; }
+    /** イテレータの取得(const専用) */
+    inline const_iterator cbegin() const { return data_.get(); }
+    /** 終端イテレータの取得(const専用) */
+    inline const_iterator cend() const { return data_.get() + size_; }
 
-    /* 容量 */
-    size_type size() const { return size_; }
-    bool empty() const { return size_ == 0; }
+    /** 要素数の取得 */
+    inline size_type size() const { return size_; }
+    /** 空か */
+    inline bool empty() const { return size_ == 0; }
 
-    /* 要素アクセス */
-    reference operator[](size_type pos) { return data_[pos]; }
-    const_reference operator[](size_type pos) const { return data_[pos]; }
+    /** 要素アクセス */
+    inline reference operator[](size_type pos) { return data_[pos]; }
+    /** 要素アクセス(const) */
+    inline const_reference operator[](size_type pos) const { return data_[pos]; }
 
-    /* 境界チェック付きアクセス */
+    /** 境界チェック付きアクセス */
     reference at(size_type pos) {
         if (pos >= size_) throw std::out_of_range("FixedArray::at: index out of bounds");
         return data_[pos];
     }
+    /** 境界チェック付きアクセス(const) */
     const_reference at(size_type pos) const {
         if (pos >= size_) throw std::out_of_range("FixedArray::at: index out of bounds");
         return data_[pos];
     }
 
-    /* 生ポインタの取得 */
-    pointer data() { return data_.get(); }
-    const_pointer data() const { return data_.get(); }
+    /** 生ポインタの取得 */
+    inline pointer data() { return data_.get(); }
+    /** 生ポインタの取得(const) */
+    inline const_pointer data() const { return data_.get(); }
 };

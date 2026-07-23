@@ -3,23 +3,23 @@
 /** キャラクターパラメータ用の構造体 */
 struct CharacterStatusDef
 {
-    uint32_t key = 0; // 検索用のCRC32ハッシュキー
+    uint32_t key = 0; //!< 検索用のCRC32ハッシュキー
 
-    uint16_t hp = 0;
-    uint8_t attack = 0;
-    float speed = 0.0f;
+    uint16_t hp = 0; //!< HP
+    uint8_t attack = 0; //!< 攻撃力
+    float speed = 0.0f; //!< 移動速度
 };
 
-// キャラクター1体分の設定情報をまとめる構造体
+/** キャラクター1体分の設定情報をまとめる構造体 */
 struct PlayerParam
 {
-    NormalAttackType nAttack = NormalAttackType::enNone;
-    AbilityType      ability = AbilityType::enNone;
-    UtilityType      utility = UtilityType::enNone;
+    NormalAttackType nAttack = NormalAttackType::enNone; //!< 装備中の通常攻撃
+    AbilityType      ability = AbilityType::enNone; //!< 装備中の特殊能力
+    UtilityType      utility = UtilityType::enNone; //!< 装備中の汎用スキル
 };
 
 
-/* キャラクター用データベース */
+/** キャラクター用データベース */
 class CharacterDataBase
 {
 private:
@@ -28,40 +28,49 @@ private:
     BossParam bossParam_; //!< ボスに必要なパラメータ
 
 
+private:
+    /** コンストラクタ */
+    CharacterDataBase();
+    /** デストラクタ */
+    ~CharacterDataBase();
+
+
 public:
     /* ============================================================================ */
     /* プレイヤーデータ */
     /* ============================================================================ */
 
-    /* プレイヤー用ゲッター・セッター */
-    void SetPlayerParam(const PlayerParam& param) { playerData_ = param; }
-    const PlayerParam& GetPlayerParam() const { return playerData_; }
+    /** プレイヤーパラメータの設定 */
+    inline void SetPlayerParam(const PlayerParam& param) { playerData_ = param; }
+    /** プレイヤーパラメータの取得 */
+    inline const PlayerParam& GetPlayerParam() const { return playerData_; }
 
     // 特定のスキルだけを書き換える用
-    void SetPlayerNormalAttack(NormalAttackType type) { playerData_.nAttack = type; }
-    void SetPlayerAbility(AbilityType type) { playerData_.ability = type; }
-    void SetPlayerUtility(UtilityType type) { playerData_.utility = type; }
+    /** 通常攻撃の設定 */
+    inline void SetPlayerNormalAttack(NormalAttackType type) { playerData_.nAttack = type; }
+    /** 特殊能力の設定 */
+    inline void SetPlayerAbility(AbilityType type) { playerData_.ability = type; }
+    /** 汎用スキルの設定 */
+    inline void SetPlayerUtility(UtilityType type) { playerData_.utility = type; }
 
 
     /* ============================================================================ */
     /* ボスデータ */
     /* ============================================================================ */
 
-    /* ボスのパラメータ */
-    void SetGameSettingParam(const BossParam& param) { bossParam_ = param; }   //!< 設定
-    const BossParam& GetGameParam() const { return bossParam_; }           //!< 取得
+    /** ボスのパラメータの設定 */
+    inline void SetGameSettingParam(const BossParam& param) { bossParam_ = param; }
+    /** ボスのパラメータの取得 */
+    inline const BossParam& GetGameParam() const { return bossParam_; }
 
-    /* ステージタイプ */
-    void SetStageType(BossType type) { bossParam_.stageType_ = type; }    //!< 設定
-    const BossType& GetStageType() const{ return bossParam_.stageType_; } //!< 取得
-    /* ゲームモード */
-    void SetGameModeType(GameModeType mode) { bossParam_.mode_ = mode; }      //!< 設定
-    const GameModeType& GetGameModeType() const { return bossParam_.mode_; }  //!< 取得
-
-
-private:
-    CharacterDataBase();
-    ~CharacterDataBase(); 
+    /** ステージタイプの設定 */
+    inline void SetStageType(BossType type) { bossParam_.stageType_ = type; }
+    /** ステージタイプの取得 */
+    inline const BossType& GetStageType() const{ return bossParam_.stageType_; }
+    /** ゲームモードの設定 */
+    inline void SetGameModeType(GameModeType mode) { bossParam_.mode_ = mode; }
+    /** ゲームモードの取得 */
+    inline const GameModeType& GetGameModeType() const { return bossParam_.mode_; }
 
 
 /*=============================================*/

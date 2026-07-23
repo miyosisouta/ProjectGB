@@ -28,19 +28,11 @@ private:
 
 
 private:
+	/** コンストラクタ */
 	GhostBodyManager();
+	/** デストラクタ */
 	~GhostBodyManager();
 
-public:
-	void Update();
-
-	void AddBody(GhostBody* body);
-	void RemoveBody(GhostBody* body);
-
-	void RegisterCallback(const RegisterPairCallback& callback) { registerPairCallback_ = callback; }
-	void ClearCallback() { registerPairCallback_ = nullptr; }
-
-private:
 	/** 衝突ペアの処理 */
 	void ProcessCollisionPair(GhostBody* a, GhostBody* b);
 
@@ -48,18 +40,37 @@ private:
 	bool CheckCollisionBullet(GhostBody* a, GhostBody* b);
 
 
+public:
+	/** 更新処理 */
+	void Update();
+
+	/** 判定対象に登録する */
+	void AddBody(GhostBody* body);
+	/** 判定対象から除外する */
+	void RemoveBody(GhostBody* body);
+
+	/** 衝突ペア登録コールバックを設定 */
+	inline void RegisterCallback(const RegisterPairCallback& callback) { registerPairCallback_ = callback; }
+	/** 衝突ペア登録コールバックを解除 */
+	inline void ClearCallback() { registerPairCallback_ = nullptr; }
+
+
 
 	/**
 	 * シングルトン関連
 	 */
 private:
-	static GhostBodyManager* m_instance;
+	static GhostBodyManager* m_instance; //!< インスタンス
 
 
 public:
+	/** インスタンスを生成 */
 	static void Initialize() { if (!m_instance) m_instance = new GhostBodyManager(); }
+	/** インスタンスを破棄 */
 	static void Finalize() { if (m_instance) { delete m_instance; m_instance = nullptr; } }
+	/** インスタンスを取得 */
 	static GhostBodyManager& Get() { return *m_instance; }
+	/** インスタンスが利用可能か */
 	static bool IsAvailable() { return m_instance != nullptr; }
 };
 

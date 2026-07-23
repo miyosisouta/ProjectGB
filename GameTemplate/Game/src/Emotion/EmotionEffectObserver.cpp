@@ -54,9 +54,9 @@ void EmotionEffectObserver::OnEmotionChanged(int oldLevel, int newLevel)
 
     if (newLevel > oldLevel)
     {
-        // レベルが上がった → 強気化エフェクト
+        // レベルが上がった → Buffエフェクト
         float s = buffEffectScale_;
-        // 上書き指定があればその回だけ使い、使ったら解除する（通常はJSON設定値のbuffEffectOffsetY_を使う）
+        // 上書き指定があればその回だけ使い、使ったら解除する（通常はbuffEffectOffsetY_を使う）
         if (hasBuffOffsetYOverride_)
         {
             pos.y += buffOffsetYOverride_;
@@ -76,9 +76,9 @@ void EmotionEffectObserver::OnEmotionChanged(int oldLevel, int newLevel)
     }
     else
     {
-        // レベルが下がった → 動揺エフェクト
+        // レベルが下がった → Debuffエフェクト
         float s = debuffEffectScale_;
-        // 上書き指定があればその回だけ使い、使ったら解除する（通常はJSON設定値のdebuffEffectOffsetY_を使う）
+        // 上書き指定があればその回だけ使い、使ったら解除する（通常はdebuffEffectOffsetY_を使う）
         if (hasDebuffOffsetYOverride_)
         {
             pos.y += debuffOffsetYOverride_;
@@ -94,7 +94,7 @@ void EmotionEffectObserver::OnEmotionChanged(int oldLevel, int newLevel)
             Quaternion::Identity,
             { s, s, s }
         );
-        // Debuff.wavは収録音量が小さいため、通常のボリューム計算に追加で倍率をかけて底上げする（EmotionParameter.jsonのdebuffSeVolumeBoostで調整）
+        // Debuff.wavは収録音量が小さいため、通常のボリューム計算に追加で倍率をかけて底上げする（debuffSeVolumeBoostで調整）
         SoundManager::Get().PlaySE(enSoundKind_InGame_Debuff, false, false, debuffSeVolumeScale_);
     }
 }

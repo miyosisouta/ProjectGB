@@ -36,7 +36,9 @@ private:
 
 
 private:
+    /** コンストラクタ */
     EffectManager();
+    /** デストラクタ */
     ~EffectManager();
 
 
@@ -80,6 +82,7 @@ public:
     void SetEffectSpeed(const EffectHandle handle, const float speed);
 
 
+    /** ハンドルからエフェクトインスタンスを探す */
     EffectEmitter* FindEffect(const EffectHandle handle)
     {
         auto it = effectList_.find(handle);
@@ -137,16 +140,22 @@ public:
 class EffectManagerObject :public IGameObject
 {
 public:
+    /** コンストラクタ */
     EffectManagerObject();
+    /** デストラクタ */
     ~EffectManagerObject();
 
 
 public:
+    /** スタート処理 */
     bool Start()override;
+    /** 更新処理 */
     void Update()override;
 
 #ifdef K2_DEBUG
+    /** デバッグ用: 更新の一時停止を設定 */
     static void SetUpdatePaused(bool isPaused);
+    /** デバッグ用: 一時停止中か */
     static bool IsUpdatePaused();
 #endif
 };

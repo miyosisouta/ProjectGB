@@ -15,10 +15,12 @@ struct MasterBossPhaseCutSceneParameter;
 class BossPhaseCutSceneMenu : public MenuBase
 {
 private:
-	std::unique_ptr<TaskSchedulerSystem> taskScheduler_ = nullptr;
+	std::unique_ptr<TaskSchedulerSystem> taskScheduler_ = nullptr; //!< 演出タイマーの管理
 
 public:
+	/** 更新処理 */
 	void Update() override;
+	/** UIロジックの初期化 */
 	void InitializeLogic() override;
 
 public:

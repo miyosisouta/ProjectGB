@@ -88,7 +88,7 @@ void GrassObject::Update()
     frustum.BuildFromViewProjectionMatrix(g_camera3D->GetViewProjectionMatrix());
     const Vector3 camPos = g_camera3D->GetPosition();
 
-    // 2条する
+    // LOD切り替え距離を2乗しておく（distSqとの比較にsqrtを使わずに済む）
     const float dist0Sq = LOD0_MAX_DIST * LOD0_MAX_DIST;
     const float dist1Sq = LOD1_MAX_DIST * LOD1_MAX_DIST;
 

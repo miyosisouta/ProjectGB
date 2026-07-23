@@ -3,15 +3,16 @@
 #include <random>
 #include <algorithm>
 
-// ダメージ計算結果
+/** ダメージ計算結果 */
 struct DamageResult
 {
-    int  damage = 0;
-    bool isCritical = false;
+    int  damage = 0; //!< 最終的なダメージ量
+    bool isCritical = false; //!< クリティカルが発生したか
 };
 
 namespace
 {
+    /** 攻撃者のステータスとモーション値からダメージを計算する */
     inline DamageResult Calculate(const ActorStatus* attacker, float motionValue)
     {
         DamageResult result;

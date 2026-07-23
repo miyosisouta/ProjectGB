@@ -35,57 +35,57 @@ class Character : public Actor
 protected:
 	AllocatedArray<AnimationClip> animationClipList_; //!< アニメーションクリップのリスト
 	std::unique_ptr<GhostBody> damageBody_; //!< ダメージ用コリジョン
-	StateMachine stateMachine_;
-	CharacterController charaCon_;
+	StateMachine stateMachine_; //!< ステートマシーン
+	CharacterController charaCon_; //!< キャラクターコントローラー
 
 	/* スキルの実態を持つ */
-	std::unique_ptr<NormalAttackBase> activeNormalAttack_;
-	std::unique_ptr<AbilityBase>      activeAbility_;
-	std::unique_ptr<UtilityBase>      activeUtility_;
+	std::unique_ptr<NormalAttackBase> activeNormalAttack_; //!< 通常攻撃スキルの実体
+	std::unique_ptr<AbilityBase>      activeAbility_; //!< 特殊能力スキルの実体
+	std::unique_ptr<UtilityBase>      activeUtility_; //!< 汎用能力スキルの実体
 
 	Vector3 moveVelocity_ = Vector3::Zero; //!< 毎フレームの移動速度を保持する変数
 
 	bool isUpdate_ = true; //!< 更新するかどうかのフラグ
 
 public:
-	/* 通常攻撃枠のスキルを取得 */
-	NormalAttackBase* GetNormalAttackSkill() const { return activeNormalAttack_.get(); }
-	/* 特殊能力枠のスキルを取得 */
-	AbilityBase* GetAbilitySkill() const { return activeAbility_.get(); }
-	/* 汎用能力枠のスキルを取得 */
-	UtilityBase* GetUtilitySkill() const { return activeUtility_.get(); }
+	/** 通常攻撃枠のスキルを取得 */
+	inline NormalAttackBase* GetNormalAttackSkill() const { return activeNormalAttack_.get(); }
+	/** 特殊能力枠のスキルを取得 */
+	inline AbilityBase* GetAbilitySkill() const { return activeAbility_.get(); }
+	/** 汎用能力枠のスキルを取得 */
+	inline UtilityBase* GetUtilitySkill() const { return activeUtility_.get(); }
 
-	/* ステートマシーンの取得 */
-	StateMachine* GetStateMachine() { return  &stateMachine_; }
-	/* キャラクターコントローラの取得 */
-	CharacterController* GetCharaCon() { return &charaCon_; }
+	/** ステートマシーンの取得 */
+	inline StateMachine* GetStateMachine() { return  &stateMachine_; }
+	/** キャラクターコントローラの取得 */
+	inline CharacterController* GetCharaCon() { return &charaCon_; }
 
-	/* 移動速度の設定 */
+	/** 移動速度の設定 */
 	inline void SetMoveVelocity(const Vector3& velocity) { moveVelocity_ = velocity; }
-	/* 移動速度を取得 */
+	/** 移動速度を取得 */
 	inline Vector3 GetMoveVelocity() { return moveVelocity_; }
 
 	/** 更新の可否状態を設定 */
 	inline void SetUpdate(const bool flg) { isUpdate_ = flg; }
 
 public:
-	/* コンストラクタ */
+	/** コンストラクタ */
 	Character() {}
-	/* デストラクタ */
+	/** デストラクタ */
 	~Character() {}
 
-	/* スタート処理 */
+	/** スタート処理 */
 	virtual bool Start() override;
-	/* 更新処理 */
+	/** 更新処理 */
 	virtual void Update() override;
-	/* 描画処理 */
+	/** 描画処理 */
 	virtual void Render(RenderContext& rc) override;
 	/**
-	 * アニメーションの再生。
-	 * id : ステートのIDによってアニメーションのインデックスを決める
+	 * アニメーションの再生
+	 * @param id ステートのIDによってアニメーションのインデックスを決める
 	 */
 	virtual void PlayAnimation(int id) {}
 
-	/* キャラクターごとのスキル作成 */
+	/** キャラクターごとのスキル作成 */
 	virtual void CreateSkill(NormalAttackType nAttackType, AbilityType abilityType, UtilityType utilityType) {}
 };

@@ -20,15 +20,16 @@ void Actor::Update()
 	modelRender_.SetRotation(transform_.rotation);
 	modelRender_.Update();
 
-	if (status_) {
-		status_->Update();
-	}
+	// ステータスの更新
+	if (status_) { status_->Update(); }
 }
 
 
 void Actor::Render(RenderContext& rc)
 {
-	if (!isDraw_) { return; } // 非表示設定中は描画をスキップ
+	// 非表示設定中は描画処理をスキップ
+	if (!isDraw_) { return; } 
 
+	// 描画
 	modelRender_.Draw(rc);
 }

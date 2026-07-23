@@ -13,34 +13,37 @@ class GrassBendManager;
 class GrassObject
 {
 public:
-    static constexpr int LOD_COUNT = 3;
+    static constexpr int LOD_COUNT = 3; //!< LODの段階数
 
 private:
+    /** 草1本分のトランスフォーム */
     struct GrassTransform
     {
-        Vector3    position = Vector3::Zero;
-        Quaternion rotation = Quaternion::Identity;
-        Vector3    scale    = Vector3::One;
+        Vector3    position = Vector3::Zero; //!< 座標
+        Quaternion rotation = Quaternion::Identity; //!< 回転
+        Vector3    scale    = Vector3::One; //!< 拡縮
     };
 
     // LOD切り替え距離
-    static constexpr float LOD0_MAX_DIST     = 1900.0f;
-    static constexpr float LOD1_MAX_DIST     = 2400.0f;
+    static constexpr float LOD0_MAX_DIST     = 1900.0f; //!< LOD0からLOD1へ切り替わる距離
+    static constexpr float LOD1_MAX_DIST     = 2400.0f; //!< LOD1からLOD2へ切り替わる距離
     // LOD遷移ディザリング距離 (デバッグ用: 動作確認後に元の値へ戻すこと)
-    static constexpr float DITHER_START_DIST = LOD0_MAX_DIST - 100.0f;  // TODO: 本来は LOD0_MAX_DIST - 100.0f
-    static constexpr float DITHER_ALPHA_MIN  = 0.4f;
+    static constexpr float DITHER_START_DIST = LOD0_MAX_DIST - 100.0f;  //!< ディザ遷移を開始する距離。TODO: 本来は LOD0_MAX_DIST - 100.0f
+    static constexpr float DITHER_ALPHA_MIN  = 0.4f; //!< ディザ遷移中の最小アルファ値
 
-    static const char* const LOD_MODEL_PATHS[LOD_COUNT];
+    static const char* const LOD_MODEL_PATHS[LOD_COUNT]; //!< LODごとのモデルパス
 
-    ModelRender                 renderer_[LOD_COUNT];
-    std::vector<GrassTransform> transforms_;
-    Bounds                      templateBounds_;
+    ModelRender                 renderer_[LOD_COUNT]; //!< LODごとのインスタンシングレンダラー
+    std::vector<GrassTransform> transforms_; //!< 配置した草のトランスフォームリスト
+    Bounds                      templateBounds_; //!< LOD0モデルのローカルAABB(カリング用テンプレート)
 
-    bool isLodEnabled_    = true;
-    bool isDitherEnabled_ = true;
+    bool isLodEnabled_    = true; //!< LOD切り替えを行うか
+    bool isDitherEnabled_ = true; //!< LOD遷移ディザリングを行うか
 
 public:
+    /** コンストラクタ */
     GrassObject()  = default;
+    /** デストラクタ */
     ~GrassObject() = default;
 
     /**
@@ -56,10 +59,11 @@ public:
     /** LOD別に描画 (LOD0/1は草LODディザCBを設定してから描画) */
     void Draw(RenderContext& rc);
 
-    bool IsEmpty() const { return transforms_.empty(); }
+    /** 草が1本も配置されていないか */
+    inline bool IsEmpty() const { return transforms_.empty(); }
 
     /** LOD切り替えの有効/無効 (falseのとき常にLOD0で描画) */
-    void SetLodEnabled(bool v)    { isLodEnabled_    = v; }
+    inline void SetLodEnabled(bool v)    { isLodEnabled_    = v; }
     /** LOD遷移ディザリングの有効/無効 */
-    void SetDitherEnabled(bool v) { isDitherEnabled_ = v; }
+    inline void SetDitherEnabled(bool v) { isDitherEnabled_ = v; }
 };

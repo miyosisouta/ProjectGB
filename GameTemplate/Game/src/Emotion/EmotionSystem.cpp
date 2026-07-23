@@ -17,11 +17,12 @@ void EmotionSystem::Init()
     if (!param) { return; }
     for (int i = 0; i < 7; i++)
     {
-        modifierTable_[i].attackMul         = param->modifiers[i].attackMul;
-        modifierTable_[i].attackSpeedMul    = param->modifiers[i].attackSpeedMul;
-        modifierTable_[i].damageTakenMul    = param->modifiers[i].damageTakenMul;
-        modifierTable_[i].animationSpeedMul = param->modifiers[i].animationSpeedMul;
-        modifierTable_[i].effectSpeedMul    = param->modifiers[i].effectSpeedMul;
+        // この段階の倍率一式をコピーする
+        modifierTable_[i].attackMul         = param->modifiers[i].attackMul;         // 攻撃力倍率
+        modifierTable_[i].attackSpeedMul    = param->modifiers[i].attackSpeedMul;    // 攻撃速度倍率
+        modifierTable_[i].damageTakenMul    = param->modifiers[i].damageTakenMul;    // 被ダメージ倍率
+        modifierTable_[i].animationSpeedMul = param->modifiers[i].animationSpeedMul; // アニメーション再生速度倍率
+        modifierTable_[i].effectSpeedMul    = param->modifiers[i].effectSpeedMul;    // エフェクト再生速度倍率
     }
 }
 
@@ -29,7 +30,7 @@ void EmotionSystem::InitModifierTable()
 {
     // インデックス = static_cast<int>(level) + 3
     // JSON未読み込み時のフォールバック値。実際の効果量は EmotionParameter.json 側で調整する
-    // 攻撃力・攻撃速度は「強気になるほど上がる」、被ダメージは「動揺するほど上がる」軸で設計している
+    // 攻撃力・攻撃速度は「Buffが強いほど上がる」、被ダメージは「Debuffが強いほど上がる」軸で設計している
     // animationSpeedMul/effectSpeedMul は演出用の値。デフォルトではattackSpeedMulと同じ値にしているが、JSON側で独立に調整できる
     modifierTable_[0] = { 1.15f, 0.85f, 1.5f, 0.85f, 0.85f };  // Debuff3: 攻撃力上昇(小) 攻撃速度Down(小) 被ダメージUp(大)
     modifierTable_[1] = { 1.05f, 1.0f,  1.2f, 1.0f,  1.0f  };  // Debuff2: 攻撃力上昇(微) 被ダメージUp(小)
@@ -44,7 +45,7 @@ void EmotionSystem::OnAttackHitPlayer()
 {
     int current = static_cast<int>(currentLevel_);
 
-    // 動揺中（Debuff）に攻撃が当たったら1段階だけ動揺が晴れる。通常/強気中は1段階強気になる（上限 Buff3 でクランプ）
+    // Debuff中に攻撃が当たったら1段階だけ回復する。通常/Buff中は1段階Buffが上がる（上限 Buff3 でクランプ）
     // windows.h の min マクロと衝突するため () で囲んで展開を防ぐ
     int next = (std::min)(current + 1, LevelMax);
     ChangeLevel(static_cast<EmotionLevel>(next));
@@ -54,7 +55,7 @@ void EmotionSystem::OnJustAvoidedByPlayer()
 {
     int current = static_cast<int>(currentLevel_);
 
-    // 強気中（Buff）にジャスト回避されたら、調子の良さが帳消しになり即 Normal に戻す（1段階ずつではない）
+    // Buffにジャスト回避されたら、調子の良さが帳消しになり即 Normal に戻す（1段階ずつではない）
     // 仕様：「ボスにバフがついているときにジャスト回避を行った場合、バフの効果はすべて消されて通常状態になる」
     if (current > 0)
     {
@@ -62,7 +63,7 @@ void EmotionSystem::OnJustAvoidedByPlayer()
         return;
     }
 
-    // 通常/動揺中は1段階動揺が深まる（下限 Debuff3 でクランプ）
+    // 通常/Debuff中は1段階Debuffが深まる（下限 Debuff3 でクランプ）
     // windows.h の max マクロと衝突するため () で囲んで展開を防ぐ
     int next = (std::max)(current - 1, LevelMin);
     ChangeLevel(static_cast<EmotionLevel>(next));

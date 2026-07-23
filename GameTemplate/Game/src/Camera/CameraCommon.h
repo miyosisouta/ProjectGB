@@ -5,6 +5,7 @@
 #pragma once
 
 
+/** NOTE: すべてのカメラコントローラーに付ける */
 #define appCameraController(name)\
 public:\
 	static constexpr uint32_t ID() { return Hash32(#name); }
@@ -16,12 +17,12 @@ public:\
   */
 struct CameraData
 {
-    Vector3 position = Vector3(0.0f, 50.0f, -100.0f);
-    Vector3 target = Vector3::Zero;
-    Vector3 up = Vector3::Up;
-    float fov = Math::DegToRad(120.0f);
-    float nearClip = 0.01f;
-    float farClip = 5000.0f;
+    Vector3 position = Vector3(0.0f, 50.0f, -100.0f); //!< カメラの座標
+    Vector3 target = Vector3::Zero; //!< 注視点
+    Vector3 up = Vector3::Up; //!< 上方向ベクトル
+    float fov = Math::DegToRad(120.0f); //!< 視野角(ラジアン)
+    float nearClip = 0.01f; //!< ニアクリップ
+    float farClip = 5000.0f; //!< ファークリップ
 
     /** 線形補間（ブレンド用） */
     static CameraData Lerp(const float t, const CameraData& start, const CameraData& end)
@@ -46,7 +47,9 @@ struct CameraData
 class ICameraController
 {
 public:
+    /** コンストラクタ */
     ICameraController() = default;
+    /** デストラクタ */
     virtual ~ICameraController() = default;
 
     /** アクティブになった瞬間に呼ばれる */
@@ -58,10 +61,11 @@ public:
     /** 計算結果を返す */
     virtual const CameraData& GetCameraData() const = 0;
 
-    /** 型判定・変換用テンプレートメソッド */
+    /** 派生型かどうか確認する */
     template <typename T>
     bool Is() const { return dynamic_cast<T*>(this); }
+    /** 派生型にキャストして取得する */
     template <typename T>
     T* As() { return dynamic_cast<T*>(this); }
 };
-using RefCameraController = std::shared_ptr<ICameraController>;
+using RefCameraController = std::shared_ptr<ICameraController>; //!< カメラコントローラーの参照型

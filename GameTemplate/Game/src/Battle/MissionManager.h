@@ -1,6 +1,6 @@
 ﻿#pragma once
 
-/*
+/**
  * MissionManager.h
  * ミッションシステムの管理クラス。
  * 選択されたボスの種類に応じてミッションを初期化
@@ -14,6 +14,10 @@
 
 class MissionManager
 {
+private:
+    std::vector<std::unique_ptr<Mission>> missions_; //!< ミッション管理用変数
+
+
     /*========================================================*/
     /* 通知関連 */
     /*========================================================*/
@@ -70,19 +74,19 @@ private:
 public:
     /** 指定IDのミッションを取得 */
     /* --- ゴリラ --- */
-    const Mission* GetGorillaTimeMission()        const { return GetMissionAt(MissionID::enGorillaTime); }
-    const Mission* GetGorillaAbilityMission()     const { return GetMissionAt(MissionID::enGorillaAbility); }
-    const Mission* GetGorillaUtilityMission()     const { return GetMissionAt(MissionID::enGorillaUtility); }
+    inline const Mission* GetGorillaTimeMission()        const { return GetMissionAt(MissionID::enGorillaTime); }
+    inline const Mission* GetGorillaAbilityMission()     const { return GetMissionAt(MissionID::enGorillaAbility); }
+    inline const Mission* GetGorillaUtilityMission()     const { return GetMissionAt(MissionID::enGorillaUtility); }
 
     /* --- カメ --- */
-    const Mission* GetTurtleTimeMission()         const { return GetMissionAt(MissionID::enTurtleTime); }
-    const Mission* GetTurtleNormalAttackMission() const { return GetMissionAt(MissionID::enTurtleNormalAttack); }
-    const Mission* GetTurtleHpRateMission()       const { return GetMissionAt(MissionID::enTurtleHpRate); }
+    inline const Mission* GetTurtleTimeMission()         const { return GetMissionAt(MissionID::enTurtleTime); }
+    inline const Mission* GetTurtleNormalAttackMission() const { return GetMissionAt(MissionID::enTurtleNormalAttack); }
+    inline const Mission* GetTurtleHpRateMission()       const { return GetMissionAt(MissionID::enTurtleHpRate); }
 
     /** ミッションの数を取得 */
-    int GetMissionCount() const 
-    { 
-        return static_cast<int>(missions_.size()); 
+    inline int GetMissionCount() const
+    {
+        return static_cast<int>(missions_.size());
     }
     /** クリアしているミッションの数 */
     int GetClearedCount() const 
@@ -113,15 +117,13 @@ public:
         return missions_[index].get();
     }
 
-private:
-    std::vector<std::unique_ptr<Mission>> missions_; //!< ミッション管理用変数
-
-
     /*========================================================*/
     /* コンストラクタ・デストラクタ */
     /*========================================================*/
 private:
+    /** コンストラクタ */
     MissionManager();
+    /** デストラクタ */
     ~MissionManager();
 
 

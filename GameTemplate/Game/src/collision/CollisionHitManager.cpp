@@ -422,8 +422,8 @@ bool CollisionHitManager::IsJustAvoidPair(const Pair& hitPair)
 
 void CollisionHitManager::OnJustAvoid(Pair& hitPair)
 {
-	// ジャスト回避が成立した瞬間：ボスの調子を動揺方向へ進める
-	// （強気中なら帳消しでNormal、通常/動揺中なら1段階動揺が深まる）
+	// ジャスト回避が成立した瞬間：ボスの調子をDebuff方向へ進める
+	// （Buff中なら帳消しでNormal、通常/Debuff中なら1段階Debuffが深まる）
 	if (auto* boss = GetBossFromAttackPair(hitPair))
 	{
 		auto* bossStatus = boss->GetStatus()->As<BossStatus>();
@@ -436,7 +436,7 @@ void CollisionHitManager::OnJustAvoid(Pair& hitPair)
 void CollisionHitManager::OnBossStrongAttackHit(BossCharacter* boss)
 {
 	// ボスの特定の攻撃（HitStamp・チャージレーザー・SpinAttack・ThrowRock）がプレイヤーにヒットした瞬間：
-	// ボスの調子を強気方向へ進める（動揺中なら帳消しでNormal、通常/強気中なら1段階強気になる）
+	// ボスの調子をBuff方向へ進める（Debuff中なら帳消しでNormal、通常/Buff中なら1段階Buffが上がる）
 	if (!boss) { return; }
 	auto* bossStatus = boss->GetStatus()->As<BossStatus>();
 	if (bossStatus) { bossStatus->GetEmotionSystem().OnAttackHitPlayer(); }

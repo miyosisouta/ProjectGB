@@ -54,16 +54,16 @@ enum class GameModeType
 
 /** ボスのアニメーション */
 enum BossAnimID {
-    enNone = -1,// 何もなし
-    enAnimIdle = 0,
-    enAnimRun,
-    enAnimJump,
-    enAnimAttack,
-    enAnimHit,
-    enAnimDeath,
-    enAnimSpin,
-    enAnimClicked,
-    enAnimAntic,
+    enNone = -1, //!< 何もなし
+    enAnimIdle = 0,      //!< 待機
+    enAnimRun,           //!< 走る
+    enAnimJump,          //!< ジャンプ（ヒットスタンプ）
+    enAnimAttack,        //!< 通常攻撃
+    enAnimHit,           //!< ダメージリアクション
+    enAnimDeath,         //!< 死亡
+    enAnimSpin,          //!< 回転攻撃
+    enAnimClicked,       //!< 岩投げ・レーザーの発射モーション
+    enAnimAntic,         //!< レーザーの予備動作
     enAnimClickedWindUp, //!< 岩投げのワインドアップ（予備動作）
     enAnimJumpImpact,    //!< ヒットスタンプ着地インパクト
     enAnimNum  //!<アニメーションの最大数
@@ -80,22 +80,22 @@ struct AnimSetting
 struct BossParam
 {
     /** ステージデータ */
-    BossType stageType_ = BossType::enNone;
-    GameModeType mode_ = GameModeType::enNone;
-    
-    /** モデルに必要なデータ */
-    std::string characterKey_ = "Turtle";
-    std::string modelPath_ = "";
-    AnimSetting anims[enAnimNum];
-    EnModelUpAxis modelAxis_ = EnModelUpAxis::enModelUpAxisZ;
+    BossType stageType_ = BossType::enNone; //!< ボスの種類
+    GameModeType mode_ = GameModeType::enNone; //!< ゲームモード
 
-    /** コリジョンの */
+    /** モデルに必要なデータ */
+    std::string characterKey_ = "Turtle"; //!< キャラクター識別キー
+    std::string modelPath_ = ""; //!< モデルファイルパス
+    AnimSetting anims[enAnimNum]; //!< アニメーション設定一覧
+    EnModelUpAxis modelAxis_ = EnModelUpAxis::enModelUpAxisZ; //!< モデルの上方向
+
+    /** コリジョンのサイズ */
     float colliderRadius = 10.0f; //!< 半径
     float colliderHeight = 20.0f; //!< 高さ
 
     /* キャラクターのステータス */
-    int maxHp_ = 0;
-    int attack_ = 0;
+    int maxHp_ = 0; //!< 最大HP
+    int attack_ = 0; //!< 攻撃力
 };
 
 

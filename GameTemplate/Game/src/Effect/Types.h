@@ -32,8 +32,8 @@ enum enEffectKind
 	enEffectKind_AttackHitBoss,		// 14
 
 	/* 感情システム */
-	enEffectKind_Buff,				// 15 強気化時
-	enEffectKind_Debuff,			// 16 動揺時
+	enEffectKind_Buff,				// 15 Buff時
+	enEffectKind_Debuff,			// 16 Debuff時
 
 	enEffectKind_Max
 };
@@ -42,8 +42,9 @@ enum enEffectKind
 /** エフェクトの情報の構造体 */
 struct EffectInformation
 {
-	const char16_t* assetPath;
-	//
+	const char16_t* assetPath; //!< エフェクトファイルのパス
+
+	/** コンストラクタ */
 	EffectInformation(const char16_t* path) : assetPath(path) {}
 };
 

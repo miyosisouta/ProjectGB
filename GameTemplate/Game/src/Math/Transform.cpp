@@ -40,7 +40,7 @@ void Transform::UpdateTransform()
 		Matrix pos;
 		pos.Multiply(localPos, parent_->worldMatrix_);
 
-		//多分平行移動の部分を取ってるだけ
+		//行列の平行移動成分（ワールド座標）を取り出す
 		position.x = pos.m[3][0];
 		position.y = pos.m[3][1];
 		position.z = pos.m[3][2];
@@ -87,24 +87,6 @@ void Transform::UpdateWorldMatrix()
 
 void Transform::Release()
 {
-	////イテレータ生成
-	//std::vector<Transform*>::iterator it = m_children_.begin();
-	////vectorの終わりまで回す
-	//while (it != m_children_.end())
-	//{
-	//	//子トランスフォームからの紐づけを外す
-	//	(*it)->m_parent_ = nullptr;
-	//	//子トランスフォームへの紐づけを外す
-	//	m_children_.erase(it);
-	//	if (m_children_.size() <= 0) {
-	//		break;
-	//	}
-	//	//イテレータを進める
-	//	++it;
-	//}
-	////念のため？vectorの要素を全削除
-	//m_children_.clear();
-
 	// 1. 全ての子どもの親設定を解除
 	for (auto* child : children_)
 	{

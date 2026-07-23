@@ -840,7 +840,7 @@ void InGameMenu::UpdateEmotionBuffIcon(const int currentLevel)
 		// 段階数値：ボスの感情レベルの絶対値をそのまま全アイコン共通で使う
 		const int displayStage = std::abs(currentLevel);
 
-		// バフ中(強気)は水色、デバフ中(動揺)は赤色に背景・縁だけ色付けする（アイコン自体の色は変えない）
+		// Buff中は水色、Debuff中は赤色に背景・縁だけ色付けする（アイコン自体の色は変えない）
 		// バフ側は緑を減らして青寄り・少し濃いめに、デバフ側は緑と青を上げて少し薄めに調整
 		static const Vector4 kBuffTintColor(0.3f, 0.65f, 1.0f, 1.0f);
 		static const Vector4 kDebuffTintColor(1.0f, 0.35f, 0.35f, 1.0f);

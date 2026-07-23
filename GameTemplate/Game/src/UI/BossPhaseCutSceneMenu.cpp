@@ -172,6 +172,7 @@ void BossPhaseCutSceneMenu::EndMarks(const bool isPhase25, const MasterBossPhase
 {
 	if (isPhase25)
 	{
+		// 疲れマークを非表示に戻す
 		if (auto* icon = GetUI<UIIcon>(Hash32("tired1"))) { icon->isDraw = false; }
 		if (auto* icon = GetUI<UIIcon>(Hash32("tired2"))) { icon->isDraw = false; }
 		if (auto* icon = GetUI<UIIcon>(Hash32("tired3"))) { icon->isDraw = false; }

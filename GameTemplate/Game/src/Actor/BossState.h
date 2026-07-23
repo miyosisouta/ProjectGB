@@ -5,13 +5,13 @@
 class BossCharacter;
 class AttackRange;
 class ThrowRockObject;
-/*
+/**
  * Stateの基底クラス
  */
 class BossStateBase: public IState
-{	
+{
 protected:
-	BossCharacter* boss_; //!< プレイヤー
+	BossCharacter* boss_; //!< 操作対象のボス
 
 
 protected:
@@ -34,15 +34,6 @@ protected:
 	 */
 	bool UpdateTurnToPlayer();
 
-private:
-	bool isTurningToPlayer_ = false;			//!< プレイヤー方向へ振り向き中か
-	float turnElapsed_ = 0.0f;					//!< 振り向き開始からの経過時間
-	float turnDuration_ = 1.0f;					//!< 振り向きにかける時間
-	Quaternion turnStartRot_ = Quaternion::Identity;	//!< 振り向き開始時の回転
-	Quaternion turnEndRot_ = Quaternion::Identity;		//!< 振り向き終了時（プレイヤー方向）の回転
-	std::function<void()> onTurnFinished_;		//!< 振り向き完了時に呼ぶコールバック（攻撃開始処理）
-
-protected:
 	/**
 	 * ボスの現在の攻撃速度倍率を取得する（EmotionSystem由来。1.0fが等倍）
 	 * 攻撃系ステート（通常攻撃・ヒットスタンプ・回転・岩投げ・レーザー）が
@@ -63,20 +54,35 @@ protected:
 	float GetEffectSpeedMul() const;
 
 
+private:
+	bool isTurningToPlayer_ = false;			//!< プレイヤー方向へ振り向き中か
+	float turnElapsed_ = 0.0f;					//!< 振り向き開始からの経過時間
+	float turnDuration_ = 1.0f;					//!< 振り向きにかける時間
+	Quaternion turnStartRot_ = Quaternion::Identity;	//!< 振り向き開始時の回転
+	Quaternion turnEndRot_ = Quaternion::Identity;		//!< 振り向き終了時（プレイヤー方向）の回転
+	std::function<void()> onTurnFinished_;		//!< 振り向き完了時に呼ぶコールバック（攻撃開始処理）
+
+
 public:
-	/*
+	/**
 	 * コンストラクタ
-	 * chara : キャラクターの情報を渡すため
+	 * @param chara キャラクターの情報を渡すため
 	 */
 	BossStateBase(BossCharacter* chara) : boss_(chara) {}
+	/** デストラクタ */
 	virtual ~BossStateBase() {}
 
+	/** ステート開始時に呼ぶ */
 	virtual void Enter() override= 0;
+	/** 毎フレーム呼ぶ */
 	virtual void Update() override = 0;
+	/** ステート終了時に呼ぶ */
 	virtual void Exit() override = 0;
 
-	virtual bool IsFinished() const{ return false; }
-	virtual bool IsCancelable() const { return false; }
+	/** 処理が終わったか */
+	inline virtual bool IsFinished() const{ return false; }
+	/** 他のステートに割り込みキャンセル可能か */
+	inline virtual bool IsCancelable() const { return false; }
 };
 
 /*==========================================*/
@@ -86,14 +92,18 @@ public:
 class BossIdleState : public BossStateBase
 {
 public:
-	/* 処理が終わったか */
-	bool IsFinished() const override { return isFinished_; }
+	/** 処理が終わったか */
+	inline bool IsFinished() const override { return isFinished_; }
 
 public:
+	/** コンストラクタ */
 	BossIdleState(BossCharacter* b) : BossStateBase(b) {}
 
+	/** ステート開始時に呼ぶ */
 	void Enter()override;
+	/** 毎フレーム呼ぶ */
 	void Update()override;
+	/** ステート終了時に呼ぶ */
 	void Exit()override;
 };
 
@@ -104,18 +114,21 @@ public:
 class BossRunState : public BossStateBase
 {
 private:
-	/* 目標座標 */
-	float goalPos_ = 0.0f;
+	float goalPos_ = 0.0f; //!< 目標座標
 
 public:
-	/* 処理が終わったか */
-	bool IsFinished() const override{ return isFinished_; }
+	/** 処理が終わったか */
+	inline bool IsFinished() const override{ return isFinished_; }
 
 public:
+	/** コンストラクタ */
 	BossRunState(BossCharacter* b) : BossStateBase(b) {}
 
+	/** ステート開始時に呼ぶ */
 	void Enter()override;
+	/** 毎フレーム呼ぶ */
 	void Update()override;
+	/** ステート終了時に呼ぶ */
 	void Exit()override;
 };
 
@@ -126,18 +139,22 @@ public:
 class BossAttackState : public BossStateBase
 {
 private:
-	/* 振り向き終了後に呼ばれる、攻撃本体の開始処理 */
+	/** 振り向き終了後に呼ばれる、攻撃本体の開始処理 */
 	void StartAttack();
 
 public:
-	/* 処理が終わったか */
-	bool IsFinished() const override { return isFinished_; }
+	/** 処理が終わったか */
+	inline bool IsFinished() const override { return isFinished_; }
 
 public:
+	/** コンストラクタ */
 	BossAttackState(BossCharacter* b) : BossStateBase(b) {}
 
+	/** ステート開始時に呼ぶ */
 	void Enter()override;
+	/** 毎フレーム呼ぶ */
 	void Update()override;
+	/** ステート終了時に呼ぶ */
 	void Exit()override;
 };
 
@@ -160,25 +177,29 @@ private:
 	};
 
 private:
-	Phase phase_ = Phase::Ready; //!< 攻撃段階
-	Vector3 targetPos_ = Vector3::Zero; //!< 移動先の座標
-	Vector3 nextTargetPos_ = Vector3::Zero; //!< 次の移動先の座標
-	Vector3 fixedAttackPos_ = Vector3::Zero;
-	float verticalVelocity_ = 0.0f;  //!< 垂直速度
-	float gravity_ = 0.0f;        //!< 重力
-	bool createAttackCollision_ = false; //!< 攻撃用コリジョンを作成したかのフラグ
-	bool impactAnimPlayed_ = false; //!< 着地インパクトアニメーション(enAnimJumpImpact)を再生済みか
-	AttackRange* attackRange_ = nullptr; //!< 攻撃予測インジケーター
+	Phase        phase_                = Phase::Ready; //!< 攻撃段階
+	Vector3      targetPos_            = Vector3::Zero; //!< 移動先の座標
+	Vector3      nextTargetPos_        = Vector3::Zero; //!< 次の移動先の座標
+	Vector3      fixedAttackPos_       = Vector3::Zero; //!< 着地攻撃判定を固定する座標
+	float        verticalVelocity_     = 0.0f;          //!< 垂直速度
+	float        gravity_              = 0.0f;          //!< 重力
+	bool         createAttackCollision_ = false;        //!< 攻撃用コリジョンを作成したかのフラグ
+	bool         impactAnimPlayed_     = false;         //!< 着地インパクトアニメーション(enAnimJumpImpact)を再生済みか
+	AttackRange* attackRange_          = nullptr;       //!< 攻撃予測インジケーター
 
 public:
-	/* 処理が終わりか */
-	bool IsFinished() const override { return isFinished_; }
+	/** 処理が終わりか */
+	inline bool IsFinished() const override { return isFinished_; }
 
 public:
+	/** コンストラクタ */
 	HitStampState(BossCharacter* b) : BossStateBase(b) {}
 
+	/** ステート開始時に呼ぶ */
 	void Enter()override;
+	/** 毎フレーム呼ぶ */
 	void Update()override;
+	/** ステート終了時に呼ぶ */
 	void Exit()override;
 };
 
@@ -197,18 +218,22 @@ private:
 	FloatCurve   jumpCurve_;                                    //!< 突進開始直前のジャンプ演出（Y座標の上下）を管理するカーブ
 
 private:
-	/* 振り向き終了後に呼ばれる、攻撃本体の開始処理 */
+	/** 振り向き終了後に呼ばれる、攻撃本体の開始処理 */
 	void StartAttack();
 
 public:
-	/* 処理が終わりか */
-	bool IsFinished() const override { return isFinished_; }
+	/** 処理が終わりか */
+	inline bool IsFinished() const override { return isFinished_; }
 
 public:
+	/** コンストラクタ */
 	SpinState(BossCharacter* b) : BossStateBase(b) {}
 
+	/** ステート開始時に呼ぶ */
 	void Enter()override;
+	/** 毎フレーム呼ぶ */
 	void Update()override;
+	/** ステート終了時に呼ぶ */
 	void Exit()override;
 };
 
@@ -228,29 +253,33 @@ private:
 	};
 
 private:
-	Phase phase_ = Phase::enReady; //!< 攻撃段階
-	Vector3 targetPos_ = Vector3::Zero; //!< 攻撃対象の座標
-	EffectHandle predictionEffectHandle_ = INVALID_EFFECT_HANDLE; // 予測エフェクトのハンドル
-	AttackRange* attackRangeIndicator_ = nullptr; //!< 攻撃予測ラインインジケーター
-	float predictionElapsed_ = 0.0f; //!< 予測表示の経過時間
-	FloatCurve windUpSwayCurve_; //!< ワインドアップ中に左右へ揺さぶる角度(度)のイージング（PingPongで往復し続ける）
-	Quaternion windUpSwayBaseRot_ = Quaternion::Identity; //!< 揺さぶりの基準になる向き（プレイヤー方向を向いた状態）
-	ThrowRockObject* pendingRock_ = nullptr; //!< ワインドアップ中に出現させ、Launch()前まで成長させ続けている岩（予測ラインと同じ進捗値で駆動する）
+	Phase             phase_                = Phase::enReady;        //!< 攻撃段階
+	Vector3           targetPos_            = Vector3::Zero;         //!< 攻撃対象の座標
+	EffectHandle      predictionEffectHandle_ = INVALID_EFFECT_HANDLE; //!< 予測エフェクトのハンドル
+	AttackRange*      attackRangeIndicator_ = nullptr;               //!< 攻撃予測ラインインジケーター
+	float             predictionElapsed_    = 0.0f;                  //!< 予測表示の経過時間
+	FloatCurve        windUpSwayCurve_;                              //!< ワインドアップ中に左右へ揺さぶる角度(度)のイージング（PingPongで往復し続ける）
+	Quaternion        windUpSwayBaseRot_    = Quaternion::Identity;  //!< 揺さぶりの基準になる向き（プレイヤー方向を向いた状態）
+	ThrowRockObject*  pendingRock_          = nullptr;               //!< ワインドアップ中に出現させ、Launch()前まで成長させ続けている岩（予測ラインと同じ進捗値で駆動する）
 
 private:
-	/* 振り向き終了後に呼ばれる、攻撃本体の開始処理 */
+	/** 振り向き終了後に呼ばれる、攻撃本体の開始処理 */
 	void StartAttack();
 
 public:
-	/* 処理が終わりか */
-	bool IsFinished() const override { return isFinished_; }
+	/** 処理が終わりか */
+	inline bool IsFinished() const override { return isFinished_; }
 
 
 public:
+	/** コンストラクタ */
 	ThrowRockState(BossCharacter* b) : BossStateBase(b) {}
 
+	/** ステート開始時に呼ぶ */
 	void Enter()override;
+	/** 毎フレーム呼ぶ */
 	void Update()override;
+	/** ステート終了時に呼ぶ */
 	void Exit()override;
 };
 
@@ -262,7 +291,7 @@ public:
 class LaserState : public BossStateBase
 {
 private:
-	/* 処理段階 */
+	/** 処理段階 */
 	enum Phase
 	{
 		enReady,	//!< 準備
@@ -271,8 +300,8 @@ private:
 		enDone,		//!< 何もなし
 	};
 
-	/* 攻撃パターン */
-	enum Mode 
+	/** 攻撃パターン */
+	enum Mode
 	{
 		enNormal,	//!< クイック攻撃
 		enMult,		//!< 連発する攻撃
@@ -283,19 +312,19 @@ private:
 
 
 private:
-	Phase phase_ = Phase::enReady; //!< 処理段階
-	Mode mode_ = Mode::enMax; //!< 攻撃パターン
-	uint8_t weights_[enMax] = { 3,4,3 }; //!< 攻撃の重み
-	Vector3 targetPos_ = Vector3::Zero; //!< 攻撃対象の座標
-	EffectHandle laserEffectHandle_ = INVALID_EFFECT_HANDLE; //!< レーザーエフェクトのハンドル
-	AttackRange* attackRangeIndicator_ = nullptr; //!< 攻撃予測サークルインジケーター
+	Phase        phase_                = Phase::enReady;        //!< 処理段階
+	Mode         mode_                 = Mode::enMax;           //!< 攻撃パターン
+	uint8_t      weights_[enMax]       = { 3,4,3 };             //!< 攻撃の重み
+	Vector3      targetPos_            = Vector3::Zero;         //!< 攻撃対象の座標
+	EffectHandle laserEffectHandle_    = INVALID_EFFECT_HANDLE; //!< レーザーエフェクトのハンドル
+	AttackRange* attackRangeIndicator_ = nullptr;               //!< 攻撃予測サークルインジケーター
 
 
-	Vector3 scale_ = Vector3::Zero; //!< 攻撃範囲
-	float shotTime_ = 0.0f; //!< タスクスケジューラの次の処理までの時間
-	float attackDeleyTime = 0.0f; //!< 攻撃までの時間
-	uint8_t shotCount_ = 0; //!< 攻撃回数
-	float attackSpeedMul_ = 1.0f; //!< Enter()冒頭で取得する攻撃速度倍率。Setup()内の[timing]計算で使う
+	Vector3 scale_          = Vector3::Zero; //!< 攻撃範囲
+	float   shotTime_       = 0.0f;          //!< タスクスケジューラの次の処理までの時間
+	float   attackDeleyTime = 0.0f;          //!< 攻撃までの時間
+	uint8_t shotCount_      = 0;             //!< 攻撃回数
+	float   attackSpeedMul_ = 1.0f;          //!< Enter()冒頭で取得する攻撃速度倍率。Setup()内の[timing]計算で使う
 
 	FloatCurve   multiJumpCurve_;      //!< 連発攻撃前の予備動作（上下ジャンプ）のY座標を管理するカーブ
 	float        multiJumpElapsed_ = 0.0f; //!< 予備ジャンプ開始からの経過時間（既定回数繰り返したか判定するため）
@@ -305,24 +334,28 @@ private:
 
 
 private:
-	/* セットアップ */
+	/** セットアップ */
 	void Setup();
-	/* 振り向き終了後に呼ばれる、攻撃タイプに応じた予備動作の開始処理（連発は上下ジャンプ後にStartAttack()を呼ぶ。通常/チャージはそのままStartAttack()を呼ぶ。チャージのScale演出はEnter()側で振り向きと並行して開始済み） */
+	/** 振り向き終了後に呼ばれる、攻撃タイプに応じた予備動作の開始処理（連発は上下ジャンプ後にStartAttack()を呼ぶ。通常/チャージはそのままStartAttack()を呼ぶ。チャージのScale演出はEnter()側で振り向きと並行して開始済み） */
 	void BeginPreMotion();
-	/* 予備動作終了後に呼ばれる、攻撃本体の開始処理 */
+	/** 予備動作終了後に呼ばれる、攻撃本体の開始処理 */
 	void StartAttack();
 
 
 public:
-	/* 攻撃終了か */
-	bool IsFinished() const override { return isFinished_; }
+	/** 攻撃終了か */
+	inline bool IsFinished() const override { return isFinished_; }
 
 
 public:
+	/** コンストラクタ */
 	LaserState(BossCharacter* b) : BossStateBase(b) {}
 
+	/** ステート開始時に呼ぶ */
 	void Enter()override;
+	/** 毎フレーム呼ぶ */
 	void Update()override;
+	/** ステート終了時に呼ぶ */
 	void Exit()override;
 };
 
@@ -338,9 +371,13 @@ public:
 class BossDeathState : public BossStateBase
 {
 public:
+	/** コンストラクタ */
 	BossDeathState(BossCharacter* b) : BossStateBase(b) {}
 
+	/** ステート開始時に呼ぶ */
 	void Enter()override;
+	/** 毎フレーム呼ぶ */
 	void Update()override;
+	/** ステート終了時に呼ぶ */
 	void Exit()override;
 };

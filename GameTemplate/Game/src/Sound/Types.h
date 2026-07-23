@@ -35,26 +35,26 @@ enum enSoundKind
 	enSoundKind_Max = enSoundKind_Gorilla_DoubleImpact, //!< SEの最大数
 
 	/** UI */
-	enSoundKind_Menu_Decide,
-	enSoundKind_Menu_Move,
-	enSoundKind_Menu_Return,
+	enSoundKind_Menu_Decide, //!< 決定
+	enSoundKind_Menu_Move,   //!< カーソル移動
+	enSoundKind_Menu_Return, //!< キャンセル・戻る
 
 	/** インゲーム */
-	enSoundKind_InGame_Buff,
-	enSoundKind_InGame_Debuff,
+	enSoundKind_InGame_Buff,   //!< Buff
+	enSoundKind_InGame_Debuff, //!< Debuff
 
 	/* BGM */
 	enSoundKind_BGM,
-	enSoundKind_Title = enSoundKind_BGM,
-	enSoundKind_StageSelect,
-	enSoundKind_SkillSelect,
-	enSoundKind_InGame,
-	enSoundKind_GameClear,
-	enSoundKind_GameOver,
+	enSoundKind_Title = enSoundKind_BGM, //!< タイトル
+	enSoundKind_StageSelect,             //!< ステージ選択
+	enSoundKind_SkillSelect,             //!< スキル選択
+	enSoundKind_InGame,                  //!< インゲーム
+	enSoundKind_GameClear,               //!< ゲームクリア
+	enSoundKind_GameOver,                //!< ゲームオーバー
 
 	/** ゲームクリアリザルト：ミッション */
-	enSoundKind_Slide,
-	enSoundKind_Mission_Clear,
+	enSoundKind_Slide,        //!< スライド演出
+	enSoundKind_Mission_Clear,//!< ミッションクリア
 	enSoundKind_SE_Max,
 };
 
@@ -62,8 +62,9 @@ enum enSoundKind
 /** サウンドの情報の構造体 */
 struct SoundInformation
 {
-	std::string assetPath;
-	//
+	std::string assetPath; //!< サウンドファイルのパス
+
+	/** コンストラクタ */
 	SoundInformation(const std::string& path) : assetPath(path) {}
 };
 

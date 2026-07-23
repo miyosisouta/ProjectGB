@@ -36,5 +36,5 @@ public:
 
 public:
 	/** 演出終了フラグを返す（trueでシーン遷移） */
-	bool IsEnd() const { return isEnd_; }
+	inline bool IsEnd() const { return isEnd_; }
 };

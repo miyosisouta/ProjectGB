@@ -36,7 +36,7 @@ void Bite::Enter(Character* p)
 					const auto* sp = ParameterManager::Get().GetSkillParam("Bite");
 					attackHitbox_->CreateSphere(p, CharacterID::PlayerNormalAtkID(), sp->collisionRadius, ghost::CollisionAttribute::PlayerAtk, ghost::CollisionAttributeMask::PlayerAtk);
 					Vector3 playerPos = p->transform_.position;				// プレイヤーの現在の座標を取得
-					Quaternion playerRot = p->GetStateMachine()->GetRotation();
+					Quaternion playerRot = p->GetStateMachine()->GetRotation();// プレイヤーの回転を取得
 					Vector3 forwardDir = p->GetStateMachine()->GetDirection();// プレイヤーが最後に向いていた方向を取得
 					float forwardOffset = sp->collisionForward; // 目の前にどれくらいズラすか
 					float heightOffset  = sp->collisionHeight;  // 高さの調整

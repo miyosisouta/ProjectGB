@@ -40,10 +40,11 @@ void GhostBody::CreateCapsule(IGameObject* owner, const uint32_t id, const float
 
 void GhostBody::CreateCore(IGameObject* owner, const uint32_t id, const uint32_t attr, const uint32_t mask)
 {
-	owner_ = owner;
-	attribute_ = attr;
-	mask_ = mask;
-	ownerId_ = id;
+	// 所有者・属性情報を設定（所有者本体・識別ID・自分の属性・判定する相手のマスク）
+	owner_ = owner;         // 所有者
+	attribute_ = attr;      // 自分の属性
+	mask_ = mask;           // 判定する相手の属性マスク
+	ownerId_ = id;          // 所有者を識別するID
 	RebuildBulletObject();
 	if (GhostBodyManager::IsAvailable()) {
 		GhostBodyManager::Get().AddBody(this);

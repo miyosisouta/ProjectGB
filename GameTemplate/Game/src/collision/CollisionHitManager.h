@@ -35,9 +35,10 @@ class CollisionHitManager
 public:
 	struct Pair
 	{
-		GhostBody* a = nullptr;
-		GhostBody* b = nullptr;
-		//
+		GhostBody* a = nullptr; //!< 片方のボディ
+		GhostBody* b = nullptr; //!< もう片方のボディ
+
+		/** コンストラクタ */
 		Pair(GhostBody* bodyA, GhostBody* bodyB)
 			: a(bodyA), b(bodyB)
 		{
@@ -82,10 +83,11 @@ private:
 	 */
 	struct PairInfo
 	{
-		CollisionPairState state;
-		int frameCount;
-		bool flaggedThisFrame;
+		CollisionPairState state; //!< 現在の衝突状態
+		int frameCount; //!< Stay状態が継続しているフレーム数
+		bool flaggedThisFrame; //!< このフレームで検出済みか（Exit判定用）
 
+		/** コンストラクタ */
 		PairInfo()
 			: state(CollisionPairState::Enter)
 			, frameCount(0)
@@ -103,12 +105,83 @@ private:
 	std::unordered_map<PairKey, PairInfo, PairKeyHash> activePairs_;
 
 public:
-	// ダメージ通知コールバック（BattleManagerなど外部から登録する）
+	/** ダメージ通知コールバック（BattleManagerなど外部から登録する） */
 	std::function<void(int, DamageNotifyType, bool)> onDamageNotify;
 
 private:
+	/** コンストラクタ */
 	CollisionHitManager();
+	/** デストラクタ */
 	~CollisionHitManager();
+
+	/** Enter: 衝突した瞬間の処理 : 一度だけ実行したい処理 */
+	void OnCollisionEnter(GhostBody* a, GhostBody* b);
+	/** Stay: 継続衝突の処理 : 継続的に実行したい処理 */
+	void OnCollisionStay(GhostBody* a, GhostBody* b, int frameCount);
+	/** Exit: 離脱した瞬間の処理 : 離脱時に一度だけ実行したい処理 */
+	void OnCollisionExit(GhostBody* a, GhostBody* b);
+
+	/* ジャスト回避 */
+	/** ジャスト回避ウィンドウ中のボス攻撃か */
+	bool IsJustAvoidPair(const Pair& hitPair);
+	/** ジャスト回避成立時の処理。ボスの調子システムをDebuff方向へ進める */
+	void OnJustAvoid(Pair& hitPair);
+
+	/**
+	 * ボスの特定の攻撃（HitStamp・チャージレーザー・SpinAttack・ThrowRock）がプレイヤーにヒットした時の共通フック
+	 * 各 UpdateBoss*Pair の中で個別に書くのを避けるためここにまとめる。ボスの調子システムをBuff方向へ進める
+	 */
+	void OnBossStrongAttackHit(BossCharacter* boss);
+	/* 通常回避（無敵） */
+	/** プレイヤーが無敵中か（回避・ダメージ硬直など） */
+	bool IsPlayerInvinciblePair(const Pair& hitPair);
+
+	/* プレイヤーの攻撃 */
+	/** 通常攻撃のフラグ取得 */
+	bool ContainsPlayerNormalAttackPair(const Pair& hitPair);
+	/** 通常攻撃の更新 */
+	void UpdatePlayerNormalAttackPair(Pair& hitPair);
+	/** スキル攻撃のフラグ取得 */
+	bool ContainsPlayerSkillAttackPair(const Pair& hitPair);
+	/** スキル攻撃の更新 */
+	void UpdatePlayerSkillAttackPair(Pair& hitPair);
+
+
+	/* ボスの攻撃 */
+	/** 通常攻撃のフラグ取得 */
+	bool ContainsBossAttackPair(const Pair& hitPair);
+	/** 通常攻撃の更新 */
+	void UpdateBossAttackPair(Pair& hitPair);
+	/** ヒットスタンプ攻撃のフラグ取得 */
+	bool ContainsBossHitStampPair(const Pair& hitPair);
+	/** ヒットスタンプ攻撃の更新 */
+	void UpdateBossHitStampPair(Pair& hitPair);
+	/** 回転攻撃のフラグ取得 */
+	bool ContainsBossSpinPair(const Pair& hitPair);
+	/** 回転攻撃の更新 */
+	void UpdateBossSpinPair(Pair& hitPair);
+	/** 岩を投げるのフラグ取得 */
+	bool ContainsBossThrowRockPair(const Pair& hitPair);
+	/** 岩を投げるの更新 */
+	void UpdateBossThrowRockPair(Pair& hitPair);
+	/** 弱いレーザーのフラグ取得 */
+	bool ContainsBossLaserWeakPair(const Pair& hitPair);
+	/** 弱いレーザーの更新 */
+	void UpdateBossLaserWeakPair(Pair& hitPair);
+	/** 強いレーザーのフラグ取得 */
+	bool ContainsBossLaserStrongPair(const Pair& hitPair);
+	/** 強いレーザーの更新 */
+	void UpdateBossLaserStrongPair(Pair& hitPair);
+
+	/* キャラクターの誰かの攻撃 */
+	/** 地雷(対プレイヤー)のフラグ取得 */
+	bool ContainsCharacterLandminePlayerPair(const Pair& hitPair);
+	/** 地雷(対プレイヤー)の更新 */
+	void UpdateCharacterLandminePlayerPair(Pair& hitPair);
+	/** 地雷(対ボス)のフラグ取得 */
+	bool ContainsCharacterLandmineBossPair(const Pair& hitPair);
+	/** 地雷(対ボス)の更新 */
+	void UpdateCharacterLandmineBossPair(Pair& hitPair);
 
 
 public:
@@ -126,70 +199,32 @@ public:
 	void OnBodyRemoved(GhostBody* body);
 
 	/* コリジョンがヒットしたときに流すSE */
+	/** 被弾時のSEを再生する */
 	void UpdateTakeHitSound();
+	/** 攻撃ヒット時のSEを再生する */
 	void UpdateAttackHitSound();
 
-private:
-	/** Enter: 衝突した瞬間の処理 : 一度だけ実行したい処理 */
-	void OnCollisionEnter(GhostBody* a, GhostBody* b);
-	/** Stay: 継続衝突の処理 : 継続的に実行したい処理 */
-	void OnCollisionStay(GhostBody* a, GhostBody* b, int frameCount);
-	/** Exit: 離脱した瞬間の処理 : 離脱時に一度だけ実行したい処理 */
-	void OnCollisionExit(GhostBody* a, GhostBody* b);
-
-	/* ジャスト回避 */
-	bool IsJustAvoidPair(const Pair& hitPair);      //!< ジャスト回避ウィンドウ中のボス攻撃か
-	void OnJustAvoid(Pair& hitPair);                //!< ジャスト回避成立時の処理。ボスの調子システムを動揺方向へ進める
-
-	// ボスの特定の攻撃（HitStamp・チャージレーザー・SpinAttack・ThrowRock）がプレイヤーにヒットした時の共通フック
-	// 各 UpdateBoss*Pair の中で個別に書くのを避けるためここにまとめる。ボスの調子システムを強気方向へ進める
-	void OnBossStrongAttackHit(BossCharacter* boss);
-	/* 通常回避（無敵） */
-	bool IsPlayerInvinciblePair(const Pair& hitPair); //!< プレイヤーが無敵中か（回避・ダメージ硬直など）
-
-	/* プレイヤーの攻撃 */
-	bool ContainsPlayerNormalAttackPair(const Pair& hitPair);	//!< 通常攻撃のフラグ取得
-	void UpdatePlayerNormalAttackPair(Pair& hitPair);			//!< 通常攻撃の更新
-	bool ContainsPlayerSkillAttackPair(const Pair& hitPair);	//!< スキル攻撃のフラグ取得
-	void UpdatePlayerSkillAttackPair(Pair& hitPair);			//!< スキル攻撃の更新
-
-
-	/* ボスの攻撃 */
-	bool ContainsBossAttackPair(const Pair& hitPair);	//!< 通常攻撃のフラグ取得
-	void UpdateBossAttackPair(Pair& hitPair);			//!< 通常攻撃の更新
-	bool ContainsBossHitStampPair(const Pair& hitPair);	//!< ヒットスタンプ攻撃のフラグ取得
-	void UpdateBossHitStampPair(Pair& hitPair);			//!< ヒットスタンプ攻撃の更新
-	bool ContainsBossSpinPair(const Pair& hitPair);	//!< 回転攻撃のフラグ取得
-	void UpdateBossSpinPair(Pair& hitPair);			//!< 回転攻撃の更新
-	bool ContainsBossThrowRockPair(const Pair& hitPair);	//!< 岩を投げるのフラグ取得
-	void UpdateBossThrowRockPair(Pair& hitPair);			//!< 岩を投げるの更新
-	bool ContainsBossLaserWeakPair(const Pair& hitPair);	//!< 弱いレーザーのフラグ取得
-	void UpdateBossLaserWeakPair(Pair& hitPair);			//!< 弱いレーザーの更新
-	bool ContainsBossLaserStrongPair(const Pair& hitPair);	//!< 強いレーザーのフラグ取得
-	void UpdateBossLaserStrongPair(Pair& hitPair);			//!< 強いレーザーの更新
-
-	/* キャラクターの誰かの攻撃 */
-	bool ContainsCharacterLandminePlayerPair(const Pair& hitPair); // 地雷(対プレイヤー)のフラグ取得
-	void UpdateCharacterLandminePlayerPair(Pair& hitPair); // 地雷(対プレイヤー)の更新
-	bool ContainsCharacterLandmineBossPair(const Pair& hitPair); // 地雷(対ボス)のフラグ取得
-	void UpdateCharacterLandmineBossPair(Pair& hitPair);// 地雷(対ボス)の更新
 
 	/**
 	 * シングルトン関連
 	 */
 private:
-	static CollisionHitManager* instance_;
+	static CollisionHitManager* instance_; //!< インスタンス
 
 
 public:
+	/** インスタンスを生成 */
 	static void Initialize()
 	{
 		if (!instance_) {
 			instance_ = new CollisionHitManager();
 		}
 	}
+	/** インスタンスを取得 */
 	static CollisionHitManager& Get() { return *instance_; }
+	/** インスタンスが利用可能か */
 	static bool IsAvailable() { return instance_ != nullptr; }
+	/** インスタンスを破棄 */
 	static void Finalize()
 	{
 		if (instance_) {

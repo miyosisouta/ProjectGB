@@ -62,11 +62,12 @@ void PhysicalBody::CreateSphere(float radius, const Vector3& position, const uin
 
 void PhysicalBody::CreateCore(const std::function<void(RigidBodyInitData& data)>& func, const uint32_t collisionAttribute, const btCollisionObject::CollisionFlags collisionFlags, const float restitution)
 {
+	// 剛体の初期化データを組み立てる（コライダー・質量・反発係数）
 	RigidBodyInitData rbInfo;
-	rbInfo.collider = collider_.get();
-	rbInfo.mass = 0.0f;
-	rbInfo.restitution = restitution;
-	// カスタム設定
+	rbInfo.collider = collider_.get(); // コライダー
+	rbInfo.mass = 0.0f;                // 質量（0=静的オブジェクト）
+	rbInfo.restitution = restitution;  // 反発係数
+	// カスタム設定（呼び出し元ごとの座標設定など）
 	func(rbInfo);
 	rigidBody_.Init(rbInfo);
 

@@ -1,5 +1,5 @@
 ﻿/**
- * Stage.cpp
+ * StageBase.cpp
  *
  * ステージの描画を行う
  */

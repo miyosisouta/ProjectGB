@@ -1,24 +1,27 @@
 ﻿#pragma once
 
-/*
+/**
  * MissionType.h
  * ミッションシステム全体で使用する列挙型・構造体の定義。
  * ロジックは持たない。
  */
 
+/** ミッションの状態 */
 enum class MissionState
 {
-	enActive,
-	enCleared,
-	enFailed
+	enActive,  //!< 進行中
+	enCleared, //!< クリア済み
+	enFailed   //!< 失敗済み
 };
 
+/** ミッションのUI通知タイプ */
 enum class MissionUpdateType
 {
 	enCount,   //!< 回数カウント系（countUpdatedThisFrame_ で検知）
 	enOneShot, //!< 一回で出る系（クリア・失敗時のみ）
 };
 
+/** ミッションの識別ID */
 enum class MissionID
 {
     /* なにもない */

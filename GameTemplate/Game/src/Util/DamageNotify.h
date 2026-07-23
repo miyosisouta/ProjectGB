@@ -5,19 +5,19 @@
  * ダメージ通知の型定義と通知キューの管理
  */
 
- // ダメージ通知の種別
+ /** ダメージ通知の種別 */
 enum class DamageNotifyType
 {
-    AttackHit,  // プレイヤーがボスに与えたダメージ
-    TakeHit,    // プレイヤーが受けたダメージ
+    AttackHit,  //!< プレイヤーがボスに与えたダメージ
+    TakeHit,    //!< プレイヤーが受けたダメージ
 };
 
-// ダメージ通知1件分
+/** ダメージ通知1件分 */
 struct DamageNotify
 {
-    int              damage = 0;
-    DamageNotifyType type = DamageNotifyType::AttackHit;
-    bool             isCritical = false;
+    int              damage = 0;                             //!< 確定したダメージ値
+    DamageNotifyType type = DamageNotifyType::AttackHit;      //!< 与えた/受けたの種別
+    bool             isCritical = false;                      //!< クリティカルかどうか
 };
 
 /**
@@ -26,6 +26,13 @@ struct DamageNotify
  */
 class DamageNotifyQueue
 {
+private:
+    static constexpr int kMaxNotify = 16; //!< 通知の最大件数
+    DamageNotify buffer_[kMaxNotify];     //!< 固定長の通知バッファ
+    int head_ = 0;                 //!< 読み取り位置
+    int tail_ = 0;                 //!< 書き込み位置
+    int notifyCount_ = 0;                 //!< 現在の通知件数
+
 public:
     /**
      * ダメージ通知を積む
@@ -64,11 +71,4 @@ public:
 
         return notify;
     }
-
-private:
-    static constexpr int kMaxNotify = 16; //!< 通知の最大件数
-    DamageNotify buffer_[kMaxNotify];     //!< 固定長の通知バッファ
-    int head_ = 0;                 //!< 読み取り位置
-    int tail_ = 0;                 //!< 書き込み位置
-    int notifyCount_ = 0;                 //!< 現在の通知件数
 };

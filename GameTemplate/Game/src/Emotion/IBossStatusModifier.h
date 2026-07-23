@@ -1,11 +1,14 @@
 ﻿#pragma once
 
-// ボスのステータスへの倍率修正を提供するインターフェース
-// EmotionSystem 以外の修正要因（今後増える場合）も同じ口で差し込める
-// BossStatus は IBossStatusModifier* のリストを持ち、攻撃力・攻撃速度・被ダメージ取得時に全修正子を適用する
+/**
+ * ボスのステータスへの倍率修正を提供するインターフェース
+ * EmotionSystem 以外の修正要因（今後増える場合）も同じ口で差し込める
+ * BossStatus は IBossStatusModifier* のリストを持ち、攻撃力・攻撃速度・被ダメージ取得時に全修正子を適用する
+ */
 class IBossStatusModifier
 {
 public:
+    /** デストラクタ */
     virtual ~IBossStatusModifier() = default;
 
     /** 攻撃力倍率を返す（1.0f = 等倍） */
