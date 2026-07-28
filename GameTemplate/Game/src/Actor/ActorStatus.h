@@ -152,13 +152,27 @@ public:
 
 
 public:
-    /** ダメージを与える(hpがマイナスにならないようにクランプ) */
+    /**
+     * HP減少を一時的に無効化する（チュートリアル中など、実際のHP変化を止めたい場面で使う）
+     * Player・Boss共通のActorStatusにあるフラグなので、これ1つで両方のHP減少を止められる
+     */
+    inline static void SetDamageDisabled(bool flg) { s_damageDisabled = flg; }
+
+    /** ダメージを与える(hpがマイナスにならないようにクランプ)。s_damageDisabled中はHPは減らさず、被弾フラグだけ立てる */
     void Damage(int damage)
     {
-        hp_ -= damage;
-        if (hp_ < 0) hp_ = 0;
+        if (!s_damageDisabled)
+        {
+            hp_ -= damage;
+            if (hp_ < 0) hp_ = 0;
+        }
         isTakeDamage_ = true;
     }
+
+private:
+    static bool s_damageDisabled; //!< trueの間はDamage()がHPを実際には減らさない（ActorStatus.cppで定義）
+
+public:
 
     /** 回復処理(maxHp_ を超えないようにクランプする) */
     void Heal(int value)
@@ -556,6 +570,8 @@ public:
     inline StaminaState GetStaminaState()  const { return staminaState_; }
     /** スタミナの状態を設定 */
     inline void SetStaminaState(const StaminaState state) { staminaState_ = state; }
+    /** スタミナを最大まで回復し、枯渇状態も解除する（チュートリアル終了時など、状態を初期化したい場面で使う） */
+    inline void ResetStamina() { stamina_ = maxStamina_; isExhausted_ = false; staminaState_ = StaminaState::enNone; }
 
     /** 毎秒のスタミナ消費量の取得 */
     inline float GetStaminaDrainPerSec()       const { return staminaDrainPerSec_; }
@@ -675,6 +691,8 @@ public:
     inline void AddInvincible(InvincibleFlags flag)    { invincibleFlag_ |=  static_cast<uint32_t>(flag); }
     // &= ~ : 指定フラグのビットを 0 にする（~ で対象ビットだけ反転させてから AND で消す）
     inline void RemoveInvincible(InvincibleFlags flag) { invincibleFlag_ &= ~static_cast<uint32_t>(flag); }
+    /** 無敵フラグを全て解除する（チュートリアル終了時など、状態を初期化したい場面で使う） */
+    inline void ClearInvincible() { invincibleFlag_ = 0; }
     // != 0 : どれか1つでもフラグが立っていれば true
     inline bool IsInvincible()      const { return invincibleFlag_ != 0; }
     // & : enJustAvoid のビットだけ取り出して 0 以外なら true（ジャスト回避ウィンドウ中）

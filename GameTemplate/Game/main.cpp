@@ -77,6 +77,7 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 	ParameterManager::Get().LoadEmotionParamData("Assets/Parameter/EmotionParameter.json");
 	ParameterManager::Get().LoadBossStateParamData("Assets/Parameter/BossStateParameter.json");
 	ParameterManager::Get().LoadBossPhaseCutSceneParamData("Assets/Parameter/BossPhaseCutSceneParameter.json");
+	ParameterManager::Get().LoadTutorialParamData("Assets/Parameter/TutorialParameter.json");
 
 	// カメラコンフィグ
 	CameraConfig::CreateInstance();

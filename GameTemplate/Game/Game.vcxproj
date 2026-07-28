@@ -242,6 +242,9 @@
     <ClCompile Include="src\Actor\StateMachine.cpp" />
     <ClCompile Include="src\Battle\BattleManager.cpp" />
     <ClCompile Include="src\Battle\BossEmotionPhaseManager.cpp" />
+    <ClCompile Include="src\Battle\TutorialManager.cpp" />
+    <ClCompile Include="src\Battle\TutorialBossScript.cpp" />
+    <ClCompile Include="src\Battle\TutorialStageText.cpp" />
     <ClCompile Include="src\Battle\Mission.cpp" />
     <ClCompile Include="src\Battle\MissionCondition.cpp" />
     <ClCompile Include="src\Battle\MissionEvent.cpp" />
@@ -359,6 +362,9 @@
     <ClInclude Include="src\Actor\StateMachine.h" />
     <ClInclude Include="src\Battle\BattleManager.h" />
     <ClInclude Include="src\Battle\BossEmotionPhaseManager.h" />
+    <ClInclude Include="src\Battle\TutorialManager.h" />
+    <ClInclude Include="src\Battle\TutorialBossScript.h" />
+    <ClInclude Include="src\Battle\TutorialStageText.h" />
     <ClInclude Include="src\Battle\Mission.h" />
     <ClInclude Include="src\Battle\MissionCondition.h" />
     <ClInclude Include="src\Battle\MissionEvent.h" />

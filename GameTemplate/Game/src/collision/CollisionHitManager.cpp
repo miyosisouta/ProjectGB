@@ -223,7 +223,8 @@ void CollisionHitManager::OnCollisionEnter(GhostBody* a, GhostBody* b)
 			OnJustAvoid(pair);
 		}
 		else if (IsPlayerInvinciblePair(pair)) {
-			// 通常回避（無敵中）: 何もせずダメージをすべてスキップ
+			// 通常回避（無敵中）: ダメージはすべてスキップし、回避成立をコールバックで通知する
+			if (onBossAttackAvoided) { onBossAttackAvoided(); }
 		}
 		else {
 			// 通常攻撃

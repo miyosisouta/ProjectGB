@@ -16,6 +16,7 @@ class MissionManager
 {
 private:
     std::vector<std::unique_ptr<Mission>> missions_; //!< ミッション管理用変数
+    bool enabled_ = true; //!< falseの間はNotify*が全て無視される（チュートリアル中の進捗汚染防止用）
 
 
     /*========================================================*/
@@ -24,6 +25,10 @@ private:
 private:
     /** イベントを通知 */
     void NotifyEvent(const MissionEventData& ev);
+
+public:
+    /** 通知の有効/無効を切り替える（チュートリアル中はfalseにしてNotify*を無視させる） */
+    inline void SetEnabled(bool flg) { enabled_ = flg; }
 
 public:
     /** 通常スキルの通知 */

@@ -30,6 +30,7 @@
 #include "src/UI/GameClearMenu.h"
 #include "src/UI/GameOverMenu.h"
 #include "src/UI/GameStartMenu.h"
+#include "src/UI/LoadingMenu.h"
 #include "src/UI/MissionMenu.h"
 #include "src/UI/TimerMenu.h"
 #include "../../k2Engine/graphics/DitherCBData.h"
@@ -46,6 +47,9 @@ namespace
 	/* ディザリング */
 	constexpr float DITHERING_ENABLE_TRUE_VALUE  = 1.0f;
 	constexpr float DITHERING_ENABLE_FALSE_VALUE = 0.0f;
+
+	/* チュートリアル終了後、ボス登場演出に移るまでのLoading表示秒数 */
+	constexpr float TUTORIAL_LOADING_DURATION = 3.0f;
 }
 
 BattleManager* BattleManager::myInstance_ = nullptr;
@@ -79,14 +83,13 @@ BattleManager::BattleManager()
 	// ボス
 	{
 #if defined(_DEBUG)
-		// デバッグ実行時、ステージ選択を経由せず直接起動した場合のフォールバック設定
-		if (CharacterDataBase::Get().GetStageType() == BossType::enNone) {
-			CharacterDataBase::Get().SetStageType(BossType::enGorilla);
-		}
 		if (CharacterDataBase::Get().GetGameModeType() == GameModeType::enNone) {
 			CharacterDataBase::Get().SetGameModeType(GameModeType::enNormal);
 		}
 #endif
+
+		// チュートリアルはゴリラ固定で行うため、選択されていたステージ種別に関わらずここで上書きする
+		CharacterDataBase::Get().SetStageType(BossType::enGorilla);
 
 		// ボス生成・管理クラスを作り、攻撃対象をプレイヤーに設定してボスを生成する
 		boss_ = new BossSpawner();
@@ -158,20 +161,16 @@ BattleManager::BattleManager()
 		initOption.invert = CameraManager::Get().GetInvert();
 		initOption.fovDeg = param->cameraParam.fovy;
 		SetCameraOption(initOption);
+
+		// チュートリアル中はこのカメラでプレイヤーを追従する（ボス登場演出は Tutorial→Entry 遷移時にセットアップする）
+		CameraManager::Get().Register(GameCamera::ID(), gameCameraController_);
+		CameraManager::Get().SwitchCamera(gameCameraController_);
 	}
 
 	// 演出
 	{
-		// カットシーン用タイマーを生成し、対戦するボスの種類に応じた登場演出をセットアップする
+		// カットシーン用タイマーを生成する（ボス登場演出のセットアップは Tutorial→Entry 遷移時に行う）
 		cutSceneScheduler_ = std::make_unique<TaskSchedulerSystem>();
-		BossType stageType = CharacterDataBase::Get().GetStageType();
-
-		if (stageType == BossType::enGorilla) {
-			SetupEntryGolliraCutScene();
-		}
-		if (stageType == BossType::enTurtle) {
-			SetupEntryTurtleCutScene();
-		}
 	}
 
 	// その他
@@ -187,6 +186,27 @@ BattleManager::BattleManager()
 		// ミッション管理シングルトンを生成し、対戦するボスの種類に応じたミッション一式を組み立てる
 		MissionManager::CreateInstance();
 		MissionManager::Get().InitByBossType(CharacterDataBase::Get().GetStageType());
+
+		// チュートリアル進行管理シングルトンを生成する
+		TutorialManager::CreateInstance();
+
+		if (CharacterDataBase::Get().IsTutorialEnabled())
+		{
+			// チュートリアル中はミッション・タイマーは無し（Tutorial→Entry遷移時にAllへ戻す）
+			uiManager_.SetUpdateMask(UIManager::All & ~UIManager::Mission);
+			uiManager_.SetDrawMask(UIManager::All & ~UIManager::Mission);
+
+			// チュートリアル中はミッション進捗に反映しない・HPも実際には減らさない（Tutorial→Entry遷移時に元に戻す）
+			MissionManager::Get().SetEnabled(false);
+			ActorStatus::SetDamageDisabled(true);
+		}
+		else
+		{
+			// チュートリアルを行わない場合：最初から全行動を解禁した状態にし、ボス登場演出から始める
+			TutorialManager::Get().RequestSkip();
+			gameState_ = GameState::Entry;
+		}
+
 		// 草曲げ管理シングルトンを生成する
 		GrassBendManager::Initialize();
 
@@ -195,6 +215,12 @@ BattleManager::BattleManager()
 		CollisionHitManager::Get().onDamageNotify = [this](int damage, DamageNotifyType type, bool isCritical)
 			{
 				PushDamageNotify(damage, type, isCritical);
+			};
+
+		// チュートリアル「かいひ」段階のクリア判定（実際にボスの攻撃をよけられた瞬間）を登録する
+		CollisionHitManager::Get().onBossAttackAvoided = []()
+			{
+				TutorialManager::Get().NotifyBossAttackAvoided();
 			};
 	}
 }
@@ -218,6 +244,7 @@ BattleManager::~BattleManager()
 
 	// このクラスが生成したシングルトンを破棄する
 	MissionManager::Get().DestroyInstance();
+	TutorialManager::Get().DestroyInstance();
 	GrassBendManager::Finalize();
 }
 
@@ -228,8 +255,35 @@ void BattleManager::Update()
 	UpdateDebugGroupInput();
 #endif
 
+	// BossEmotionPhaseManager / TutorialManager の遅延初期化
+	// コンストラクタ時点では BossCharacter::Start() が未完了のため、
+	// ゲーム状態に関わらず、ボスの準備が整った最初のフレームで Init() する
+	// （Tutorial が Entry より先に動くようになったため、Playing 突入を待たずに行う）
+	if (!bossEmotionPhaseManagerInitialized_)
+	{
+		auto* boss = boss_->GetBoss();
+		auto* bossStatus = boss ? boss->GetStatus()->As<BossStatus>() : nullptr;
+		if (bossStatus)
+		{
+			bossEmotionPhaseManager_.Init(boss, &bossStatus->GetEmotionSystem());
+			emotionEffectObserver_.Init(boss, &bossStatus->GetEmotionSystem());
+			TutorialManager::Get().Init(player_, boss, &bossStatus->GetEmotionSystem());
+			bossEmotionPhaseManagerInitialized_ = true;
+		}
+	}
+
 	switch (gameState_)
 	{
+		case GameState::Tutorial:
+		{
+			UpdateTutorialState();
+			break;
+		}
+		case GameState::TutorialLoading:
+		{
+			UpdateTutorialLoadingState();
+			break;
+		}
 		case GameState::Entry:
 		{
 			// ボス登場カットシーンが再生中ならここで止まる（trueが返る間はEntryのまま）
@@ -260,30 +314,12 @@ void BattleManager::Update()
 		}
 		case GameState::Playing:
 		{
-			// BossEmotionPhaseManager の遅延初期化
-			// コンストラクタ時点では BossCharacter::Start() が未完了のため、
-			// Playing に入った最初のフレームで Init() する
-			if (!bossEmotionPhaseManagerInitialized_)
-			{
-				auto* boss = boss_->GetBoss();
-				auto* bossStatus = boss ? boss->GetStatus()->As<BossStatus>() : nullptr;
-				if (bossStatus)
-				{
-					bossEmotionPhaseManager_.Init(boss, &bossStatus->GetEmotionSystem());
-					emotionEffectObserver_.Init(boss, &bossStatus->GetEmotionSystem());
-					bossEmotionPhaseManagerInitialized_ = true;
-				}
-			}
-			bossEmotionPhaseManager_.Update(); // ダメージ通知管理
-			emotionEffectObserver_.Update(); // 感情システム : 条件により、ボスにバフデバフがかかる
 			CheckBossPhaseCutsceneTrigger(); // ボスHP50%/25%でズームアウト演出を開始する
 			cutSceneScheduler_->Update(g_gameTime->GetFrameDeltaTime()); // ボスHP閾値カットシーンのタイマーを進める
 			UpdateBossPhaseCutsceneCamera(g_gameTime->GetFrameDeltaTime()); // ボスHP閾値カットシーンのカメライージングを進める
 			UpdateBossPhaseCutsceneTilt(g_gameTime->GetFrameDeltaTime()); // HP25%演出：ボスの前後傾き・左右揺れイージングを進める
 
 			gameTimer_.Update();
-			boss_->Update();
-			GrassBendManager::Get().Update(g_gameTime->GetFrameDeltaTime());
 
 			// ミッションの状態をUIに通知（MissionManager::Update()の前に読む）
 			if (auto* missionMenu = uiManager_.GetMissionMenu())
@@ -316,19 +352,7 @@ void BattleManager::Update()
 
 			MissionManager::Get().Update();
 
-			// ディザリング設定
-			g_ditherCBData.isEnable       = DITHERING_ENABLE_TRUE_VALUE;							// ディザを有効に
-			g_ditherCBData.cameraWorldPos = CameraManager::Get().GetCurrentCameraData().position;	// カメラの現在の座標を取得
-			g_ditherCBData.playerWorldPos = player_->GetTransformPosition();						// プレイヤーの座標を取得
-
-			// カメラ更新
-			auto gameCamera = gameCameraController_->As<GameCamera>();				// 型変換をしてカメラのインターフェースを取得
-			auto cameraData = gameCamera->GetCameraData();							// カメラデータを取得
-			cameraSteering_->Update(cameraData, g_gameTime->GetFrameDeltaTime());	// 現在のデータと経過時間をもとに更新
-			gameCamera->SetState(cameraData);										// データを設定
-
-			// スカイキューブをプレイヤーに追従
-			skyCube_->SetPosition(player_->GetTransformPosition());
+			UpdateSharedGameplaySystems(); // ボス見た目更新・草・ディザ・カメラ/スカイキューブ追従（Tutorialと共通処理）
 
 			// タイマー UI に値を渡す
 			if (auto* timerMenu = uiManager_.GetTimerMenu()) {
@@ -403,6 +427,9 @@ void BattleManager::Render(RenderContext& rc)
 	// UIと攻撃オブジェクトを描画する（本体キャラクター等はGameObjectManager経由で個別に描画される）
 	uiManager_.Render(rc);
 	AttackObjectManager::Get().Render(rc);
+
+	// チュートリアル中の段階表示（本実装の指示UIができるまでの仮表示）
+	if (gameState_ == GameState::Tutorial) { TutorialManager::Get().Render(rc); }
 }
 
 
@@ -412,6 +439,116 @@ void BattleManager::SetGroupMask(const uint32_t updateMask, const uint32_t drawM
 	updateMask_ = updateMask;
 	drawMask_   = drawMask;
 	ApplyGroupMasks();
+}
+
+
+void BattleManager::UpdateTutorialState()
+{
+	if (!tutorialInitialized_)
+	{
+		// チュートリアル開始：プレイヤーを操作可能にし、ボスは(AIは止めたまま)見た目だけ更新する
+		playerController_->Activate();
+		boss_->SetUpdate(true);
+		tutorialInitialized_ = true;
+	}
+
+	// Enterキーでチュートリアル全体を即座に終了する
+	// NOTE: enActionInteract(決定)はゲームパッドのAボタンにも割り当たっており、
+	//       ダッシュ/回避と同じ物理ボタンのため誤爆する。ここではキーボードのEnterキーのみを直接見る
+	{
+		const bool curEnterPressed = (GetAsyncKeyState(VK_RETURN) & 0x8000) != 0;
+		if (curEnterPressed && !tutorialSkipKeyPrevPressed_)
+		{
+			TutorialManager::Get().RequestSkip();
+		}
+		tutorialSkipKeyPrevPressed_ = curEnterPressed;
+	}
+
+	TutorialManager::Get().Update(); // 各段階の完了判定
+	UpdateSharedGameplaySystems(); // ボス見た目更新・草・ディザ・カメラ/スカイキューブ追従（Playingと共通処理）
+
+	if (!TutorialManager::Get().IsFinished()) { return; }
+
+	// プレイヤー・ボスの位置/向き/状態はTutorialManager::RequestSkip()側で既に初期位置・Idleへ戻し済みなので、
+	// ここでは操作を止めるだけでよい
+	playerController_->Deactivate();
+
+	// チュートリアル中に動かしたカメラの向きが残らないよう、初期状態へ戻す
+	// NOTE: ResetRotation()はCameraSteering内部の蓄積値を戻すだけで、gameCameraController_のCameraDataは
+	//       次にUpdate()が呼ばれるまで古い値のまま。Entry/GameStart中はUpdateSharedGameplaySystems()
+	//       （＝cameraSteering_->Update()）を呼んでいないため、ここで明示的に1回分反映しておかないと
+	//       Entry〜GameStartの間、チュートリアルで動かした位置のまま固まって見えてしまう
+	cameraSteering_->ResetRotation();
+	{
+		auto gameCamera = gameCameraController_->As<GameCamera>();
+		auto cameraData = gameCamera->GetCameraData();
+		cameraSteering_->Update(cameraData, 0.0f); // deltaTime=0でリセット直後の位置だけを反映する
+		gameCamera->SetState(cameraData);
+	}
+
+	// ここから先はミッション進捗に反映する・HPも実際に減らす（本戦の挙動に戻す）
+	MissionManager::Get().SetEnabled(true);
+	ActorStatus::SetDamageDisabled(false);
+
+	// Loading演出の間はミッション等を隠し、プレイヤー・ボスの見た目も隠す
+	uiManager_.SetUpdateMask(UIManager::CutScene);
+	uiManager_.SetDrawMask(UIManager::CutScene);
+	player_->SetDraw(false);
+	if (auto* boss = boss_->GetBoss()) { boss->SetDraw(false); }
+
+	// 既定秒数のLoadingを挟んでからボス登場演出へ引き継ぐ
+	uiManager_.SetupCutScene<LoadingMenu>("Assets/ui/layout/LoadingMenu.json");
+	tutorialLoadingElapsed_ = 0.0f;
+	gameState_ = GameState::TutorialLoading;
+}
+
+
+void BattleManager::UpdateTutorialLoadingState()
+{
+	tutorialLoadingElapsed_ += g_gameTime->GetFrameDeltaTime();
+	if (tutorialLoadingElapsed_ < TUTORIAL_LOADING_DURATION) { return; }
+
+	// Loading演出を終了し、見た目・UI表示を元に戻す
+	uiManager_.ReleaseCutSceneLayout();
+	uiManager_.SetUpdateMask(UIManager::All);
+	uiManager_.SetDrawMask(UIManager::All);
+	player_->SetDraw(true);
+	if (auto* boss = boss_->GetBoss()) { boss->SetDraw(true); }
+
+	// ボス登場演出をセットアップする（カメラの登録・切り替えもこの中で行われる）
+	const BossType stageType = CharacterDataBase::Get().GetStageType();
+	if (stageType == BossType::enGorilla) { SetupEntryGolliraCutScene(); }
+	if (stageType == BossType::enTurtle)  { SetupEntryTurtleCutScene(); }
+
+	gameState_ = GameState::Entry;
+}
+
+
+void BattleManager::UpdateSharedGameplaySystems()
+{
+	// ボスの感情システム（バフ/デバフ）とHP閾値カットシーン管理の下地を更新
+	bossEmotionPhaseManager_.Update();
+	emotionEffectObserver_.Update();
+
+	// ボスの見た目（Tutorial中はSetControlEnabled(false)のままなのでアニメーションのみ）を更新
+	boss_->Update();
+
+	// 草の押し倒し/復元を進める
+	GrassBendManager::Get().Update(g_gameTime->GetFrameDeltaTime());
+
+	// ディザリング設定
+	g_ditherCBData.isEnable       = DITHERING_ENABLE_TRUE_VALUE;							// ディザを有効に
+	g_ditherCBData.cameraWorldPos = CameraManager::Get().GetCurrentCameraData().position;	// カメラの現在の座標を取得
+	g_ditherCBData.playerWorldPos = player_->GetTransformPosition();						// プレイヤーの座標を取得
+
+	// カメラ更新
+	auto gameCamera = gameCameraController_->As<GameCamera>();				// 型変換をしてカメラのインターフェースを取得
+	auto cameraData = gameCamera->GetCameraData();							// カメラデータを取得
+	cameraSteering_->Update(cameraData, g_gameTime->GetFrameDeltaTime());	// 現在のデータと経過時間をもとに更新
+	gameCamera->SetState(cameraData);										// データを設定
+
+	// スカイキューブをプレイヤーに追従
+	skyCube_->SetPosition(player_->GetTransformPosition());
 }
 
 
@@ -522,9 +659,13 @@ void BattleManager::SetupEntryGolliraCutScene()
 	uiManager_.SetupCutScene<MenuBase>("Assets/ui/layout/BossEntryCutScene.json");
 
 	// 演出カメラを生成し、通常プレイ用カメラから切り替える
+	// NOTE: position/targetを未設定のまま切り替えると、firstCutTimeのタイマーが発火するまでの間
+	//       原点(0,0,0)を向いた状態で一瞬映ってしまうため、最初から1カット目の位置・注視点を設定しておく
 	CameraData initData;
-	initData.fov     = Math::DegToRad(param->cameraParam.fovy);
-	initData.farClip = param->cameraParam.farClip;
+	initData.fov      = Math::DegToRad(param->cameraParam.fovy);
+	initData.farClip  = param->cameraParam.farClip;
+	initData.position = param->cutSceneParam.firstCutCameraPos;
+	initData.target   = param->cutSceneParam.cutSceneTargetPos;
 	auto gameCamera  = std::make_shared<GameCamera>();
 	gameCamera->SetState(initData);
 	bossEntryCameraController_ = gameCamera;
@@ -532,20 +673,16 @@ void BattleManager::SetupEntryGolliraCutScene()
 	CameraManager::Get().Register(GameCamera::ID(), bossEntryCameraController_);
 	CameraManager::Get().SwitchCamera(bossEntryCameraController_);
 
+	// 1カット目: カメラは上のinitDataで既に1カット目の位置に構えているので、
+	// ゴリラ本体と名前(A)もLoadingのフェードアウトに合わせてこの時点で表示する
+	// （firstCutTimeのタイマー任せにすると、カメラは構え済みなのにUIだけ遅れて出てしまう）
+	{
+		auto* menu = uiManager_.GetCutSceneMenu();
+		menu->GetUI<UIIcon>(Hash32("gollira"))->isDraw        = true;
+		menu->GetUI<UIIcon>(Hash32("gollira_nameA"))->isDraw  = true;
+	}
+
 	// カットシーンスケジューラー: 各カットの切り替わりタイミングでカメラ位置とUI表示を変える
-	// 1カット目: カメラを最初の位置へ、ゴリラ本体と名前(A)を表示する
-	cutSceneScheduler_->AddTimer(param->cutSceneParam.firstCutTime, [this, param]()
-		{
-			CameraData cameraData;
-			cameraData.position = param->cutSceneParam.firstCutCameraPos;
-			cameraData.target   = param->cutSceneParam.cutSceneTargetPos;
-			bossEntryCameraController_->As<GameCamera>()->SetState(cameraData);
-
-			auto* menu = uiManager_.GetCutSceneMenu();
-			menu->GetUI<UIIcon>(Hash32("gollira"))->isDraw        = true;
-			menu->GetUI<UIIcon>(Hash32("gollira_nameA"))->isDraw  = true;
-		});
-
 	// 2カット目: カメラを2番目の位置へ、名前(C)を追加表示する
 	cutSceneScheduler_->AddTimer(param->cutSceneParam.secondCutTime, [this, param]()
 		{
@@ -596,9 +733,13 @@ void BattleManager::SetupEntryTurtleCutScene()
 	uiManager_.SetupCutScene<MenuBase>("Assets/ui/layout/BossEntryCutScene.json");
 
 	// 演出カメラを生成し、通常プレイ用カメラから切り替える
+	// NOTE: position/targetを未設定のまま切り替えると、firstCutTimeのタイマーが発火するまでの間
+	//       原点(0,0,0)を向いた状態で一瞬映ってしまうため、最初から1カット目の位置・注視点を設定しておく
 	CameraData initData;
-	initData.fov = Math::DegToRad(param->cameraParam.fovy);
-	initData.farClip = param->cameraParam.farClip;
+	initData.fov      = Math::DegToRad(param->cameraParam.fovy);
+	initData.farClip  = param->cameraParam.farClip;
+	initData.position = param->cutSceneParam.firstCutCameraPos;
+	initData.target   = param->cutSceneParam.cutSceneTargetPos;
 	auto gameCamera = std::make_shared<GameCamera>();
 	gameCamera->SetState(initData);
 	bossEntryCameraController_ = gameCamera;
@@ -606,20 +747,16 @@ void BattleManager::SetupEntryTurtleCutScene()
 	CameraManager::Get().Register(GameCamera::ID(), bossEntryCameraController_);
 	CameraManager::Get().SwitchCamera(bossEntryCameraController_);
 
+	// 1カット目: カメラは上のinitDataで既に1カット目の位置に構えているので、
+	// カメ本体と名前(A)もLoadingのフェードアウトに合わせてこの時点で表示する
+	// （firstCutTimeのタイマー任せにすると、カメラは構え済みなのにUIだけ遅れて出てしまう）
+	{
+		auto* menu = uiManager_.GetCutSceneMenu();
+		menu->GetUI<UIIcon>(Hash32("turtle"))->isDraw = true;
+		menu->GetUI<UIIcon>(Hash32("turtle_nameA"))->isDraw = true;
+	}
+
 	// カットシーンスケジューラー: 各カットの切り替わりタイミングでカメラ位置とUI表示を変える
-	// 1カット目: カメラを最初の位置へ、カメ本体と名前(A)を表示する
-	cutSceneScheduler_->AddTimer(param->cutSceneParam.firstCutTime, [this, param]()
-		{
-			CameraData cameraData;
-			cameraData.position = param->cutSceneParam.firstCutCameraPos;
-			cameraData.target = param->cutSceneParam.cutSceneTargetPos;
-			bossEntryCameraController_->As<GameCamera>()->SetState(cameraData);
-
-			auto* menu = uiManager_.GetCutSceneMenu();
-			menu->GetUI<UIIcon>(Hash32("turtle"))->isDraw = true;
-			menu->GetUI<UIIcon>(Hash32("turtle_nameA"))->isDraw = true;
-		});
-
 	// 2カット目: カメラを2番目の位置へ、名前(C)を追加表示する
 	cutSceneScheduler_->AddTimer(param->cutSceneParam.secondCutTime, [this, param]()
 		{
@@ -1109,6 +1246,24 @@ void BattleManager::FreezePlayerAndBoss()
 
 	// ゲーム内時間（制限時間タイマー）を止める
 	SetPouse(true);
+}
+
+
+void BattleManager::SetWorldFrozen(bool freeze)
+{
+	isWorldFrozen_ = freeze;
+
+	// Player/Boss/Camera/Stageの更新だけを止め、描画マスクはAllのまま（＝今の見た目を保持して描画し続ける）
+	SetGroupMask(freeze ? UpdateGroup::None : UpdateGroup::All, UpdateGroup::All);
+
+	// エフェクト・サウンドも「止める」のではなく「一時停止」。破棄せず、見た目・再生位置をそのまま保持する
+	EffectManagerObject::SetUpdatePaused(freeze);
+	SoundManagerObject::SetUpdatePaused(freeze);
+	if (freeze) { SoundManager::Get().PauseAll(); }
+	else        { SoundManager::Get().ResumeAll(); }
+
+	// ゲーム内時間（制限時間タイマー）も合わせて止める/再開する
+	SetPouse(freeze);
 }
 
 

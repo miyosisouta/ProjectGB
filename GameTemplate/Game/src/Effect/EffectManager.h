@@ -152,10 +152,8 @@ public:
     /** 更新処理 */
     void Update()override;
 
-#ifdef K2_DEBUG
     /** デバッグ用: 更新の一時停止を設定 */
     static void SetUpdatePaused(bool isPaused);
     /** デバッグ用: 一時停止中か */
     static bool IsUpdatePaused();
-#endif
 };

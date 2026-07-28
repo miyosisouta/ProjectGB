@@ -106,6 +106,9 @@
     <ClCompile Include="src\Camera\CameraConfig.cpp" />
     <ClCompile Include="src\Scene\TitleBackground.cpp" />
     <ClCompile Include="src\Battle\BossEmotionPhaseManager.cpp" />
+    <ClCompile Include="src\Battle\TutorialManager.cpp" />
+    <ClCompile Include="src\Battle\TutorialBossScript.cpp" />
+    <ClCompile Include="src\Battle\TutorialStageText.cpp" />
     <ClCompile Include="src\Emotion\EmotionSystem.cpp" />
     <ClCompile Include="src\Emotion\EmotionEffectObserver.cpp" />
     <ClCompile Include="src\UI\PlayGameMenu.cpp" />
@@ -230,6 +233,9 @@
     <ClInclude Include="src\Camera\CameraConfig.h" />
     <ClInclude Include="src\Scene\TitleBackground.h" />
     <ClInclude Include="src\Battle\BossEmotionPhaseManager.h" />
+    <ClInclude Include="src\Battle\TutorialManager.h" />
+    <ClInclude Include="src\Battle\TutorialBossScript.h" />
+    <ClInclude Include="src\Battle\TutorialStageText.h" />
     <ClInclude Include="src\Emotion\EmotionSystem.h" />
     <ClInclude Include="src\Emotion\IBossStatusModifier.h" />
     <ClInclude Include="src\Emotion\IEmotionObserver.h" />

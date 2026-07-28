@@ -1,0 +1,15 @@
+{
+    "Tutorial": [
+        {
+            "comment": "チュートリアル関連パラメーター",
+
+            "requiredNormalAttackCount": 3,
+
+            "moveTimeoutDuration": 5.0,
+            "transitionDuration": 5.0,
+
+            "bossIdleDurationInTeaching": 3.0,
+            "bossIdleDurationInFree": 5.0
+        }
+    ]
+}

@@ -93,4 +93,16 @@ public:
 		config_.pitchMax = Math::DegToRad(maxDeg);
 		currentPitch_ =  Clamp(currentPitch_, config_.pitchMin, config_.pitchMax);
 	}
+
+	/**
+	 * カメラの向き（仰角・水平回転）を初期値（ターゲットの真後ろ・水平）にリセットする。
+	 * currentPitch_ / toVector_ はプレイヤーの右スティック入力で毎フレーム蓄積される値のため、
+	 * 何もしないと前のシーン（チュートリアル等）で動かした向きがそのまま残ってしまう。
+	 * 新しいシーン・フェーズでカメラを初期状態から始めたい時に呼ぶ。
+	 */
+	void ResetRotation()
+	{
+		currentPitch_ = 0.0f;
+		toVector_ = Vector3(0.0f, config_.height, config_.distance);
+	}
 };

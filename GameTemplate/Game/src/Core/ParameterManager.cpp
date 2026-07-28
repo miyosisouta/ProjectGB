@@ -236,6 +236,25 @@ void ParameterManager::LoadBossSpawnerParamData(const char* path)
 }
 
 // ============================================================
+//  TutorialParameter.json 読み込みヘルパー
+// ============================================================
+void ParameterManager::LoadTutorialParamData(const char* path)
+{
+	ParameterManager::Get().LoadParameterFromArray<MasterTutorialParameter>(
+		path,
+		"Tutorial",
+		[](const nlohmann::json& j, MasterTutorialParameter& p)
+		{
+			p.requiredNormalAttackCount  = j.value("requiredNormalAttackCount",  0);
+			p.moveTimeoutDuration        = j.value("moveTimeoutDuration",        0.0f);
+			p.transitionDuration         = j.value("transitionDuration",         0.0f);
+			p.bossIdleDurationInTeaching = j.value("bossIdleDurationInTeaching", 0.0f);
+			p.bossIdleDurationInFree     = j.value("bossIdleDurationInFree",     0.0f);
+		}
+	);
+}
+
+// ============================================================
 //  SkillParameter.json 読み込みヘルパー
 // ============================================================
 void ParameterManager::LoadSkillParamData(const char* path)
