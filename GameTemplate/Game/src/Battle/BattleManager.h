@@ -37,6 +37,7 @@
 #include "src/Util/DamageNotify.h"
 #include "src/Util/Curve.h"
 #include "src/Battle/BossEmotionPhaseManager.h"
+#include "src/Battle/TutorialManager.h"
 #include "src/Emotion/EmotionEffectObserver.h"
 #include "src/Core/ParameterManager.h"
 
@@ -54,7 +55,9 @@ private:
 	/** ゲームの進行状態 */
 	enum class GameState
 	{
-		Entry,          //!< 開始前の演出
+		Tutorial,          //!< チュートリアル（ボス登場演出より前）
+		TutorialLoading,   //!< チュートリアル終了〜ボス登場演出の間のLoading演出
+		Entry,             //!< 開始前の演出
 		GameStart,      //!< ゲームスタート演出
 		Playing,        //!< メインのゲームプレイ中
 		ResultClear,    //!< スコア表示・リザルト演出
@@ -98,6 +101,9 @@ private:
 	BossEmotionPhaseManager bossEmotionPhaseManager_;
 	EmotionEffectObserver   emotionEffectObserver_;                  //!< 感情レベル変化時にエフェクトを再生するオブザーバー
 	bool bossEmotionPhaseManagerInitialized_ = false; //!< Start()完了後に1回だけ Init() するためのフラグ
+	bool tutorialInitialized_ = false; //!< Tutorial突入時に1回だけ初期化処理を行うためのフラグ
+	bool tutorialSkipKeyPrevPressed_ = false; //!< チュートリアルスキップ用Enterキーの前フレーム押下状態（立ち上がり検知用）
+	float tutorialLoadingElapsed_ = 0.0f; //!< TutorialLoading突入からの経過秒数
 
 	// --- ボスHP閾値カットシーン（HP50%/25%でボスへズームアウトする演出） ---
 	bool bossPhase50CutsceneTriggered_ = false; //!< HP50%閾値カットシーンの発火済みフラグ（重複発火を防ぐ）
@@ -120,11 +126,12 @@ private:
 
 
 private:
-	GameState gameState_        = GameState::Entry;
+	GameState gameState_        = GameState::Tutorial;
 	uint32_t  updateMask_       = UpdateGroup::All;  //!< 更新グループマスク
 	uint32_t  drawMask_         = UpdateGroup::All;  //!< 描画グループマスク
 	bool      isPlayingEntryBoss_ = true;
 	bool      isPlayingResult_    = false;
+	bool      isWorldFrozen_      = false; //!< SetWorldFrozen(true)中か
 
 
 private:
@@ -222,8 +229,15 @@ public:
 	/** UIManager を取得（細かい UI 制御が必要な場合に使用） */
 	inline UIManager& GetUIManager() { return uiManager_; }
 
-	/** カットシーン中（Playing 以外）か */
-	inline bool IsCutScene()     const { return gameState_ != GameState::Playing; }
+	/** カットシーン中（Playing / Tutorial 以外）か。InGameSceneはこれでインゲームHUDの描画/更新を切り替える */
+	inline bool IsCutScene()     const { return gameState_ != GameState::Playing && gameState_ != GameState::Tutorial; }
+	/**
+	 * チュートリアル中か（チュートリアル終了後のLoading演出中を含む）。
+	 * EnterキーがパッドのStartボタンと物理的に衝突するため、InGameSceneのポーズ判定を止めるのに使う。
+	 * TutorialLoadingを含めないと、Enterでチュートリアルをスキップした瞬間に
+	 * gameState_がTutorialLoadingへ遷移済みになり、同じEnter入力でポーズも開いてしまう
+	 */
+	inline bool IsTutorialScene() const { return gameState_ == GameState::Tutorial || gameState_ == GameState::TutorialLoading; }
 	/** プレイ中か */
 	inline bool IsPlayingScene() const { return gameState_ == GameState::Playing; }
 	/** ゲーム演出が完全に終了したか */
@@ -250,6 +264,27 @@ public:
 private:
 	/** updateMask_ / drawMask_ を各オブジェクトに反映する */
 	void ApplyGroupMasks();
+
+	/**
+	 * GameState::Tutorial の毎フレーム更新をまとめたもの。
+	 * 初回初期化・Enterキーによるスキップ入力検知・TutorialManagerへの進行判定委譲・
+	 * 完了時のGameState::TutorialLoadingへの遷移セットアップを行う。
+	 */
+	void UpdateTutorialState();
+
+	/**
+	 * GameState::TutorialLoading の毎フレーム更新をまとめたもの。
+	 * チュートリアル終了からボス登場演出までの間、Loading演出を既定秒数(TUTORIAL_LOADING_DURATION)だけ挟む。
+	 * 経過後、ボス登場演出をセットアップしてGameState::Entryへ遷移する。
+	 */
+	void UpdateTutorialLoadingState();
+
+	/**
+	 * Tutorial / Playing の両方で毎フレーム必要な共通処理をまとめたもの。
+	 * ボスの感情システム更新・ボスの見た目更新・草の押し倒し/復元・ディザリング・カメラ/スカイキューブのプレイヤー追従を行う。
+	 * Playing 固有の処理（ミッション・タイマー・HP閾値カットシーン等）はここには含めない。
+	 */
+	void UpdateSharedGameplaySystems();
 
 	/**====================================*/
 	/** シーン演出 */
@@ -316,6 +351,17 @@ public:
 	 * ズームアウト演出（カメラワーク）を実装した際、その演出の終了タイミングで呼ぶこと。
 	 */
 	void ExitBossPhaseCutscene();
+
+	/**
+	 * 世界（プレイヤー・ボス・カメラ・ステージのUpdate、エフェクト、サウンド）の更新を止め、描画だけを続ける「一時停止」を切り替える。
+	 * チュートリアルでUIAnimation中に「このUIはこういうものです」という説明演出を差し込みたい場合など、
+	 * 今の画面をそのまま静止させておきたい場面で使う想定。
+	 * FreezePlayerAndBoss()と違い、入力状態のリセットやエフェクト/サウンドの停止(破棄)は行わない——
+	 * あくまで「今の見た目のまま時間だけ止める」ための汎用トグル。
+	 */
+	void SetWorldFrozen(bool freeze);
+	/** 現在SetWorldFrozen(true)の状態か */
+	inline bool IsWorldFrozen() const { return isWorldFrozen_; }
 
 private:
 

@@ -108,6 +108,9 @@ public:
 	/** ダメージ通知コールバック（BattleManagerなど外部から登録する） */
 	std::function<void(int, DamageNotifyType, bool)> onDamageNotify;
 
+	/** ボスの攻撃を（ジャストではない）通常回避の無敵中に受けた瞬間のコールバック（BattleManagerなど外部から登録する） */
+	std::function<void()> onBossAttackAvoided;
+
 private:
 	/** コンストラクタ */
 	CollisionHitManager();

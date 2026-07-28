@@ -99,12 +99,10 @@ public:
     /** 再生中の（ループ）SEをすべて停止する。カットシーン開始時などに使用する */
     void StopAllSE();
 
-#ifdef K2_DEBUG
     /** BGM と ループSE をその場で一時停止する */
     void PauseAll();
     /** PauseAll() で止めた音を再開する */
     void ResumeAll();
-#endif
 
 
     /** ハンドルからSEのサウンドソースを探す */
@@ -207,13 +205,12 @@ public:
     /** 更新処理 */
     void Update()override;
 
-#ifdef K2_DEBUG
 private:
     static bool s_isUpdatePaused; //!< 更新の一時停止フラグ
+
 public:
-    /** デバッグ用: 更新の一時停止を設定 */
+    /** 更新の一時停止を設定 */
     static inline void SetUpdatePaused(bool isPaused) { s_isUpdatePaused = isPaused; }
-    /** デバッグ用: 一時停止中か */
+    /** 一時停止中か */
     static inline bool IsUpdatePaused() { return s_isUpdatePaused; }
-#endif
 };

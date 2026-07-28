@@ -199,6 +199,8 @@ void TitleScene::Update()
 			// ボスとタイプをデータベースへ設定
 			CharacterDataBase::Get().SetStageType(stageType);
 			CharacterDataBase::Get().SetGameModeType(mode);
+			// TODO: チュートリアルを行うか選ぶUI画面が実装されたら、その決定処理で
+			//       CharacterDataBase::Get().SetTutorialEnabled(選択結果) を呼んでください（未設定時はtrue＝チュートリアルを行う）
 			SoundManager::Get().PlaySE(enSoundKind_Menu_Decide);
 		}
 	}

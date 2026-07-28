@@ -110,6 +110,8 @@ public:
 
 	/** 現在のステートを取得 */
 	inline IState* GetCurrentState() const{ return currentState_; }
+	/** 現在のステートIDを取得 */
+	inline PlayerStateID GetCurrentStateId() const { return currentStateId_; }
 
 	/** 回避ステート実行中は新たな回避入力を受け付けない */
 	inline void SetAvoidRequested(bool flg) {

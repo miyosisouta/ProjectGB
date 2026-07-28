@@ -59,8 +59,10 @@ void InGameScene::Update()
 
 
 	// ポーズメニューの呼び出し
+	// NOTE: キーボードのEnterキーはパッドのenButtonStartに直接割り当たっており、
+	//       チュートリアルのスキップ判定と物理的に衝突するため、チュートリアル中はポーズを開かない
 	{
-		if (g_pad[0]->IsTrigger(enButtonStart)) {			
+		if (!BattleManager::Get().IsTutorialScene() && g_pad[0]->IsTrigger(enButtonStart)) {
 
 			// ポーズメニューの開閉状態を切り替える
 			isOpenPauseMenu_ = !isOpenPauseMenu_;

@@ -285,6 +285,21 @@ struct MasterCollisionHitParameter : public IMasterParameter
 };
 
 /**
+ * チュートリアルパラメーター
+ * TutorialParameter.json の "Tutorial" 配列から読み込む
+ */
+struct MasterTutorialParameter : public IMasterParameter
+{
+	appParameter(MasterTutorialParameter);
+
+	int   requiredNormalAttackCount;   //!< 通常攻撃段階：次に進むために必要な通常攻撃回数
+	float moveTimeoutDuration;         //!< 移動段階：ダッシュしなくても強制的にクリア扱いにするまでの秒数
+	float transitionDuration;          //!< 「アニメーション」表示から次の段階名表示に切り替わるまでの秒数
+	float bossIdleDurationInTeaching;  //!< かいひ/ジャスト段階中、ボスがIdleで待機する秒数
+	float bossIdleDurationInFree;      //!< 自由段階中、ボスがIdleで待機する秒数
+};
+
+/**
  * ミッションパラメーター
  * MissionParameter.json の "Mission" 配列から読み込む
  * "key" フィールドでボスを識別する (例: "Gorilla", "Turtle")
@@ -612,6 +627,7 @@ public:
 	void LoadEmotionParamData(const char* path);
 	void LoadBossStateParamData(const char* path);
 	void LoadBossPhaseCutSceneParamData(const char* path);
+	void LoadTutorialParamData(const char* path);
 
 public:
 	/**
@@ -863,6 +879,12 @@ public:
 	inline const MasterBossSpawnerParameter* GetBossSpawnerParam()
 	{
 		return GetParameter<MasterBossSpawnerParameter>(0);
+	}
+
+	/** チュートリアルパラメーターを取得するショートカット */
+	inline const MasterTutorialParameter* GetTutorialParam()
+	{
+		return GetParameter<MasterTutorialParameter>(0);
 	}
 
 	/** keyでスキルパラメーターを取得するショートカット */

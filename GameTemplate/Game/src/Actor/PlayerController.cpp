@@ -2,6 +2,7 @@
 #include "PlayerController.h"
 #include "src/Actor/Player.h"
 #include "src/Actor/StateMachine.h"
+#include "src/Battle/TutorialManager.h"
 
 
 namespace
@@ -21,9 +22,11 @@ void PlayerController::Update()
 	// Aボタン、長押しでダッシュ、短押しで回避
 	UpdateAButton(targetStateMachine);
 
-	// 各スキルボタン
-	targetStateMachine->ActionButtonB(KeyConfig::Get().IsPress(enActionNormalSkill));
-	targetStateMachine->ActionButtonY(KeyConfig::Get().IsPress(enActionSpecialSkill));
+	// 各スキルボタン（チュートリアルで解禁されるまでは入力そのものを無視する）
+	const bool allowNormalAttack = TutorialManager::Get().IsActionAllowed(TutorialManager::Action::NormalAttack);
+	const bool allowSkill        = TutorialManager::Get().IsActionAllowed(TutorialManager::Action::Skill);
+	targetStateMachine->ActionButtonB(allowNormalAttack && KeyConfig::Get().IsPress(enActionNormalSkill));
+	targetStateMachine->ActionButtonY(allowSkill && KeyConfig::Get().IsPress(enActionSpecialSkill));
 
 
 	// スティックの入力を取得
@@ -59,10 +62,11 @@ void PlayerController::UpdateAButton(StateMachine* sm)
 	// Aボタンをホールドしているか否か
 	sm->ActionButtonA(isDashHolding);
 
-	// 回避するか、ダッシュするか
+	// 回避するか、ダッシュするか（回避はチュートリアルで解禁されるまで入力を無視する。ダッシュは常に許可）
 	if (KeyConfig::Get().IsShortRelease(enActionDash))
 	{
-		if (!target_->IsExhausted())
+		const bool allowAvoid = TutorialManager::Get().IsActionAllowed(TutorialManager::Action::Avoid);
+		if (allowAvoid && !target_->IsExhausted())
 		{
 			sm->SetAvoidRequested(true);
 		}

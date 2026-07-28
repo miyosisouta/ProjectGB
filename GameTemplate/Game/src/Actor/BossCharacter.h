@@ -34,6 +34,20 @@ public:
 	inline bool IsMoveStop() { return isMoveStop_; }
 
 	/**
+	 * 外部から座標・回転を直接指定し、Transformとモデルの見た目を即座に同期する。
+	 * チュートリアル終了時にボスを登場演出用の初期位置へ戻す、といった用途で使う。
+	 */
+	void SetTransformImmediate(const Vector3& position, const Quaternion& rotation)
+	{
+		transform_.localPosition = position;
+		transform_.localRotation = rotation;
+		transform_.UpdateTransform();
+		modelRender_.SetPosition(transform_.position);
+		modelRender_.SetRotation(transform_.rotation);
+		modelRender_.SetScale(transform_.scale);
+	}
+
+	/**
 	 * カットシーン演出用：基準の向き(baseRotation)に対して、前後(X軸)・左右(Y軸)の回転オフセットを加えた向きを毎フレーム絶対値で設定する。
 	 * イージングなど「時間経過で角度が変化する」演出向けに、呼び出し側で計算した角度をそのまま渡す想定。
 	 * isMoveStop_中はUpdate()内の回転同期処理(transform_.localRotation = targetPlayerRot_)がスキップされるため、

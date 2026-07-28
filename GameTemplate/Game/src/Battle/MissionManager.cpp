@@ -10,6 +10,9 @@ MissionManager* MissionManager::instance_ = nullptr;
 
 void MissionManager::NotifyEvent(const MissionEventData& ev)
 {
+    // チュートリアル中など無効化されている間は、練習用の入力をミッション進捗に反映しない
+    if (!enabled_) { return; }
+
     // 保持している全ミッションへ同じイベントを配信する（該当しないミッションは各Condition側で無視される）
     for (auto& mission : missions_)
     {

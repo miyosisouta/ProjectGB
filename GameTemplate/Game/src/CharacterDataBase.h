@@ -27,6 +27,8 @@ private:
 
     BossParam bossParam_; //!< ボスに必要なパラメータ
 
+    bool isTutorialEnabled_ = true; //!< チュートリアルを行うか。選択UI側から設定される想定（デフォルトtrue＝行う）
+
 
 private:
     /** コンストラクタ */
@@ -71,6 +73,21 @@ public:
     inline void SetGameModeType(GameModeType mode) { bossParam_.mode_ = mode; }
     /** ゲームモードの取得 */
     inline const GameModeType& GetGameModeType() const { return bossParam_.mode_; }
+
+
+    /* ============================================================================ */
+    /* チュートリアル */
+    /* ============================================================================ */
+
+    /**
+     * チュートリアルを行うかどうかを設定する（true=行う／false=飛ばして最初から全行動解禁でボス登場演出から始める）
+     * TODO: チュートリアルを行うか選ぶUI画面が実装されたら、その決定処理からここを呼んでください。
+     *       呼び出し例は TitleScene.cpp の SetStageType/SetGameModeType 呼び出し箇所を参照。
+     *       未設定の場合はデフォルトtrue（チュートリアルを行う）のままです。
+     */
+    inline void SetTutorialEnabled(bool flg) { isTutorialEnabled_ = flg; }
+    /** チュートリアルを行うかどうかを取得 */
+    inline bool IsTutorialEnabled() const { return isTutorialEnabled_; }
 
 
 /*=============================================*/
