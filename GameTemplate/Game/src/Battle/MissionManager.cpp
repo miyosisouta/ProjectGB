@@ -60,27 +60,21 @@ void MissionManager::NotifyBossDefeated()
 /* ボスのミッションのセットアップ */
 /*========================================*/
 
-void MissionManager::InitByBossType(BossType type)
+void MissionManager::InitByBossKey(const std::string& key)
 {
     // 前回のミッションが残っていると重複するので、まず全消去する
     missions_.clear();
 
     // 対戦するボスの種類に応じて、そのボス専用のミッション一式を構築する
-    switch (type)
-    {
-    case BossType::enGorilla:
-    {
+    if (key == "Gorilla") {
         SetupGorilla();
-        break;
     }
-    case BossType::enTurtle:
-    {
+    else if (key == "Turtle") {
         SetupTurtle();
-        break;
     }
-    default:
+    else {
         // 未対応のボス種別はミッションなしのまま
-        break;
+        K2_ASSERT(false, ("MissionManager: 未対応のボスkeyです（key='" + key + "'）\n").c_str());
     }
 }
 

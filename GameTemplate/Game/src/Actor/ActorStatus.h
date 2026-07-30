@@ -792,6 +792,7 @@ public:
     void Init(const std::string& characterKey)
     {
         const auto* param = ParameterManager::Get().GetCharacterStatus(characterKey);
+        K2_ASSERT(param != nullptr, ("CharacterStatusData.jsonにキー'" + characterKey + "'が見つかりません。ボスが未設定です\n").c_str());
         if (param)
         {
             initParam_.pos_ = param->position;                           //!< 座標

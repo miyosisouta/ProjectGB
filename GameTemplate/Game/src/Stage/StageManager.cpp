@@ -103,22 +103,9 @@ bool StageManager::Start()
     kusaTex_.InitFromDDSFile(L"Assets/Objects/Stage/Forest/ObjectData/kusaGround.DDS");
     tuthiTex_.InitFromDDSFile(L"Assets/Objects/Stage/Forest/ObjectData/tuthi_ground.DDS");
     fuyoudoTex_.InitFromDDSFile(L"Assets/Objects/Stage/Forest/ObjectData/fuyoudo_ground.DDS");
-    // 選択されたボスを取得
-    //BossType stageKind = CharacterDataBase::Get().GetGameParam().stageType_;
-    BossType stageKind = BossType::enGorilla;
-
-    switch (stageKind)
-    {
-    case BossType::enGorilla:
-        StageTKLLoader("Assets/Objects/Stage/Forest/tkl/Stage_Gollira.tkl");
-        break;
-    case BossType::enTurtle:
-        StageTKLLoader("Assets/Objects/Stage/Forest/tkl/Stage_Turtle.tkl");
-        break;
-    default:
-        K2_ASSERT(true, "ボスタイプが設定されていません");
-        break;
-    }
+    // NOTE: ステージはまだボスごとに分かれていない（tklは共通でStage_Gollira.tklを使い続ける）。
+    //       ボスごとに専用ステージを用意するようになったら、CharacterDataBase::Get().GetStageKey() で分岐する。
+    StageTKLLoader("Assets/Objects/Stage/Forest/tkl/Stage_Gollira.tkl");
 
     stageCullingSystem_ = std::make_unique<StageCullingSystem>();
 

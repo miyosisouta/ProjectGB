@@ -23,8 +23,8 @@ void BossPhaseCutSceneMenu::InitializeLogic()
 
 	// 怒り/疲れマークの表示位置はボスの種類ごとに立ち位置・高さが違うため、JSON側のYオフセットを反映する
 	MasterBossPhaseCutSceneParameter defaultIconParam;
-	const BossType stageType = CharacterDataBase::Get().GetStageType();
-	const auto* iconParam = ParameterManager::Get().GetBossPhaseCutSceneParam(stageType == BossType::enGorilla ? "Gorilla" : "Turtle");
+	const std::string stageKey = CharacterDataBase::Get().GetStageKey();
+	const auto* iconParam = ParameterManager::Get().GetBossPhaseCutSceneParam(stageKey);
 	if (!iconParam) { iconParam = &defaultIconParam; }
 
 	// 怒りマークのスケールパルス用アニメーションをアタッチしておく（再生自体はStartAngryMarks()で開始する）

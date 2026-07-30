@@ -16,7 +16,7 @@ private:
 	
 private:
 	/** ボスを作る際に必要なデータを作成する */
-	BossParam CreateBossData(BossType type, GameModeType mode);
+	BossParam CreateBossData(const std::string& key);
 
 public:
 	/** 更新のグループを取得 */

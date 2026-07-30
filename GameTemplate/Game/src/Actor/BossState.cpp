@@ -948,15 +948,21 @@ void LaserState::Enter()
 
 	// 攻撃モード
 	{
+		const auto* p = ParameterManager::Get().GetBossStateParam();
+		const uint8_t weights[Mode::enMax] = { p->laser.weightNormal, p->laser.weightMult, p->laser.weightCharge };
+
+		// 重みの合計を求める（JSON側の値をそのまま使うため、合計値を固定値に決め打ちしない）
+		uint16_t totalWeight = INT_ZERO;
+		for (uint8_t i = INT_ZERO; i < Mode::enMax; ++i) { totalWeight += weights[i]; }
+
 		// 結果をランダムに
 		srand(time(nullptr));
-		// 0～9の乱数を取得
-		uint8_t attackMode = rand() % enWeightMax;
+		uint16_t attackMode = (totalWeight > INT_ZERO) ? (rand() % totalWeight) : INT_ZERO;
 
 		/* 抽選処理 */
-		uint8_t currentWeightSum = INT_ZERO;
+		uint16_t currentWeightSum = INT_ZERO;
 		for (uint8_t i = INT_ZERO; i < Mode::enMax; ++i) {
-			currentWeightSum += weights_[i]; // 重みを足していく
+			currentWeightSum += weights[i]; // 重みを足していく
 
 			// 乱数が現在の重みの合計値未満なら当選
 			if (attackMode < currentWeightSum) {

@@ -336,13 +336,13 @@ void InGameMenu::InitializeLogic()
 	// ボスの名前が変わる
 	auto* bossGollira = GetUI<UIIcon>(Hash32("BossHPBar/Boss_HP_word"));
 	auto* bossTurtle = GetUI<UIIcon>(Hash32("BossHPBar/Boss_HP_word2"));
-	BossType stageType = CharacterDataBase::Get().GetStageType();
+	std::string stageKey = CharacterDataBase::Get().GetStageKey();
 	// ゴリラが選択されているとき
-	if (stageType == BossType::enGorilla) {
+	if (stageKey == "Gorilla") {
 		bossGollira->isDraw = true;
 	}
 	// カメが選択されているとき
-	if (stageType == BossType::enTurtle) {
+	if (stageKey == "Turtle") {
 		bossTurtle->isDraw = true;
 	}
 

@@ -78,6 +78,44 @@ ParameterManager::~ParameterManager()
 
 
 // ============================================================
+//  CharacterMaster.json 読み込みヘルパー
+// ============================================================
+void ParameterManager::LoadCharacterMasterData(const char* path)
+{
+	ParameterManager::Get().LoadParameterFromArray<MasterCharacterMasterParameter>(
+		path,
+		"CharacterMaster",   // JSONのトップレベルキー名
+		[](const nlohmann::json& j, MasterCharacterMasterParameter& p)
+		{
+			p.key               = j.value("key",               "");
+			p.category          = j.value("category",          "");
+			p.modelPath         = j.value("modelPath",          "");
+			p.animationBasePath = j.value("animationBasePath",  "");
+			p.modelAxis         = j.value("modelAxis",          "Z");
+		}
+	);
+}
+
+
+// ============================================================
+//  AnimationMaster.json 読み込みヘルパー
+// ============================================================
+void ParameterManager::LoadAnimationMasterData(const char* path)
+{
+	ParameterManager::Get().LoadParameterFromNestedArray<MasterAnimationMasterParameter>(
+		path,
+		[](const std::string& category, const nlohmann::json& j, MasterAnimationMasterParameter& p)
+		{
+			p.category = category; // トップレベルのキー（キャラクター識別キー）
+			p.key      = j.value("key",      "");
+			p.fileName = j.value("fileName", "");
+			p.isLoop   = j.value("isLoop",   false);
+		}
+	);
+}
+
+
+// ============================================================
 //  CharacterStatusData.json 読み込みヘルパー
 //  ゲーム起動時などに一度だけ呼ぶ
 // ============================================================
@@ -92,32 +130,37 @@ void ParameterManager::LoadCharacterStatusData(const char* path)
 			// key: キャラクター識別子 (必須)
 			p.key = j.value("key", "");
 
-			// ステータス
-			p.position							= ParseVector3(j["position"]);
-			p.rotation							= ParseRotation(j["rotation"]);
-			p.scale								= ParseVector3(j["scale"]);
-			p.collisionPosUp					= ParseVector3(j["collisionPosUp"]);
-			p.collisionSizeRadius				= j.value("collisionSizeRadius",		0.0f);
-			p.collisionSizeHeight				= j.value("collisionSizeHeight",		0.0f);
-			p.charaConSizeRadius				= j.value("charaConSizeRadius",			0.0f);
-			p.charaConSizeHeight				= j.value("charaConSizeHeight",			0.0f);
-			p.hp								= j.value("hp",							0);
-			p.attack							= j.value("attack",						0);
-			p.criticalRate						= j.value("criticalRate",				0);
-			p.criticalDamageMultiplier			= j.value("criticalDamageMultiplier",	0.0f);
-			const nlohmann::json staminaJson =
-				(j.contains("stamina") && j["stamina"].is_object())
-				? j["stamina"]
-				: nlohmann::json::object();
+			// spawn: 初期トランスフォーム
+			const nlohmann::json spawnJson = GetSubObject(j, "spawn");
+			p.position							= ParseVector3(spawnJson["position"]);
+			p.rotation							= ParseRotation(spawnJson["rotation"]);
+			p.scale								= ParseVector3(spawnJson["scale"]);
 
-			p.stamina.maxStamina				= staminaJson.value("maxStamina", j.value("stamina", 0.0f));
-			p.stamina.drainPerSec				= staminaJson.value("drainPerSec", j.value("drainPerSec", 0.0f));
-			p.stamina.recoverPerSec				= staminaJson.value("recoverPerSec", j.value("recoverPerSec", 0.0f));
-			p.stamina.exhaustedRecoverPerSec	= staminaJson.value("exhaustedRecoverPerSec", j.value("exhaustedRecoverPerSec", 0.0f));
-			p.stamina.exhaustedThreshold		= staminaJson.value("exhaustedThreshold", j.value("exhaustedThreshold", 0.0f));
-			p.stamina.exhaustedSpeedRate		= staminaJson.value("exhaustedSpeedRate", j.value("exhaustedSpeedRate", 0.0f));
-			p.moveSpeedBase						= j.value("walkSpeedBase",				0.0f);
-			p.runSpeedBase						= j.value("runSpeedBase",				0.0f);
+			// collision: 当たり判定・キャラコンのサイズ
+			const nlohmann::json collisionJson = GetSubObject(j, "collision");
+			p.collisionPosUp					= ParseVector3(collisionJson["collisionPosUp"]);
+			p.collisionSizeRadius				= collisionJson.value("collisionSizeRadius",	0.0f);
+			p.collisionSizeHeight				= collisionJson.value("collisionSizeHeight",	0.0f);
+			p.charaConSizeRadius				= collisionJson.value("charaConSizeRadius",		0.0f);
+			p.charaConSizeHeight				= collisionJson.value("charaConSizeHeight",		0.0f);
+
+			// stats: 体力・攻撃力・移動速度など
+			const nlohmann::json statsJson = GetSubObject(j, "stats");
+			p.hp								= statsJson.value("hp",							0);
+			p.attack							= statsJson.value("attack",						0);
+			p.criticalRate						= statsJson.value("criticalRate",				0);
+			p.criticalDamageMultiplier			= statsJson.value("criticalDamageMultiplier",	0.0f);
+			p.moveSpeedBase						= statsJson.value("moveSpeedBase",				0.0f);
+			p.runSpeedBase						= statsJson.value("runSpeedBase",				0.0f);
+
+			// stamina: プレイヤー系のみ使用（ボスは省略可）
+			const nlohmann::json staminaJson = GetSubObject(j, "stamina");
+			p.stamina.maxStamina				= staminaJson.value("maxStamina",				0.0f);
+			p.stamina.drainPerSec				= staminaJson.value("drainPerSec",				0.0f);
+			p.stamina.recoverPerSec				= staminaJson.value("recoverPerSec",			0.0f);
+			p.stamina.exhaustedRecoverPerSec	= staminaJson.value("exhaustedRecoverPerSec",	0.0f);
+			p.stamina.exhaustedThreshold		= staminaJson.value("exhaustedThreshold",		0.0f);
+			p.stamina.exhaustedSpeedRate		= staminaJson.value("exhaustedSpeedRate",		0.0f);
 		}
 	);
 }
@@ -156,8 +199,11 @@ void ParameterManager::LoadBossSkillStatusData(const char* path)
 			p.category = category;
 			p.key      = j.value("key",    "");
 			p.motionValues = j.value("motionValues",  0.0f);
+			p.cooldown = j.value("cooldown",  0.0f);
 			p.vibrationTime = j.value("vibrationTime",  0.0f);
 			p.vibrationForce = j.value("vibrationForce",  0.0f);
+			p.correspondingState = j.value("correspondingState", "");
+			p.stateId            = j.value("stateId",            "");
 		}
 	);
 }
@@ -211,10 +257,27 @@ void ParameterManager::LoadNPCControllerParamData(const char* path)
 		"NPCController",
 		[](const nlohmann::json& j, MasterNPCControllerParameter& p)
 		{
-			p.attackLotteryMax = j.value("attackLotteryMax", 0);
 			p.shortDistance    = j.value("shortDistance",    0.0f);
 			p.midDistance      = j.value("midDistance",      0.0f);
 			p.longDistance     = j.value("longDistance",     0.0f);
+		}
+	);
+}
+
+
+// ============================================================
+//  NPCAttackRuleParameter.json 読み込みヘルパー
+// ============================================================
+void ParameterManager::LoadNPCAttackRuleData(const char* path)
+{
+	ParameterManager::Get().LoadParameterFromNestedArray<MasterNPCAttackRuleParameter>(
+		path,
+		[](const std::string& category, const nlohmann::json& j, MasterNPCAttackRuleParameter& p)
+		{
+			p.category = category; // トップレベルのキー（キャラクター識別キー）
+			p.distance = j.value("distance", "");
+			p.stateId  = j.value("stateId",  "");
+			p.weight   = j.value("weight",   0);
 		}
 	);
 }
@@ -591,6 +654,9 @@ void ParameterManager::LoadBossStateParamData(const char* path)
 				if (o.contains("chargeBodyScale")) { p.laser.chargeBodyScale = ParseVector3(o["chargeBodyScale"]); }
 				p.laser.chargeIndicatorDelay    = o.value("chargeIndicatorDelay",    p.laser.chargeIndicatorDelay);
 				p.laser.chargeScaleDownDuration = o.value("chargeScaleDownDuration", p.laser.chargeScaleDownDuration);
+				p.laser.weightNormal = o.value("weightNormal", p.laser.weightNormal);
+				p.laser.weightMult   = o.value("weightMult",   p.laser.weightMult);
+				p.laser.weightCharge = o.value("weightCharge", p.laser.weightCharge);
 			}
 
 			// 死亡

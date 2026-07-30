@@ -184,21 +184,19 @@ void TitleScene::Update()
 			UIScreenManager::Get().Push<SkillSelectMenu>("Assets/ui/layout/SkillSelectMenu.json", UITransitionMode::Push, UIScreenTransitionPreset::FadeInOut());
 			
 			// 初期化
-			BossType stageType = BossType::enGorilla;
-			GameModeType mode = GameModeType::enNormal;
+			std::string stageKey = "Gorilla";
 
 			// ゴリラを選択したら
 			if (bossSelectMenu->IsSelectGollira()) {
-				stageType = BossType::enGorilla;
+				stageKey = "Gorilla";
 			}
 			// カメを選択したら
 			else if (bossSelectMenu->IsSelectTurtle()) {
-				stageType = BossType::enTurtle;
+				stageKey = "Turtle";
 			}
 
-			// ボスとタイプをデータベースへ設定
-			CharacterDataBase::Get().SetStageType(stageType);
-			CharacterDataBase::Get().SetGameModeType(mode);
+			// ボスのkeyをデータベースへ設定
+			CharacterDataBase::Get().SetStageKey(stageKey);
 			// TODO: チュートリアルを行うか選ぶUI画面が実装されたら、その決定処理で
 			//       CharacterDataBase::Get().SetTutorialEnabled(選択結果) を呼んでください（未設定時はtrue＝チュートリアルを行う）
 			SoundManager::Get().PlaySE(enSoundKind_Menu_Decide);

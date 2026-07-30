@@ -80,6 +80,7 @@ private:
 	Player*             player_           = nullptr; //!< プレイヤー本体
 	PlayerController*   playerController_ = nullptr; //!< プレイヤーの操作コントローラー
 	BossSpawner*        boss_             = nullptr; //!< ボス生成・管理
+	std::string         realStageKey_;                //!< プレイヤーが実際に選んだボスのkey（チュートリアルは常にGorillaで行うため、本番切り替え用に覚えておく）
 	StageManagerObject* stage_            = nullptr; //!< ステージ管理
 	GameTimer           gameTimer_; //!< ゲーム内タイマー
 	SkyCube*            skyCube_          = nullptr; //!< 天球オブジェクト

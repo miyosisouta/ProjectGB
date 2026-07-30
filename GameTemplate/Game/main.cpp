@@ -61,6 +61,8 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 
 	// パラメータ
 	ParameterManager::CreateInstance();
+	ParameterManager::Get().LoadCharacterMasterData("Assets/Objects/CharacterData/CharacterMaster.json");
+	ParameterManager::Get().LoadAnimationMasterData("Assets/Objects/CharacterData/AnimationMaster.json");
 	ParameterManager::Get().LoadCharacterStatusData("Assets/Objects/CharacterData/CharacterStatusData.json");
 	ParameterManager::Get().LoadPlayerSkillStatusData("Assets/Objects/CharacterData/PlayerSkillStatus.json");
 	ParameterManager::Get().LoadBossSkillStatusData("Assets/Objects/CharacterData/BossSkillStatus.json");
@@ -70,6 +72,7 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 	ParameterManager::Get().LoadCollisionHitParamData("Assets/Parameter/CollisionHitParameter.json");
 	ParameterManager::Get().LoadPlayerStateParamData("Assets/Parameter/PlayerStateParameter.json");
 	ParameterManager::Get().LoadNPCControllerParamData("Assets/Parameter/NPCControllerParameter.json");
+	ParameterManager::Get().LoadNPCAttackRuleData("Assets/Parameter/NPCAttackRuleParameter.json");
 	ParameterManager::Get().LoadBossSpawnerParamData("Assets/Parameter/BossSpawnerParameter.json");
 	ParameterManager::Get().LoadSkillParamData("Assets/Parameter/SkillParameter.json");
 	ParameterManager::Get().LoadAttackObjectParamData("Assets/Parameter/AttackObjectParameter.json");

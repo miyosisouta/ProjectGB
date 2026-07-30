@@ -47,7 +47,7 @@ public:
 
 public:
     /** ボスの種類に応じてミッションを作成・初期化 */
-    void InitByBossType(BossType type);
+    void InitByBossKey(const std::string& key);
 
 private:
     /** イベントを追加 */

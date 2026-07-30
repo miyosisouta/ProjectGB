@@ -1,0 +1,49 @@
+{
+    "_README": [
+        "【CharacterMaster.json】",
+        "敵キャラクターの「見た目データの置き場」を登録するファイルです（プレイヤーはここには書きません）。",
+        "1体につき1つのブロックを書きます。",
+        "",
+        "■新しい敵を追加する手順",
+        "1. 下にある \"key\": \"__EXAMPLE__\" のブロックをコピーする",
+        "2. \"key\" を新しい敵の名前にする（半角英数字。CharacterStatusData.json・AnimationMaster.json・BossSkillStatus.jsonの\"key\"/カテゴリ名と必ず一致させること）",
+        "3. \"category\" を \"Boss\"（ボス敵）か \"Normal\"（雑魚敵）のどちらかにする",
+        "4. \"modelPath\" にモデルファイル(.tkm)の場所を書く",
+        "5. \"animationBasePath\" にアニメーションファイル(.tka)が入っているフォルダを書く（末尾は必ず / で終わらせる）",
+        "6. \"modelAxis\" はモデルの上方向。基本は \"Z\" でOK",
+        "7. 忘れずに AnimationMaster.json 側にも、同じ \"key\" でアニメーションクリップの登録を追加する",
+        "",
+        "■注意",
+        "\"key\" が \"__EXAMPLE__\" のブロックはコピー元のサンプルなので、削除せずそのまま残しておいてください。",
+        "実際のファイルパスは \"animationBasePath\"（このファイル） + \"fileName\"（AnimationMaster.json）を繋げた形になります。"
+    ],
+
+    "CharacterMaster": [
+        {
+            "key": "__EXAMPLE__",
+            "comment": "新しい敵を追加する時はこの行をコピーして書き換えてください。keyが__EXAMPLE__の行はローダーが無視します。",
+            "category": "Boss",
+            "modelPath": "Assets/Objects/Enemy/__EXAMPLE__/Model/__EXAMPLE__.tkm",
+            "animationBasePath": "Assets/Objects/Enemy/__EXAMPLE__/Animation/",
+            "modelAxis": "Z"
+        },
+
+        {
+            "key": "Gorilla",
+            "comment": "ゴリラ（ボス1体目）",
+            "category": "Boss",
+            "modelPath": "Assets/Objects/Enemy/Gorilla/Model/Gorilla.tkm",
+            "animationBasePath": "Assets/Objects/Enemy/Gorilla/Animation/",
+            "modelAxis": "Z"
+        },
+
+        {
+            "key": "Turtle",
+            "comment": "カメ（ボス2体目）",
+            "category": "Boss",
+            "modelPath": "Assets/Objects/Enemy/Turtle/Model/Turtle.tkm",
+            "animationBasePath": "Assets/Objects/Enemy/Turtle/Animation/",
+            "modelAxis": "Z"
+        }
+    ]
+}
