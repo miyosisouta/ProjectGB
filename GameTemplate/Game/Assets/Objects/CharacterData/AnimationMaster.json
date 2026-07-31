@@ -1,0 +1,153 @@
+{
+    "_README": [
+        "【AnimationMaster.json】",
+        "敵キャラクターのアニメーションクリップを登録するファイルです。",
+        "キャラクターごとに配列を分けます。この配列名は CharacterMaster.json の \"key\" と必ず一致させてください。",
+        "",
+        "■新しいアニメーションを追加する手順",
+        "1. 対象キャラクターの配列の中にある \"key\": \"__EXAMPLE__\" のブロックをコピーする",
+        "2. \"key\" をアニメーションの種類名に書き換える（Idle / Run / Jump / Attack / Hit / Death / Spin / Clicked / Antic / ClickedWindUp / JumpImpact のいずれか。",
+        "3. \"fileName\" にアニメーションファイル名(.tka)を書く。実際のファイルパスは CharacterMaster.json の \"animationBasePath\" + ここの \"fileName\" を繋げた形になります",
+        "4. \"isLoop\" にループ再生するかどうかを true/false で書く",
+        "",
+        "■注意",
+        "そのキャラクターが使わないアニメーション種類は書かなくてOKです",
+        "\"key\" が \"__EXAMPLE__\" のブロックはコピー元のサンプルなので、削除せずそのまま残しておいてください。",
+        "新しいアニメーションを追加したい場合、別途プログラムに追加が必要です"
+    ],
+
+    "__EXAMPLE__": [
+        {
+            "key": "__EXAMPLE__",
+            "comment": "新アニメーションを追加時はこの行をコピー",
+            "fileName": "IdleA.tka",
+            "isLoop": true
+        }
+    ],
+
+    "Gorilla": [
+        {
+            "key": "Idle",
+            "comment": "待機",
+            "fileName": "IdleA.tka",
+            "isLoop": true
+        },
+        {
+            "key": "Run",
+            "comment": "走る",
+            "fileName": "Run.tka",
+            "isLoop": true
+        },
+        {
+            "key": "Jump",
+            "comment": "ヒットスタンプ攻撃の飛び上がり",
+            "fileName": "Jump.tka",
+            "isLoop": false
+        },
+        {
+            "key": "Attack",
+            "comment": "通常攻撃",
+            "fileName": "Attack.tka",
+            "isLoop": false
+        },
+        {
+            "key": "Hit",
+            "comment": "ダメージを受けた時のリアクション",
+            "fileName": "Hit.tka",
+            "isLoop": false
+        },
+        {
+            "key": "Death",
+            "comment": "死亡",
+            "fileName": "Death.tka",
+            "isLoop": false
+        },
+        {
+            "key": "Spin",
+            "comment": "回転攻撃",
+            "fileName": "Spin.tka",
+            "isLoop": true
+        },
+        {
+            "key": "Clicked",
+            "comment": "岩投げ・レーザーの発射モーション",
+            "fileName": "Clicked.tka",
+            "isLoop": false
+        },
+        {
+            "key": "ClickedWindUp",
+            "comment": "岩投げのワインドアップ（予備動作）",
+            "fileName": "Clicked_wideUp.tka",
+            "isLoop": true
+        },
+        {
+            "key": "JumpImpact",
+            "comment": "ヒットスタンプ攻撃の着地インパクト",
+            "fileName": "Jump_Impact.tka",
+            "isLoop": false
+        }
+    ],
+
+    "Turtle": [
+        {
+            "key": "Idle",
+            "comment": "待機",
+            "fileName": "IdleA.tka",
+            "isLoop": true
+        },
+        {
+            "key": "Run",
+            "comment": "走る",
+            "fileName": "Run.tka",
+            "isLoop": true
+        },
+        {
+            "key": "Jump",
+            "comment": "ヒットスタンプ攻撃の飛び上がり",
+            "fileName": "Jump.tka",
+            "isLoop": false
+        },
+        {
+            "key": "Attack",
+            "comment": "通常攻撃",
+            "fileName": "Attack.tka",
+            "isLoop": false
+        },
+        {
+            "key": "Hit",
+            "comment": "ダメージを受けた時のリアクション",
+            "fileName": "Hit.tka",
+            "isLoop": false
+        },
+        {
+            "key": "Death",
+            "comment": "死亡",
+            "fileName": "Death.tka",
+            "isLoop": false
+        },
+        {
+            "key": "Spin",
+            "comment": "回転攻撃",
+            "fileName": "Spin.tka",
+            "isLoop": true
+        },
+        {
+            "key": "Clicked",
+            "comment": "岩投げ・レーザーの発射モーション",
+            "fileName": "Clicked.tka",
+            "isLoop": false
+        },
+        {
+            "key": "Antic",
+            "comment": "レーザーの予備動作（予告）",
+            "fileName": "Antic.tka",
+            "isLoop": true
+        },
+        {
+            "key": "JumpImpact",
+            "comment": "ヒットスタンプ攻撃の着地インパクト",
+            "fileName": "Jump_Impact.tka",
+            "isLoop": false
+        }
+    ]
+}

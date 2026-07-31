@@ -43,10 +43,10 @@ void BossCharacter::SetupTranslate()
 	AddState(BossStateID::Idle, new BossIdleState(this));
 	AddState(BossStateID::Run, new BossRunState(this));
 	AddState(BossStateID::Attack, new BossAttackState(this));
-	AddState(BossStateID::Jump, new HitStampState(this));
+	AddState(BossStateID::HitStamp, new HitStampState(this));
 	AddState(BossStateID::Spin, new SpinState(this));
-	AddState(BossStateID::Clicked_Gollira, new ThrowRockState(this));
-	AddState(BossStateID::Clicked_Turtle, new LaserState(this));
+	AddState(BossStateID::ThrowRock, new ThrowRockState(this));
+	AddState(BossStateID::Laser, new LaserState(this));
 	AddState(BossStateID::Death, new BossDeathState(this));
 }
 

@@ -19,7 +19,7 @@ void MissionMenu::Update()
 	const float deltaTime = g_gameTime->GetFrameDeltaTime();
 
 	// クリア済みミッションのアイコンを表示状態にする
-	const bool isGorilla = (CharacterDataBase::Get().GetStageType() == BossType::enGorilla);
+	const bool isGorilla = (CharacterDataBase::Get().GetStageKey() == "Gorilla");
 	auto* slot1Icon = isGorilla ? GetUI<UIIcon>(Hash32("gollira_mission_1")) : GetUI<UIIcon>(Hash32("turtle_mission_1"));
 	auto* slot2Icon = isGorilla ? GetUI<UIIcon>(Hash32("gollira_mission_2")) : GetUI<UIIcon>(Hash32("turtle_mission_2"));
 	auto* slot3Icon = isGorilla ? GetUI<UIIcon>(Hash32("gollira_mission_3")) : GetUI<UIIcon>(Hash32("turtle_mission_3"));
@@ -114,7 +114,7 @@ void MissionMenu::PlayNotification(const MissionNotification& notif)
 	missionObiSequence_->Play(missionObi);
 	missionMedaruSequence_->Play(missionMedaru);
 
-	const bool isGorilla = (CharacterDataBase::Get().GetStageType() == BossType::enGorilla);
+	const bool isGorilla = (CharacterDataBase::Get().GetStageKey() == "Gorilla");
 	if (notif.slot == 1)
 	{
 		if (isGorilla)

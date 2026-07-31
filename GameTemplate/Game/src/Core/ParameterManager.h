@@ -56,6 +56,36 @@ struct MasterCharacterStatusParameter : public IMasterParameter
 };
 
 /**
+ * キャラクターマスター（敵の見た目データの置き場）
+ * CharacterMaster.json の "CharacterMaster" 配列から読み込む
+ * "key" フィールドでキャラクターを識別する (例: "Gorilla", "Turtle")
+ */
+struct MasterCharacterMasterParameter : public IMasterParameter
+{
+	appParameter(MasterCharacterMasterParameter);
+
+	std::string key;               //!< キャラクター識別キー (例: "Gorilla", "Turtle")
+	std::string category;          //!< 敵の区分 ("Boss" または "Normal")
+	std::string modelPath;         //!< モデルファイル(.tkm)のパス
+	std::string animationBasePath; //!< アニメーションファイル(.tka)が入っているフォルダのパス（AnimationMasterの"fileName"と連結して使う）
+	std::string modelAxis;         //!< モデルの上方向 ("Y" または "Z")
+};
+
+/**
+ * アニメーションマスター（アニメーションクリップの登録）
+ * AnimationMaster.json から読み込む（トップレベルのキーがキャラクター識別キーになる＝category）
+ */
+struct MasterAnimationMasterParameter : public IMasterParameter
+{
+	appParameter(MasterAnimationMasterParameter);
+
+	std::string category;      //!< キャラクター識別キー (AnimationMaster.jsonのトップレベルキー。例: "Gorilla")
+	std::string key;           //!< アニメーション種類キー (例: "Idle", "Run")
+	std::string fileName;      //!< アニメーションファイル名(.tka)
+	bool        isLoop = false;//!< ループ再生するか
+};
+
+/**
  * プレイヤースキルのステータス
  * PlayerSkillStatus.json から読み込む
  */
@@ -86,6 +116,8 @@ struct MasterBossSkillParameter : public IMasterParameter
 	float       cooldown;		//!< クールダウン
 	float		vibrationTime;	//!< バイブレーション時間
 	float		vibrationForce; //!< バイブレーション力
+	std::string correspondingState; //!< 対応するC++のステートクラス名（ドキュメント用途）
+	std::string stateId;            //!< 対応するBossStateID名（ドキュメント用途）
 };
 
 struct MasterBattleCommonParameter : public IMasterParameter
@@ -172,10 +204,23 @@ struct MasterNPCControllerParameter : public IMasterParameter
 {
 	appParameter(MasterNPCControllerParameter);
 
-	int   attackLotteryMax; //!< 攻撃行動抽選の合計確率 (各フェーズの重み合計と一致させること)
 	float shortDistance;    //!< 近距離判定の距離閾値
 	float midDistance;      //!< 中距離判定の距離閾値
 	float longDistance;     //!< 遠距離判定の距離閾値
+};
+
+/**
+ * NPCの攻撃選択ルール（ボスごとの距離帯別・攻撃抽選の重みテーブル）
+ * NPCAttackRuleParameter.json から読み込む（トップレベルのキーがキャラクター識別キーになる＝category）
+ */
+struct MasterNPCAttackRuleParameter : public IMasterParameter
+{
+	appParameter(MasterNPCAttackRuleParameter);
+
+	std::string category; //!< キャラクター識別キー (NPCAttackRuleParameter.jsonのトップレベルキー。例: "Gorilla")
+	std::string distance;  //!< 距離帯 ("Short"/"Mid"/"Long"/"OutRange")
+	std::string stateId;   //!< 選ばれた時に遷移するBossStateID名 (例: "Attack", "Spin"...)
+	int         weight = 0;//!< 抽選の重み
 };
 
 /**
@@ -324,48 +369,48 @@ struct MasterTitleBGParameter : public IMasterParameter
 {
 	appParameter(MasterTitleBGParameter);
 
-	float treeSpeed          = 100.0f;	 //!< 木のスクロール速度
-	float grassSpeed         = 130.0f;	 //!< 草のスクロール速度
-	float fenceSpeed         = 150.0f;	 //!< 柵のスクロール速度
-	float treeSpacing        = 300.0f;	 //!< 木の基本間隔
-	float treeZ              = -300.0f;  //!< 手前側の木のZ座標
-	float treeZ2             = -1100.0f; //!< 奥側の木のZ座標
-	float grassSpacing       = 240.0f;	 //!< 草の基本間隔
-	float grassZ             = -100.0f;  //!< 草のZ座標
-	float fenceSpacing       = 250.0f;	 //!< 柵の基本間隔
-	float fenceZ             = -180.0f;  //!< 柵のZ座標
-	float groundY            = -30.0f;	 //!< 地面のY座標
-	float groundScale        = 5000.0f;  //!< 地面のスケール
-	float cullingMargin      = 100.0f;	 //!< 画面外判定のマージン
-	float spawnX             = 1000.0f;  //!< 木・草・柵の出現X座標
+	float treeSpeed          = 0.0f;	 //!< 木のスクロール速度
+	float grassSpeed         = 0.0f;	 //!< 草のスクロール速度
+	float fenceSpeed         = 0.0f;	 //!< 柵のスクロール速度
+	float treeSpacing        = 0.0f;	 //!< 木の基本間隔
+	float treeZ              = 0.0f;	 //!< 手前側の木のZ座標
+	float treeZ2             = 0.0f;	 //!< 奥側の木のZ座標
+	float grassSpacing       = 0.0f;	 //!< 草の基本間隔
+	float grassZ             = 0.0f;	 //!< 草のZ座標
+	float fenceSpacing       = 0.0f;	 //!< 柵の基本間隔
+	float fenceZ             = 0.0f;	 //!< 柵のZ座標
+	float groundY            = 0.0f;	 //!< 地面のY座標
+	float groundScale        = 0.0f;	 //!< 地面のスケール
+	float cullingMargin      = 0.0f;	 //!< 画面外判定のマージン
+	float spawnX             = 0.0f;	 //!< 木・草・柵の出現X座標
 	float treeSpawnX         = 0.0f;	 //!< 木の出現X座標
-	float playerX            = -250.0f;  //!< プレイヤーのX座標
+	float playerX            = 0.0f;	 //!< プレイヤーのX座標
 	float playerY            = 0.0f;	 //!< プレイヤーのY座標
 	float playerZ            = 0.0f;	 //!< プレイヤーのZ座標
-	float playerRotYDeg      = 90.0f;	 //!< プレイヤーのY軸回転角度
+	float playerRotYDeg      = 0.0f;	 //!< プレイヤーのY軸回転角度
 	float camPosX            = 0.0f;	 //!< カメラ座標X
-	float camPosY            = 150.0f;	 //!< カメラ座標Y
-	float camPosZ            = 800.0f;	 //!< カメラ座標Z
+	float camPosY            = 0.0f;	 //!< カメラ座標Y
+	float camPosZ            = 0.0f;	 //!< カメラ座標Z
 	float camTargetX         = 0.0f;	 //!< カメラ注視点X
 	float camTargetY         = 0.0f;	 //!< カメラ注視点Y
 	float camTargetZ         = 0.0f;	 //!< カメラ注視点Z
-	float camFovDeg          = 60.0f;	 //!< カメラ視野角(度)
-	float camNear            = 1.0f;	 //!< ニアクリップ
-	float camFar             = 5000.0f;  //!< ファークリップ
-	float skyCubeScale       = 1000.0f;  //!< スカイキューブのスケール
-	float playerRunSpeed     = 300.0f;	 //!< プレイヤーの走行アニメーション速度
-	int   treeMaxConsecutive  = 8;		 //!< 木の最大連続出現数
-	float treeMinGap          = 150.0f;  //!< 木の最小間隔
-	float treeBaseGap         = 300.0f;  //!< 木の基本間隔
-	float treeMaxGap          = 3.0f;    //!< 木の最大間隔倍率
-	int   grassMaxConsecutive = 4;		 //!< 草の最大連続出現数
-	float grassMinGap         = 50.0f;	 //!< 草の最小間隔
-	float grassBaseGap        = 240.0f;  //!< 草の基本間隔
-	float grassMaxGap         = 2.0f;	 //!< 草の最大間隔倍率
-	int   fenceMaxConsecutive = 3;		 //!< 柵の最大連続出現数
-	float fenceMinGap         = 150.0f;  //!< 柵の最小間隔
-	float fenceBaseGap        = 250.0f;  //!< 柵の基本間隔
-	float fenceMaxGap         = 3.0f;	 //!< 柵の最大間隔倍率
+	float camFovDeg          = 0.0f;	 //!< カメラ視野角(度)
+	float camNear            = 0.0f;	 //!< ニアクリップ
+	float camFar             = 0.0f;	 //!< ファークリップ
+	float skyCubeScale       = 0.0f;	 //!< スカイキューブのスケール
+	float playerRunSpeed     = 0.0f;	 //!< プレイヤーの走行アニメーション速度
+	int   treeMaxConsecutive  = 0;		 //!< 木の最大連続出現数
+	float treeMinGap          = 0.0f;	 //!< 木の最小間隔
+	float treeBaseGap         = 0.0f;	 //!< 木の基本間隔
+	float treeMaxGap          = 0.0f;	 //!< 木の最大間隔倍率
+	int   grassMaxConsecutive = 0;		 //!< 草の最大連続出現数
+	float grassMinGap         = 0.0f;	 //!< 草の最小間隔
+	float grassBaseGap        = 0.0f;	 //!< 草の基本間隔
+	float grassMaxGap         = 0.0f;	 //!< 草の最大間隔倍率
+	int   fenceMaxConsecutive = 0;		 //!< 柵の最大連続出現数
+	float fenceMinGap         = 0.0f;	 //!< 柵の最小間隔
+	float fenceBaseGap        = 0.0f;	 //!< 柵の基本間隔
+	float fenceMaxGap         = 0.0f;	 //!< 柵の最大間隔倍率
 };
 
 /**
@@ -381,36 +426,25 @@ struct MasterEmotionParameter : public IMasterParameter
 	// インデックス 0=Debuff3, 1=Debuff2, 2=Debuff1, 3=Normal, 4=Buff1, 5=Buff2, 6=Buff3
 	struct ModifierEntry
 	{
-		float attackMul          = 1.0f;  //!< 攻撃力倍率
-		float attackSpeedMul     = 1.0f;  //!< 攻撃速度倍率（taskSchedulerの秒数・攻撃間隔に反映。演出速度とは独立）
-		float damageTakenMul     = 1.0f;  //!< 被ダメージ倍率
-		float animationSpeedMul  = 1.0f;  //!< アニメーション再生速度倍率（攻撃速度とは独立に調整できる演出用の値）
-		float effectSpeedMul     = 1.0f;  //!< エフェクト再生速度倍率（攻撃速度とは独立に調整できる演出用の値）
+		float attackMul          = 0.0f;  //!< 攻撃力倍率
+		float attackSpeedMul     = 0.0f;  //!< 攻撃速度倍率（taskSchedulerの秒数・攻撃間隔に反映。演出速度とは独立）
+		float damageTakenMul     = 0.0f;  //!< 被ダメージ倍率
+		float animationSpeedMul  = 0.0f;  //!< アニメーション再生速度倍率（攻撃速度とは独立に調整できる演出用の値）
+		float effectSpeedMul     = 0.0f;  //!< エフェクト再生速度倍率（攻撃速度とは独立に調整できる演出用の値）
 	};
 
-	ModifierEntry modifiers[7];              //!< 7段階分の倍率テーブル
-	float         buffEffectScale   = 1.0f;  //!< Buffエフェクトのスケール（一様）
-	float         debuffEffectScale = 1.0f;  //!< Debuffエフェクトのスケール（一様）
-	float         buffEffectOffsetY   = 0.0f;  //!< Buffエフェクトのボス位置からのYオフセット（XZはボス座標のまま）
-	float         debuffEffectOffsetY = 0.0f;  //!< Debuffエフェクトのボス位置からのYオフセット（XZはボス座標のまま）
-	float         buffSeVolumeBoost   = 1.0f;  //!< BuffSEの追加音量倍率（通常のマスター×SE計算値に掛ける。素材音源の収録音量差を補うためのもの）
-	float         debuffSeVolumeBoost = 1.0f;  //!< DebuffSEの追加音量倍率（同上）
+	ModifierEntry modifiers[7];					//!< 7段階分の倍率テーブル
+	float         buffEffectScale   = 0.0f;		//!< Buffエフェクトのスケール（一様）
+	float         debuffEffectScale = 0.0f;		//!< Debuffエフェクトのスケール（一様）
+	float         buffEffectOffsetY   = 0.0f;	//!< Buffエフェクトのボス位置からのYオフセット（XZはボス座標のまま）
+	float         debuffEffectOffsetY = 0.0f;	//!< Debuffエフェクトのボス位置からのYオフセット（XZはボス座標のまま）
+	float         buffSeVolumeBoost   = 0.0f;	//!< BuffSEの追加音量倍率（通常のマスター×SE計算値に掛ける。素材音源の収録音量差を補うためのもの）
+	float         debuffSeVolumeBoost = 0.0f;   //!< DebuffSEの追加音量倍率（同上）
 };
 
 /**
  * ボスの行動パラメーター（BossState.cpp の各ステートが参照する調整値）
  * BossStateParameter.json の "BossState" 配列から読み込む（ボス種別によらず共通の1セット）
- *
- * 攻撃ごとにネストした構造体でまとめ、その中をさらに用途別にコメントで分類している。
- *   [timing]   : TaskSchedulerSystem::AddTimer/AddLoopTimer に渡す秒数
- *   [collision] : 攻撃判定・インジケーターのサイズや位置オフセット
- *   [effect]    : エフェクトのスケール
- *   [movement]  : 移動速度・距離・重力など
- *   [count]     : 回数などの整数値
- *
- * "※攻撃速度で秒数が変化する" と書かれた構造体の [timing] 項目は、
- * BossStateBase::GetAttackSpeedMul()（EmotionSystem の攻撃速度倍率）で割った値が
- * 実際に taskScheduler_->AddTimer(...) に渡される（BossState.cpp 側で除算する）。
  * Idle/Run/Death は「攻撃」ではないため攻撃速度の影響を受けない。
  */
 struct MasterBossStateParameter : public IMasterParameter
@@ -420,119 +454,122 @@ struct MasterBossStateParameter : public IMasterParameter
 	// 共通（複数ステートで使う値、または他システム(NPCController)と足並みを揃えるための値）
 	struct Common
 	{
-		float shortDistance         = 500.0f;  //!< [movement] 近距離判定 (NPCControllerと同じ値。BossRunStateの目標距離計算で使用)
-		float midDistance           = 1000.0f; //!< [movement] 中距離判定
-		float longDistance          = 1500.0f; //!< [movement] 遠距離判定
-		float rotateSpeed           = 0.01f;   //!< [movement] ボスがターゲット方向へ旋回する速さ（各攻撃の予備動作で共通使用）
-		float damageRingEffectScale = 0.4f;    //!< [effect]   円形攻撃エフェクトのスケール係数（通常攻撃・回転攻撃・レーザーの着弾エフェクトで共通使用）
+		float shortDistance         = 0.0f;  //!< 近距離判定 (NPCControllerと同じ値。BossRunStateの目標距離計算で使用)
+		float midDistance           = 0.0f;  //!< 中距離判定
+		float longDistance          = 0.0f;  //!< 遠距離判定
+		float rotateSpeed           = 0.0f;  //!< ボスがターゲット方向へ旋回する速さ（各攻撃の予備動作で共通使用）
+		float damageRingEffectScale = 0.0f;  //!< 円形攻撃エフェクトのスケール係数（通常攻撃・回転攻撃・レーザーの着弾エフェクトで共通使用）
 	} common;
 
 	// 待機 (BossIdleState)
 	struct Idle
 	{
-		float endTime = 6.0f; //!< [timing] 待機を終えるまでの秒数
+		float endTime = 0.0f; //!< 待機を終えるまでの秒数
 	} idle;
 
 	// 走る (BossRunState)
 	struct Run
 	{
-		float   moveSpeed          = 100.0f;              //!< [movement] 走行時のベース移動速度
-		float   seLoopInterval     = 0.2f;                 //!< [timing]   足音SEを鳴らすループ間隔(秒)
-		float   effectLoopInterval = 0.5f;                 //!< [timing]   疾走エフェクトを再生するループ間隔(秒)
-		Vector3 effectScale        = Vector3(20.0f, 20.0f, 20.0f); //!< [effect] 疾走エフェクトのスケール
+		float   moveSpeed          = 0.0f; //!< 走行時のベース移動速度
+		float   seLoopInterval     = 0.0f;	 //!< 足音SEを鳴らすループ間隔(秒)
+		float   effectLoopInterval = 0.0f;	 //!< 疾走エフェクトを再生するループ間隔(秒)
+		Vector3 effectScale        = Vector3::Zero;	//!< 疾走エフェクトのスケール
 	} run;
 
 	// 通常攻撃 (BossAttackState) ※攻撃速度で秒数が変化する
 	struct NormalAttack
 	{
-		float beginTime          = 0.1f;   //!< [timing]    攻撃判定・アニメーションが発生するまでの秒数
-		float collisionResetTime = 0.6f;   //!< [timing]    攻撃判定を消すまでの秒数
-		float endTime            = 1.0f;   //!< [timing]    ステートを終えるまでの秒数
-		float collisionForward   = 200.0f; //!< [collision] 判定をボス前方へずらすオフセット量
-		float collisionHeight    = 100.0f; //!< [collision] 判定の高さオフセット量
-		float collisionSize      = 200.0f; //!< [collision] 判定球の半径
+		float beginTime          = 0.0f;   //!< 攻撃判定・アニメーションが発生するまでの秒数
+		float collisionResetTime = 0.0f;   //!< 攻撃判定を消すまでの秒数
+		float endTime            = 0.0f;   //!< ステートを終えるまでの秒数
+		float collisionForward   = 0.0f;   //!< 判定をボス前方へずらすオフセット量
+		float collisionHeight    = 0.0f;   //!< 判定の高さオフセット量
+		float collisionSize      = 0.0f;   //!< 判定球の半径
 	} normalAttack;
 
 	// ヒットスタンプ (HitStampState) ※攻撃速度で秒数が変化する
 	struct HitStamp
 	{
-		float   upBeginTime         = 0.5f;    //!< [timing]    飛び上がり開始までの秒数
-		float   overheadMoveTime    = 2.0f;    //!< [timing]    プレイヤー頭上へ移動を終えるまでの秒数
-		float   fallBeginTime       = 5.0f;    //!< [timing]    落下を開始するまでの秒数
-		float   rangeSize           = 70.0f;   //!< [collision] 攻撃範囲インジケーター(着地地点の予告円)の半径
-		Vector3 jumpHeight          = Vector3(0.0f, 3000.0f, 0.0f); //!< [movement] 飛び上がる高さ（現在地からの相対値）
-		float   verticalVelocity    = 1500.0f; //!< [movement]  上昇時に設定する垂直速度
-		float   upSpeed             = 600.0f;  //!< [movement]  上昇中の水平移動速度
-		float   downSpeed           = 800.0f;  //!< [movement]  落下中の水平移動速度
-		float   gravityPower        = -800.0f; //!< [movement]  落下中にかかる重力の強さ
-		float   effectScaleBasis   = 350.0f;   //!< [effect]    着地エフェクトのスケール算出に使う基準サイズ（実際の攻撃判定半径はBossState.cpp内の固定値を使用しており本値の対象外）
-		float   smokeEffectScale    = 0.2f;    //!< [effect]    着地時の煙エフェクトのスケール係数（effectScaleBasisに掛ける）
-		float   shockWaveEffectScale = 0.5f;   //!< [effect]    着地時の衝撃波エフェクトのスケール係数（effectScaleBasisに掛ける）
-		float   impactAnimLeadTime  = 0.15f;   //!< [timing]    着地インパクトアニメーション(enAnimJumpImpact)を、落下速度から概算した残り落下時間がこの秒数を下回った時点（＝着地直前）で再生する
-		float   stateExitDelay      = 1.0f;    //!< [timing]    着地してからステートを終えるまでの秒数（インパクトアニメーションを最後まで見せるための猶予）
+		float   upBeginTime         = 0.0f;    //!< 飛び上がり開始までの秒数
+		float   overheadMoveTime    = 0.0f;    //!< プレイヤー頭上へ移動を終えるまでの秒数
+		float   fallBeginTime       = 0.0f;    //!< 落下を開始するまでの秒数
+		float   rangeSize           = 0.0f;    //!< 攻撃範囲インジケーター(着地地点の予告円)の半径
+		Vector3 jumpHeight          = Vector3::Zero; //!< [movement] 飛び上がる高さ（現在地からの相対値）
+		float   verticalVelocity    = 0.0f;    //!< 上昇時に設定する垂直速度
+		float   upSpeed             = 0.0f;    //!< 上昇中の水平移動速度
+		float   downSpeed           = 0.0f;    //!< 落下中の水平移動速度
+		float   gravityPower        = 0.0f;    //!< 落下中にかかる重力の強さ
+		float   effectScaleBasis   = 0.0f;     //!< 着地エフェクトのスケール算出に使う基準サイズ（実際の攻撃判定半径はBossState.cpp内の固定値を使用しており本値の対象外）
+		float   smokeEffectScale    = 0.0f;    //!< 着地時の煙エフェクトのスケール係数（effectScaleBasisに掛ける）
+		float   shockWaveEffectScale = 0.0f;   //!< 着地時の衝撃波エフェクトのスケール係数（effectScaleBasisに掛ける）
+		float   impactAnimLeadTime  = 0.0f;    //!< 着地インパクトアニメーション(enAnimJumpImpact)を、落下速度から概算した残り落下時間がこの秒数を下回った時点（＝着地直前）で再生する
+		float   stateExitDelay      = 0.0f;    //!< 着地してからステートを終えるまでの秒数（インパクトアニメーションを最後まで見せるための猶予）
 	} hitStamp;
 
 	// 回転攻撃 (SpinState) ※攻撃速度で秒数が変化する
 	struct Spin
 	{
-		float attackStartTime    = 3.0f;   //!< [timing]    予測表示を終え突進を開始するまでの秒数
-		float attackEndTime      = 7.5f;   //!< [timing]    強制終了までの秒数
-		float seLoopInterval     = 0.3f;   //!< [timing]    回転SEを鳴らすループ間隔(秒)
-		float effectLoopInterval = 1.0f;   //!< [timing]    回転エフェクトのループ間隔(秒)（現状コード内では未使用。将来の追従エフェクト用に予約）
-		float moveSpeed          = 300.0f; //!< [movement]  突進時の移動速度
-		float overMoveDistance   = 300.0f; //!< [movement]  目標地点からさらに進む距離
-		float effectScaleBasis   = 250.0f; //!< [effect]    突進エフェクトのスケール算出に使う基準サイズ（実際の攻撃判定半径はBossState.cpp内の固定値を使用しており本値の対象外）
-		float indicatorRangeSize = 50.0f;  //!< [collision] 攻撃予測ラインの太さ
-		float indicatorLength    = 250.0f; //!< [collision] 攻撃予測ラインの長さ（見た目のみ、攻撃距離とは無関係）
-		float indicatorForward   = 500.0f; //!< [collision] 攻撃予測ライン中心の前方オフセット
-		float jumpLeadTime       = 1.5f;   //!< [timing]    突進開始(attackStartTime)の何秒前からジャンプ演出を始めるか
-		float jumpHeight         = 150.0f; //!< [movement]  ジャンプ演出で上昇するY座標の高さ
+		float attackStartTime    = 0.0f;   //!< 予測表示を終え突進を開始するまでの秒数
+		float attackEndTime      = 0.0f;   //!< 強制終了までの秒数
+		float seLoopInterval     = 0.0f;   //!< 回転SEを鳴らすループ間隔(秒)
+		float effectLoopInterval = 0.0f;   //!< 回転エフェクトのループ間隔(秒)（現状コード内では未使用。将来の追従エフェクト用に予約）
+		float moveSpeed          = 0.0f;   //!< 突進時の移動速度
+		float overMoveDistance   = 0.0f;   //!< 目標地点からさらに進む距離
+		float effectScaleBasis   = 0.0f;   //!< 突進エフェクトのスケール算出に使う基準サイズ（実際の攻撃判定半径はBossState.cpp内の固定値を使用しており本値の対象外）
+		float indicatorRangeSize = 0.0f;   //!< 攻撃予測ラインの太さ
+		float indicatorLength    = 0.0f;   //!< 攻撃予測ラインの長さ（見た目のみ、攻撃距離とは無関係）
+		float indicatorForward   = 0.0f;   //!< 攻撃予測ライン中心の前方オフセット
+		float jumpLeadTime       = 0.0f;   //!< 突進開始(attackStartTime)の何秒前からジャンプ演出を始めるか
+		float jumpHeight         = 0.0f;   //!< ジャンプ演出で上昇するY座標の高さ
 	} spin;
 
 	// 岩を投げる攻撃 (ThrowRockState) ※攻撃速度で秒数が変化する
 	struct ThrowRock
 	{
-		float beginTime         = 2.5f;   //!< [timing]    岩を投げるまでの秒数
-		float endTime           = 4.0f;   //!< [timing]    ステートを終えるまでの秒数
-		float overMoveDistance  = 200.0f; //!< [movement]  プレイヤーのいる位置からさらに奥に投げ込む距離
-		float indicatorLength   = 250.0f; //!< [collision] 攻撃予測ラインの長さ（見た目のみ、攻撃距離とは無関係）
-		float indicatorBaseSize = 200.0f; //!< [collision] 攻撃予測ラインのタイリング基準サイズ（長さ軸）
-		float indicatorForward  = 600.0f; //!< [collision] 攻撃予測ライン中心の前方オフセット
-		float indicatorRangeSize = 33.0f; //!< [collision] 攻撃予測ラインの太さ
-		float rockCollisionSize = 100.0f; //!< [collision] 投げた岩の攻撃判定サイズ
-		float clickedBlendTime  = 0.15f;  //!< [effect]    ワインドアップ→投擲アニメーションへ滑らかに繋げるためのブレンド秒数
-		float windUpSwayAmplitudeDeg   = 15.0f; //!< [effect] ワインドアップ中に左右へ揺さぶる角度(度)
-		float windUpSwaySegmentDuration = 0.3f; //!< [timing] ワインドアップの揺さぶりが片側(中央→端)へ動くのにかける秒数
-		float windUpSpawnHeight = 10.0f; //!< [effect] ワインドアップ開始時に岩が出現するY座標（投げる瞬間までに本来の高さへ近づく）
-		float dustEffectScale = 10.0f; //!< [effect] 岩を準備している間に足元(Y=0)で再生する土ぼこりエフェクトのスケール（一様）
+		float beginTime         = 0.0f;   //!< 岩を投げるまでの秒数
+		float endTime           = 0.0f;   //!< ステートを終えるまでの秒数
+		float overMoveDistance  = 0.0f;   //!< プレイヤーのいる位置からさらに奥に投げ込む距離
+		float indicatorLength   = 0.0f;   //!< 攻撃予測ラインの長さ（見た目のみ、攻撃距離とは無関係）
+		float indicatorBaseSize = 0.0f;   //!< 攻撃予測ラインのタイリング基準サイズ（長さ軸）
+		float indicatorForward  = 0.0f;   //!< 攻撃予測ライン中心の前方オフセット
+		float indicatorRangeSize = 0.0f;  //!< 攻撃予測ラインの太さ
+		float rockCollisionSize = 0.0f;   //!< 投げた岩の攻撃判定サイズ
+		float clickedBlendTime  = 0.0f;   //!< ワインドアップ→投擲アニメーションへ滑らかに繋げるためのブレンド秒数
+		float windUpSwayAmplitudeDeg   = 0.0f;  //!< ワインドアップ中に左右へ揺さぶる角度(度)
+		float windUpSwaySegmentDuration = 0.0f; //!< ワインドアップの揺さぶりが片側(中央→端)へ動くのにかける秒数
+		float windUpSpawnHeight = 0.0f;		//!< ワインドアップ開始時に岩が出現するY座標（投げる瞬間までに本来の高さへ近づく）
+		float dustEffectScale = 0.0f;			//!< 岩を準備している間に足元(Y=0)で再生する土ぼこりエフェクトのスケール（一様）
 	} throwRock;
 
 	// レーザー攻撃 (LaserState) ※攻撃速度で秒数が変化する
 	struct Laser
 	{
-		float   initialShotTime       = 0.1f;  //!< [timing]    最初の予測タイマーが発火するまでの秒数
-		float   attackTime            = 1.0f;  //!< [timing]    発射開始から判定・エフェクトを消すまでの秒数
-		float   shotIntervalNormal    = 3.0f;  //!< [timing]    予測→発射までの秒数（通常/連発モード）
-		float   shotIntervalCharge    = 6.0f;  //!< [timing]    予測→発射までの秒数（チャージモード）
-		uint8_t shotCountNormal       = 1;     //!< [count]     発射本数（通常/チャージモード）
-		uint8_t shotCountMult         = 3;     //!< [count]     発射本数（連発モード）
-		Vector3 chargeScale           = Vector3(1.75f, 1.75f, 1.75f); //!< [effect] チャージモード時のエフェクト・判定スケール倍率
-		float   collisionScale        = 180.0f; //!< [collision] 発射時の攻撃判定スケール基準値
-		float   indicatorRadiusNormal = 45.0f;  //!< [collision] 予測サークルの半径（通常/連発モード）
-		float   indicatorRadiusCharge = 75.0f;  //!< [collision] 予測サークルの半径（チャージモード）
-		float   effectScaleFactor     = 0.5f;   //!< [effect]    レーザーエフェクトのサイズ調整係数（現状コード内では未使用）
-		float   multiJumpHeight         = 100.0f; //!< [movement] 連発攻撃前の予備動作で上下するY座標の高さ
-		float   multiJumpDuration       = 1.0f;   //!< [timing]   予備ジャンプ1回（上昇→着地）にかける秒数
-		uint8_t multiJumpCount          = 3;      //!< [count]    予備ジャンプを繰り返す回数
-		Vector3 chargeBodyScale         = Vector3(3.8f, 3.8f, 3.8f); //!< [effect] チャージ攻撃前の予備動作で拡大するボス本体のScale（絶対値。通常時のScaleはCharacterStatusData.json側で管理）
-		float   chargeIndicatorDelay    = 1.0f;   //!< [timing]   チャージ攻撃：振り向き終了後、予測線が表示されるまでの「溜め」の秒数（他モードのinitialShotTimeに相当する値をチャージ専用に長く取ったもの）
-		float   chargeScaleDownDuration = 2.0f;   //!< [timing]   チャージ攻撃後、Scaleを通常Scaleへ戻すのにかける秒数
+		float   initialShotTime       = 0.0f;  //!< 最初の予測タイマーが発火するまでの秒数
+		float   attackTime            = 0.0f;  //!< 発射開始から判定・エフェクトを消すまでの秒数
+		float   shotIntervalNormal    = 0.0f;  //!< 予測→発射までの秒数（通常/連発モード）
+		float   shotIntervalCharge    = 0.0f;  //!< 予測→発射までの秒数（チャージモード）
+		uint8_t shotCountNormal       = 0;     //!< 発射本数（通常/チャージモード）
+		uint8_t shotCountMult         = 0;     //!< 発射本数（連発モード）
+		Vector3 chargeScale           = Vector3::Zero; //!< チャージモード時のエフェクト・判定スケール倍率
+		float   collisionScale        = 0.0f;  //!< 発射時の攻撃判定スケール基準値
+		float   indicatorRadiusNormal = 0.0f;   //!< 予測サークルの半径（通常/連発モード）
+		float   indicatorRadiusCharge = 0.0f;   //!< 予測サークルの半径（チャージモード）
+		float   effectScaleFactor     = 0.0f;   //!< レーザーエフェクトのサイズ調整係数（現状コード内では未使用）
+		float   multiJumpHeight         = 0.0f;   //!< 連発攻撃前の予備動作で上下するY座標の高さ
+		float   multiJumpDuration       = 0.0f;   //!< 予備ジャンプ1回（上昇→着地）にかける秒数
+		uint8_t multiJumpCount          = 0;      //!< 予備ジャンプを繰り返す回数
+		Vector3 chargeBodyScale         = Vector3::Zero; //!< チャージ攻撃前の予備動作で拡大するボス本体のScale（絶対値。通常時のScaleはCharacterStatusData.json側で管理）
+		float   chargeIndicatorDelay    = 0.0f;   //!< チャージ攻撃：振り向き終了後、予測線が表示されるまでの「溜め」の秒数（他モードのinitialShotTimeに相当する値をチャージ専用に長く取ったもの）
+		float   chargeScaleDownDuration = 0.0f;   //!< チャージ攻撃後、Scaleを通常Scaleへ戻すのにかける秒数
+		uint8_t weightNormal            = 0;      //!< 攻撃パターン抽選の重み（単発）
+		uint8_t weightMult               = 0;      //!< 攻撃パターン抽選の重み（連発）
+		uint8_t weightCharge             = 0;      //!< 攻撃パターン抽選の重み（チャージ）
 	} laser;
 
 	// 死亡 (BossDeathState)
 	struct Death
 	{
-		float animationTime = 2.0f; //!< [timing] 死亡アニメーション再生後、実際に死亡扱いにするまでの秒数
+		float animationTime = 0.0f; //!< [timing] 死亡アニメーション再生後、実際に死亡扱いにするまでの秒数
 	} death;
 };
 
@@ -546,42 +583,42 @@ struct MasterBossPhaseCutSceneParameter : public IMasterParameter
 	appParameter(MasterBossPhaseCutSceneParameter);
 
 	std::string key;					//!< ボス識別キー (例: "Gorilla", "Turtle")
-	float angryHpRatio = 0.5f;			//!< 「怒り状態」カットシーンに入るHP割合の閾値
-	float tiredHpRatio = 0.25f;			//!< 「疲れ状態」カットシーンに入るHP割合の閾値
-	float cameraDistance = 300.0f;		//!< ボス正面からのカメラ距離
-	float cameraHeight = 150.0f;		//!< 注視点・カメラ位置の高さオフセット
-	float cameraEaseDuration = 1.2f;	//!< カメラが通常視点⇔ボス正面をイージングで移動する秒数（往復とも同じ秒数）
-	float cutsceneDuration = 5.0f;		//!< カメラをボスの正面に合わせてから、通常視点に戻すまでの秒数
-	float bossIdleHoldDuration = 3.0f;	//!< 視点が戻ってからボスAIを再開するまでの待機秒数（戻った瞬間に攻撃が当たって見えるのを防ぐ）
+	float angryHpRatio = 0.0f;			//!< 「怒り状態」カットシーンに入るHP割合の閾値
+	float tiredHpRatio = 0.0f;			//!< 「疲れ状態」カットシーンに入るHP割合の閾値
+	float cameraDistance = 0.0f;		//!< ボス正面からのカメラ距離
+	float cameraHeight = 0.0f;			//!< 注視点・カメラ位置の高さオフセット
+	float cameraEaseDuration = 0.0f;	//!< カメラが通常視点⇔ボス正面をイージングで移動する秒数（往復とも同じ秒数）
+	float cutsceneDuration = 0.0f;		//!< カメラをボスの正面に合わせてから、通常視点に戻すまでの秒数
+	float bossIdleHoldDuration = 0.0f;	//!< 視点が戻ってからボスAIを再開するまでの待機秒数（戻った瞬間に攻撃が当たって見えるのを防ぐ）
 	float iconOffsetY = 0.0f;			//!< 怒り/疲れマーク(angry1/2, tired1/2/3)のY座標に加えるオフセット。ボスごとに立ち位置・高さが違うための調整値
 	float tiredIconOffsetX = 0.0f;		//!< 疲れマーク(tired1/2/3)を外側(X方向)にずらす量。tired1/3は+X、tired2は-X側へ適用する
 
 	// HP25%演出：ボスの前後傾き（X軸回転）
-	float pitchForwardDeg         = 20.0f;	//!< 前方向へ傾ける角度
-	float pitchForwardEaseDuration = 0.65f;	//!< 0度→pitchForwardDegへイージングする秒数
-	float pitchHoldDuration        = 2.25f;	//!< 前傾きのまま静止する秒数（左右揺れ・疲れマークの演出もこの間に行う）
-	float pitchBackEaseDuration    = 0.65f;	//!< pitchForwardDeg→0度へイージングで戻す秒数
+	float pitchForwardDeg         = 0.0f;	//!< 前方向へ傾ける角度
+	float pitchForwardEaseDuration = 0.0f;	//!< 0度→pitchForwardDegへイージングする秒数
+	float pitchHoldDuration        = 0.0f;	//!< 前傾きのまま静止する秒数（左右揺れ・疲れマークの演出もこの間に行う）
+	float pitchBackEaseDuration    = 0.0f;	//!< pitchForwardDeg→0度へイージングで戻す秒数
 
 	// HP25%演出：ボスの左右揺れ（Y軸回転）。静止時間(pitchHoldDuration)を4等分し、
 	// 0→-A→+A→-A→0度と往復させる（Aがこの振れ幅）
-	float yawWobbleAmplitudeDeg = 10.0f;	//!< 左右揺れの振れ幅（度）
+	float yawWobbleAmplitudeDeg = 0.0f;	//!< 左右揺れの振れ幅（度）
 
 	// HP25%演出：疲れマーク(tired1/2/3)の弧移動
-	float tiredArcRiseDuration     = 0.2f;	//!< 弧の上昇にかける秒数
-	float tiredArcDriftDuration    = 0.3f;	//!< 弧の下降（横移動）にかける秒数
-	float tiredStaggerInterval     = 0.6f;	//!< tired1→2→3を開始する間隔（秒）
+	float tiredArcRiseDuration     = 0.0f;	//!< 弧の上昇にかける秒数
+	float tiredArcDriftDuration    = 0.0f;	//!< 弧の下降（横移動）にかける秒数
+	float tiredStaggerInterval     = 0.0f;	//!< tired1→2→3を開始する間隔（秒）
 
 	// カットシーン専用のバフ/デバフエフェクト位置オフセット（通常のインゲーム中のオフセットはEmotionParameter.json側）
-	float debuffEffectOffsetYOverride = 10.0f;	//!< HP25%演出中のDebuffエフェクトのYオフセット上書き値
-	float buffEffectOffsetYOverride   = 10.0f;	//!< HP50%演出中のBuffエフェクトのYオフセット上書き値
+	float debuffEffectOffsetYOverride = 0.0f;	//!< HP25%演出中のDebuffエフェクトのYオフセット上書き値
+	float buffEffectOffsetYOverride   = 0.0f;	//!< HP50%演出中のBuffエフェクトのYオフセット上書き値
 
 	// HP50%演出：ボスのジャンプ演出・怒りマークのスケールパルス
-	int   bossJumpCount          = 2;		//!< ジャンプ→着地を繰り返す回数
-	float iconScaleDownDuration   = 0.2f;	//!< 怒りマークが縮むのにかける秒数
-	float iconScaleUpDuration     = 0.35f;	//!< 怒りマークが元の大きさに戻るのにかける秒数
-	float icon2PulseDelay         = 0.2f;	//!< 2枚目の怒りマークのパルスを1枚目からずらす秒数
-	float angry1BaseScale         = 1.0f;	//!< 怒りマーク1の基準スケール（BossPhaseCutSceneUI.jsonのscaleと合わせること。パルス停止時に戻す値）
-	float angry2BaseScale         = 0.8f;	//!< 怒りマーク2の基準スケール（BossPhaseCutSceneUI.jsonのscaleと合わせること。パルス停止時に戻す値）
+	int   bossJumpCount          = 0;		//!< ジャンプ→着地を繰り返す回数
+	float iconScaleDownDuration   = 0.0f;	//!< 怒りマークが縮むのにかける秒数
+	float iconScaleUpDuration     = 0.0f;	//!< 怒りマークが元の大きさに戻るのにかける秒数
+	float icon2PulseDelay         = 0.0f;	//!< 2枚目の怒りマークのパルスを1枚目からずらす秒数
+	float angry1BaseScale         = 0.0f;	//!< 怒りマーク1の基準スケール（BossPhaseCutSceneUI.jsonのscaleと合わせること。パルス停止時に戻す値）
+	float angry2BaseScale         = 0.0f;	//!< 怒りマーク2の基準スケール（BossPhaseCutSceneUI.jsonのscaleと合わせること。パルス停止時に戻す値）
 };
 
 /** defineの使用終了 */
@@ -610,6 +647,8 @@ private:
 
 public:
 	/* 各種パラメーターJSONの読み込み（呼び出し元は main.cpp のロード処理） */
+	void LoadCharacterMasterData(const char* path);
+	void LoadAnimationMasterData(const char* path);
 	void LoadCharacterStatusData(const char* path);
 	void LoadPlayerSkillStatusData(const char* path);
 	void LoadBossSkillStatusData(const char* path);
@@ -619,6 +658,7 @@ public:
 	void LoadCollisionHitParamData(const char* path);
 	void LoadPlayerStateParamData(const char* path);
 	void LoadNPCControllerParamData(const char* path);
+	void LoadNPCAttackRuleData(const char* path);
 	void LoadBossSpawnerParamData(const char* path);
 	void LoadSkillParamData(const char* path);
 	void LoadAttackObjectParamData(const char* path);
@@ -684,6 +724,12 @@ public:
 
 		std::vector<IMasterParameter*> parameters;
 		for (const auto& j : jsonRoot[arrayKey]) {
+			// オブジェクトでない要素（文字列など）は読み込み対象外
+			if (!j.is_object()) { continue; }
+
+			// "key"が"__EXAMPLE__"の行はコピペ用テンプレートなので読み込まない
+			if (j.value("key", "") == "__EXAMPLE__") { continue; }
+
 			T* parameter = new T();
 			func(j, *parameter);
 			parameters.push_back(static_cast<IMasterParameter*>(parameter));
@@ -716,12 +762,21 @@ public:
 			const std::string& category = it.key();
 			const auto& array = it.value();
 
+			// "_README"のような説明用キーはカテゴリではないので読み飛ばす
+			if (category == "_README") { continue; }
+
 			if (!array.is_array()) { continue; }
 
 			for (const auto& j : array)
 			{
+				// オブジェクトでない要素（文字列など）は読み込み対象外
+				if (!j.is_object()) { continue; }
+
 				// 空オブジェクト {} はスキップ
 				if (j.empty()) { continue; }
+
+				// "key"が"__EXAMPLE__"の行はコピペ用テンプレートなので読み込まない
+				if (j.value("key", "") == "__EXAMPLE__") { continue; }
 
 				T* parameter = new T();
 				func(category, j, *parameter);
@@ -825,6 +880,50 @@ public:
 				return p.category == category && p.key == key;
 			}
 		);
+	}
+
+	/** キーでキャラクターマスター（敵の見た目データ）を取得するショートカット */
+	inline const MasterCharacterMasterParameter* GetCharacterMaster(const std::string& key)
+	{
+		return FindParameter<MasterCharacterMasterParameter>(
+			[&key](const MasterCharacterMasterParameter& p) {
+				return p.key == key;
+			}
+		);
+	}
+
+	/** カテゴリ(キャラクター)＋keyでアニメーションマスターを取得するショートカット */
+	inline const MasterAnimationMasterParameter* GetAnimationMaster(const std::string& category, const std::string& key)
+	{
+		return FindParameter<MasterAnimationMasterParameter>(
+			[&](const MasterAnimationMasterParameter& p) {
+				return p.category == category && p.key == key;
+			}
+		);
+	}
+
+	/** カテゴリ(キャラクター)で絞り込んで全アニメーションマスターを取得するショートカット */
+	std::vector<const MasterAnimationMasterParameter*> GetAnimationsByCharacter(const std::string& category)
+	{
+		std::vector<const MasterAnimationMasterParameter*> result;
+		ForEach<MasterAnimationMasterParameter>(
+			[&](const MasterAnimationMasterParameter& p) {
+				if (p.category == category) { result.push_back(&p); }
+			}
+		);
+		return result;
+	}
+
+	/** カテゴリ(キャラクター)で絞り込んで全NPC攻撃選択ルールを取得するショートカット */
+	std::vector<const MasterNPCAttackRuleParameter*> GetNPCAttackRulesByCharacter(const std::string& category)
+	{
+		std::vector<const MasterNPCAttackRuleParameter*> result;
+		ForEach<MasterNPCAttackRuleParameter>(
+			[&](const MasterNPCAttackRuleParameter& p) {
+				if (p.category == category) { result.push_back(&p); }
+			}
+		);
+		return result;
 	}
 
 	/** キーでキャラクターのステータスを取得するショートカット */

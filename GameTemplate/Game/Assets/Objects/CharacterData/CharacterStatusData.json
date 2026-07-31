@@ -1,62 +1,133 @@
 {
+    "_README": [
+        "キャラクター（プレイヤー・ボス）の初期パラメーターを登録するファイルです。",
+        "1体につき1つのブロックを書きます。",
+        "",
+        "■新しいキャラを追加する手順",
+        "1. 下にある \"key\": \"__EXAMPLE__\" のブロックをコピーする",
+        "2. \"key\" を新しいキャラの名前にする（CharacterMaster.json・AnimationMaster.json・BossSkillStatus.jsonの\"key\"/カテゴリ名と必ず一致させること）",
+        "3. \"spawn\"（出現位置・向き・大きさ）、\"collision\"（当たり判定・キャラコンのサイズ）、\"stats\"（HP・攻撃力など）を埋める",
+        "4. \"stamina\" グループはプレイヤー系のみ使用します。ボス（敵）は丸ごと省略してOKです",
+        "",
+        "■注意",
+        "\"key\" が \"__EXAMPLE__\" のブロックはコピー元のサンプルなので、削除せずそのまま残しておいてください。"
+    ],
+
     "Character": [
         {
-            "comment": "プレイヤーのステータス",
-            "key": "Player",
-            "position":[300.0,0.0,0.0],
-            "rotation":[0.0,0.0,0.0,1.0],
-            "scale":[1.0, 1.0, 1.0],
-            "collisionPosUp":[0.0, 40.0, 0.0],
-            "collisionSizeRadius": 28.0,
-            "collisionSizeHeight": 100.0,
-            "charaConSizeRadius":28.0,
-            "charaConSizeHeight":100.0,
-            "hp": 300,
-            "attack": 30,
-            "criticalRate":20,
-            "criticalDamageMultiplier": 1.5,
-            "stamina": 100.0,
-            "drainPerSec": 10.0,
-            "recoverPerSec": 12.0,
-            "exhaustedRecoverPerSec": 10.0,
-            "exhaustedThreshold": 0.5,
-            "exhaustedSpeedRate": 0.5,
-            "walkSpeedBase": 150.0,
-            "runSpeedBase": 350.0
-        },
-        
-        {
-            "comment": "ゴリラのステータス",
-            "key" : "Gorilla",
-            "position":[-300.0,0.0,0.0],
-            "rotation":[0.0,0.0,0.0,1.0],
-            "scale":[2.5,2.5,2.5],
-            "collisionPosUp":[0.0,120.0,0.0],
-            "collisionSizeRadius": 110.0,
-            "collisionSizeHeight": 110.0,
-            "charaConSizeRadius":110.0,
-            "charaConSizeHeight":110.0,
-            "hp": 1000,
-            "attack": 40,
-            "criticalRate": 5,
-            "criticalDamageMultiplier": 1.8
+            "key": "__EXAMPLE__",
+            "comment": "新しいキャラを追加する時はこの行をコピーして書き換えてください。staminaグループはPlayer系のみ使用（ボスは省略可）",
+            "spawn": {
+                "position": [0.0, 0.0, 0.0],
+                "rotation": [0.0, 0.0, 0.0, 1.0],
+                "scale": [1.0, 1.0, 1.0]
+            },
+            "collision": {
+                "collisionPosUp": [0.0, 0.0, 0.0],
+                "collisionSizeRadius": 0.0,
+                "collisionSizeHeight": 0.0,
+                "charaConSizeRadius": 0.0,
+                "charaConSizeHeight": 0.0
+            },
+            "stats": {
+                "hp": 0,
+                "attack": 0,
+                "criticalRate": 0,
+                "criticalDamageMultiplier": 1.0,
+                "moveSpeedBase": 0.0,
+                "runSpeedBase": 0.0
+            },
+            "stamina": {
+                "maxStamina": 0.0,
+                "drainPerSec": 0.0,
+                "recoverPerSec": 0.0,
+                "exhaustedRecoverPerSec": 0.0,
+                "exhaustedThreshold": 0.0,
+                "exhaustedSpeedRate": 0.0
+            }
         },
 
         {
-            "comment":"亀のステータス",
-            "key" : "Turtle",
-            "position":[-300.0,0.0,0.0],
-            "rotation":[0.0,0.0,0.0,1.0],
-            "scale":[3.0,3.0,3.0],
-            "collisionPosUp":[0.0,120.0,0.0],
-            "collisionSizeRadius": 110.0,
-            "collisionSizeHeight": 20.0,
-            "charaConSizeRadius":110.0,
-            "charaConSizeHeight":50.0,
-            "hp": 1500,
-            "attack": 30,
-            "criticalRate": 10,
-            "criticalDamageMultiplier": 1.5
+            "key": "Player",
+            "comment": "プレイヤーのステータス",
+            "spawn": {
+                "position": [300.0, 0.0, 0.0],
+                "rotation": [0.0, 0.0, 0.0, 1.0],
+                "scale": [1.0, 1.0, 1.0]
+            },
+            "collision": {
+                "collisionPosUp": [0.0, 40.0, 0.0],
+                "collisionSizeRadius": 28.0,
+                "collisionSizeHeight": 100.0,
+                "charaConSizeRadius": 28.0,
+                "charaConSizeHeight": 100.0
+            },
+            "stats": {
+                "hp": 300,
+                "attack": 30,
+                "criticalRate": 20,
+                "criticalDamageMultiplier": 1.5,
+                "moveSpeedBase": 150.0,
+                "runSpeedBase": 350.0
+            },
+            "stamina": {
+                "maxStamina": 100.0,
+                "drainPerSec": 10.0,
+                "recoverPerSec": 12.0,
+                "exhaustedRecoverPerSec": 10.0,
+                "exhaustedThreshold": 0.5,
+                "exhaustedSpeedRate": 0.5
+            }
+        },
+
+        {
+            "key": "Gorilla",
+            "comment": "ゴリラのステータス",
+            "spawn": {
+                "position": [-300.0, 0.0, 0.0],
+                "rotation": [0.0, 0.0, 0.0, 1.0],
+                "scale": [2.5, 2.5, 2.5]
+            },
+            "collision": {
+                "collisionPosUp": [0.0, 120.0, 0.0],
+                "collisionSizeRadius": 110.0,
+                "collisionSizeHeight": 110.0,
+                "charaConSizeRadius": 110.0,
+                "charaConSizeHeight": 110.0
+            },
+            "stats": {
+                "hp": 1000,
+                "attack": 40,
+                "criticalRate": 5,
+                "criticalDamageMultiplier": 1.8,
+                "moveSpeedBase": 100.0,
+                "runSpeedBase": 0.0
+            }
+        },
+
+        {
+            "key": "Turtle",
+            "comment": "亀のステータス",
+            "spawn": {
+                "position": [-300.0, 0.0, 0.0],
+                "rotation": [0.0, 0.0, 0.0, 1.0],
+                "scale": [3.0, 3.0, 3.0]
+            },
+            "collision": {
+                "collisionPosUp": [0.0, 120.0, 0.0],
+                "collisionSizeRadius": 110.0,
+                "collisionSizeHeight": 20.0,
+                "charaConSizeRadius": 110.0,
+                "charaConSizeHeight": 50.0
+            },
+            "stats": {
+                "hp": 1500,
+                "attack": 30,
+                "criticalRate": 10,
+                "criticalDamageMultiplier": 1.5,
+                "moveSpeedBase": 100.0,
+                "runSpeedBase": 0.0
+            }
         }
     ]
 }

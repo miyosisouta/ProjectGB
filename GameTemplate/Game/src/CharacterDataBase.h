@@ -65,14 +65,14 @@ public:
     /** ボスのパラメータの取得 */
     inline const BossParam& GetGameParam() const { return bossParam_; }
 
-    /** ステージタイプの設定 */
-    inline void SetStageType(BossType type) { bossParam_.stageType_ = type; }
-    /** ステージタイプの取得 */
-    inline const BossType& GetStageType() const{ return bossParam_.stageType_; }
-    /** ゲームモードの設定 */
-    inline void SetGameModeType(GameModeType mode) { bossParam_.mode_ = mode; }
-    /** ゲームモードの取得 */
-    inline const GameModeType& GetGameModeType() const { return bossParam_.mode_; }
+    /**
+     * ステージ（ボス）の識別キーの設定。
+     * CharacterMaster.json / AnimationMaster.json / CharacterStatusData.json 等の"key"と一致させる。
+     * ボス選択画面（TitleScene）から、選ばれたボスのkeyをそのまま渡してもらう想定。
+     */
+    inline void SetStageKey(const std::string& key) { bossParam_.characterKey_ = key; }
+    /** ステージ（ボス）の識別キーの取得 */
+    inline const std::string& GetStageKey() const { return bossParam_.characterKey_; }
 
 
     /* ============================================================================ */
@@ -82,7 +82,7 @@ public:
     /**
      * チュートリアルを行うかどうかを設定する（true=行う／false=飛ばして最初から全行動解禁でボス登場演出から始める）
      * TODO: チュートリアルを行うか選ぶUI画面が実装されたら、その決定処理からここを呼んでください。
-     *       呼び出し例は TitleScene.cpp の SetStageType/SetGameModeType 呼び出し箇所を参照。
+     *       呼び出し例は TitleScene.cpp の SetStageKey 呼び出し箇所を参照。
      *       未設定の場合はデフォルトtrue（チュートリアルを行う）のままです。
      */
     inline void SetTutorialEnabled(bool flg) { isTutorialEnabled_ = flg; }

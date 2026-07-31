@@ -105,7 +105,10 @@
                 "multiJumpCount": 3,
                 "chargeBodyScale": [3.8, 3.8, 3.8],
                 "chargeIndicatorDelay": 1.0,
-                "chargeScaleDownDuration": 2.0
+                "chargeScaleDownDuration": 2.0,
+                "weightNormal": 3,
+                "weightMult": 4,
+                "weightCharge": 3
             },
 
             "death": {

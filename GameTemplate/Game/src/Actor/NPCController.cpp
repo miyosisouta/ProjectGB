@@ -5,87 +5,40 @@
 #include "src/Actor/BossCharacter.h"
 
 
-// ボスの攻撃ルール
-namespace bossRuleData
+namespace
 {
-    // ゴリラのルールセットを返す関数（std::array版）
-    inline std::array<DistanceRule, static_cast<int>(DistancePhase::enMax)> GetGorillaRules()
-    {
-        // std::array を返すため、全体を {{ }} で囲みます
-        return { 
-            {
-                // ▼ 近距離ルールの設定
-                { DistancePhase::enShortAttackType, {
-                    { BossStateID::Attack, 5 }, // 通常攻撃
-                    { BossStateID::Spin,   3 }, // 回転攻撃
-                    { BossStateID::Jump,   2 }  // ヒットスタンプ
-                }},
+	// NPCAttackRuleParameter.jsonの"distance"文字列 → DistancePhase の変換（唯一の変換場所）
+	DistancePhase ToDistancePhase(const std::string& distance)
+	{
+		if (distance == "Short")    { return DistancePhase::enShortAttackType; }
+		if (distance == "Mid")      { return DistancePhase::enMidAttackType; }
+		if (distance == "Long")     { return DistancePhase::enLongAttackType; }
+		if (distance == "OutRange") { return DistancePhase::enOutRange; }
 
-                // ▼ 中距離ルールの設定
-                { DistancePhase::enMidAttackType, {
-                    { BossStateID::Run,     1 },    // 走る
-                    { BossStateID::Jump,    3 },    // ヒットスタンプ
-                    { BossStateID::Spin,    3 },    // 回転攻撃
-                    { BossStateID::Clicked_Gollira, 3 }     // 岩を投げる
-                }},
+		K2_ASSERT(false, ("NPCAttackRuleParameter.json: 未知のdistanceです（distance='" + distance + "'）\n").c_str());
+		return DistancePhase::enOutRange;
+	}
 
-                // ▼ 遠距離ルールの設定
-                { DistancePhase::enLongAttackType, {
-                    { BossStateID::Run,     1 },    // 走る
-                    { BossStateID::Jump,    2 },    // ジャンプ
-                    { BossStateID::Spin,    2 },    // 回転攻撃
-                    { BossStateID::Clicked_Gollira, 5 }     // 岩を投げる
-                }},
+	// NPCAttackRuleParameter.jsonの"stateId"文字列 → BossStateID の変換（唯一の変換場所）
+	BossStateID ToBossStateId(const std::string& stateId)
+	{
+		static const std::unordered_map<std::string, BossStateID> table = {
+			{ "Idle",      BossStateID::Idle },
+			{ "Run",       BossStateID::Run },
+			{ "HitStamp",  BossStateID::HitStamp },
+			{ "Attack",    BossStateID::Attack },
+			{ "Hit",       BossStateID::Hit },
+			{ "Spin",      BossStateID::Spin },
+			{ "ThrowRock", BossStateID::ThrowRock },
+			{ "Laser",     BossStateID::Laser },
+			{ "Death",     BossStateID::Death },
+		};
 
-                // ▼ 攻撃範囲外にいる場合
-                { DistancePhase::enOutRange, {
-                    { BossStateID::Run, 10 }    // 追跡
-                    // 攻撃範囲外なら1つでもOK
-                }}
-            } 
-        };
-    }
-
-    // ここから下に新しいボスのルールを書く
-    // カメのルールセットを返す関数（std::array版）
-    inline std::array<DistanceRule, static_cast<int>(DistancePhase::enMax)> GetTurtleRules()
-    {
-        // std::array を返すため、全体を {{ }} で囲みます
-        return {
-            {
-                // ▼ 近距離ルールの設定
-                { DistancePhase::enShortAttackType, {
-                    { BossStateID::Attack, 3 }, // 通常攻撃
-                    { BossStateID::Spin,   2 }, // 回転攻撃
-                    { BossStateID::Jump,   2 },  // ヒットスタンプ
-                    { BossStateID::Clicked_Turtle, 3 }     // レーザー
-                }},
-
-            // ▼ 中距離ルールの設定
-            { DistancePhase::enMidAttackType, {
-                { BossStateID::Run,     1 },    // 走る
-                { BossStateID::Jump,    2 },    // ヒットスタンプ
-                { BossStateID::Spin,    2 },    // 回転攻撃
-                { BossStateID::Clicked_Turtle, 5 }     // レーザー
-            }},
-
-            // ▼ 遠距離ルールの設定
-            { DistancePhase::enLongAttackType, {
-                { BossStateID::Jump,    3 },    // ジャンプ
-                { BossStateID::Spin,    2 },    // 回転攻撃
-                { BossStateID::Clicked_Turtle, 5 }     // レーザー
-            }},
-
-            // ▼ 攻撃範囲外にいる場合
-            { DistancePhase::enOutRange, {
-                { BossStateID::Run, 10 }    // 追跡
-                // 攻撃範囲外なら1つでもOK
-            }}
-        }
-        };
-    }
+		auto it = table.find(stateId);
+		K2_ASSERT(it != table.end(), ("NPCAttackRuleParameter.json: 未知のstateIdです（stateId='" + stateId + "'）\n").c_str());
+		return (it != table.end()) ? it->second : BossStateID::Idle;
+	}
 }
-
 
 
 /* ========================================== */
@@ -105,25 +58,8 @@ bool NPCController::Start()
     // 乱数をランダムで生成
     srand(time(nullptr));
 
-
     // スポーナーから渡されたボスの種類によって、AIのルール（確率や行動パターン）を切り替える
-    {
-        switch (bossType_)
-        {
-        case BossType::enGorilla:
-            currentRules_ = bossRuleData::GetGorillaRules(); // ゴリラ用の設定を取得
-            break;
-
-        case BossType::enTurtle:
-            currentRules_ = bossRuleData::GetTurtleRules(); // カメ用の設定を取得
-            break;
-
-        default:
-            K2_ASSERT(true, "ボスの種類が設定されていません");
-            break;
-        }
-    }
-
+    BuildRulesFromParam();
 
 	return true;
 }
@@ -137,18 +73,18 @@ void NPCController::Update()
         // ボスが死んでいる場合
         if (boss_->GetCurrentStateID() == BossStateID::Death) return;
     }
-    
+
 
     // ボスのHPが0なら死亡ステートへ移行
-    if (boss_->GetStatus()->IsHpDepleted()) { 
-        boss_->ChangeState(BossStateID::Death); 
+    if (boss_->GetStatus()->IsHpDepleted()) {
+        boss_->ChangeState(BossStateID::Death);
     }
 
     // プレイヤーの座標をボス本体に設定
     boss_->SetTargetPos(targerPlayer_->GetTransformPosition());
 
     // 行動ノードを選択
-    if (boss_->IsCurrentStateFinished()) 
+    if (boss_->IsCurrentStateFinished())
     {
         // 終わったのがIdle以外なら、強制的にIdleを挟む
         if (boss_->GetCurrentStateID() != BossStateID::Idle)
@@ -169,6 +105,26 @@ void NPCController::Update()
 /* 選択処理 */
 /* ========================================== */
 
+void NPCController::BuildRulesFromParam()
+{
+    // 距離帯ごとの攻撃リストを初期化
+    for (int i = 0; i < static_cast<int>(DistancePhase::enMax); ++i)
+    {
+        currentRules_[i].distanceType_ = static_cast<DistancePhase>(i);
+        currentRules_[i].attackList.clear();
+    }
+
+    const auto rules = ParameterManager::Get().GetNPCAttackRulesByCharacter(bossKey_);
+    K2_ASSERT(!rules.empty(), ("NPCAttackRuleParameter.jsonにキー'" + bossKey_ + "'の攻撃ルールがありません\n").c_str());
+
+    for (const auto* rule : rules)
+    {
+        const DistancePhase phase = ToDistancePhase(rule->distance);
+        const BossStateID   stateId = ToBossStateId(rule->stateId);
+        currentRules_[static_cast<int>(phase)].attackList.push_back({ stateId, rule->weight });
+    }
+}
+
 void NPCController::SelectActionNode()
 {
     // 自分と攻撃の対象の座標を取得
@@ -182,31 +138,35 @@ void NPCController::SelectActionNode()
     // 現在どの距離にいるかを取得
     DistancePhase currentPhase = ChackDistancePhase(distance);
 
-
-    // どの攻撃を使うか抽選
-    const int lotteryMax = ParameterManager::Get().GetNPCControllerParam()->attackLotteryMax;
-    int actionLottery = rand() % lotteryMax;
-
-
     // 現在の距離フェーズに対応するルールを取得
     // enumの値をintにキャストして配列のインデックスとして使います
     const DistanceRule& currentRule = currentRules_[static_cast<int>(currentPhase)];
 
+    // 重みの合計を求める（JSON側の値をそのまま使うため、合計値を固定値に決め打ちしない）
+    int totalWeight = 0;
+    for (const auto& pattern : currentRule.attackList) { totalWeight += pattern.weight; }
+
     // 決定した攻撃を入れる変数（初期値は安全のためIdleにしておく）
     BossStateID selectedAttack = BossStateID::Idle;
 
-    // ここから抽選処理
-    int currentWeightSum = 0; // 重みの合計値
-
-    for (const auto& pattern : currentRule.attackList)
+    if (totalWeight > 0)
     {
-        currentWeightSum += pattern.weight;
+        // どの攻撃を使うか抽選
+        int actionLottery = rand() % totalWeight;
 
-        // 乱数が現在の重みの合計値を下回ったら、その攻撃に決定！
-        if (actionLottery < currentWeightSum)
+        // ここから抽選処理
+        int currentWeightSum = 0; // 重みの合計値
+
+        for (const auto& pattern : currentRule.attackList)
         {
-            selectedAttack = pattern.attackID;
-            break; // 攻撃が決まったのでループを抜ける
+            currentWeightSum += pattern.weight;
+
+            // 乱数が現在の重みの合計値を下回ったら、その攻撃に決定！
+            if (actionLottery < currentWeightSum)
+            {
+                selectedAttack = pattern.attackID;
+                break; // 攻撃が決まったのでループを抜ける
+            }
         }
     }
 

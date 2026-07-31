@@ -5,12 +5,12 @@ enum class BossStateID
 {
 	Idle,			//!< 待機
 	Run,			//!< 走る
-	Jump,			//!< ヒットスタンプ
+	HitStamp,		//!< ヒットスタンプ攻撃
 	Attack,			//!< 通常攻撃
 	Hit,			//!< ダメージリアクション
 	Spin,			//!< 回転攻撃
-	Clicked_Gollira,	//!< ゴリラ専用：岩投げ攻撃
-	Clicked_Turtle,		//!< カメ専用：レーザー攻撃
+	ThrowRock,		//!< 岩投げ攻撃
+	Laser,			//!< レーザー攻撃
 	Death			//!< 死亡
 };
 
@@ -48,7 +48,7 @@ class BossCharacter;
 class NPCController : public IGameObject
 {
 private:
-	BossType bossType_ = BossType::enNone; //!< 自分がどのボスか
+	std::string bossKey_; //!< 自分がどのボスか（CharacterMaster.json等のkeyと一致）
 	std::array<DistanceRule, static_cast<int>(DistancePhase::enMax)> currentRules_; //!< 現在のボス種類に対応する距離別攻撃ルール
 
 	BossCharacter* boss_ = nullptr; //!< 操作するボス
@@ -61,10 +61,13 @@ private:
 	/** 距離チェックを行う。距離によって検索するルールを決める */
 	DistancePhase ChackDistancePhase(float distance);
 
+	/** NPCAttackRuleParameter.jsonから、自分のボス(bossKey_)に対応する攻撃選択ルールを組み立てる */
+	void BuildRulesFromParam();
+
 
 public:
 	/** 選ばれているボスを設定 */
-	inline void SetBossType(BossType type) { bossType_ = type; }
+	inline void SetBossKey(const std::string& key) { bossKey_ = key; }
 
 	/** 攻撃対象の設定 */
 	inline void SetAttackTarget(Player* target) { targerPlayer_ = target; }

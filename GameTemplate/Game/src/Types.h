@@ -34,22 +34,24 @@ enum class UtilityType {
 /* ステージ */
 /*========================================*/
 
+/**
+ * ボスの種類とCharacterMaster.json等のキー文字列の対応一覧。
+ * 新しいボスを追加する時は、このリストに1行足すだけでよい
+ * （BossType enumの値と、BossType↔key文字列の変換テーブルの両方がここから自動生成される）。
+ *     X(enum値の名前, JSON側のkey文字列)
+ */
+#define BOSS_TYPE_LIST(X) \
+    X(enGorilla, "Gorilla") \
+    X(enTurtle,  "Turtle")
+
 /* ボスの種類 */
-enum class BossType 
+enum class BossType
 {
     enNone = 0xFFFFFFFF, //!< 何もなし
-    enGorilla,  //!< ゴリラ
-    enTurtle,   //!< カメ
+#define BOSS_TYPE_X(name, key) name,
+    BOSS_TYPE_LIST(BOSS_TYPE_X)
+#undef BOSS_TYPE_X
     enBossType_Max
-};
-
-/** ゲーム難易度 */
-enum class GameModeType
-{
-    enNone,         //!< 特になし
-    enNormal,       //!< 通常モード
-    enHighAttack,   //!< 攻撃力が高いモード
-    enTimeAttack    //!< HPが高い
 };
 
 /** ボスのアニメーション */
@@ -79,23 +81,11 @@ struct AnimSetting
 /** ボスのパラメータの構造体 */
 struct BossParam
 {
-    /** ステージデータ */
-    BossType stageType_ = BossType::enNone; //!< ボスの種類
-    GameModeType mode_ = GameModeType::enNone; //!< ゲームモード
-
     /** モデルに必要なデータ */
-    std::string characterKey_ = "Turtle"; //!< キャラクター識別キー
+    std::string characterKey_ = "Turtle"; //!< キャラクター識別キー（CharacterMaster.json等のkeyと一致。ボスの識別はこれで行う）
     std::string modelPath_ = ""; //!< モデルファイルパス
     AnimSetting anims[enAnimNum]; //!< アニメーション設定一覧
     EnModelUpAxis modelAxis_ = EnModelUpAxis::enModelUpAxisZ; //!< モデルの上方向
-
-    /** コリジョンのサイズ */
-    float colliderRadius = 10.0f; //!< 半径
-    float colliderHeight = 20.0f; //!< 高さ
-
-    /* キャラクターのステータス */
-    int maxHp_ = 0; //!< 最大HP
-    int attack_ = 0; //!< 攻撃力
 };
 
 

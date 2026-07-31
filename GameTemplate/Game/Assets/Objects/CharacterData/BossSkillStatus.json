@@ -1,20 +1,53 @@
 {
+    "_README": [
+        "【BossSkillStatus.json】",
+        "ボスの攻撃ごとの威力・クールダウン・振動を登録するファイルです。",
+        "キャラクターごとに配列を分けます。この配列名は CharacterMaster.json の \"key\" と必ず一致させてください。",
+        "",
+        "■ 新しい攻撃を追加する手順",
+        "1. 対象ボスの配列の中にある \"key\" : \"EXAMPLE\" のブロックをコピーする",
+        "2. \"key\" を攻撃の名前に書き換える",
+        "3. \"motionValues\"（攻撃力の元になる数値）・\"cooldown\"（再使用までの秒数）・\"vibrationTime\"/\"vibrationForce\"（コントローラー振動の時間と強さ）を埋める",
+        "4. \"correspondingState\" と \"stateId\" は、その攻撃を実際に動かしているプログラム側のステートを表します。",
+        "",
+        "■注意",
+        "\"key\" が \"__EXAMPLE__\" のブロックはコピー元のサンプルなので、削除せずそのまま残しておいてください。",
+        "新しい攻撃を追加するには、プログラム側の対応が別途必要です。"
+    ],
+
+    "__EXAMPLE__": [
+        {
+            "key": "__EXAMPLE__",
+            "comment": "新しい攻撃を追加時、コピーして書き換えてください。",
+            "motionValues": 0,
+            "cooldown": 0.0,
+            "vibrationTime": 0.0,
+            "vibrationForce": 0.0,
+            "correspondingState": "対応するプログラム側のステートクラス名をここに書く（例: BossAttackState）",
+            "stateId": "対応するBossStateIDをここに書く（例: Attack）"
+        }
+    ],
+
     "Gorilla": [
         {
             "comment": "通常攻撃",
             "key": "NormalAttack",
             "motionValues": 40,
             "vibrationTime": 0.3,
-            "vibrationForce": 0.3
+            "vibrationForce": 0.3,
+            "correspondingState": "BossAttackState",
+            "stateId": "Attack"
         },
-        
+
         {
             "comment": "ヒットスタンプ",
             "key" : "HitStamp",
             "motionValues": 100,
             "cooldown": 5.0,
             "vibrationTime": 1.0,
-            "vibrationForce": 2.0
+            "vibrationForce": 2.0,
+            "correspondingState": "HitStampState",
+            "stateId": "HitStamp"
         },
 
         {
@@ -23,7 +56,9 @@
             "motionValues": 75,
             "cooldown": 5.0,
             "vibrationTime": 0.5,
-            "vibrationForce": 0.6
+            "vibrationForce": 0.6,
+            "correspondingState": "SpinState",
+            "stateId": "Spin"
         },
 
         {
@@ -32,7 +67,9 @@
             "motionValues": 50,
             "cooldown": 5.0,
             "vibrationTime": 0.4,
-            "vibrationForce": 0.5
+            "vibrationForce": 0.5,
+            "correspondingState": "ThrowRockState",
+            "stateId": "ThrowRock"
         }
     ],
 
@@ -43,16 +80,20 @@
             "motionValues": 30,
             "cooldown": 1.0,
             "vibrationTime": 0.3,
-            "vibrationForce": 0.3
+            "vibrationForce": 0.3,
+            "correspondingState": "BossAttackState",
+            "stateId": "Attack"
         },
-        
+
         {
             "comment": "ヒットスタンプ",
             "key" : "HitStamp",
             "motionValues": 80,
             "cooldown": 5.0,
             "vibrationTime": 0.8,
-            "vibrationForce": 1.5
+            "vibrationForce": 1.5,
+            "correspondingState": "HitStampState",
+            "stateId": "HitStamp"
         },
 
         {
@@ -61,26 +102,31 @@
             "motionValues": 60,
             "cooldown": 5.0,
             "vibrationTime": 0.5,
-            "vibrationForce": 0.6
+            "vibrationForce": 0.6,
+            "correspondingState": "SpinState",
+            "stateId": "Spin"
         },
 
         {
-            "comment":"レーザー",
+            "comment":"レーザー（単発・連発）",
             "key" : "LaserWeak",
             "motionValues": 50,
             "cooldown" : 1.0,
             "vibrationTime": 0.5,
-            "vibrationForce": 0.5
+            "vibrationForce": 0.5,
+            "correspondingState": "LaserState",
+            "stateId": "Laser"
         },
-        
+
         {
-            "comment":"レーザーチャージ",
+            "comment":"レーザー（チャージ）",
             "key" : "LaserStrong",
             "motionValues": 100,
             "cooldown" : 1.0,
             "vibrationTime": 1.0,
-            "vibrationForce": 1.2
+            "vibrationForce": 1.2,
+            "correspondingState": "LaserState",
+            "stateId": "Laser"
         }
     ]
-
 }

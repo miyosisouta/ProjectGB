@@ -82,14 +82,14 @@ BattleManager::BattleManager()
 
 	// ボス
 	{
-#if defined(_DEBUG)
-		if (CharacterDataBase::Get().GetGameModeType() == GameModeType::enNone) {
-			CharacterDataBase::Get().SetGameModeType(GameModeType::enNormal);
-		}
-#endif
+		// 実際に選ばれたボスのkeyを覚えておく（チュートリアル終了時に本番用へ切り替えるため）
+		realStageKey_ = CharacterDataBase::Get().GetStageKey();
 
-		// チュートリアルはゴリラ固定で行うため、選択されていたステージ種別に関わらずここで上書きする
-		CharacterDataBase::Get().SetStageType(BossType::enGorilla);
+		// チュートリアルは常にゴリラ固定で行う（UpdateTutorialLoadingState()で本番のボスへ切り替える）
+		if (CharacterDataBase::Get().IsTutorialEnabled())
+		{
+			CharacterDataBase::Get().SetStageKey("Gorilla");
+		}
 
 		// ボス生成・管理クラスを作り、攻撃対象をプレイヤーに設定してボスを生成する
 		boss_ = new BossSpawner();
@@ -184,8 +184,9 @@ BattleManager::BattleManager()
 		uiManager_.InitMission();
 
 		// ミッション管理シングルトンを生成し、対戦するボスの種類に応じたミッション一式を組み立てる
+		// (チュートリアル中はCharacterDataBaseのkeyがGorillaに上書きされているため、実際に選んだボスのkeyを使う)
 		MissionManager::CreateInstance();
-		MissionManager::Get().InitByBossType(CharacterDataBase::Get().GetStageType());
+		MissionManager::Get().InitByBossKey(realStageKey_);
 
 		// チュートリアル進行管理シングルトンを生成する
 		TutorialManager::CreateInstance();
@@ -508,6 +509,23 @@ void BattleManager::UpdateTutorialLoadingState()
 	tutorialLoadingElapsed_ += g_gameTime->GetFrameDeltaTime();
 	if (tutorialLoadingElapsed_ < TUTORIAL_LOADING_DURATION) { return; }
 
+	// チュートリアルは常にゴリラで行ったので、実際に選ばれたボスと違う場合はここで本番のボスに差し替える。
+	// プレイヤー・ボスの見た目もUIもまだ隠れている（Loading演出中）ので、この入れ替えはプレイヤーに気づかれない
+	if (CharacterDataBase::Get().GetStageKey() != realStageKey_)
+	{
+		delete boss_; // 内部でチュートリアル用ボス本体のDeleteGOも行われる
+		CharacterDataBase::Get().SetStageKey(realStageKey_);
+
+		boss_ = new BossSpawner();
+		boss_->SetAttackTarger(player_);
+		boss_->SpawnBoss();
+		boss_->SetControlEnabled(false); // Entry演出が終わるまではAI・移動を止めておく（コンストラクタ時と同様）
+
+		// 新しいボスに対して、感情システム関連（BossEmotionPhaseManager/EmotionEffectObserver/TutorialManager）の
+		// 遅延初期化をやり直す。Update()冒頭の既存ロジックが次フレームで自動的に再Initする
+		bossEmotionPhaseManagerInitialized_ = false;
+	}
+
 	// Loading演出を終了し、見た目・UI表示を元に戻す
 	uiManager_.ReleaseCutSceneLayout();
 	uiManager_.SetUpdateMask(UIManager::All);
@@ -516,9 +534,9 @@ void BattleManager::UpdateTutorialLoadingState()
 	if (auto* boss = boss_->GetBoss()) { boss->SetDraw(true); }
 
 	// ボス登場演出をセットアップする（カメラの登録・切り替えもこの中で行われる）
-	const BossType stageType = CharacterDataBase::Get().GetStageType();
-	if (stageType == BossType::enGorilla) { SetupEntryGolliraCutScene(); }
-	if (stageType == BossType::enTurtle)  { SetupEntryTurtleCutScene(); }
+	const std::string stageKey = CharacterDataBase::Get().GetStageKey();
+	if (stageKey == "Gorilla") { SetupEntryGolliraCutScene(); }
+	if (stageKey == "Turtle")  { SetupEntryTurtleCutScene(); }
 
 	gameState_ = GameState::Entry;
 }
@@ -855,8 +873,8 @@ void BattleManager::CheckBossPhaseCutsceneTrigger()
 
 	// ボスの種類ごとの閾値をマスターデータから取得（見つからない場合は構造体のデフォルト値を使う）
 	MasterBossPhaseCutSceneParameter defaultCutSceneParam;
-	const BossType stageType = CharacterDataBase::Get().GetStageType();
-	const auto* cutSceneParam = ParameterManager::Get().GetBossPhaseCutSceneParam(stageType == BossType::enGorilla ? "Gorilla" : "Turtle");
+	const std::string stageKey = CharacterDataBase::Get().GetStageKey();
+	const auto* cutSceneParam = ParameterManager::Get().GetBossPhaseCutSceneParam(stageKey);
 	if (!cutSceneParam) { cutSceneParam = &defaultCutSceneParam; }
 
 	// HPの割合を計算
@@ -899,11 +917,11 @@ void BattleManager::EnterBossPhaseCutscene(const bool isPhase25)
 	if (!boss) { return; }
 
 	// カメラ位置・演出内容はボスの種類ごとに異なるため、パラメータ取得の時点からボス別の関数に分ける
-	const BossType stageType = CharacterDataBase::Get().GetStageType();
-	if (stageType == BossType::enGorilla) {
+	const std::string stageKey = CharacterDataBase::Get().GetStageKey();
+	if (stageKey == "Gorilla") {
 		SetupGorillaPhaseCutsceneCamera(boss, isPhase25);
 	}
-	else if (stageType == BossType::enTurtle) {
+	else if (stageKey == "Turtle") {
 		SetupTurtlePhaseCutsceneCamera(boss, isPhase25);
 	}
 }

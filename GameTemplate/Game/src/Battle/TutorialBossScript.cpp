@@ -36,7 +36,7 @@ void TutorialBossScript::Update(float deltaTime, bool shouldBeActive, const Vect
 		scriptActive_ = true;
 		waitingIdle_  = false;
 		boss_->SetMoveStop(false);
-		boss_->ChangeState(BossStateID::Jump);
+		boss_->ChangeState(BossStateID::HitStamp);
 		return;
 	}
 
@@ -50,13 +50,13 @@ void TutorialBossScript::Update(float deltaTime, bool shouldBeActive, const Vect
 		if (idleElapsed_ >= idleDuration)
 		{
 			waitingIdle_ = false;
-			boss_->ChangeState(BossStateID::Jump);
+			boss_->ChangeState(BossStateID::HitStamp);
 		}
 		return;
 	}
 
 	// 攻撃中：アニメーションが終わったらIdleへ戻し、待機を開始する
-	if (boss_->GetCurrentStateID() == BossStateID::Jump && boss_->IsCurrentStateFinished())
+	if (boss_->GetCurrentStateID() == BossStateID::HitStamp && boss_->IsCurrentStateFinished())
 	{
 		boss_->ChangeState(BossStateID::Idle);
 		waitingIdle_ = true;

@@ -1,9 +1,11 @@
 ﻿#include "stdafx.h"
 #include "src/Actor/BossSpawner.h"
 #include "src/Actor/BossCharacter.h"
+#include "src/Actor/BossParamBuilder.h"
 #include "src/Actor/NPCController.h"
 #include "src/Actor/Player.h"
 #include "src/Actor/PlayerController.h"
+#include "src/CharacterDataBase.h"
 
 
 
@@ -34,114 +36,20 @@ void BossSpawner::Update()
 }
 
 
-BossParam BossSpawner::CreateBossData(BossType type, GameModeType mode)
+BossParam BossSpawner::CreateBossData(const std::string& key)
 {
-	BossParam param;
-	param.stageType_ = type;
-	param.mode_ = mode;
-
-	// 共通のモデルパスを定義
-	std::string modelpath = "Assets/Objects/Enemy/";
-
-
-	// ボスの種類を決める
-	switch (type)
-	{
-	case BossType::enGorilla: /**************** ゴリラ *************************/
-	{
-		// モデルtkm
-		std::string path = modelpath + "Gorilla/Model/Gorilla.tkm";
-		param.characterKey_ = "Gorilla";
-		param.modelPath_ = path;
-		param.modelAxis_ = EnModelUpAxis::enModelUpAxisZ;
-
-		// アニメ登録を自動化
-		auto AddAnim = [&](BossAnimID id, const std::string& fileName, bool loop)
-			{
-				// ここでパスを結合して、paramに直接突っ込む！
-				param.anims[id].filePath = modelpath + "Gorilla/Animation/" + fileName;
-				param.anims[id].isLoop = loop;
-			};
-
-		// アニメーションの追加
-		AddAnim(enAnimIdle,"IdleA.tka",true);
-		AddAnim(enAnimRun,"Run.tka",true);
-		AddAnim(enAnimJump,"Jump.tka",false);
-		AddAnim(enAnimAttack,"Attack.tka",false);
-		AddAnim(enAnimHit,"Hit.tka",false);
-		AddAnim(enAnimDeath,"Death.tka",false);
-		AddAnim(enAnimSpin, "Spin.tka", true);
-		AddAnim(enAnimClicked, "Clicked.tka", false);
-		AddAnim(enAnimClickedWindUp, "Clicked_wideUp.tka", true);
-		AddAnim(enAnimJumpImpact, "Jump_Impact.tka", false);
-		break;
-	}
-	case BossType::enTurtle:/**************** カメ *************************/
-	{
-		// モデルtkm
-		std::string path = modelpath + "Turtle/Model/Turtle.tkm";
-		param.characterKey_ = "Turtle";
-		param.modelPath_ = path;
-		param.modelAxis_ = EnModelUpAxis::enModelUpAxisZ;
-
-		// アニメ登録を自動化
-		auto AddAnim = [&](BossAnimID id, const std::string& fileName, bool loop)
-			{
-				// ここでパスを結合して、paramに直接突っ込む！
-				param.anims[id].filePath = modelpath + "Turtle/Animation/" + fileName;
-				param.anims[id].isLoop = loop;
-			};
-
-		// アニメーションの追加
-		AddAnim(enAnimIdle, "IdleA.tka", true);
-		AddAnim(enAnimRun, "Run.tka", true);
-		AddAnim(enAnimJump, "Jump.tka", false);
-		AddAnim(enAnimAttack, "Attack.tka", false);
-		AddAnim(enAnimHit, "Hit.tka", false);
-		AddAnim(enAnimDeath, "Death.tka", false);
-		AddAnim(enAnimSpin, "Spin.tka", true);
-		AddAnim(enAnimClicked, "Clicked.tka", false);
-		AddAnim(enAnimAntic, "Antic.tka", true);
-		AddAnim(enAnimJumpImpact, "Jump_Impact.tka", false);
-		break;
-	}
-	default:
-		break;
-	}
-
-
-	// モード
-	const auto* modeParam = ParameterManager::Get().GetBossSpawnerParam();
-	switch (mode)
-	{
-	case GameModeType::enHighAttack: /* 攻撃力が高いモード */
-	{
-		param.attack_ = static_cast<int>(param.attack_ * modeParam->modeAttackMultiplier);
-		break;
-	}
-	case GameModeType::enTimeAttack: /* 防御力が高いモード */
-	{
-		param.maxHp_ = static_cast<int>(param.maxHp_ * modeParam->modeHpMultiplier);
-
-		// TODO : 仮で最大体力を設定
-		param.maxHp_ = 5.0f;
-		break;
-	}
-	default:
-		break;
-	}
-	return param;
+	// keyからJSONを読み、BossParamを組み立てる
+	// (モデルパス・アニメーションの中身はここでは一切知らない。BossParamBuilderだけが知っている)
+	return BossParamBuilder::Build(key);
 }
 
 void BossSpawner::SpawnBoss(bool isPlayerControl)
 {
-	// データベースからはステージ選択で選ばれたタイプを取得
-	BossType stageType = CharacterDataBase::Get().GetStageType();
-	GameModeType mode = CharacterDataBase::Get().GetGameModeType();
+	// データベースからはステージ選択で選ばれたボスのkeyを取得
+	const std::string stageKey = CharacterDataBase::Get().GetStageKey();
 
-
-	// JSON読み込み ＋ モード補正 がここで完了
-	BossParam param = CreateBossData(stageType, mode);
+	// JSON読み込みがここで完了
+	BossParam param = CreateBossData(stageKey);
 
 	// ボスを作って、見た目や当たり判定のデータを渡す
 	boss_ = NewGO<BossCharacter>(0, "boss");
@@ -164,7 +72,7 @@ void BossSpawner::SpawnBoss(bool isPlayerControl)
 			else
 			{
 				bossController_ = NewGO<NPCController>(0, "bossController");
-				bossController_->SetBossType(stageType); // 対戦するボスをセット
+				bossController_->SetBossKey(stageKey); // 対戦するボスをセット
 				bossController_->SetBossCharacter(boss_); // ボスの情報をセット
 				bossController_->SetAttackTarget(attackTarget_); // 攻撃対象をセット
 			}
