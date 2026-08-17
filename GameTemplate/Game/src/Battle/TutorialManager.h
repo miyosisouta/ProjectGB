@@ -100,6 +100,12 @@ public:
 	/** UIAnimationを開始すべきタイミングか */
 	inline bool GetUIAnimationFlag() const { return uiAnimationFlag_; }
 
+	/** 現在「アニメーション」表示中か（クリア後、次の段階へ進むまでの間ずっとtrue） */
+	inline bool IsTransitioning() const { return isTransitioning_; }
+
+	/** 現在の段階を取得（本実装UI側がアイコン表示切り替えに使う） */
+	inline Stage GetStage() const { return stage_; }
+
 	/** Enterによる終了要求が来ているか */
 	inline bool IsFinished() const { return skipRequested_; }
 

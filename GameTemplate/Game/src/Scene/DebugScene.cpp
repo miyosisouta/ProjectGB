@@ -14,7 +14,7 @@
 
 
 #include "src/UI/Layout.h"
-#include "src/UI/TitleMenu.h"
+#include "src/UI/TutorialMenu.h"
 
 
 DebugScene::DebugScene()
@@ -35,7 +35,7 @@ bool DebugScene::Start()
 {
 	// UI
 	layout_ = new Layout;
-	layout_->Initialize<TitleMenu>("Assets/ui/Layout/TitleMenu.json");
+	layout_->Initialize<TutorialMenu>("Assets/ui/Layout/TutorialMenu.json");
 
 
 	// タイトル
@@ -49,7 +49,7 @@ void DebugScene::Update()
 {
 	// UI
 	//taskScheduler_->Update(g_gameTime->GetFrameDeltaTime());
-	TitleMenu* menu = static_cast<TitleMenu*>(layout_->GetMenu());
+	TutorialMenu* menu = static_cast<TutorialMenu*>(layout_->GetMenu());
 	
 	layout_->Update();
 }

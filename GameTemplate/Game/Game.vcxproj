@@ -320,6 +320,7 @@
     <ClCompile Include="src\UI\SoundOptionMenu.cpp" />
     <ClCompile Include="src\UI\TimerMenu.cpp" />
     <ClCompile Include="src\UI\TitleMenu.cpp" />
+    <ClCompile Include="src\UI\TutorialMenu.cpp" />
     <ClCompile Include="src\UI\UIAnimation.cpp" />
     <ClCompile Include="src\UI\UIParts.cpp" />
     <ClCompile Include="src\UI\UIManager.cpp" />
@@ -449,6 +450,7 @@
     <ClInclude Include="src\UI\SoundOptionMenu.h" />
     <ClInclude Include="src\UI\TimerMenu.h" />
     <ClInclude Include="src\UI\TitleMenu.h" />
+    <ClInclude Include="src\UI\TutorialMenu.h" />
     <ClInclude Include="src\UI\UIAnimation.h" />
     <ClInclude Include="src\UI\UIAnimationFactory.h" />
     <ClInclude Include="src\UI\UIAnimationParameter.h" />

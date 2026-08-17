@@ -33,6 +33,7 @@
 #include "src/UI/LoadingMenu.h"
 #include "src/UI/MissionMenu.h"
 #include "src/UI/TimerMenu.h"
+#include "src/UI/TutorialMenu.h"
 #include "../../k2Engine/graphics/DitherCBData.h"
 
 
@@ -200,6 +201,9 @@ BattleManager::BattleManager()
 			// チュートリアル中はミッション進捗に反映しない・HPも実際には減らさない（Tutorial→Entry遷移時に元に戻す）
 			MissionManager::Get().SetEnabled(false);
 			ActorStatus::SetDamageDisabled(true);
+
+			// チュートリアル用アイコンUI（idou/attack/skill/avoid/justAvoid/freeMove）をセットアップする
+			uiManager_.SetupCutScene<TutorialMenu>("Assets/ui/layout/TutorialMenu.json");
 		}
 		else
 		{

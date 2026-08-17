@@ -1,0 +1,191 @@
+{
+  "canvas": {
+    "elements": [
+      {
+        "coment": "チュートリアル：背景",
+        "type": "UIIcon",
+        "name": "back",
+        "asset": "Assets/ui/tutorialUI/back.DDS",
+        "width": 500,
+        "height": 200,
+        "position": [ -1300, 230, 0],
+        "scale": [1, 1, 1],
+        "rotation": 0,
+        "color": [1, 1, 1, 1]
+      },
+      {
+        "coment": "チュートリアル：枠",
+        "type": "UIIcon",
+        "name": "pika",
+        "asset": "Assets/ui/tutorialUI/pika.DDS",
+        "width": 500,
+        "height": 200,
+        "position": [ -700, 230, 0],
+        "scale": [1, 1, 1],
+        "rotation": 0,
+        "color": [1, 1, 1, 1],
+        "isDraw": false
+      },
+      {
+        "coment": "チュートリアル：文字",
+        "type": "UIIcon",
+        "name": "text",
+        "asset": "Assets/ui/tutorialUI/tutorial.DDS",
+        "width": 200,
+        "height": 30,
+        "position": [ -1125, 285, 0],
+        "scale": [1, 1, 1],
+        "rotation": 0,
+        "color": [1, 1, 1, 1]
+      },
+
+
+      {
+        "coment": "チュートリアル：スキップ",
+        "type": "UIIcon",
+        "name": "skip",
+        "asset": "Assets/ui/tutorialUI/skip.DDS",
+        "width": 250,
+        "height": 35,
+        "position": [ -780, 100, 0],
+        "scale": [1, 1, 1],
+        "rotation": 0,
+        "color": [1, 1, 1, 1]
+      },
+      {
+        "coment": "チュートリアル：スタンプ",
+        "type": "UIIcon",
+        "name": "stamp",
+        "asset": "Assets/ui/tutorialUI/stamp.DDS",
+        "width": 75,
+        "height": 75,
+        "position": [ -510, 200, 0],
+        "scale": [1, 1, 1],
+        "rotation": 0,
+        "color": [1, 1, 1, 1],
+        "isDraw": false
+      },
+
+
+      {
+        "coment": "チュートリアル：移動してみよう",
+        "type": "UIIcon",
+        "name": "idou",
+        "asset": "Assets/ui/tutorialUI/idou.DDS",
+        "width": 320,
+        "height": 40,
+        "position": [ -758, 200, 0],
+        "scale": [1, 1, 1],
+        "rotation": 0,
+        "color": [1, 1, 1, 1],
+        "isDraw": false
+      },
+      {
+        "coment": "チュートリアル：攻撃してみよう",
+        "type": "UIIcon",
+        "name": "attack",
+        "asset": "Assets/ui/tutorialUI/attack.DDS",
+        "width": 320,
+        "height": 40,
+        "position": [ -758, 200, 0],
+        "scale": [1, 1, 1],
+        "rotation": 0,
+        "color": [1, 1, 1, 1],
+        "isDraw": false
+      },
+      {
+        "coment": "チュートリアル：スキルを使ってみよう",
+        "type": "UIIcon",
+        "name": "skill",
+        "asset": "Assets/ui/tutorialUI/skill.DDS",
+        "width": 450,
+        "height": 40,
+        "position": [ -695, 200, 0],
+        "scale": [1, 1, 1],
+        "rotation": 0,
+        "color": [1, 1, 1, 1],
+        "isDraw": false
+      },
+      {
+        "coment": "チュートリアル：回避してみよう",
+        "type": "UIIcon",
+        "name": "avoid",
+        "asset": "Assets/ui/tutorialUI/avoid.DDS",
+        "width": 320,
+        "height": 40,
+        "position": [ -758, 200, 0],
+        "scale": [1, 1, 1],
+        "rotation": 0,
+        "color": [1, 1, 1, 1],
+        "isDraw": false
+      },
+      {
+        "coment": "チュートリアル：ジャスト回避してみよう",
+        "type": "UIIcon",
+        "name": "justAvoid",
+        "asset": "Assets/ui/tutorialUI/just.DDS",
+        "width": 450,
+        "height": 40,
+        "position": [ -695, 200, 0],
+        "scale": [1, 1, 1],
+        "rotation": 0,
+        "color": [1, 1, 1, 1],
+        "isDraw": false
+      },
+      {
+        "coment": "チュートリアル：自由に動いてみよう",
+        "type": "UIIcon",
+        "name": "freeMove",
+        "asset": "Assets/ui/tutorialUI/free.DDS",
+        "width": 430,
+        "height": 40,
+        "position": [ -705, 200, 0],
+        "scale": [1, 1, 1],
+        "rotation": 0,
+        "color": [1, 1, 1, 1],
+        "isDraw": false
+      },
+
+
+      
+      {
+        "coment": "数字：秒単位の1桁目",
+        "type": "UIDigit",
+        "name": "clockSec1",
+        "asset": "Assets/ui/suuji",
+        "width": 45,
+        "height": 45,
+        "digit": 1,
+        "spacing": 0,
+        "align": "center",
+        "position": [-765, 270, 0],
+        "scale": [1, 1, 1],
+        "rotation": 0,
+        "color": [0.45, 0.45, 0.45, 1],
+        "isDraw": false
+      },
+
+
+
+
+      {
+        "comment": "ダミー(はじめる座標取得用)",
+        "type": "UIDummy",
+        "name": "InitFlame",
+        "color": [1.0, 1.0, 1.0, 1.0]
+      },
+      {
+        "comment": "ダミー(サウンド座標取得用)",
+        "type": "UIDummy",
+        "name": "SoundPositionDummy",
+        "position": [-210, -300, 0]
+      },
+      {
+        "comment": "ダミー(おわる座標取得用)",
+        "type": "UIDummy",
+        "name": "ExitPositionDummy",
+        "position": [-170, -420, 0]
+      }
+    ]
+}
+}

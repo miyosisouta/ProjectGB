@@ -1029,6 +1029,79 @@
             "duration": 1.0,
             "easing": "EaseOut",
             "loop": "Loop"
+        },
+
+
+        {
+            "comment": "チュートリアルの背景:右に動く",
+            "key": "tutorial_posRight",
+            "valueType": "Vector3",
+            "startValue": { "x": 0, "y": 0, "z": 0},
+            "endValue":   { "x": 600, "y": 0, "z": 0},
+            "duration": 1.0,
+            "easing": "Linear",
+            "loop": "Once"
+        },
+        {
+            "comment": "チュートリアルの背景:左に動く",
+            "key": "tutorial_posLeft",
+            "valueType": "Vector3",
+            "startValue": { "x": 0, "y": 0, "z": 0},
+            "endValue":   { "x": -600, "y": 0, "z": 0},
+            "duration": 1.0,
+            "easing": "Linear",
+            "loop": "Once"
+        },
+        {
+            "comment": "チュートリアルテキスト:右に動く",
+            "key": "tutorialText_posRight",
+            "valueType": "Vector3",
+            "startValue": { "x": 0, "y": 0, "z": 0},
+            "endValue":   { "x": 300, "y": 0, "z": 0},
+            "duration": 0.8,
+            "easing": "Linear",
+            "loop": "Once"
+        },
+        {
+            "comment": "チュートリアルテキスト:左に動く",
+            "key": "tutorialText_posLeft",
+            "valueType": "Vector3",
+            "startValue": { "x": 0, "y": 0, "z": 0},
+            "endValue":   { "x": -300, "y": 0, "z": 0},
+            "duration": 0.8,
+            "easing": "Linear",
+            "loop": "Once"
+        },
+        {
+            "comment": "チュートリアルテキスト:フェードin",
+            "key": "tutorialText_fadeIn",
+            "valueType": "Vector4",
+            "startValue": { "x": 1.0, "y": 1.0, "z": 1.0, "w": 0.0},
+            "endValue":   { "x": 1.0, "y": 1.0, "z": 1.0, "w": 1.0},
+            "duration": 0.4,
+            "easing": "EaseIn",
+            "loop": "Once"
+        },
+        {
+            "comment": "チュートリアルテキスト:フェードout",
+            "key": "tutorialText_fadeOut",
+            "valueType": "Vector4",
+            "startValue": { "x": 1.0, "y": 1.0, "z": 1.0, "w": 1.0},
+            "endValue":   { "x": 1.0, "y": 1.0, "z": 1.0, "w": 0.0},
+            "duration": 0.4,
+            "easing": "EaseIn",
+            "loop": "Once"
+        },
+
+        {
+            "comment": "チュートリアルフレーム:フェードout",
+            "key": "tutorialFrame_fadeOut",
+            "valueType": "Vector4",
+            "startValue": { "x": 1.0, "y": 1.0, "z": 1.0, "w": 1.0},
+            "endValue":   { "x": 1.0, "y": 1.0, "z": 1.0, "w": 0.3},
+            "duration": 0.5,
+            "easing": "EaseIn",
+            "loop": "Loop"
         }
     ]
 }
