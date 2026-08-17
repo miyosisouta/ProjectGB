@@ -106,14 +106,17 @@
                 "chargeBodyScale": [3.8, 3.8, 3.8],
                 "chargeIndicatorDelay": 1.0,
                 "chargeScaleDownDuration": 2.0,
-                "weightNormal": 3,
-                "weightMult": 4,
-                "weightCharge": 3
+                "multFavorMultiplierAfterNormal": 2.0
             },
 
             "death": {
                 "comment": "死亡パラメーター",
                 "animationTime": 2.0
+            },
+
+            "stagger": {
+                "comment": "ダメージリアクション（怯み）パラメーター",
+                "duration": 3.2
             }
         }
     ]

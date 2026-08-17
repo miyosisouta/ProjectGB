@@ -1,6 +1,7 @@
 ﻿#pragma once
 #include "src/Actor/Character.h"
 #include "src/Actor/NPCController.h"
+#include "src/Util/Curve.h"
 
 class BossStateBase;
 class BossStatus;
@@ -17,6 +18,15 @@ private:
 	Quaternion targetPlayerRot_ = Quaternion::Identity; //!< プレイヤーがいる方向
 	bool       isMoveStop_      = false;                //!< 動きを止めるかどうか
 
+	/**
+	 * 攻撃が中断された時などにScaleを元へ戻す演出用カーブ。
+	 * 中断元のステートのExit()で開始し、以降はステートをまたいで（isMoveStop_中でも）
+	 * BossCharacter::Update()側で更新し続ける。
+	 */
+	Vector3Curve scaleReturnCurve_;
+
+	Vector3 pendingLaserModeWeights_ = Vector3::Zero; //!< レーザー選択時にAIから渡される、モード(x=単発, y=連発, z=チャージ)ごとの基礎重み
+
 
 public:
 	/** プレイヤーのいる座標を設定 */
@@ -32,6 +42,21 @@ public:
 	inline void SetMoveStop(const bool flg = true) { isMoveStop_ = flg; }
 	/** 動きが止まっているか */
 	inline bool IsMoveStop() { return isMoveStop_; }
+
+	/**
+	 * 現在のScaleから通常Scale（CharacterStatusData.json由来）へ、durationかけて滑らかに戻す。
+	 * チャージ攻撃などScaleを変える演出が中断された時、呼び出し元のステートのExit()から呼ぶ想定。
+	 * ステートが切り替わった後もBossCharacter::Update()側で継続して更新される。
+	 */
+	void BeginScaleReturn(float duration);
+
+	/**
+	 * レーザー選択時にAI(NPCController)から渡す、モード(単発/連発/チャージ)ごとの基礎重み。
+	 * ChangeState(Laser)の直前に呼ぶ想定。LaserState::Enter()がGetPendingLaserModeWeights()で読む。
+	 */
+	inline void SetPendingLaserModeWeights(float normal, float mult, float charge) { pendingLaserModeWeights_ = Vector3(normal, mult, charge); }
+	/** 直近にSetPendingLaserModeWeights()で渡されたモード別重み（x=単発, y=連発, z=チャージ） */
+	inline Vector3 GetPendingLaserModeWeights() const { return pendingLaserModeWeights_; }
 
 	/**
 	 * 外部から座標・回転を直接指定し、Transformとモデルの見た目を即座に同期する。

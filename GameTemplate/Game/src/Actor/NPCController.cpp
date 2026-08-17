@@ -3,6 +3,7 @@
 #include "NPCController.h"
 #include "src/Actor/Player.h"
 #include "src/Actor/BossCharacter.h"
+#include "src/Actor/ActorStatus.h"
 
 
 namespace
@@ -61,6 +62,10 @@ bool NPCController::Start()
     // スポーナーから渡されたボスの種類によって、AIのルール（確率や行動パターン）を切り替える
     BuildRulesFromParam();
 
+    // ルールを元にビヘイビアツリーを組み立てる
+    staggerNode_ = BuildStaggerNode();
+    tree_ = BuildNormalBehaviorTree();
+
 	return true;
 }
 
@@ -76,28 +81,22 @@ void NPCController::Update()
 
 
     // ボスのHPが0なら死亡ステートへ移行
-    if (boss_->GetStatus()->IsHpDepleted()) {
+    if (boss_->GetStatus()->IsHpDepleted())
+    {
         boss_->ChangeState(BossStateID::Death);
+        return;
     }
 
     // プレイヤーの座標をボス本体に設定
     boss_->SetTargetPos(targerPlayer_->GetTransformPosition());
 
-    // 行動ノードを選択
-    if (boss_->IsCurrentStateFinished())
-    {
-        // 終わったのがIdle以外なら、強制的にIdleを挟む
-        if (boss_->GetCurrentStateID() != BossStateID::Idle)
-        {
-            boss_->ChangeState(BossStateID::Idle);
-        }
-        // 今終わったのがIdleなら、次の行動を決める！
-        else
-        {
-            SelectActionNode();
-        }
-    }
+    // 怯み割り込みは通常行動ツリーとは独立に、毎フレーム最優先でチェックする
+    // （通常行動ツリー内のSelector/Sequenceは「一度選んだ行動は最後までやり切る」メモリを持つため、
+    //   ツリーの内側に混ぜてしまうと攻撃モーション中に割り込めなくなる。ここで外側から独立に見ることで解決する）
+    if (staggerNode_ && staggerNode_->Tick() != BTStatus::Failure) { return; }
 
+    // 怯み中でなければ、通常行動のビヘイビアツリーを評価する
+    if (tree_) { tree_->Tick(); }
 }
 
 
@@ -121,60 +120,20 @@ void NPCController::BuildRulesFromParam()
     {
         const DistancePhase phase = ToDistancePhase(rule->distance);
         const BossStateID   stateId = ToBossStateId(rule->stateId);
-        currentRules_[static_cast<int>(phase)].attackList.push_back({ stateId, rule->weight });
+
+        AttackPattern pattern;
+        pattern.attackID = stateId;
+        pattern.weight = rule->weight;
+        pattern.allowRepeat = rule->allowRepeat;
+        pattern.laserModeWeightNormal = rule->laserModeWeightNormal;
+        pattern.laserModeWeightMult   = rule->laserModeWeightMult;
+        pattern.laserModeWeightCharge = rule->laserModeWeightCharge;
+
+        currentRules_[static_cast<int>(phase)].attackList.push_back(pattern);
     }
 }
 
-void NPCController::SelectActionNode()
-{
-    // 自分と攻撃の対象の座標を取得
-    Vector3 bossPos = boss_->GetTransformPosition();
-    Vector3 targetPos = targerPlayer_->GetTransformPosition();
-
-    // プレイヤーがいる方向と距離を計算
-    Vector3 diff = bossPos - targetPos;
-    float distance = diff.Length();
-
-    // 現在どの距離にいるかを取得
-    DistancePhase currentPhase = ChackDistancePhase(distance);
-
-    // 現在の距離フェーズに対応するルールを取得
-    // enumの値をintにキャストして配列のインデックスとして使います
-    const DistanceRule& currentRule = currentRules_[static_cast<int>(currentPhase)];
-
-    // 重みの合計を求める（JSON側の値をそのまま使うため、合計値を固定値に決め打ちしない）
-    int totalWeight = 0;
-    for (const auto& pattern : currentRule.attackList) { totalWeight += pattern.weight; }
-
-    // 決定した攻撃を入れる変数（初期値は安全のためIdleにしておく）
-    BossStateID selectedAttack = BossStateID::Idle;
-
-    if (totalWeight > 0)
-    {
-        // どの攻撃を使うか抽選
-        int actionLottery = rand() % totalWeight;
-
-        // ここから抽選処理
-        int currentWeightSum = 0; // 重みの合計値
-
-        for (const auto& pattern : currentRule.attackList)
-        {
-            currentWeightSum += pattern.weight;
-
-            // 乱数が現在の重みの合計値を下回ったら、その攻撃に決定！
-            if (actionLottery < currentWeightSum)
-            {
-                selectedAttack = pattern.attackID;
-                break; // 攻撃が決まったのでループを抜ける
-            }
-        }
-    }
-
-    // 抽選結果に基づくアクションの実行
-    boss_->ChangeState(selectedAttack);
-}
-
-DistancePhase NPCController::ChackDistancePhase(float distance)
+DistancePhase NPCController::ChackDistancePhase(float distance) const
 {
     const auto* p = ParameterManager::Get().GetNPCControllerParam();
 
@@ -182,4 +141,125 @@ DistancePhase NPCController::ChackDistancePhase(float distance)
     if (distance < p->midDistance)   { return DistancePhase::enMidAttackType; }   // 中距離タイプ
     if (distance < p->longDistance)  { return DistancePhase::enLongAttackType; }  // 遠距離タイプ
     return DistancePhase::enOutRange;                                              // 射程範囲外
+}
+
+DistancePhase NPCController::GetCurrentDistancePhase() const
+{
+    Vector3 diff = boss_->GetTransformPosition() - targerPlayer_->GetTransformPosition();
+    return ChackDistancePhase(diff.Length());
+}
+
+
+/* ========================================== */
+/* ビヘイビアツリー構築 */
+/* ========================================== */
+
+BTNodePtr NPCController::MakeStateAction(BossStateID id)
+{
+    // onEnter: このステートへ切り替える（既に同じステートなら何もしないのはChangeState側で保証済み）
+    // isRunning: 自分が切り替えたステートのままかつ、まだ終わっていない間はRunning
+    return std::make_unique<BTAction>(
+        [this, id]() { boss_->ChangeState(id); },
+        [this, id]() { return boss_->GetCurrentStateID() == id && !boss_->IsCurrentStateFinished(); }
+    );
+}
+
+BTNodePtr NPCController::MakeAttackChoiceAction(const AttackPattern& pattern)
+{
+    const BossStateID id = pattern.attackID;
+
+    return std::make_unique<BTAction>(
+        [this, pattern]()
+        {
+            // レーザーが選ばれた場合、モード抽選用の重みを先に渡しておく（LaserState::Enter()が読む）
+            if (pattern.attackID == BossStateID::Laser)
+            {
+                boss_->SetPendingLaserModeWeights(pattern.laserModeWeightNormal, pattern.laserModeWeightMult, pattern.laserModeWeightCharge);
+            }
+
+            boss_->ChangeState(pattern.attackID);
+
+            // 連続回避の判定用に、今選んだ攻撃を記録する
+            lastTopLevelAction_ = pattern.attackID;
+        },
+        [this, id]() { return boss_->GetCurrentStateID() == id && !boss_->IsCurrentStateFinished(); }
+    );
+}
+
+BTNodePtr NPCController::BuildWeightedAttackNode(const std::vector<AttackPattern>& patterns)
+{
+    auto weighted = std::make_unique<BTWeightedSelector>();
+    for (const auto& pattern : patterns)
+    {
+        weighted->AddEntry(
+            MakeAttackChoiceAction(pattern),
+            [this, pattern]()
+            {
+                // 連続を許さない攻撃かつ、直前に選んだのが自分自身なら今回は選ばれないようにする
+                if (!pattern.allowRepeat && lastTopLevelAction_ == pattern.attackID) { return 0; }
+                return pattern.weight;
+            }
+        );
+    }
+    return weighted;
+}
+
+BTNodePtr NPCController::BuildStaggerNode()
+{
+    // Condition: 怯み要求あり（かつ死亡中でない） → Action: Hitステートへ切り替えて再生し終わるまで待つ
+    auto staggerSequence = std::make_unique<BTSequence>();
+
+    staggerSequence->AddChild(std::make_unique<BTCondition>(
+        [this]()
+        {
+            return boss_->GetCurrentStateID() != BossStateID::Death
+                && boss_->GetStatus()->As<BossStatus>()->IsStaggerRequested();
+        }
+    ));
+
+    staggerSequence->AddChild(std::make_unique<BTAction>(
+        [this]()
+        {
+            // 怯み要求を消費してからHitステートへ（多重発火防止）
+            boss_->GetStatus()->As<BossStatus>()->ConsumeStaggerRequest();
+            boss_->ChangeState(BossStateID::Hit);
+        },
+        [this]() { return boss_->GetCurrentStateID() == BossStateID::Hit && !boss_->IsCurrentStateFinished(); }
+    ));
+
+    return staggerSequence;
+}
+
+BTNodePtr NPCController::BuildNormalBehaviorTree()
+{
+    // 現在のステートが終わっている時だけ、距離帯ごとの重み付き抽選で次の行動を選ぶ
+    // （攻撃モーションの途中は横取りしない。最初にBossCharacter::Start()で入るIdleの待機時間もここで尊重される）
+    auto normalSequence = std::make_unique<BTSequence>();
+
+    normalSequence->AddChild(std::make_unique<BTCondition>(
+        [this]() { return boss_->IsCurrentStateFinished(); }
+    ));
+
+    auto distanceSelector = std::make_unique<BTSelector>();
+
+    for (int i = 0; i < static_cast<int>(DistancePhase::enMax); ++i)
+    {
+        const DistancePhase phase = static_cast<DistancePhase>(i);
+        const std::vector<AttackPattern>& patterns = currentRules_[i].attackList;
+
+        auto phaseSequence = std::make_unique<BTSequence>();
+        phaseSequence->AddChild(std::make_unique<BTCondition>(
+            [this, phase]() { return GetCurrentDistancePhase() == phase; }
+        ));
+
+        auto attackThenIdle = std::make_unique<BTSequence>();
+        attackThenIdle->AddChild(BuildWeightedAttackNode(patterns));
+        attackThenIdle->AddChild(MakeStateAction(BossStateID::Idle));
+        phaseSequence->AddChild(std::move(attackThenIdle));
+
+        distanceSelector->AddChild(std::move(phaseSequence));
+    }
+
+    normalSequence->AddChild(std::move(distanceSelector));
+    return normalSequence;
 }

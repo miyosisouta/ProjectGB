@@ -233,6 +233,7 @@
     <ClCompile Include="src\Actor\BossCharacter.cpp" />
     <ClCompile Include="src\Actor\BossParamBuilder.cpp" />
     <ClCompile Include="src\Actor\BossSpawner.cpp" />
+    <ClCompile Include="src\Actor\BehaviorTree.cpp" />
     <ClCompile Include="src\Actor\BossState.cpp" />
     <ClCompile Include="src\Actor\Character.cpp" />
     <ClCompile Include="src\Actor\IState.cpp" />
@@ -354,6 +355,7 @@
     <ClInclude Include="src\Actor\AttackRange.h" />
     <ClInclude Include="src\Actor\BossCharacter.h" />
     <ClInclude Include="src\Actor\BossParamBuilder.h" />
+    <ClInclude Include="src\Actor\BehaviorTree.h" />
     <ClInclude Include="src\Actor\BossSpawner.h" />
     <ClInclude Include="src\Actor\BossState.h" />
     <ClInclude Include="src\Actor\Character.h" />

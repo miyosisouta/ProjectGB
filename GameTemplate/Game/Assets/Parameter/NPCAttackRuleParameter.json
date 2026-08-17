@@ -10,6 +10,15 @@
         "3. \"stateId\" を、選ばれた時に実行してほしい攻撃にする（Idle/Run/HitStamp/Attack/Hit/Spin/ThrowRock/Laser/Death のいずれか。新しい攻撃を増やす場合はプログラム側の対応が別途必要です）",
         "4. \"weight\" にその行動が選ばれる重み（大きいほど選ばれやすい）を書く。同じdistance内での相対値でよく、合計を10などに揃える必要はありません",
         "",
+        "■連続回避（allowRepeat）",
+        "\"allowRepeat\": false を付けると、直前に選ばれた攻撃と同じ場合はその回だけ重み0になり、連続で選ばれなくなります（距離帯をまたいでも判定されます）。",
+        "省略した場合は true（連続してもよい）扱いです。同じ距離帯に候補が1つしかない行には allowRepeat:false を付けないでください（選べる行動が無くなってしまいます）。",
+        "",
+        "■レーザー専用：モードごとの重み（laserModeWeightNormal / laserModeWeightMult / laserModeWeightCharge）",
+        "stateId が \"Laser\" の行にのみ付けます。レーザーが選ばれた時に、単発(Normal)/連発(Mult)/チャージ(Charge)のどれを撃つかをこの3つの重みで抽選します。",
+        "省略した場合は0扱い（＝そのモードは選ばれない）なので、Laserの行には必ず3つとも書いてください。",
+        "なお「チャージの直後は必ず単発になる」「単発の直後は連発が出やすくなる」という技の繋がり演出は、この重みとは別にプログラム側（LaserState）で自動的に上書きされます。",
+        "",
         "■注意",
         "\"key\" が \"__EXAMPLE__\" のブロックはコピー元のサンプルなので、削除せずそのまま残しておいてください。",
         "同じdistanceを複数行書けば、その距離での抽選候補が増えます。"
@@ -21,7 +30,8 @@
             "comment": "新しいルールを追加する時はこの行をコピーして書き換えてください。keyが__EXAMPLE__の行はローダーが無視します。",
             "distance": "Short",
             "stateId": "Attack",
-            "weight": 0
+            "weight": 0,
+            "allowRepeat": true
         }
     ],
 
@@ -36,13 +46,15 @@
             "comment": "近距離：回転攻撃",
             "distance": "Short",
             "stateId": "Spin",
-            "weight": 3
+            "weight": 3,
+            "allowRepeat": false
         },
         {
             "comment": "近距離：ヒットスタンプ",
             "distance": "Short",
             "stateId": "HitStamp",
-            "weight": 2
+            "weight": 2,
+            "allowRepeat": false
         },
         {
             "comment": "中距離：走って距離を詰める",
@@ -54,19 +66,22 @@
             "comment": "中距離：ヒットスタンプ",
             "distance": "Mid",
             "stateId": "HitStamp",
-            "weight": 3
+            "weight": 3,
+            "allowRepeat": false
         },
         {
             "comment": "中距離：回転攻撃",
             "distance": "Mid",
             "stateId": "Spin",
-            "weight": 3
+            "weight": 3,
+            "allowRepeat": false
         },
         {
             "comment": "中距離：岩を投げる",
             "distance": "Mid",
             "stateId": "ThrowRock",
-            "weight": 3
+            "weight": 3,
+            "allowRepeat": false
         },
         {
             "comment": "遠距離：走って距離を詰める",
@@ -78,19 +93,22 @@
             "comment": "遠距離：ヒットスタンプ",
             "distance": "Long",
             "stateId": "HitStamp",
-            "weight": 2
+            "weight": 2,
+            "allowRepeat": false
         },
         {
             "comment": "遠距離：回転攻撃",
             "distance": "Long",
             "stateId": "Spin",
-            "weight": 2
+            "weight": 2,
+            "allowRepeat": false
         },
         {
             "comment": "遠距離：岩を投げる",
             "distance": "Long",
             "stateId": "ThrowRock",
-            "weight": 5
+            "weight": 5,
+            "allowRepeat": false
         },
         {
             "comment": "射程範囲外：追跡（これ以外の選択肢は無くてよい）",
@@ -111,19 +129,24 @@
             "comment": "近距離：回転攻撃",
             "distance": "Short",
             "stateId": "Spin",
-            "weight": 2
+            "weight": 2,
+            "allowRepeat": false
         },
         {
             "comment": "近距離：ヒットスタンプ",
             "distance": "Short",
             "stateId": "HitStamp",
-            "weight": 2
+            "weight": 2,
+            "allowRepeat": false
         },
         {
             "comment": "近距離：レーザー",
             "distance": "Short",
             "stateId": "Laser",
-            "weight": 3
+            "weight": 3,
+            "laserModeWeightNormal": 3,
+            "laserModeWeightMult": 4,
+            "laserModeWeightCharge": 1
         },
         {
             "comment": "中距離：走って距離を詰める",
@@ -135,37 +158,47 @@
             "comment": "中距離：ヒットスタンプ",
             "distance": "Mid",
             "stateId": "HitStamp",
-            "weight": 2
+            "weight": 2,
+            "allowRepeat": false
         },
         {
             "comment": "中距離：回転攻撃",
             "distance": "Mid",
             "stateId": "Spin",
-            "weight": 2
+            "weight": 2,
+            "allowRepeat": false
         },
         {
             "comment": "中距離：レーザー",
             "distance": "Mid",
             "stateId": "Laser",
-            "weight": 5
+            "weight": 5,
+            "laserModeWeightNormal": 3,
+            "laserModeWeightMult": 4,
+            "laserModeWeightCharge": 1
         },
         {
             "comment": "遠距離：ヒットスタンプ",
             "distance": "Long",
             "stateId": "HitStamp",
-            "weight": 3
+            "weight": 3,
+            "allowRepeat": false
         },
         {
             "comment": "遠距離：回転攻撃",
             "distance": "Long",
             "stateId": "Spin",
-            "weight": 2
+            "weight": 2,
+            "allowRepeat": false
         },
         {
             "comment": "遠距離：レーザー",
             "distance": "Long",
             "stateId": "Laser",
-            "weight": 5
+            "weight": 5,
+            "laserModeWeightNormal": 3,
+            "laserModeWeightMult": 4,
+            "laserModeWeightCharge": 1
         },
         {
             "comment": "射程範囲外：追跡（これ以外の選択肢は無くてよい）",
