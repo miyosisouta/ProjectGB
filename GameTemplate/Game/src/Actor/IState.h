@@ -15,6 +15,8 @@ public:
 	inline virtual bool IsFinished() const { return isFinished_; }
 	/** 他のステートに割り込みキャンセル可能か */
 	inline virtual bool IsCancelable() const { return false; }
+	/** 怯み(スタガー)に対して免疫か（trueの間に受けた怯み要求は発動せず捨てられる） */
+	inline virtual bool IsStaggerImmune() const { return false; }
 
 
 public:

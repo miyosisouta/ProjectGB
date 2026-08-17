@@ -884,6 +884,11 @@ void BattleManager::CheckBossPhaseCutsceneTrigger()
 	// HPの割合を計算
 	const float hpRatio = static_cast<float>(bossStatus->GetHP()) / static_cast<float>(bossStatus->GetMaxHP());
 
+	// 怯み(スタガー)の反応中は、演出に割り込まれず最後まで見えるよう、閾値を下回っていてもカットシーンの開始を待つ
+	// （Hitステート中、または怯み要求がまだ消費されていない間は「怯み中」とみなす。トリガー済みフラグはまだ立てず、次のフレームで再チェックする）
+	const bool isStaggering = boss->GetCurrentStateID() == BossStateID::Hit || bossStatus->IsStaggerRequested();
+	if (isStaggering) { return; }
+
 	// HPが特定の割合を下回ったとき、怒り状態になる。(一度だけ)
 	if (!bossPhase50CutsceneTriggered_ && hpRatio <= cutSceneParam->angryHpRatio) {
 		bossPhase50CutsceneTriggered_ = true;

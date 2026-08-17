@@ -144,6 +144,11 @@ public:
 		return true; // ステートがない場合は「終わってる」扱いにして次を呼ぶ
 	}
 
+	/** 現在のステートが怯み(スタガー)に対して免疫か（true中に受けた怯み要求は発動しない） */
+	inline bool IsCurrentStateStaggerImmune() const {
+		return currentState_ && currentState_->IsStaggerImmune();
+	}
+
 
 /** =================================================================== */
 /** コンストラクタ関連の関数 */

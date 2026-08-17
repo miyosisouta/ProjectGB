@@ -212,8 +212,20 @@ BTNodePtr NPCController::BuildStaggerNode()
     staggerSequence->AddChild(std::make_unique<BTCondition>(
         [this]()
         {
-            return boss_->GetCurrentStateID() != BossStateID::Death
-                && boss_->GetStatus()->As<BossStatus>()->IsStaggerRequested();
+            if (boss_->GetCurrentStateID() == BossStateID::Death) { return false; }
+
+            auto* bossStatus = boss_->GetStatus()->As<BossStatus>();
+            if (!bossStatus->IsStaggerRequested()) { return false; }
+
+            // 特定の攻撃(ヒットスタンプ・回転・岩投げ・チャージレーザー等)の最中は怯まない。
+            // その間に受けた怯み要求はここで消費して捨て、免疫が切れた後に発動しないようにする
+            if (boss_->IsCurrentStateStaggerImmune())
+            {
+                bossStatus->ConsumeStaggerRequest();
+                return false;
+            }
+
+            return true;
         }
     ));
 

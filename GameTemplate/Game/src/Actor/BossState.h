@@ -215,6 +215,8 @@ private:
 public:
 	/** 処理が終わりか */
 	inline bool IsFinished() const override { return isFinished_; }
+	/** 怯み免疫（叩き付け攻撃中は怯まない） */
+	inline bool IsStaggerImmune() const override { return true; }
 
 public:
 	/** コンストラクタ */
@@ -249,6 +251,8 @@ private:
 public:
 	/** 処理が終わりか */
 	inline bool IsFinished() const override { return isFinished_; }
+	/** 怯み免疫（回転攻撃中は怯まない） */
+	inline bool IsStaggerImmune() const override { return true; }
 
 public:
 	/** コンストラクタ */
@@ -294,6 +298,8 @@ private:
 public:
 	/** 処理が終わりか */
 	inline bool IsFinished() const override { return isFinished_; }
+	/** 怯み免疫（岩投げ攻撃中は怯まない） */
+	inline bool IsStaggerImmune() const override { return true; }
 
 
 public:
@@ -369,6 +375,8 @@ private:
 public:
 	/** 攻撃終了か */
 	inline bool IsFinished() const override { return isFinished_; }
+	/** 怯み免疫（チャージモードの間だけ怯まない。単発/連発モードは通常通り怯む） */
+	inline bool IsStaggerImmune() const override { return mode_ == Mode::enCharge; }
 
 
 public:

@@ -8,11 +8,13 @@ BTStatus BTSelector::Tick()
 	{
 		const BTStatus status = children_[i]->Tick();
 
+		// 実行中なら
 		if (status == BTStatus::Running)
 		{
 			runningIndex_ = i;
 			return BTStatus::Running;
 		}
+		// 成功したなら
 		if (status == BTStatus::Success)
 		{
 			runningIndex_ = 0;
@@ -32,11 +34,13 @@ BTStatus BTSequence::Tick()
 	{
 		const BTStatus status = children_[i]->Tick();
 
+		// 実行中なら
 		if (status == BTStatus::Running)
 		{
 			runningIndex_ = i;
 			return BTStatus::Running;
 		}
+		// 失敗したなら
 		if (status == BTStatus::Failure)
 		{
 			runningIndex_ = 0;
