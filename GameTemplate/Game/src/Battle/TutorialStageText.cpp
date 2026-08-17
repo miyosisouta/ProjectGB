@@ -26,5 +26,5 @@ void TutorialStageText::SetText(const wchar_t* text)
 
 void TutorialStageText::Render(RenderContext& rc)
 {
-	fontRender_.Draw(rc);
+	//fontRender_.Draw(rc);
 }

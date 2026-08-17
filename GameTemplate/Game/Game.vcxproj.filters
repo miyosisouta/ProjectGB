@@ -115,6 +115,7 @@
     <ClCompile Include="src\UI\PlayGameMenu.cpp" />
     <ClCompile Include="system\system.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="src\UI\TutorialMenu.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Game.h" />
@@ -245,6 +246,7 @@
     <ClInclude Include="src\UI\PlayGameMenu.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="resource1.h" />
+    <ClInclude Include="src\UI\TutorialMenu.h" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="gb.ico" />
