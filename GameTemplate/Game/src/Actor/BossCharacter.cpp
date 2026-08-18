@@ -43,6 +43,7 @@ void BossCharacter::SetupTranslate()
 	AddState(BossStateID::Idle, new BossIdleState(this));
 	AddState(BossStateID::Run, new BossRunState(this));
 	AddState(BossStateID::Attack, new BossAttackState(this));
+	AddState(BossStateID::Hit, new BossStaggerState(this));
 	AddState(BossStateID::HitStamp, new HitStampState(this));
 	AddState(BossStateID::Spin, new SpinState(this));
 	AddState(BossStateID::ThrowRock, new ThrowRockState(this));
@@ -185,6 +186,16 @@ void BossCharacter::Update()
 		Vector3 collisionPos = transform_.position + collisionHeightUp;
 		damageBody_->SetPosition(collisionPos);
 	}
+
+	// Scale復帰演出の更新（isMoveStop_中の怯み等で他のステートに切り替わった後も、途中だったScale変化を継続して滑らかに戻す）
+	if (scaleReturnCurve_.IsPlaying())
+	{
+		scaleReturnCurve_.Update(g_gameTime->GetFrameDeltaTime());
+		transform_.localScale = scaleReturnCurve_.GetCurrentValue();
+		transform_.UpdateTransform();
+		modelRender_.SetScale(transform_.scale);
+	}
+
 	// 更新
 	{
 		// ボスのステータス更新
@@ -199,4 +210,11 @@ void BossCharacter::Update()
 void BossCharacter::Render(RenderContext& rc)
 {
 	modelRender_.Draw(rc);
+}
+
+void BossCharacter::BeginScaleReturn(float duration)
+{
+	const Vector3 normalScale = status_->As<BossStatus>()->GetInitParam().scal_;
+	scaleReturnCurve_.Initialize(transform_.localScale, normalScale, duration, EasingType::EaseOut, LoopMode::Once);
+	scaleReturnCurve_.Play();
 }

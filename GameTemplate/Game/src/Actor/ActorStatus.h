@@ -767,6 +767,7 @@ private:
     BossSkillStatus skillStatus_; //!< スキルスロット＋クールダウン管理
     EmotionSystem emotionSystem_; //!< 感情システム
     std::vector<IBossStatusModifier*> modifiers_; //!< ボスのステータスへの倍率を修正する際の要因を設定する
+    bool staggerRequested_ = false; //!< 怯み(スタガー)要求が来ているか（NPCControllerのビヘイビアツリーが毎フレーム確認する）
 
 
 public:
@@ -867,6 +868,14 @@ public:
 
     // 感情システムへのアクセス（CollisionHitManager や BossEmotionPhaseManager から使う）
     inline EmotionSystem& GetEmotionSystem() { return emotionSystem_; }
+
+public:
+    /** 怯み(スタガー)を要求する（CollisionHitManagerが、怯みを発生させるスキルの命中時に呼ぶ） */
+    inline void RequestStagger() { staggerRequested_ = true; }
+    /** 怯み要求が来ているか（NPCControllerのビヘイビアツリーが毎フレーム確認する） */
+    inline bool IsStaggerRequested() const { return staggerRequested_; }
+    /** 怯み要求を消費する（Hitステートへ切り替えた直後に呼び、多重発火を防ぐ） */
+    inline void ConsumeStaggerRequest() { staggerRequested_ = false; }
 
 public:
     /** スキルを使用する。クールダウンを開始させる（現在の攻撃速度倍率をクールダウンに反映する） */

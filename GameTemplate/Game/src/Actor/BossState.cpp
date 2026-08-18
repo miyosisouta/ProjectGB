@@ -147,6 +147,51 @@ void BossRunState::Exit()
 
 
 /*==========================================*/
+// ダメージリアクション（怯み）
+/*==========================================*/
+
+void BossStaggerState::Enter()
+{
+	isFinished_ = false;
+	isIdleAnimPlayed_ = false;
+	boss_->SetMoveStop(true); // 怯み中は移動・回転同期を止める
+
+	if (boss_->HasAnimation(BossAnimID::enAnimHit))
+	{
+		boss_->PlayAnimation(BossAnimID::enAnimHit);
+	}
+
+	// 怯み時間の生成（怯みは「攻撃」ではないので攻撃速度の影響は受けない）
+	const auto* p = ParameterManager::Get().GetBossStateParam();
+	taskScheduler_ = std::make_unique<TaskSchedulerSystem>();
+	taskScheduler_->AddTimer(p->stagger.duration, [&]() {
+		isFinished_ = true;
+		});
+}
+
+void BossStaggerState::Update()
+{
+	// Hitアニメーション(ループなし)が最後まで再生し終わったら、怯みが続いている間は待機アニメーションへ切り替える
+	// （そのままだと最終フレームで静止し続け、微動だにしないボスになってしまうため）
+	if (!isIdleAnimPlayed_ && !boss_->IsPlayingAnimation())
+	{
+		boss_->PlayAnimation(BossAnimID::enAnimIdle);
+		isIdleAnimPlayed_ = true;
+	}
+
+	if (taskScheduler_ && BattleManager::Get().IsPlayingScene()) {
+		taskScheduler_->Update(g_gameTime->GetFrameDeltaTime());
+	}
+}
+
+void BossStaggerState::Exit()
+{
+	boss_->SetMoveStop(false);
+	taskScheduler_.reset();
+}
+
+
+/*==========================================*/
 // 通常攻撃状態
 /*==========================================*/
 
@@ -946,30 +991,55 @@ void LaserState::Enter()
 	// 攻撃速度倍率を保持しておく（Setup()や発火済みタイマーのコールバック内でも同じ値を使うため）
 	attackSpeedMul_ = GetAttackSpeedMul();
 
-	// 攻撃モード
+	// 攻撃モード（基礎重みはAI(NPCController)が距離帯に応じて選び、SetPendingLaserModeWeights()で渡してくれる）
 	{
 		const auto* p = ParameterManager::Get().GetBossStateParam();
-		const uint8_t weights[Mode::enMax] = { p->laser.weightNormal, p->laser.weightMult, p->laser.weightCharge };
+		const Vector3 pendingWeights = boss_->GetPendingLaserModeWeights();
+		float weights[Mode::enMax] = { pendingWeights.x, pendingWeights.y, pendingWeights.z };
+
+		// 技の繋がり演出：直前のモードに応じて重みを上書きする
+		if (lastMode_ == Mode::enCharge)
+		{
+			// チャージの直後は必ず単発にする（単発以外の重みを0にする）
+			weights[Mode::enMult] = 0.0f;
+			weights[Mode::enCharge] = 0.0f;
+		}
+		else if (lastMode_ == Mode::enNormal)
+		{
+			// 単発の直後は連発が出やすくする
+			weights[Mode::enMult] *= p->laser.multFavorMultiplierAfterNormal;
+		}
 
 		// 重みの合計を求める（JSON側の値をそのまま使うため、合計値を固定値に決め打ちしない）
-		uint16_t totalWeight = INT_ZERO;
+		float totalWeight = FLOAT_ZERO;
 		for (uint8_t i = INT_ZERO; i < Mode::enMax; ++i) { totalWeight += weights[i]; }
 
-		// 結果をランダムに
-		srand(time(nullptr));
-		uint16_t attackMode = (totalWeight > INT_ZERO) ? (rand() % totalWeight) : INT_ZERO;
+		if (totalWeight > FLOAT_ZERO)
+		{
+			// 結果をランダムに
+			srand(time(nullptr));
+			const float attackMode = static_cast<float>(rand()) / RAND_MAX * totalWeight;
 
-		/* 抽選処理 */
-		uint16_t currentWeightSum = INT_ZERO;
-		for (uint8_t i = INT_ZERO; i < Mode::enMax; ++i) {
-			currentWeightSum += weights[i]; // 重みを足していく
+			/* 抽選処理 */
+			float currentWeightSum = FLOAT_ZERO;
+			for (uint8_t i = INT_ZERO; i < Mode::enMax; ++i) {
+				currentWeightSum += weights[i]; // 重みを足していく
 
-			// 乱数が現在の重みの合計値未満なら当選
-			if (attackMode < currentWeightSum) {
-				mode_ = static_cast<Mode>(i);
-				break; // 当選したらループを抜ける
+				// 乱数が現在の重みの合計値未満なら当選
+				if (attackMode < currentWeightSum) {
+					mode_ = static_cast<Mode>(i);
+					break; // 当選したらループを抜ける
+				}
 			}
 		}
+		else
+		{
+			// 重みが全て0（JSON未設定など）の場合の保険：単発を既定にする
+			mode_ = Mode::enNormal;
+		}
+
+		// 次回の技の繋がり判定のために今回選んだモードを記憶しておく
+		lastMode_ = mode_;
 	}
 
 	// 初期化
@@ -1219,11 +1289,18 @@ void LaserState::Exit()
 		attackRangeIndicator_ = nullptr;
 	}
 
-	// 予備動作が中断された場合に備え、Y座標・Scaleを元に戻しておく
+	// 予備動作が中断された場合に備え、Y座標を元に戻しておく
 	multiJumpCurve_.Stop();
 	boss_->transform_.localPosition.y = FLOAT_ZERO;
-	chargeScaleCurve_.Stop();
-	boss_->transform_.localScale = normalScale_;
+
+	// チャージ中/縮小中に中断された場合、現在のScaleから通常Scaleへ滑らかに戻す
+	// （このステート自体はもう更新されなくなるため、以降はBossCharacter側で継続して滑らかにする）
+	if (chargeScaleCurve_.IsPlaying())
+	{
+		const auto* p = ParameterManager::Get().GetBossStateParam();
+		chargeScaleCurve_.Stop();
+		boss_->BeginScaleReturn(p->laser.chargeScaleDownDuration / attackSpeedMul_);
+	}
 	isChargeScaleReturning_ = false;
 }
 

@@ -5,6 +5,7 @@
 #include "src/Actor/NPCController.h"
 #include "src/Actor/Player.h"
 #include "src/Actor/PlayerController.h"
+#include "src/Actor/ActorStatus.h"
 #include "src/CharacterDataBase.h"
 
 
@@ -96,10 +97,18 @@ void BossSpawner::SetControlEnabled(const bool flg)
 	}
 
 	if (boss_) {
-		boss_->SetMoveStop(!flg);
 		if (!flg) {
+			// 先にIdleへ切り替える（切り替え時に呼ばれる旧ステートのExit()がSetMoveStop(false)を呼ぶことがあるため、
+			// 移動停止のSetMoveStop(true)を後に確定させることで上書きされないようにする）
 			boss_->ChangeState(BossStateID::Idle); // カットシーン中に待機アニメーションをさせる
 			SetUpdate(true); // ボスが更新されるようにする
+		}
+		boss_->SetMoveStop(!flg);
+
+		if (flg) {
+			// AIが制御を再開する瞬間、無効化されていた間に溜まった怯み要求は握りつぶす
+			// （チュートリアル中に無効化された当たり判定でスキルが命中していた場合など、本戦開始直後に誤って怯まないようにする）
+			if (auto* bossStatus = boss_->GetStatus()->As<BossStatus>()) { bossStatus->ConsumeStaggerRequest(); }
 		}
 	}
 }

@@ -380,6 +380,9 @@ void CollisionHitManager::UpdatePlayerSkillAttackPair(Pair& hitPair)
 		bossStatus->Damage(finalDamage);
 		if (onDamageNotify) onDamageNotify(finalDamage, DamageNotifyType::AttackHit, result.isCritical); // ダメージの情報を通知
 		UpdateAttackHitSound(); // 攻撃が当たったSEを流す
+
+		// スキル攻撃が当たったら、攻撃中のモーション(回転攻撃等)を問わず必ず怯み要求を出す
+		bossStatus->RequestStagger();
 	}
 
 	// エフェクト: 攻撃判定からボスのコリジョン表面座標を求めて再生
@@ -769,11 +772,15 @@ void CollisionHitManager::UpdateCharacterLandmineBossPair(Pair& hitPair)
 	auto* boss = GetHitObject<BossCharacter>(hitPair, CharacterID::BossID());
 
 	auto* ownerStatus = owner->GetStatus()->As<PlayerStatus>();
+	auto* bossStatus  = boss->GetStatus()->As<BossStatus>();
 	float motion = ownerStatus->GetSkillMotionValues("SpecialAttack");
 	DamageResult result = Calculate(ownerStatus, motion);
 	boss->GetStatus()->Damage(result.damage);
 	if (onDamageNotify) onDamageNotify(result.damage, DamageNotifyType::AttackHit, result.isCritical); // ダメージの情報を通知
 	UpdateAttackHitSound();
+
+	// 地雷が当たったら必ず怯み要求を出す（UpdatePlayerSkillAttackPairと同様）
+	if (bossStatus) { bossStatus->RequestStagger(); }
 }
 
 

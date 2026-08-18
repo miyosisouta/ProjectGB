@@ -161,6 +161,31 @@ public:
 
 
 /*==========================================*/
+// ダメージリアクション（怯み）
+/*==========================================*/
+class BossStaggerState : public BossStateBase
+{
+private:
+	bool isIdleAnimPlayed_ = false; //!< Hitアニメーション終了後、待機アニメーションへ切り替え済みか
+
+public:
+	/** 処理が終わったか */
+	inline bool IsFinished() const override { return isFinished_; }
+
+public:
+	/** コンストラクタ */
+	BossStaggerState(BossCharacter* b) : BossStateBase(b) {}
+
+	/** ステート開始時に呼ぶ */
+	void Enter()override;
+	/** 毎フレーム呼ぶ */
+	void Update()override;
+	/** ステート終了時に呼ぶ */
+	void Exit()override;
+};
+
+
+/*==========================================*/
 // ヒットスタンプ攻撃
 /*==========================================*/
 class HitStampState : public BossStateBase
@@ -190,6 +215,8 @@ private:
 public:
 	/** 処理が終わりか */
 	inline bool IsFinished() const override { return isFinished_; }
+	/** 怯み免疫（叩き付け攻撃中は怯まない） */
+	inline bool IsStaggerImmune() const override { return true; }
 
 public:
 	/** コンストラクタ */
@@ -224,6 +251,8 @@ private:
 public:
 	/** 処理が終わりか */
 	inline bool IsFinished() const override { return isFinished_; }
+	/** 怯み免疫（回転攻撃中は怯まない） */
+	inline bool IsStaggerImmune() const override { return true; }
 
 public:
 	/** コンストラクタ */
@@ -269,6 +298,8 @@ private:
 public:
 	/** 処理が終わりか */
 	inline bool IsFinished() const override { return isFinished_; }
+	/** 怯み免疫（岩投げ攻撃中は怯まない） */
+	inline bool IsStaggerImmune() const override { return true; }
 
 
 public:
@@ -313,6 +344,7 @@ private:
 private:
 	Phase        phase_                = Phase::enReady;        //!< 処理段階
 	Mode         mode_                 = Mode::enMax;           //!< 攻撃パターン
+	Mode         lastMode_             = Mode::enMax;           //!< 前回選んだ攻撃パターン（技の繋がり演出用。このステートはボスの生存中ずっと同じ実体なのでEnter()をまたいで記憶される）
 	Vector3      targetPos_            = Vector3::Zero;         //!< 攻撃対象の座標
 	EffectHandle laserEffectHandle_    = INVALID_EFFECT_HANDLE; //!< レーザーエフェクトのハンドル
 	AttackRange* attackRangeIndicator_ = nullptr;               //!< 攻撃予測サークルインジケーター
@@ -343,6 +375,8 @@ private:
 public:
 	/** 攻撃終了か */
 	inline bool IsFinished() const override { return isFinished_; }
+	/** 怯み免疫（チャージモードの間だけ怯まない。単発/連発モードは通常通り怯む） */
+	inline bool IsStaggerImmune() const override { return mode_ == Mode::enCharge; }
 
 
 public:

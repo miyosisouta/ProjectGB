@@ -278,6 +278,10 @@ void ParameterManager::LoadNPCAttackRuleData(const char* path)
 			p.distance = j.value("distance", "");
 			p.stateId  = j.value("stateId",  "");
 			p.weight   = j.value("weight",   0);
+			p.allowRepeat = j.value("allowRepeat", true);
+			p.laserModeWeightNormal = j.value("laserModeWeightNormal", 0.0f);
+			p.laserModeWeightMult   = j.value("laserModeWeightMult",   0.0f);
+			p.laserModeWeightCharge = j.value("laserModeWeightCharge", 0.0f);
 		}
 	);
 }
@@ -654,15 +658,19 @@ void ParameterManager::LoadBossStateParamData(const char* path)
 				if (o.contains("chargeBodyScale")) { p.laser.chargeBodyScale = ParseVector3(o["chargeBodyScale"]); }
 				p.laser.chargeIndicatorDelay    = o.value("chargeIndicatorDelay",    p.laser.chargeIndicatorDelay);
 				p.laser.chargeScaleDownDuration = o.value("chargeScaleDownDuration", p.laser.chargeScaleDownDuration);
-				p.laser.weightNormal = o.value("weightNormal", p.laser.weightNormal);
-				p.laser.weightMult   = o.value("weightMult",   p.laser.weightMult);
-				p.laser.weightCharge = o.value("weightCharge", p.laser.weightCharge);
+				p.laser.multFavorMultiplierAfterNormal = o.value("multFavorMultiplierAfterNormal", p.laser.multFavorMultiplierAfterNormal);
 			}
 
 			// 死亡
 			{
 				const auto o = GetSubObject(j, "death");
 				p.death.animationTime = o.value("animationTime", p.death.animationTime);
+			}
+
+			// ダメージリアクション・怯み
+			{
+				const auto o = GetSubObject(j, "stagger");
+				p.stagger.duration = o.value("duration", p.stagger.duration);
 			}
 		}
 	);

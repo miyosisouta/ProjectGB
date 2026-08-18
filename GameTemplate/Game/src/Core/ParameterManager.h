@@ -221,6 +221,12 @@ struct MasterNPCAttackRuleParameter : public IMasterParameter
 	std::string distance;  //!< 距離帯 ("Short"/"Mid"/"Long"/"OutRange")
 	std::string stateId;   //!< 選ばれた時に遷移するBossStateID名 (例: "Attack", "Spin"...)
 	int         weight = 0;//!< 抽選の重み
+	bool        allowRepeat = true; //!< 直前と同じ攻撃が連続で選ばれることを許すか
+
+	// レーザー専用：モード(単発/連発/チャージ)ごとの基礎重み。stateId != "Laser" の行では未使用
+	float laserModeWeightNormal = 0.0f;
+	float laserModeWeightMult   = 0.0f;
+	float laserModeWeightCharge = 0.0f;
 };
 
 /**
@@ -561,9 +567,7 @@ struct MasterBossStateParameter : public IMasterParameter
 		Vector3 chargeBodyScale         = Vector3::Zero; //!< チャージ攻撃前の予備動作で拡大するボス本体のScale（絶対値。通常時のScaleはCharacterStatusData.json側で管理）
 		float   chargeIndicatorDelay    = 0.0f;   //!< チャージ攻撃：振り向き終了後、予測線が表示されるまでの「溜め」の秒数（他モードのinitialShotTimeに相当する値をチャージ専用に長く取ったもの）
 		float   chargeScaleDownDuration = 0.0f;   //!< チャージ攻撃後、Scaleを通常Scaleへ戻すのにかける秒数
-		uint8_t weightNormal            = 0;      //!< 攻撃パターン抽選の重み（単発）
-		uint8_t weightMult               = 0;      //!< 攻撃パターン抽選の重み（連発）
-		uint8_t weightCharge             = 0;      //!< 攻撃パターン抽選の重み（チャージ）
+		float   multFavorMultiplierAfterNormal = 1.0f; //!< 直前が単発モードだった時、連発モードの重みに掛ける倍率（技の繋がり演出用。モード自体の基礎重みはNPCAttackRuleParameter.json側）
 	} laser;
 
 	// 死亡 (BossDeathState)
@@ -571,6 +575,12 @@ struct MasterBossStateParameter : public IMasterParameter
 	{
 		float animationTime = 0.0f; //!< [timing] 死亡アニメーション再生後、実際に死亡扱いにするまでの秒数
 	} death;
+
+	// ダメージリアクション・怯み (BossStaggerState) ※攻撃速度の影響は受けない
+	struct Stagger
+	{
+		float duration = 0.0f; //!< 怯み状態が続く秒数
+	} stagger;
 };
 
 /**
