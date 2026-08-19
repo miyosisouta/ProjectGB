@@ -3,8 +3,8 @@
         {
             "comment": "通常攻撃 - Bite",
             "key": "Bite",
-            "collisionRadius": 60.0,
-            "collisionForward": 110.0,
+            "collisionRadius": 65.0,
+            "collisionForward": 120.0,
             "collisionHeight": 50.0
         },
         {

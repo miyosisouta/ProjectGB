@@ -103,7 +103,6 @@ private:
 	EmotionEffectObserver   emotionEffectObserver_;                  //!< 感情レベル変化時にエフェクトを再生するオブザーバー
 	bool bossEmotionPhaseManagerInitialized_ = false; //!< Start()完了後に1回だけ Init() するためのフラグ
 	bool tutorialInitialized_ = false; //!< Tutorial突入時に1回だけ初期化処理を行うためのフラグ
-	bool tutorialSkipKeyPrevPressed_ = false; //!< チュートリアルスキップ用Enterキーの前フレーム押下状態（立ち上がり検知用）
 	float tutorialLoadingElapsed_ = 0.0f; //!< TutorialLoading突入からの経過秒数
 
 	// --- ボスHP閾値カットシーン（HP50%/25%でボスへズームアウトする演出） ---

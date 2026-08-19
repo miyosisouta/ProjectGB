@@ -47,8 +47,8 @@
         "asset": "Assets/ui/tutorialUI/skip.DDS",
         "width": 250,
         "height": 35,
-        "position": [ -780, 100, 0],
-        "scale": [1, 1, 1],
+        "position": [ -730, 100, 0],
+        "scale": [1.5, 1.2, 1],
         "rotation": 0,
         "color": [1, 1, 1, 1]
       },

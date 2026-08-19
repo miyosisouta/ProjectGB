@@ -59,7 +59,7 @@ private:
 	bool  moveTimerActive_ = false; //!< 移動段階：計測を開始したか
 	float moveElapsed_     = 0.0f;  //!< 移動段階：計測開始からの経過秒数
 
-	bool skipRequested_    = false; //!< Enterによる即時終了が要求されたか
+	bool skipRequested_    = false; //!< Enter/ゲームパッドStartによる即時終了が要求されたか
 	bool uiAnimationFlag_  = false; //!< UIAnimation開始フラグ。Update()の先頭で毎フレームfalseに戻すため、1フレームだけtrueが取れる
 
 	Vector3    playerSpawnPosition_ = Vector3::Zero;       //!< Init()時点のプレイヤー座標（RequestSkip()で戻す先）
@@ -106,10 +106,10 @@ public:
 	/** 現在の段階を取得（本実装UI側がアイコン表示切り替えに使う） */
 	inline Stage GetStage() const { return stage_; }
 
-	/** Enterによる終了要求が来ているか */
+	/** Enter/ゲームパッドStartによる終了要求が来ているか */
 	inline bool IsFinished() const { return skipRequested_; }
 
-	/** チュートリアルを即座に終了させる（Enterによる全体スキップ） */
+	/** チュートリアルを即座に終了させる（Enter/ゲームパッドStartによる全体スキップ） */
 	void RequestSkip();
 
 	/**

@@ -457,16 +457,15 @@ void BattleManager::UpdateTutorialState()
 		tutorialInitialized_ = true;
 	}
 
-	// Enterキーでチュートリアル全体を即座に終了する
+	// Enter/ゲームパッドのStartボタンでチュートリアル全体を即座に終了する
 	// NOTE: enActionInteract(決定)はゲームパッドのAボタンにも割り当たっており、
-	//       ダッシュ/回避と同じ物理ボタンのため誤爆する。ここではキーボードのEnterキーのみを直接見る
+	//       ダッシュ/回避と同じ物理ボタンのため誤爆する。ここではenButtonStartのみを見る。
+	//       GamePadクラス内部でキーボードのEnterキーはenButtonStartに、
+	//       ゲームパッドのStartボタンもenButtonStartにそれぞれ割り当たっているため、
+	//       これ一つで両方の入力を拾える
+	if (g_pad[0]->IsTrigger(enButtonStart))
 	{
-		const bool curEnterPressed = (GetAsyncKeyState(VK_RETURN) & 0x8000) != 0;
-		if (curEnterPressed && !tutorialSkipKeyPrevPressed_)
-		{
-			TutorialManager::Get().RequestSkip();
-		}
-		tutorialSkipKeyPrevPressed_ = curEnterPressed;
+		TutorialManager::Get().RequestSkip();
 	}
 
 	TutorialManager::Get().Update(); // 各段階の完了判定

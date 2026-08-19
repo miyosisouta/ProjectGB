@@ -65,7 +65,7 @@ void TutorialManager::Update()
 {
 	// 前フレームで立てたUIAnimationフラグをリセット
 	uiAnimationFlag_ = false;
-	// プレイヤーがいない、もしくはEnterで終了要求済み（RequestSkip()でIdle・登場位置へ戻した直後）なら、
+	// プレイヤーがいない、もしくはスキップ操作で終了要求済み（RequestSkip()でIdle・登場位置へ戻した直後）なら、
 	// それ以上ボスを動かしたり段階を進めたりしない
 	if (!player_ || skipRequested_) { return; }
 
