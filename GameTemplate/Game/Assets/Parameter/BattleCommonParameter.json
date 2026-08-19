@@ -7,8 +7,8 @@
             "fovy":60.0,
             "height":200.0,
             "distance":600.0,
-            "rotSpeed":0.5,
-            "sensitivity": 1.0,
+            "rotSpeed":0.75,
+            "sensitivity": 1.5,
             "lookAtOffsetY": 75.0,
             
            

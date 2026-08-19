@@ -67,8 +67,8 @@
                 "attack": 30,
                 "criticalRate": 20,
                 "criticalDamageMultiplier": 1.5,
-                "moveSpeedBase": 150.0,
-                "runSpeedBase": 350.0
+                "moveSpeedBase": 200.0,
+                "runSpeedBase": 400.0
             },
             "stamina": {
                 "maxStamina": 100.0,
