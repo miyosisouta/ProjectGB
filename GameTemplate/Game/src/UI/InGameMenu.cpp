@@ -133,8 +133,18 @@ void InGameMenu::Update()
 	{
 		bossGauge->transform.localScale.x = bossHP / static_cast<float>(bossMaxHP);
 	}
-	
-	
+
+	// ボスの名前表示（チュートリアル中は常にGorillaで固定されており、チュートリアル終了/スキップ時に
+	// 実際に選んだボスのkeyへ差し替わる。ここで毎フレーム見るようにして、その差し替えに追従させる）
+	{
+		auto* bossGollira = GetUI<UIIcon>(Hash32("BossHPBar/Boss_HP_word"));
+		auto* bossTurtle = GetUI<UIIcon>(Hash32("BossHPBar/Boss_HP_word2"));
+		const std::string& stageKey = CharacterDataBase::Get().GetStageKey();
+		if (bossGollira) bossGollira->isDraw = (stageKey == "Gorilla");
+		if (bossTurtle) bossTurtle->isDraw = (stageKey == "Turtle");
+	}
+
+
 
 	// 攻撃ボタン枠の色変化
 	auto* attackButton = GetUI<UIIcon>(Hash32("Attack_Icon_flame")); 
@@ -333,18 +343,9 @@ void InGameMenu::InitializeLogic()
 	auto* bossHPGauge = GetUI<UIIcon>(Hash32("BossHPBar/Boss_HP_gauge"));
 	bossHPGauge->SetPivot(Vector2(0.0f, 0.5f));
 
-	// ボスの名前が変わる
-	auto* bossGollira = GetUI<UIIcon>(Hash32("BossHPBar/Boss_HP_word"));
-	auto* bossTurtle = GetUI<UIIcon>(Hash32("BossHPBar/Boss_HP_word2"));
-	std::string stageKey = CharacterDataBase::Get().GetStageKey();
-	// ゴリラが選択されているとき
-	if (stageKey == "Gorilla") {
-		bossGollira->isDraw = true;
-	}
-	// カメが選択されているとき
-	if (stageKey == "Turtle") {
-		bossTurtle->isDraw = true;
-	}
+	// ボスの名前表示はUpdate()側で毎フレーム更新する
+	// （チュートリアル中はCharacterDataBaseのkeyが一時的にGorillaへ上書きされており、
+	//   ここInitializeLogic()の時点ではまだ実際に選んだボスのkeyに戻っていないため）
 
 	// 選択されたスキルのアイコンを表示
 	auto* biteIcon = GetUI<UIIcon>(Hash32("AbilitySkillIcon/SkillIcon_Howl"));
